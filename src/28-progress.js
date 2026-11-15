@@ -21,7 +21,11 @@ function loadProgress(){
       if(c&&typeof c==='object'&&!Array.isArray(c))chapters[i]=checkpoint(c);
     }
     if(!chapters[raw.ch])return null;
-    return {version:2,ch:raw.ch,unlocked:top,chapters:chapters};
+    // "at" remembers the short moment the player was in, so closing the tab on a phone never costs ten minutes of story.
+    var at=null,a=raw.at;
+    if(a&&a.ch===raw.ch&&typeof a.moment==='string'&&(AFTER[a.ch]||[]).indexOf(a.moment)>=0&&a.state&&typeof a.state==='object')
+      at={ch:a.ch,moment:a.moment,state:checkpoint(a.state),jobDone:!!a.jobDone};
+    return {version:2,ch:raw.ch,unlocked:top,chapters:chapters,at:at};
   }catch(e){return null;}
 }
 function saveProgress(n){
@@ -30,4 +34,11 @@ function saveProgress(n){
     chapters[n]=checkpoint(G);
     window.localStorage.setItem(SAVE_KEY,JSON.stringify({version:2,ch:n,unlocked:Math.max(n,old?old.unlocked:1),chapters:chapters}));
   }catch(e){/* Storage is optional: private/offline play must still work. */}
+}
+function saveMoment(id){
+  try{
+    var old=loadProgress();if(!old||old.ch!==G.chapter)return;
+    window.localStorage.setItem(SAVE_KEY,JSON.stringify({version:2,ch:old.ch,unlocked:old.unlocked,chapters:old.chapters,
+      at:{ch:G.chapter,moment:id,state:checkpoint(G),jobDone:!!G.jobDone}}));
+  }catch(e){}
 }

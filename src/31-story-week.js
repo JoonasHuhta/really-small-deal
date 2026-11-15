@@ -60,6 +60,14 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
     {t:'Scenario two: she isn’t angry. She’s disappointed.',then:[['H','Oh no.'],['S','I know. I shouldn’t have said it out loud. Now it’s in the room.']]},
     {t:'Scenario three: while we’re up, the archive.',then:[['S','2011. You waved at someone who was waving at someone else.'],['H','Why do you still HAVE that?'],['S','I keep everything. It’s a safety archive.']]}
   ]},
+  ['S','And if it’s none of those, I have the full list. Four: she sighs first. Five: she doesn’t sigh, which is worse. Six: there is a biscuit. They soften you up with a biscuit. Seven: the whole department is there. Eight: there is a cake. It says “goodbye”. Your name is spelled wrong. Nine: we correct the spelling. Ten: the correcting is what they remember.',{big:true}],
+  ['S','…'],
+  ['S','Who said all that?'],
+  ['H','You did. It’s blocking the window.'],
+  ['S','It’s ENORMOUS. Is that how it comes out?'],
+  ['H','Imagine being under it.'],
+  set({mood:'worry',s:1}),
+  ['S','…I’ll use a smaller font.'],
   ['H','What time is it?'],
   ['S','Three. The best time. Nobody can reject us at three.'],
   ['H','Nobody can do anything at three. That’s the problem.'],
@@ -323,10 +331,23 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','I know. I’ll be there.'],
   {wait:0.8}
  ]);}
-function chain(n){var out=[],fns=[null,null,scTue,scWed,scThu,scFri];for(var i=Math.max(2,n);i<=5;i++){(function(f){out.push(function(){return f();});})(fns[i]);out=out.concat(momentsAfter(i));}out.push(showWeekEnd);return out;}
-function startChapter(n){
+// chain(3) is Wednesday onwards. chain(3,'glass') picks the story up at that moment, without replaying Wednesday.
+function chain(n,from){
+  var out=[],fns=[null,null,scTue,scWed,scThu,scFri];
+  for(var i=Math.max(2,n);i<=5;i++){
+    var ms=AFTER[i]||[],k=i===n&&from?ms.indexOf(from):-1;
+    if(k<0){(function(f){out.push(function(){return f();});})(fns[i]);k=0;}
+    out=out.concat(ms.slice(k).map(interlude));
+  }
+  out.push(showWeekEnd);return out;
+}
+function startChapter(n,at){
   n=Number.isInteger(n)?clamp(n,1,5):1;
   var saved=loadProgress(),sv=saved&&saved.chapters[n]||{};
+  if(at&&at.ch===n&&n>1){   // Continue, in the middle of a chapter
+    reset(at.state.day||'B');var h=G;Object.keys(at.state).forEach(function(k){h[k]=at.state[k];});
+    h.started=true;h.jobDone=at.jobDone;h.chapter=n;newDay();Q=chain(n,at.moment);run();return;
+  }
   if(n<=1){startGame(sv.day||null,false);return;}
   reset(sv.day||'B');var g=G,c=checkpoint(sv);Object.keys(c).forEach(function(k){g[k]=c[k];});g.started=true;g.jobDone=n>4;
   Q=chain(n);run();

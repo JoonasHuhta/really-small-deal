@@ -287,7 +287,8 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   function(){G.boss.friendly=true;G.boss.name='THE GROUP CHAT';sfx('turn');},
   ['N','BOSS DEFEATED. Correction: there was no boss.'],
   function(){return G.lab?[]:[['S','Year two. Somebody laughed.'],['H','Eleven people liked it.'],['S','…I’ll update the file.'],function(){var g=G;g.cards.push({kind:'good',year:'TODAY',text:'Showed eleven people a drawing. They liked the cat.',t:0,life:null,x:790,y:178,rot:-0.03});sfx('card');},{wait:2.2},closeArchive];},
-  ['S','I’m keeping the headband.']
+  ['S','I’m keeping the headband.'],
+  set({pose:'puppet',mood:'care'}),{wait:2.2},set({pose:null})   // nothing to prevent: the bird again, and this time nobody asks
  ]);}
 function drawChatlog(o){
   var log=G.fightLog||[],x=W/2-330,y=72,w=440;

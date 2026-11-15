@@ -273,3 +273,19 @@ Trubyn 22 askelta kokonaisena on romaanin tai elokuvan työkalu. 38 minuutin kom
 
 - **Salainen lounaspolku** (maanantain ikkunassa onnistuminen) ratkaisee halun jo 6 %:n kohdalla. Loppuviikko tarvitsee silloin oman kysymyksensä, esimerkiksi ”pystyykö sen toistamaan?”. Nyt perjantai on sillä polulla lähes sama kuin muilla.
 - ***A fine.*** olisi hyvä jälkikohtaus kuitin jälkeen: Sannan ”fine” ja kirjaston ”That’ll be a fine” maksaisivat saman vitsin kahdesti.
+
+## Ekskyysmin eleet ja ihmisen nimi (15.11.2026, versio 0.27)
+
+**Ihmisellä ei ole nimeä, ja niin on hyvä.** HUMAN on Ekskyysmin arkistonimike: varjo ei ajattele isäntäänsä nimellä vaan vastuualueena. Nimetön ihminen on myös se, johon jokainen pelaaja mahtuu. Muilla on nimet, koska he ovat ”muita”.
+
+**Eleet nyt:** huonekalu, piiloutuminen, jähmettyminen, kasvaminen, suurennuslasi, takki ja räpyttävät napit, tasapainoilu, sateenvarjo, juoma, lohdutus, otsanauha, kutistuminen oman kuplan alle (0.27) ja varjolintu (0.27).
+
+**Sääntö:** ele kuuluu peliin, jos se on jotain, minkä vain varjo voi tehdä (venyä, litistyä, olla seinällä, tehdä käsivarjoja) tai jos se on virkamiehen ele (arkistointi, leimaaminen, lomake). Yleinen sarjakuvahätäily ei kuulu.
+
+**Ideapankki, ei vielä pelissä:**
+
+- **Leimasin.** ”Rejection prevented.” on nyt repliikki. Leima (PREVENTED, punainen, vähän vinossa) ihmisen päälle olisi kuva, ja perjantaina leimasin jää ilmaan.
+- **Varjo jää jälkeen.** Kun ihminen lähtee reippaasti, Ekskyysmi venyy ja napsahtaa perään kuin kuminauha.
+- **Valo määrää koon.** Lampun lähellä varjo on pitkä, ikkunan luona lyhyt. Ekskyysmi voisi valita paikkansa sen mukaan (”Stand by the lamp. I need to be taller for this.”).
+- **Käsivarjoteatteri.** Linnun lisäksi: kun Ekskyysmi matkii jotakuta, se tekee puhuvan käden. ”Quick chat.” Nimeltä mainitsematon Riitta.
+- **Kupla käyttäytyy.** Nyt kupla kasvaa kerran. Varaa on yhdelle takaisinviittaukselle: perjantaina Ekskyysmi aloittaa pitkän lauseen ja taittaa kuplan itse pieneksi.

@@ -24,7 +24,7 @@ function run(){
     if(!Q.length){WAIT=null;render();return;}
     var s=Q.shift();
     if(typeof s==='function'){var r=s();if(r&&r.length)Q=r.concat(Q);continue;}
-    if(Array.isArray(s)){setLine(s[0],s[1]);WAIT='click';LOCK=0.3;render();return;}
+    if(Array.isArray(s)){setLine(s[0],s[1],s[2]);WAIT='click';LOCK=0.3;render();return;}
     if(s.wait!=null){WAIT='time';TIMER=s.wait;render();return;}
     if(s.view){WAIT='view';TIMER=2.4;render();return;}
     if(s.stretch){WAIT='stretch';G.morko.pose='grow';G.morko.sT=2.1;G.morko.mood='stern';LOCK=0.2;render();return;}
@@ -42,11 +42,11 @@ function choose(i){
   var then=typeof o.then==='function'?o.then():(o.then||[]);
   Q=[['S',o.t]].concat(then,Q);run();
 }
-function setLine(who,text){
+function setLine(who,text,o){
   var g=G;
   if(who==='N'){g.band=text;}
-  else{g.band=null;g.lines=g.lines.filter(function(l){return l.who!==who;});g.lines.push({who:who,text:text});if(g.lines.length>2)g.lines.shift();}
-  g.cur={who:who,text:text};g.curT=0;speak(who,text);
+  else{g.band=null;g.lines=g.lines.filter(function(l){return l.who!==who;});g.lines.push({who:who,text:text,big:!!(o&&o.big)});if(g.lines.length>2)g.lines.shift();}
+  g.cur={who:who,text:text,big:!!(o&&o.big)};g.curT=0;speak(who,text);
   history.push({who:who,text:text});
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}

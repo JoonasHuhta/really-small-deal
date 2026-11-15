@@ -8,11 +8,19 @@ Ei asennusta, ei kirjautumista. Toimii puhelimella vaakasuunnassa ja tietokoneel
 
 ## Pelaa paikallisesti
 
-Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.26 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
+Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.27 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
 
 **Pelin ydin (14.11.):** varjo ei opeta eikä anna vinkkejä, se vain yrittää suojella, kuten AwA:n susi. Huumori syntyy mittakaavasta: sisällä katastrofi, ulkona kaksi sekuntia. Vitsit kohdistuvat varjon byrokratiaan, arkistoon, välimerkkeihin, ylisuojeluun ja omaan arvokkuuteen, eivät ihmisen kipuun eikä toisten aitoon julmuuteen. Päämäärä on, että pelaaja nauraa, tunnistaa itsensä ja näkee lopussa suhteen muuttuvan: korjaamisesta pysymiseen.
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
+
+Versio 0.27 (Claude, 15.11.2026): **puhelinkäyttö, jakaminen ja kaksi uutta elettä.**
+
+- **Jatka kesken luvun.** Peli tallentaa nyt myös sen, missä välihetkessä pelaaja oli. Ennen tallennus tapahtui vain lukujen alussa, ja välilehden sulkeminen keskiviikon jälkeen saattoi maksaa kymmenen minuuttia tarinaa. Aloitusruudun nappi näyttää hetken nimen (”Continue · Sometime.”).
+- **Linkin esikatselu.** `assets/share.png` (1200×630) ja og-metatiedot: kun linkin lähettää WhatsAppissa, Discordissa tai Signalissa, mukana tulee kuva ja kuvaus. Kuvaa ei pakata Android-sovellukseen.
+- **Kupla, joka karkaa käsistä** (tiistai, 03:07): Ekskyysmi luettelee ”koko listan”, puhekupla kasvaa rivi riviltä huoneen suurimmaksi asiaksi ja painaa Ekskyysmin pieneksi. ”Who said all that?” – ”You did. It’s blocking the window.” – ”Imagine being under it.” – ”…I’ll use a smaller font.”
+- **Varjolintu.** Kun ei ole mitään estettävää, Ekskyysmi tekee käsillään linnun. *An ordinary evening*: ”Is that a bird?” – ”No.” – ”It’s flapping.” – ”It’s a hobby. Shadows are allowed one. Don’t tell the office.” Lintu palaa sanattomana pelin viimeisenä kuvana.
+- Tarkistettu viidellä puhelinkoolla (640×360 … 1024×480) ja pystyasennossa: ei JavaScript-virheitä, napit ruudulla, kosketusalueet vähintään 43 px.
 
 Versio 0.26 (Claude, 15.11.2026): **rakenne.** Tarinan käännekohdat mitattiin ja keskikohta järjestettiin uudelleen. Perustelut ja taulukko: [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Rakenne.
 
@@ -221,7 +229,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.26, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.27, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

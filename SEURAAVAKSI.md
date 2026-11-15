@@ -2,7 +2,7 @@
 
 15.11.2026 · Claude. Tämä tiedosto korvaa [TOTEUTUKSEN_SUUNNITTELU.md](TOTEUTUKSEN_SUUNNITTELU.md):n työlistana. Lista on järjestetty sen mukaan, mikä vaikuttaa eniten siihen, että peli toimii ja että siitä kerrotaan eteenpäin.
 
-## Missä ollaan (0.26)
+## Missä ollaan (0.27)
 
 - **Peli:** viisi päivää (Oh, hi · Quick chat? · Could you just… · Seen. · For now) ja niiden välissä yksitoista lyhyttä hetkeä. Yksi läpipeluu kestää lukutahdissa noin 38 minuuttia. Selainpeli toimii myös puhelimella vaakasuunnassa. Android-kuori on valmiina, mutta sitä ei ole julkaistu.
 - **Rakenne on mitattu ja järjestetty** (Weilandin käännekohdat, Trubyn perusaskeleet): ks. [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Rakenne.
@@ -63,6 +63,20 @@ Seuraava: **Riitan varjo** *Not now.* -hetkeen (jongleeraa yhtätoista asiaa, �
 3. **itch.io-sivu:** selainversio upotettuna, kansikuvana röntgen, ensimmäisenä kuvana kuitti, 10 sekunnin GIF röntgenistä ja lyhyt kuvaus. Selaimessa pelattavat pelit saavat itch.io:ssa selvästi enemmän pelikertoja kuin ladattavat, mutta näkyvyys tulee lähes kokonaan omista jaoista, devlogeista ja jameista.
 4. **Jamit ja tapahtumat:** *Psyche Game Jam* (huhti–toukokuu, mielenterveysaiheinen, keskeneräiset pelit sallittu). **Huom:** säännön mukaan peliä ei saa olla julkaistu muualla, ja GitHub Pages voi tulkita julkaisuksi, joten se kannattaa tarkistaa järjestäjältä. *Global Game Jam / Finnish Game Jam* on 23.–25.1.2027, mutta se on uutta peliä varten eikä tätä.
 5. **Rahoitus (jos MoshBitSurfersilla on Y-tunnus):** AVEKin demotuki (DigiDemo/CreaDemo). Vuoden 2026 haku oli 18.6.–21.9., ja omaa rahoitusta tarvitaan vähintään 20 %. Seuraava kierros kannattaa tarkistaa keväällä 2027.
+
+## 6. Tekninen tarkistuslista: netti ja Android
+
+Kunnossa (tarkistettu 0.27): vaakanäkymä ja turva-alueet puhelimella, pystyasento, Androidin takaisin-nappi, tauko kun sovellus menee taustalle, äänen käynnistys ensimmäisestä kosketuksesta, vähennetty liike, näppäimistö, ruudunlukijan teksti, jatkaminen kesken luvun, linkin esikatselukuva.
+
+Tekemättä, tärkeysjärjestyksessä:
+
+1. **Oikea laite.** Kaikki tähän asti on testattu emuloidussa selaimessa. Yksi läpipeluu oikealla Android-puhelimella (selain ja Capacitor-sovellus) ja yhdellä iPhonella: äänet, kosketus suurennuslasissa ja venytyksessä, akun lämpeneminen.
+2. **Tekstin koko ja nopeus.** Peli on lähes pelkkää lukemista. Asetus isommalle tekstille ja *Slow reality* (pidempi vastausikkuna) ovat saavutettavuuden kaksi tärkeintä.
+3. **Kieli.** Vitsit nojaavat englantiin (”fine”, ”sometime”, ”excuse me”). Suomennos on uudelleenkirjoitus, ei käännös, ja repliikit ovat koodin seassa. Jos suomi halutaan, tekstit pitää ensin irrottaa omaan tiedostoonsa.
+4. **Offline selaimessa.** Android-sovellus toimii ilman verkkoa, selainversio ei. Pieni service worker korjaisi sen, mutta se kannattaa lisätä vasta, kun versiot eivät enää vaihdu päivittäin (vanha versio jää helposti välimuistiin).
+5. **Emme tiedä, missä pelaajat lopettavat.** Analytiikkaa ei ole. Yksityisyyden kannalta se on hyvä, kehityksen kannalta sokea piste. Pelaajatesti (kohta 1) korvaa tämän toistaiseksi.
+6. **Google Play.** Sisältöluokitus, tietoturvalomake (peli ei kerää mitään) ja tietosuojasivu. Jos kehittäjätili on henkilötili, joka on luotu 13.11.2023 jälkeen, ennen julkaisua vaaditaan suljettu testi 12 testaajalla 14 päivän ajan. Vanhemmat tilit ja organisaatiotilit on vapautettu.
+7. **Kuitti kuvana.** Copy receipt kopioi tekstin. Kuva (canvas → PNG, Web Share API) leviäisi paremmin.
 
 ## Mitä ei kannata tehdä
 

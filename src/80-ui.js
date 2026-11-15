@@ -31,7 +31,7 @@ function showTitle(){
   G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
   showOv('<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
    '<p class="tagline">A small moment.<br>A very long shadow.</p>'+
-   (sv?'<button class="go" type="button" data-go="cont">Continue · '+dayName(sv.ch)+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">New game</button>'
+   (sv?'<button class="go" type="button" data-go="cont">Continue · '+(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">New game</button>'
       :'<button class="go" type="button" data-go="start">New game <span aria-hidden="true">→</span></button>')+
    '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">Chapters</button>':'')+
    '<button class="link" type="button" data-go="lab">Scenario lab</button><button class="link" type="button" data-go="about">About</button></div>');
@@ -72,7 +72,7 @@ ov.addEventListener('click',function(e){
   if(go==='chapters'){showChapters();return;}
   if(go==='about'){showAbout();return;}
   if(go==='start')startGame(null,false);
-  else if(go==='cont'){var sv=loadProgress();startChapter(sv?sv.ch:1);}
+  else if(go==='cont'){var sv=loadProgress();startChapter(sv?sv.ch:1,sv&&sv.at);}
   else if(go==='next'){hideOv();G.ended=false;G.dayEnd=false;Q=chain(2);run();}
   else if(go==='menu'){reset(null);showTitle();}
   else if(go==='again'){TRIES++;startGame(null,true);}

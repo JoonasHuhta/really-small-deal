@@ -110,7 +110,7 @@ function run(){
     if(!Q.length){WAIT=null;render();return;}
     var s=Q.shift();
     if(typeof s==='function'){var r=s();if(r&&r.length)Q=r.concat(Q);continue;}
-    if(Array.isArray(s)){setLine(s[0],s[1]);WAIT='click';LOCK=0.3;render();return;}
+    if(Array.isArray(s)){setLine(s[0],s[1],s[2]);WAIT='click';LOCK=0.3;render();return;}
     if(s.wait!=null){WAIT='time';TIMER=s.wait;render();return;}
     if(s.view){WAIT='view';TIMER=2.4;render();return;}
     if(s.stretch){WAIT='stretch';G.morko.pose='grow';G.morko.sT=2.1;G.morko.mood='stern';LOCK=0.2;render();return;}
@@ -128,11 +128,11 @@ function choose(i){
   var then=typeof o.then==='function'?o.then():(o.then||[]);
   Q=[['S',o.t]].concat(then,Q);run();
 }
-function setLine(who,text){
+function setLine(who,text,o){
   var g=G;
   if(who==='N'){g.band=text;}
-  else{g.band=null;g.lines=g.lines.filter(function(l){return l.who!==who;});g.lines.push({who:who,text:text});if(g.lines.length>2)g.lines.shift();}
-  g.cur={who:who,text:text};g.curT=0;speak(who,text);
+  else{g.band=null;g.lines=g.lines.filter(function(l){return l.who!==who;});g.lines.push({who:who,text:text,big:!!(o&&o.big)});if(g.lines.length>2)g.lines.shift();}
+  g.cur={who:who,text:text,big:!!(o&&o.big)};g.curT=0;speak(who,text);
   history.push({who:who,text:text});
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
@@ -368,7 +368,11 @@ function loadProgress(){
       if(c&&typeof c==='object'&&!Array.isArray(c))chapters[i]=checkpoint(c);
     }
     if(!chapters[raw.ch])return null;
-    return {version:2,ch:raw.ch,unlocked:top,chapters:chapters};
+    // "at" remembers the short moment the player was in, so closing the tab on a phone never costs ten minutes of story.
+    var at=null,a=raw.at;
+    if(a&&a.ch===raw.ch&&typeof a.moment==='string'&&(AFTER[a.ch]||[]).indexOf(a.moment)>=0&&a.state&&typeof a.state==='object')
+      at={ch:a.ch,moment:a.moment,state:checkpoint(a.state),jobDone:!!a.jobDone};
+    return {version:2,ch:raw.ch,unlocked:top,chapters:chapters,at:at};
   }catch(e){return null;}
 }
 function saveProgress(n){
@@ -377,6 +381,13 @@ function saveProgress(n){
     chapters[n]=checkpoint(G);
     window.localStorage.setItem(SAVE_KEY,JSON.stringify({version:2,ch:n,unlocked:Math.max(n,old?old.unlocked:1),chapters:chapters}));
   }catch(e){/* Storage is optional: private/offline play must still work. */}
+}
+function saveMoment(id){
+  try{
+    var old=loadProgress();if(!old||old.ch!==G.chapter)return;
+    window.localStorage.setItem(SAVE_KEY,JSON.stringify({version:2,ch:old.ch,unlocked:old.unlocked,chapters:old.chapters,
+      at:{ch:G.chapter,moment:id,state:checkpoint(G),jobDone:!!G.jobDone}}));
+  }catch(e){}
 }
 // ---- src/29-prelude.js ----
 /* ================= the quiet before: Monday begins without Ekskyysmi ================= */
@@ -792,6 +803,14 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
     {t:'Scenario two: she isn’t angry. She’s disappointed.',then:[['H','Oh no.'],['S','I know. I shouldn’t have said it out loud. Now it’s in the room.']]},
     {t:'Scenario three: while we’re up, the archive.',then:[['S','2011. You waved at someone who was waving at someone else.'],['H','Why do you still HAVE that?'],['S','I keep everything. It’s a safety archive.']]}
   ]},
+  ['S','And if it’s none of those, I have the full list. Four: she sighs first. Five: she doesn’t sigh, which is worse. Six: there is a biscuit. They soften you up with a biscuit. Seven: the whole department is there. Eight: there is a cake. It says “goodbye”. Your name is spelled wrong. Nine: we correct the spelling. Ten: the correcting is what they remember.',{big:true}],
+  ['S','…'],
+  ['S','Who said all that?'],
+  ['H','You did. It’s blocking the window.'],
+  ['S','It’s ENORMOUS. Is that how it comes out?'],
+  ['H','Imagine being under it.'],
+  set({mood:'worry',s:1}),
+  ['S','…I’ll use a smaller font.'],
   ['H','What time is it?'],
   ['S','Three. The best time. Nobody can reject us at three.'],
   ['H','Nobody can do anything at three. That’s the problem.'],
@@ -1055,10 +1074,23 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','I know. I’ll be there.'],
   {wait:0.8}
  ]);}
-function chain(n){var out=[],fns=[null,null,scTue,scWed,scThu,scFri];for(var i=Math.max(2,n);i<=5;i++){(function(f){out.push(function(){return f();});})(fns[i]);out=out.concat(momentsAfter(i));}out.push(showWeekEnd);return out;}
-function startChapter(n){
+// chain(3) is Wednesday onwards. chain(3,'glass') picks the story up at that moment, without replaying Wednesday.
+function chain(n,from){
+  var out=[],fns=[null,null,scTue,scWed,scThu,scFri];
+  for(var i=Math.max(2,n);i<=5;i++){
+    var ms=AFTER[i]||[],k=i===n&&from?ms.indexOf(from):-1;
+    if(k<0){(function(f){out.push(function(){return f();});})(fns[i]);k=0;}
+    out=out.concat(ms.slice(k).map(interlude));
+  }
+  out.push(showWeekEnd);return out;
+}
+function startChapter(n,at){
   n=Number.isInteger(n)?clamp(n,1,5):1;
   var saved=loadProgress(),sv=saved&&saved.chapters[n]||{};
+  if(at&&at.ch===n&&n>1){   // Continue, in the middle of a chapter
+    reset(at.state.day||'B');var h=G;Object.keys(at.state).forEach(function(k){h[k]=at.state[k];});
+    h.started=true;h.jobDone=at.jobDone;h.chapter=n;newDay();Q=chain(n,at.moment);run();return;
+  }
   if(n<=1){startGame(sv.day||null,false);return;}
   reset(sv.day||'B');var g=G,c=checkpoint(sv);Object.keys(c).forEach(function(k){g[k]=c[k];});g.started=true;g.jobDone=n>4;
   Q=chain(n);run();
@@ -1138,7 +1170,7 @@ var AFTER={
 };
 var WHEN={posting:'THAT NIGHT, LATE',detail:'THE NEXT MORNING',enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'AFTERWARDS',bar:'AN EVENING',
   colleagues:'AFTER LUNCH, SOME DAY',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'THE EVENING BEFORE',voice:'LATER THAT EVENING',library:'TWENTY-THREE DAYS LATER'};
-function interlude(id){return function(){G.lab=null;G.moment=id;return LABS[id].script();};}
+function interlude(id){return function(){G.lab=null;G.moment=id;saveMoment(id);return LABS[id].script();};}
 function momentsAfter(n){return (AFTER[n]||[]).map(interlude);}
 // ---- src/34-response.js ----
 /* ================= the correct response: a window that is technically open ================= */
@@ -1800,7 +1832,8 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   function(){G.boss.friendly=true;G.boss.name='THE GROUP CHAT';sfx('turn');},
   ['N','BOSS DEFEATED. Correction: there was no boss.'],
   function(){return G.lab?[]:[['S','Year two. Somebody laughed.'],['H','Eleven people liked it.'],['S','…I’ll update the file.'],function(){var g=G;g.cards.push({kind:'good',year:'TODAY',text:'Showed eleven people a drawing. They liked the cat.',t:0,life:null,x:790,y:178,rot:-0.03});sfx('card');},{wait:2.2},closeArchive];},
-  ['S','I’m keeping the headband.']
+  ['S','I’m keeping the headband.'],
+  set({pose:'puppet',mood:'care'}),{wait:2.2},set({pose:null})   // nothing to prevent: the bird again, and this time nobody asks
  ]);}
 function drawChatlog(o){
   var log=G.fightLog||[],x=W/2-330,y=72,w=440;
@@ -1976,6 +2009,12 @@ function labEvening(){return labScene({set:'home',title:'An ordinary evening',pl
   set({mood:'calm',s:1.15}),
   addTic('—te. ♪',440,FEETY-250,{life:2.4}),{wait:1.6},
   ['S','Thank you. I couldn’t have carried half a word all evening.'],
+  set({pose:'puppet'}),{wait:1.4},
+  ['H','Is that a bird?'],
+  ['S','No.'],
+  ['H','It’s flapping.'],
+  ['S','It’s a hobby. Shadows are allowed one. Don’t tell the office.'],
+  set({pose:null}),
   ['P','Library: “A Short History of Lighthouses” is 23 days overdue.'],
   ['H','I haven’t finished it.'],
   ['S','Correct. We cannot return an unfinished book.'],
@@ -2618,6 +2657,7 @@ function update(dt,elapsed){
   var g=G,M=g.morko,Hm=g.human;g.time+=dt;LOCK=Math.max(0,LOCK-elapsed);
   if(M.coat){var coat=M.coat;coat.p=RM?(coat.buttons?1:0):approach(coat.p,coat.buttons?1:0,dt*1.7);if(coat.blink>=0)coat.blink+=dt;}
   if(M.wobble)M.wobble.t=Math.min(3.2,M.wobble.t+dt);
+  if(G.cur&&G.cur.big&&WAIT==='click'){var bb=bigBox(G.cur.text,RM?1e9:Math.floor(G.curT*55));M.sT=clamp((WALLY-(BIGTOP+bb.h)-40)/170,0.42,1.15);if(RM)M.s=M.sT;if(bb.lines.length>3)M.mood='scared';}
   if(WAIT==='time'){TIMER-=elapsed;if(TIMER<=0)run();}
   else if(WAIT==='view'&&TIMER>0){TIMER-=elapsed;if(TIMER<=0)render();}
   g.clock+=dt*g.rate;
@@ -2671,6 +2711,15 @@ function bubble(x,y,text,o){
     ctx.beginPath();ctx.moveTo(tx-8,by+h);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h);ctx.stroke();}
   var left=o.reveal==null?1e9:o.reveal;
   ctx.fillStyle=ink;for(i=0;i<lines.length&&left>0;i++){ctx.fillText(lines[i].slice(0,left),bx+13,by+8+11+i*22);left-=lines[i].length+1;}
+}
+// A bubble that grows as it is typed, until it is the biggest thing in the room. Its author did not expect that.
+var BIGW=600,BIGX=22,BIGTOP=12;   // left of the HUD rows, over the window
+function bigBox(text,reveal){ctx.font='700 24px system-ui,sans-serif';var lines=wrap(text.slice(0,Math.max(1,reveal)),BIGW-44);return {lines:lines,h:lines.length*31+24};}
+function bigBubble(text,reveal){
+  var b=bigBox(text,reveal),bx=BIGX,i;
+  ctx.textAlign='left';ctx.textBaseline='middle';
+  ctx.fillStyle='#14111d';ctx.strokeStyle='#f6f1e4';ctx.lineWidth=2.5;rr(bx,BIGTOP,BIGW,b.h,12);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#f6f1e4';for(i=0;i<b.lines.length;i++)ctx.fillText(b.lines[i],bx+22,BIGTOP+12+16+i*31);
 }
 function bubbleH(text,maxW){ctx.font='600 17px system-ui,sans-serif';return wrap(text,maxW).length*22+16;}
 function band(text,y){
@@ -2830,6 +2879,7 @@ function handTargets(q){
     case 'toast':a={x:L.x-q.shW*0.8,y:q.shY-34*q.s};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};break;
     case 'shelter':var uk=Math.max(0.8,Math.sqrt(q.s));a={x:L.x-q.shW*0.45,y:q.shY+62*q.s};b={x:q.bx+28*uk,y:q.hdY-q.hdR-4*uk};break;
     case 'coat':a={x:q.bx-32*q.s,y:q.by-28*q.s};b={x:q.bx+32*q.s,y:q.by-28*q.s};break;
+    case 'puppet':a={x:R.x+74*q.s,y:q.shY-64*q.s};b={x:R.x+92*q.s,y:q.shY-56*q.s};break;   // up in the light, over the human’s head
     case 'balance':a={x:L.x-q.shW*0.45,y:q.shY+22*q.s+q.lean};b={x:R.x+q.shW*0.45,y:q.shY+22*q.s-q.lean};break;
     case 'selfmouth':a={x:q.bx-q.hdR*0.3,y:q.hdY+q.hdR*0.45};b={x:q.bx+q.hdR*0.3,y:q.hdY+q.hdR*0.5};break;
     case 'selfeyes':a={x:q.bx-q.hdR*0.42,y:q.hdY-q.hdR*0.05};b={x:q.bx+q.hdR*0.42,y:q.hdY-q.hdR*0.05};break;
@@ -2856,6 +2906,15 @@ function morkoArms(q,ht){
   for(var i=0;i<2;i++){var h=M.h[i],s0=sh[i];
     ctx.beginPath();ctx.moveTo(s0.x,s0.y);ctx.quadraticCurveTo((s0.x+h.x)/2+(i?14:-14)*q.s,(s0.y+h.y)/2+10*q.s,h.x,h.y);ctx.stroke();
     circ(h.x,h.y,lw*0.78);ctx.fill();}
+  if(M.pose==='puppet')puppetBird((M.h[0].x+M.h[1].x)/2,(M.h[0].y+M.h[1].y)/2,q.s);
+}
+// What a shadow does when there is nothing to prevent: a bird, made of two hands.
+function puppetBird(x,y,s){
+  var f=RM?0.35:Math.sin(G.time*5.2),k=Math.max(0.8,Math.sqrt(s)),w=40*k,lift=(13+15*f)*k;
+  ctx.fillStyle=mcol();
+  ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x-w*0.5,y-lift*1.6,x-w,y-lift);ctx.quadraticCurveTo(x-w*0.45,y-2*k,x,y+6*k);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+w*0.5,y-lift*1.6,x+w,y-lift);ctx.quadraticCurveTo(x+w*0.45,y-2*k,x,y+6*k);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(x-3*k,y-2*k);ctx.lineTo(x,y-11*k);ctx.lineTo(x+3*k,y-2*k);ctx.closePath();ctx.fill();
 }
 function morkoFace(q){
   if(G.morko.coat){drawCoatFace(q);return;}
@@ -2913,6 +2972,7 @@ function drawLines(){
   var g=G,i,l,cur=g.cur&&g.cur.who;
   for(var pass=0;pass<2;pass++)for(i=0;i<g.lines.length;i++){
     l=g.lines[i];var isCur=l.who===cur;if((pass===1)!==isCur||!isCur)continue;
+    if(l.big&&l.who==='S'){bigBubble(l.text,RM?1e9:Math.floor(g.curT*55));continue;}   // drawn on every screen: it is a prop, not a caption
     if(!WIDE)continue; // on a narrow screen the panel below the scene carries the text
     if((l.who==='S'||l.who==='H')&&g.human.gone)continue;
     var n=l.text.length,mw=n>90?330:n>50?290:0,rv=Math.floor(g.curT*55);
@@ -3137,7 +3197,7 @@ function showTitle(){
   G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
   showOv('<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
    '<p class="tagline">A small moment.<br>A very long shadow.</p>'+
-   (sv?'<button class="go" type="button" data-go="cont">Continue · '+dayName(sv.ch)+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">New game</button>'
+   (sv?'<button class="go" type="button" data-go="cont">Continue · '+(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">New game</button>'
       :'<button class="go" type="button" data-go="start">New game <span aria-hidden="true">→</span></button>')+
    '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">Chapters</button>':'')+
    '<button class="link" type="button" data-go="lab">Scenario lab</button><button class="link" type="button" data-go="about">About</button></div>');
@@ -3178,7 +3238,7 @@ ov.addEventListener('click',function(e){
   if(go==='chapters'){showChapters();return;}
   if(go==='about'){showAbout();return;}
   if(go==='start')startGame(null,false);
-  else if(go==='cont'){var sv=loadProgress();startChapter(sv?sv.ch:1);}
+  else if(go==='cont'){var sv=loadProgress();startChapter(sv?sv.ch:1,sv&&sv.at);}
   else if(go==='next'){hideOv();G.ended=false;G.dayEnd=false;Q=chain(2);run();}
   else if(go==='menu'){reset(null);showTitle();}
   else if(go==='again'){TRIES++;startGame(null,true);}

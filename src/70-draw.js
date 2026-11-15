@@ -15,6 +15,15 @@ function bubble(x,y,text,o){
   var left=o.reveal==null?1e9:o.reveal;
   ctx.fillStyle=ink;for(i=0;i<lines.length&&left>0;i++){ctx.fillText(lines[i].slice(0,left),bx+13,by+8+11+i*22);left-=lines[i].length+1;}
 }
+// A bubble that grows as it is typed, until it is the biggest thing in the room. Its author did not expect that.
+var BIGW=600,BIGX=22,BIGTOP=12;   // left of the HUD rows, over the window
+function bigBox(text,reveal){ctx.font='700 24px system-ui,sans-serif';var lines=wrap(text.slice(0,Math.max(1,reveal)),BIGW-44);return {lines:lines,h:lines.length*31+24};}
+function bigBubble(text,reveal){
+  var b=bigBox(text,reveal),bx=BIGX,i;
+  ctx.textAlign='left';ctx.textBaseline='middle';
+  ctx.fillStyle='#14111d';ctx.strokeStyle='#f6f1e4';ctx.lineWidth=2.5;rr(bx,BIGTOP,BIGW,b.h,12);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#f6f1e4';for(i=0;i<b.lines.length;i++)ctx.fillText(b.lines[i],bx+22,BIGTOP+12+16+i*31);
+}
 function bubbleH(text,maxW){ctx.font='600 17px system-ui,sans-serif';return wrap(text,maxW).length*22+16;}
 function band(text,y){
   ctx.font='500 18px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
@@ -173,6 +182,7 @@ function handTargets(q){
     case 'toast':a={x:L.x-q.shW*0.8,y:q.shY-34*q.s};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};break;
     case 'shelter':var uk=Math.max(0.8,Math.sqrt(q.s));a={x:L.x-q.shW*0.45,y:q.shY+62*q.s};b={x:q.bx+28*uk,y:q.hdY-q.hdR-4*uk};break;
     case 'coat':a={x:q.bx-32*q.s,y:q.by-28*q.s};b={x:q.bx+32*q.s,y:q.by-28*q.s};break;
+    case 'puppet':a={x:R.x+74*q.s,y:q.shY-64*q.s};b={x:R.x+92*q.s,y:q.shY-56*q.s};break;   // up in the light, over the human’s head
     case 'balance':a={x:L.x-q.shW*0.45,y:q.shY+22*q.s+q.lean};b={x:R.x+q.shW*0.45,y:q.shY+22*q.s-q.lean};break;
     case 'selfmouth':a={x:q.bx-q.hdR*0.3,y:q.hdY+q.hdR*0.45};b={x:q.bx+q.hdR*0.3,y:q.hdY+q.hdR*0.5};break;
     case 'selfeyes':a={x:q.bx-q.hdR*0.42,y:q.hdY-q.hdR*0.05};b={x:q.bx+q.hdR*0.42,y:q.hdY-q.hdR*0.05};break;
@@ -199,6 +209,15 @@ function morkoArms(q,ht){
   for(var i=0;i<2;i++){var h=M.h[i],s0=sh[i];
     ctx.beginPath();ctx.moveTo(s0.x,s0.y);ctx.quadraticCurveTo((s0.x+h.x)/2+(i?14:-14)*q.s,(s0.y+h.y)/2+10*q.s,h.x,h.y);ctx.stroke();
     circ(h.x,h.y,lw*0.78);ctx.fill();}
+  if(M.pose==='puppet')puppetBird((M.h[0].x+M.h[1].x)/2,(M.h[0].y+M.h[1].y)/2,q.s);
+}
+// What a shadow does when there is nothing to prevent: a bird, made of two hands.
+function puppetBird(x,y,s){
+  var f=RM?0.35:Math.sin(G.time*5.2),k=Math.max(0.8,Math.sqrt(s)),w=40*k,lift=(13+15*f)*k;
+  ctx.fillStyle=mcol();
+  ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x-w*0.5,y-lift*1.6,x-w,y-lift);ctx.quadraticCurveTo(x-w*0.45,y-2*k,x,y+6*k);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+w*0.5,y-lift*1.6,x+w,y-lift);ctx.quadraticCurveTo(x+w*0.45,y-2*k,x,y+6*k);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(x-3*k,y-2*k);ctx.lineTo(x,y-11*k);ctx.lineTo(x+3*k,y-2*k);ctx.closePath();ctx.fill();
 }
 function morkoFace(q){
   if(G.morko.coat){drawCoatFace(q);return;}
@@ -256,6 +275,7 @@ function drawLines(){
   var g=G,i,l,cur=g.cur&&g.cur.who;
   for(var pass=0;pass<2;pass++)for(i=0;i<g.lines.length;i++){
     l=g.lines[i];var isCur=l.who===cur;if((pass===1)!==isCur||!isCur)continue;
+    if(l.big&&l.who==='S'){bigBubble(l.text,RM?1e9:Math.floor(g.curT*55));continue;}   // drawn on every screen: it is a prop, not a caption
     if(!WIDE)continue; // on a narrow screen the panel below the scene carries the text
     if((l.who==='S'||l.who==='H')&&g.human.gone)continue;
     var n=l.text.length,mw=n>90?330:n>50?290:0,rv=Math.floor(g.curT*55);

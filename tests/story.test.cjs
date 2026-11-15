@@ -209,6 +209,25 @@ assert.match(T.history().map(x=>x.text).join('\n'),/I checked\. Tuesday works/);
 T.start('A',false);saved=JSON.parse(savedItems.get(saveKey));assert.equal(saved.ch,1);assert.equal(saved.unlocked,5);
 T.chapter(5);assert.equal(T.G.day,'C','a new Monday must not rewrite a previous Friday');
 T.chapter(1);assert.equal(T.G.day,'A','replaying Monday keeps the saved kind of Monday');
+// Closing the tab in the middle of a chapter: Continue picks the story up at that moment, with its history.
+function stepUntil(done){let n=0;while(!done()&&n++<6000){T.unlock();T.draw();const st=T.state();
+  if(st==='click')T.advance();else if(st==='view'){T.advance();T.tick(6);T.advance();}else if(st==='stretch'||st==='hold')T.advance();
+  else if(st==='choice')T.choose(T.options().findIndex(o=>!o.off));else T.tick(1);}assert.ok(done(),'reached');}
+T.chapter(3);stepUntil(()=>T.G.moment==='sometime'&&T.state()==='click');
+{const yes=T.G.yes;assert.ok(yes>=3);saved=JSON.parse(savedItems.get(saveKey));
+ assert.equal(saved.ch,3);assert.equal(saved.at.moment,'sometime');assert.equal(saved.at.state.yes,yes);
+ T.reset();T.title();assert.match(element('ov').innerHTML,/Continue · Sometime\./);
+ fire(element('ov'),'click',{target:{getAttribute(k){return k==='data-go'?'cont':null}}});
+ assert.equal(T.G.chapter,3);assert.equal(T.G.yes,yes,'the week so far comes back');assert.equal(T.G.jobDone,false);
+ stepUntil(()=>T.G.moment==='sometime'&&T.state()==='click');
+ playOn(()=>0);const rt=T.history().map(x=>x.text).join('\n');
+ assert.doesNotMatch(rt,/rejection exchange programme|falls off a printer/,'nothing before the moment is replayed');
+ assert.match(rt,/Half past four WHEN/);assert.match(rt,/busy near each other/);assert.match(rt,/Seen 17:31/);assert.match(rt,/I’ll update the file/);
+ // A resume point from a different chapter, or for a moment that no longer exists, is ignored rather than trusted.
+ const raw=JSON.parse(savedItems.get(saveKey));raw.at.moment='deleted-scene';savedItems.set(saveKey,JSON.stringify(raw));
+ T.reset();T.title();assert.match(element('ov').innerHTML,/Continue · For now|Continue · /);assert.doesNotMatch(element('ov').innerHTML,/undefined/);
+ raw.at={ch:2,moment:'enhance',state:{}};savedItems.set(saveKey,JSON.stringify(raw));T.reset();T.title();assert.doesNotMatch(element('ov').innerHTML,/Continue · Enhance/);}
+savedItems.set(saveKey,JSON.stringify(checkpointFixture));
 // Legacy saves migrate when next written; bad or unavailable storage never blocks play.
 savedItems.set(saveKey,JSON.stringify({ch:4,day:'C',real:1,lunch:0,leak:'exit',fear:3}));
 T.chapter(4);assert.equal(T.G.day,'C');assert.equal(T.G.real,1);
@@ -263,6 +282,14 @@ function playLab(id,mode){
 }
 let tr=playLab('enhance');
 assert.match(tr,/ENHANCE/);assert.match(tr,/The eyebrow was HUNGER/);assert.match(tr,/WING for eyebrows/);assert.equal(T.G.zoom,null);
+// The bubble that gets out of hand (Tuesday, 03:07), and what a shadow does when there is nothing to prevent.
+T.chapter(2);stepUntil(()=>T.G.cur&&T.G.cur.big);
+{const before=1.15;for(let i=0;i<12;i++)T.tick(1);T.draw();
+ assert.ok(T.G.morko.sT<1&&T.G.morko.sT<before,'Ekskyysmi shrinks under its own bubble: '+T.G.morko.sT);assert.equal(T.G.morko.mood,'scared');
+ T.unlock();T.advance();T.unlock();T.advance();assert.equal(T.G.cur.text,'Who said all that?');assert.equal(T.G.cur.big,false);
+ stepUntil(()=>T.G.cur&&T.G.cur.text==='…I’ll use a smaller font.');assert.equal(T.G.morko.sT,1);}
+T.lab('evening');stepUntil(()=>T.G.morko.pose==='puppet');T.draw();stepUntil(()=>T.G.cur&&/Shadows are allowed one/.test(T.G.cur.text));
+T.unlock();T.advance();assert.notEqual(T.G.morko.pose,'puppet','the bird is put away');
 tr=playLab('sometime');
 assert.match(tr,/grab a coffee sometime/);assert.match(tr,/hadn’t been picked yet/);assert.equal(T.G.someT,'form');
 assert.match(tr,/Half past four WHEN/);assert.match(tr,/Booking it is MY department/);assert.match(tr,/His watch had no hands/);assert.equal(T.G.yT,0,'Eero’s shadow leaves to catch him up');

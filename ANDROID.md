@@ -65,3 +65,9 @@ Se kokoaa pelin, kopioi sen kansioon `www/` ja päivittää Android-projektin.
 ## Vaihtoehto ilman Android Studiota
 
 Pelissä on nyt myös `manifest.webmanifest` (koko ruutu, vaakasuunta). Jos peli on jossain https-osoitteessa, sen voi lisätä Chromesta puhelimen aloitusnäytölle. Tätä en ole testannut.
+
+## Lisäys 0.27
+
+- `assets/share.png` on verkkoversion linkkikuva. `tools/www.cjs` jättää sen pois sovelluksesta.
+- Peli tallentaa nyt myös välihetken (`at` tallennuksessa), joten sovelluksen sulkeminen kesken luvun ei palauta luvun alkuun.
+- Julkaisun tarkistuslista (laitetesti, Play-lomakkeet, 12 testaajan sääntö uusille henkilötileille): [SEURAAVAKSI.md](SEURAAVAKSI.md) → Tekninen tarkistuslista.
