@@ -5,7 +5,7 @@ function lampBase(){
   return{s:s/sw,off:off/sw};
 }
 function updHands(dt){
-  var q=geom(),ht=handTargets(q),M=G.morko,k=RM&&(M.coat||M.wobble||(G.bar&&G.bar.sdrink))?1:Math.min(1,10*dt);
+  var q=geom(),ht=handTargets(q),M=G.morko,k=stampToolVisible()||RM&&(M.coat||M.wobble||(G.bar&&G.bar.sdrink))?1:Math.min(1,10*dt);
   M.h[0].x+=(ht.a.x-M.h[0].x)*k;M.h[0].y+=(ht.a.y-M.h[0].y)*k;
   M.h[1].x+=(ht.b.x-M.h[1].x)*k;M.h[1].y+=(ht.b.y-M.h[1].y)*k;
 }
@@ -30,7 +30,7 @@ function update(dt,elapsed){
   for(var ci=g.cards.length-1;ci>=0;ci--){g.cards[ci].t+=dt;if(g.cards[ci].life!=null&&g.cards[ci].t>g.cards[ci].life)g.cards.splice(ci,1);}
   g.pulse=Math.max(0,g.pulse-dt*0.3);g.shake=Math.max(0,g.shake-dt*2.6);
   if(g.zoom)g.zoom.t+=dt;
-  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);
+  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);
   var hk=(g.planText||'')+'|'+g.jobDone+'|'+g.hud+'|'+g.chapter+'|'+g.lab+'|'+g.yes+'|'+(g.w?1:0);if(hk!==g.hudKey){g.hudKey=hk;g.hudAge=0;}g.hudAge=(g.hudAge||0)+dt;
   stepTics(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
   if(WAIT==='fight'&&g.fight&&!paused)stepFight(elapsed);

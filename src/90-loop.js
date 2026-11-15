@@ -2,7 +2,7 @@
 var last=0;
 function frame(ts){
   var elapsed=clamp((ts-last)/1000||0,0,1),dt=Math.min(elapsed,0.05);last=Math.max(last,ts);
-  if(!paused)update(dt,elapsed);
+  if(!paused&&!appHidden)update(dt,elapsed);
   draw();
   window.requestAnimationFrame(frame);
 }

@@ -2,7 +2,7 @@
 
 15.11.2026 · Claude. Tämä tiedosto korvaa [TOTEUTUKSEN_SUUNNITTELU.md](TOTEUTUKSEN_SUUNNITTELU.md):n työlistana. Lista on järjestetty sen mukaan, mikä vaikuttaa eniten siihen, että peli toimii ja että siitä kerrotaan eteenpäin.
 
-## Missä ollaan (0.27)
+## Missä ollaan (0.29)
 
 - **Peli:** viisi päivää (Oh, hi · Quick chat? · Could you just… · Seen. · For now) ja niiden välissä yksitoista lyhyttä hetkeä. Yksi läpipeluu kestää lukutahdissa noin 38 minuuttia. Selainpeli toimii myös puhelimella vaakasuunnassa. Android-kuori on valmiina, mutta sitä ei ole julkaistu.
 - **Rakenne on mitattu ja järjestetty** (Weilandin käännekohdat, Trubyn perusaskeleet): ks. [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Rakenne.
@@ -66,12 +66,12 @@ Seuraava: **Riitan varjo** *Not now.* -hetkeen (jongleeraa yhtätoista asiaa, �
 
 ## 6. Tekninen tarkistuslista: netti ja Android
 
-Kunnossa (tarkistettu 0.27): vaakanäkymä ja turva-alueet puhelimella, pystyasento, Androidin takaisin-nappi, tauko kun sovellus menee taustalle, äänen käynnistys ensimmäisestä kosketuksesta, vähennetty liike, näppäimistö, ruudunlukijan teksti, jatkaminen kesken luvun, linkin esikatselukuva.
+Kunnossa (tarkistettu 0.29): vaakanäkymä ja turva-alueet puhelimella, pystyasento, Androidin takaisin-nappi (sulkee ensin valikon tai vahvistuksen), tauko ja äänten vaimennus kun puhelu, näytön lukitus tai sovelluksen vaihto keskeyttää, sormen pito ruudulla katkeaa taukoon, äänen käynnistys ensimmäisestä kosketuksesta, vähennetty liike, tekstin koko, hidastettu vastausikkuna, näppäimistö, ruudunlukijan teksti, jatkaminen kesken luvun, linkin esikatselukuva, kaksipalstainen valikko, APK:n versionumero seuraa `package.json`:ia, ja `npm run android:check` vertaa paketoidut tiedostot lähteisiin.
 
 Tekemättä, tärkeysjärjestyksessä:
 
-1. **Oikea laite.** Kaikki tähän asti on testattu emuloidussa selaimessa. Yksi läpipeluu oikealla Android-puhelimella (selain ja Capacitor-sovellus) ja yhdellä iPhonella: äänet, kosketus suurennuslasissa ja venytyksessä, akun lämpeneminen.
-2. **Tekstin koko ja nopeus.** Peli on lähes pelkkää lukemista. Asetus isommalle tekstille ja *Slow reality* (pidempi vastausikkuna) ovat saavutettavuuden kaksi tärkeintä.
+1. **Oikea laite.** APK kääntyy, läpäisee Androidin lint-tarkistuksen ja asentuu emulaattoriin (Codex, 0.28.1), ja sen voi jakaa tiedostona. Yhä tekemättä: läpipeluu oikealla puhelimella ja yhdellä iPhonella — äänet, kosketus suurennuslasissa ja venytyksessä, akun lämpeneminen.
+2. ~~**Tekstin koko ja nopeus.**~~ Tehty 0.29: *Text: normal / large / largest* ja *Slow reality* (vastausikkuna noin 9 s).
 3. **Kieli.** Vitsit nojaavat englantiin (”fine”, ”sometime”, ”excuse me”). Suomennos on uudelleenkirjoitus, ei käännös, ja repliikit ovat koodin seassa. Jos suomi halutaan, tekstit pitää ensin irrottaa omaan tiedostoonsa.
 4. **Offline selaimessa.** Android-sovellus toimii ilman verkkoa, selainversio ei. Pieni service worker korjaisi sen, mutta se kannattaa lisätä vasta, kun versiot eivät enää vaihdu päivittäin (vanha versio jää helposti välimuistiin).
 5. **Emme tiedä, missä pelaajat lopettavat.** Analytiikkaa ei ole. Yksityisyyden kannalta se on hyvä, kehityksen kannalta sokea piste. Pelaajatesti (kohta 1) korvaa tämän toistaiseksi.

@@ -4,6 +4,9 @@
   "webDir": "www",
   "backgroundColor": "#12171b",
   "android": {
-    "backgroundColor": "#12171b"
-  }
+    "backgroundColor": "#12171b",
+    "adjustMarginsForEdgeToEdge": "auto",
+    "minWebViewVersion": 108
+  },
+  "server": { "errorPath": "webview-error.html" }
 }

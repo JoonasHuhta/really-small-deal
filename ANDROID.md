@@ -71,3 +71,11 @@ Pelissä on nyt myös `manifest.webmanifest` (koko ruutu, vaakasuunta). Jos peli
 - `assets/share.png` on verkkoversion linkkikuva. `tools/www.cjs` jättää sen pois sovelluksesta.
 - Peli tallentaa nyt myös välihetken (`at` tallennuksessa), joten sovelluksen sulkeminen kesken luvun ei palauta luvun alkuun.
 - Julkaisun tarkistuslista (laitetesti, Play-lomakkeet, 12 testaajan sääntö uusille henkilötileille): [SEURAAVAKSI.md](SEURAAVAKSI.md) → Tekninen tarkistuslista.
+
+## Lisäys 0.28–0.29
+
+- `npm run android:sync` tekee nyt kaiken: `www/`, Capacitorin synkronoinnin, `tools/android-patch.cjs`-korjaukset ja `tools/android-check.cjs`-tarkistuksen. Olemassa olevaa `android/`-kansiota ei koskaan poisteta.
+- `npm run android:check` vertaa APK:hon paketoidut tiedostot lähteisiin ja tarkistaa, ettei peli lataa mitään verkosta, että offline-virhesivu on mukana, että App-liitännäinen on paketissa ja että versionumero vastaa `package.json`:ia.
+- Sovelluksen `versionCode` ja `versionName` tulevat automaattisesti `package.json`:ista, joten puhelimessa näkee, mikä versio on asennettuna.
+- `webview-error.html` näkyy, jos laitteen WebView on liian vanha (vaatimus 108).
+- Valikko on kaksipalstainen vaakanäytöllä: kahdeksan nappia ei mahtunut yhteen pylvääseen 360 px korkealla näytöllä.

@@ -1,24 +1,28 @@
 {
   "name": "really-small-deal",
-  "version": "0.27.0",
+  "version": "0.29.0",
   "private": true,
   "description": "Really Small Deal. A small moment. A very long shadow.",
   "scripts": {
     "build": "node tools/build.cjs",
     "test": "node tools/build.cjs --check && node tests/story.test.cjs",
     "www": "node tools/build.cjs && node tools/www.cjs",
-    "android:init": "npm run www && npx cap add android && node tools/android-patch.cjs && npx cap sync android",
-    "android:sync": "npm run www && npx cap sync android && node tools/android-patch.cjs",
+    "android:init": "npm run android:sync",
+    "android:sync": "npm run www && node tools/android-prepare.cjs && node tools/android-check.cjs",
+    "android:check": "node tools/android-check.cjs",
     "android:open": "npx cap open android",
     "android:run": "npm run android:sync && npx cap run android",
     "android:icons": "npx @capacitor/assets generate --android --assetPath resources --iconBackgroundColor \"#202830\" --splashBackgroundColor \"#12171b\""
   },
+  "engines": { "node": ">=22.18.0" },
+  "overrides": { "xcode": { "uuid": "11.1.1" } },
   "dependencies": {
-    "@capacitor/android": "^7.0.0",
-    "@capacitor/app": "^7.0.0",
-    "@capacitor/core": "^7.0.0"
+    "@capacitor/android": "7.6.10",
+    "@capacitor/app": "7.1.2",
+    "@capacitor/core": "7.6.10"
   },
   "devDependencies": {
-    "@capacitor/cli": "^7.0.0"
+    "@capacitor/assets": "4.0.0",
+    "@capacitor/cli": "7.6.10"
   }
 }

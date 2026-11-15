@@ -8,11 +8,25 @@ Ei asennusta, ei kirjautumista. Toimii puhelimella vaakasuunnassa ja tietokoneel
 
 ## Pelaa paikallisesti
 
-Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.27 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
+Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
 
 **Pelin ydin (14.11.):** varjo ei opeta eikä anna vinkkejä, se vain yrittää suojella, kuten AwA:n susi. Huumori syntyy mittakaavasta: sisällä katastrofi, ulkona kaksi sekuntia. Vitsit kohdistuvat varjon byrokratiaan, arkistoon, välimerkkeihin, ylisuojeluun ja omaan arvokkuuteen, eivät ihmisen kipuun eikä toisten aitoon julmuuteen. Päämäärä on, että pelaaja nauraa, tunnistaa itsensä ja näkee lopussa suhteen muuttuvan: korjaamisesta pysymiseen.
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
+
+Versio 0.29 (Claude, 15.11.2026): **kaksi asetusta, jotka pelaaja saattaa tarvita.**
+
+- **Text: normal / large / largest.** Kaikki luettava teksti (repliikit, valinnat, keskustelupäiväkirja) skaalautuu yhdellä napilla. Peli on lähes pelkkää lukemista, joten tämä oli saavutettavuuden tärkein puute. Valinta muistetaan.
+- **Slow reality.** Oikean vastauksen ikkuna pitenee 2,8 sekunnista noin yhdeksään. Vitsi säilyy: ikkunan voi yhä missata, ja missaaminen on yhä tarina. Salainen lounaspolku ei enää vaadi nopeita sormia.
+- **Valikko on kaksipalstainen** puhelimen vaakanäkymässä. Kahdeksan nappia ei mahtunut enää yhteen pylvääseen 360 px korkealla näytöllä (osa jäi ruudun ulkopuolelle); nyt ne mahtuvat ilman vieritystä.
+- **Leima siirtyi rintakehälle.** Aiemmin se peitti ihmisen kasvot. Vitsi on kasvoissa, ei paperityössä.
+- Asettelu tarkistettu uudelleen viidellä puhelinkoolla, myös isoimmalla tekstillä.
+
+Versio 0.28 (15.11.2026): **Ekskyysmin leimasin.**
+
+- **Rejection prevented.** Ekskyysmi nostaa leimasimen ja lyö ihmisen päälle vinon, punaisen leiman. Lyhyt kuiva ääni kuuluu osumassa. Leima korvaa aiemman pienen ”handled”-ilmoituksen: se on varjon oma julistus, jonka ihminen voi heti kyseenalaistaa.
+- **Perjantaina sama leimasin jää ilmaan.** ”I’ve got a verdict ready.” – ”I know they are.” Varjo laskee välineen pois. Ei jälkeä, ääntä tai uutta repliikkiä.
+- Testattu leiman ajoitus, tauko, vähennetty liike, hidas lukeminen ja kohtauksen vaihto. Leimasin ei muuta valintoja tai tallennuksen rakennetta. Piirto ja ajoitus ovat tiedostossa `src/58-stamp.js`.
 
 Versio 0.27 (Claude, 15.11.2026): **puhelinkäyttö, jakaminen ja kaksi uutta elettä.**
 
@@ -229,7 +243,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.27, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.29, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

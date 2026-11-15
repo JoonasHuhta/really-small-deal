@@ -2,9 +2,14 @@
 var AC=null,soundOn=true,voiceNodes=[];
 try{soundOn=window.localStorage.getItem('ekskyysmi.sound')!=='off';}catch(e){}
 function audio(){
-  if(!soundOn)return null;var A=window.AudioContext||window.webkitAudioContext;if(!A)return null;
+  if(!soundOn||paused||appHidden)return null;var A=window.AudioContext||window.webkitAudioContext;if(!A)return null;
   if(!AC){try{AC=new A();}catch(e){return null;}}
-  if(AC.state==='suspended'&&AC.resume)AC.resume();return AC;
+  if(AC.state==='suspended')syncAudioState();return AC;
+}
+function syncAudioState(){
+  if(!AC)return;
+  var method=paused||appHidden||!soundOn?'suspend':'resume';
+  try{if(AC[method]){var p=AC[method]();if(p&&p.catch)p.catch(function(){});}}catch(e){}
 }
 function tone(f,t0,dur,type,vol,f2){
   var o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t0);
@@ -47,6 +52,7 @@ function sfx(k){
   var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;
   if(k==='hit'){tone(120,t,0.4,'sine',0.24,42);tone(900,t,0.06,'square',0.025,300);for(var hb=0;hb<3;hb++){tone(62,t+0.6+hb*0.75,0.13,'sine',0.14-hb*0.03);tone(54,t+0.78+hb*0.75,0.13,'sine',0.1-hb*0.02);}}
   else if(k==='swat'){tone(900,t,0.12,'triangle',0.07,180);tone(240,t+0.02,0.08,'square',0.02,120);}
+  else if(k==='stamp'){tone(150,t,0.09,'triangle',0.08,65);tone(780,t,0.025,'square',0.018,260);}
   else if(k==='good'){tone(660,t,0.08,'sine',0.05);tone(990,t+0.09,0.14,'sine',0.05);}
   else if(k==='enhance'){tone(300,t,0.3,'square',0.03,1400);tone(1400,t+0.32,0.08,'square',0.03);}
   else if(k==='zap'){tone(110,t,0.32,'square',0.05,55);tone(2600,t,0.05,'sawtooth',0.04,400);tone(1900,t+0.07,0.04,'square',0.03,260);tone(70,t+0.12,0.4,'sine',0.16,40);}

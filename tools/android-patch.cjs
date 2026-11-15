@@ -14,3 +14,11 @@ if(!/android:windowFullscreen/.test(s)){
   if(!re.test(s))throw new Error('AppTheme.NoActionBar not found in styles.xml');
   s=s.replace(re,'$1\n        <item name="android:windowFullscreen">true</item>');fs.writeFileSync(st,s);console.log('styles.xml: status bar hidden.');
 }else console.log('styles.xml: fullscreen already set.');
+// Android version follows package.json, so APK updates can be distinguished on a phone.
+const pkg=require('../package.json'),version=pkg.version.split('.').map(Number);
+if(version.length!==3||version.some(n=>!Number.isInteger(n)||n<0||n>=1000))throw new Error('Invalid app version');
+const code=version[0]*1000000+version[1]*1000+version[2];
+const gradle=path.join(app,'..','..','build.gradle');
+let g=fs.readFileSync(gradle,'utf8');
+g=g.replace(/versionCode\s+\d+/,'versionCode '+code).replace(/versionName\s+"[^"]+"/,'versionName "'+pkg.version+'"');
+fs.writeFileSync(gradle,g);

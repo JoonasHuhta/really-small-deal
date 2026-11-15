@@ -94,7 +94,7 @@ window.addEventListener('keydown',function(e){
   }else if((e.key==='f'||e.key==='F')&&tag!=='INPUT'){toggleFull();}else if(e.key>='1'&&e.key<='4'&&tag!=='INPUT'){choose(+e.key-1);}
   else if(e.key==='p'||e.key==='P'){togglePause();}
 });
-function syncPause(){if(paused)stopVoice();document.getElementById('pause').textContent=paused?'Resume':'Pause';document.body.classList.toggle('is-paused',paused);}
+function syncPause(){if(paused||appHidden){stopVoice();holdUp();dragging=false;}syncAudioState();document.getElementById('pause').textContent=paused?'Resume':'Pause';document.body.classList.toggle('is-paused',paused);}
 function togglePause(){if(!G.started||G.ended||logDialog.open||ov.classList.contains('on'))return;paused=!paused;if(!paused)G.awayNote=null;syncPause();}
 document.getElementById('pause').addEventListener('click',togglePause);
 document.getElementById('restart').addEventListener('click',function(){
@@ -112,19 +112,46 @@ document.getElementById('journal').addEventListener('click',function(){
 });
 document.getElementById('close-log').addEventListener('click',function(){logDialog.close();});
 logDialog.addEventListener('close',function(){paused=modalWasPaused;syncPause();document.getElementById('journal').focus();});
+function textUI(){
+  var b=document.getElementById('textsize');
+  b.textContent='Text: '+['normal','large','largest'][textStep];
+  document.documentElement.style.setProperty('--ts',TEXT_STEPS[textStep]);
+}
+document.getElementById('textsize').addEventListener('click',function(){
+  textStep=(textStep+1)%TEXT_STEPS.length;try{window.localStorage.setItem('ekskyysmi.text',String(textStep));}catch(e){}
+  textUI();sfx('pick');
+});
+textUI();
+function slowUI(){
+  var b=document.getElementById('slow');b.setAttribute('aria-pressed',String(slowReality));
+  b.textContent=slowReality?'Slow reality: on':'Slow reality';
+  b.title=slowReality?'The window to respond correctly lasts about nine seconds.':'Give yourself about nine seconds to respond correctly.';
+}
+document.getElementById('slow').addEventListener('click',function(){
+  slowReality=!slowReality;try{window.localStorage.setItem('ekskyysmi.slow',slowReality?'on':'off');}catch(e){}
+  slowUI();sfx('pick');
+});
+slowUI();
 function motionUI(){document.getElementById('motion').setAttribute('aria-pressed',String(RM));document.body.classList.toggle('reduce-motion',RM);}
 document.getElementById('motion').addEventListener('click',function(){RM=!RM;motionUI();});
 motionUI();
-document.getElementById('sound').addEventListener('click',function(){soundOn=!soundOn;if(!soundOn){stopVoice();var mn=musicName;music(null);musicName=mn;}else{preloadSounds();var mn2=musicName;musicName=null;music(mn2);}try{window.localStorage.setItem('ekskyysmi.sound',soundOn?'on':'off');}catch(e){}soundUI();if(soundOn)sfx('pick');});
+document.getElementById('sound').addEventListener('click',function(){soundOn=!soundOn;if(!soundOn){stopVoice();var mn=musicName;music(null);musicName=mn;}else{preloadSounds();var mn2=musicName;musicName=null;music(mn2);}try{window.localStorage.setItem('ekskyysmi.sound',soundOn?'on':'off');}catch(e){}soundUI();syncAudioState();if(soundOn)sfx('pick');});
 soundUI();
 function backButton(){
   if(logDialog.open){logDialog.close();return 'log';}
-  if(!G.started||G.ended){if(ov.innerHTML.indexOf('data-go="start"')>=0)return 'exit';reset(null);showTitle();return 'title';}
+  if(ov.dataset.kind==='restart'&&ov.classList.contains('on')){hideOv();paused=modalWasPaused;syncPause();return 'cancel';}
+  if(document.body.classList.contains('menu-open')){setMenu(false);return 'menu';}
+  if(!G.started||G.ended){if(ov.dataset.kind==='title'&&ov.classList.contains('on'))return 'exit';reset(null);showTitle();return 'title';}
   if(paused){paused=false;syncPause();reset(null);showTitle();return 'title';}
   togglePause();return 'pause';
 }
 var CAP=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
-if(CAP&&CAP.addListener)CAP.addListener('backButton',function(){if(backButton()==='exit'&&CAP.exitApp)CAP.exitApp();});
+if(CAP&&CAP.addListener){
+  CAP.addListener('backButton',function(){if(backButton()==='exit'&&CAP.exitApp)CAP.exitApp();});
+  CAP.addListener('pause',function(){nativePaused=true;appVisibility();});
+  CAP.addListener('resume',function(){nativePaused=false;appVisibility();});
+  CAP.addListener('appStateChange',function(s){nativePaused=!s.isActive;appVisibility();});
+}
 /* ================= full screen and the immersive layout =================
    The scene fills the screen on a phone held sideways, and whenever the player asks for full screen.
    One class on <html> drives it; index.html sets it before first paint so phones never flash the wide layout. */
@@ -159,4 +186,15 @@ if(menuBtn&&menuBtn.addEventListener){
 }
 var fullBtn=document.getElementById('full');
 if(fullBtn){if(fullSupported())fullBtn.addEventListener('click',toggleFull);else fullBtn.remove();}
-document.addEventListener('visibilitychange',function(){if(document.hidden){goneAway();if(!paused)togglePause();}else cameBack();});
+// Android onPause can arrive before visibilitychange (a call, screen lock or app switch).
+// Keep the two signals separate: returning never resumes the story without the player's tap.
+function appVisibility(){
+  var hidden=!!document.hidden||nativePaused;if(hidden===appHidden)return;appHidden=hidden;
+  if(hidden){
+    goneAway();holdUp();dragging=false;setMenu(false);
+    if(G&&G.started&&!G.ended)paused=true;
+    if(logDialog.open||ov.dataset.kind==='restart'&&ov.classList.contains('on'))modalWasPaused=true;
+  }else cameBack();
+  syncPause();
+}
+document.addEventListener('visibilitychange',appVisibility);

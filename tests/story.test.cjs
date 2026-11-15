@@ -19,13 +19,17 @@ function element(id){
     classList:{add(x){classes.add(x)},remove(x){classes.delete(x)},contains(x){return classes.has(x)},toggle(x,v){v??=!classes.has(x);v?classes.add(x):classes.delete(x)}},
     addEventListener(k,f){(this.events[k]??=[]).push(f)},setAttribute(k,v){this[k]=v},getAttribute(k){return this[k]},
     getContext(){return ctx},getBoundingClientRect(){return{top:0,left:0,width:960,height:540}},setPointerCapture(){},
+    style:{props:{},setProperty(k,v){this.props[k]=v}},
     querySelector(){return element('focus')},focus(){},showModal(){this.open=true},close(){this.open=false;fire(this,'close',{})}};
+  Object.defineProperty(el,'className',{get(){return [...classes].join(' ')},set(value){classes.clear();for(const c of value.split(/\s+/))if(c)classes.add(c)}});
   els.set(id,el);return el;
 }
 function fire(el,event,payload){for(const fn of el.events[event]??[])fn(payload)}
 const document={getElementById:element,body:element('body'),documentElement:Object.assign(element('html'),{requestFullscreen(){}}),hidden:false,events:{},addEventListener(k,f){(this.events[k]??=[]).push(f)}};
 const savedItems=new Map();
 const window={localStorage:{getItem(k){return savedItems.get(k)??null},setItem(k,v){savedItems.set(k,String(v))}},devicePixelRatio:1,events:{},matchMedia(q){const narrow=/max-height/.test(q);return{get matches(){return narrow?!!window.__narrow:false},addEventListener(){},addListener(){}}},requestAnimationFrame(){},addEventListener(k,f){(this.events[k]??=[]).push(f)}};
+const nativeListeners={};let nativeExits=0;
+window.Capacitor={Plugins:{App:{addListener(k,f){nativeListeners[k]=f;},exitApp(){nativeExits++;}}}};
 const sandbox={window,document,console,Math};
 vm.runInNewContext(fs.readFileSync(path.join(root,'assets/game.js'),'utf8'),sandbox);
 const T=window.__T;
@@ -209,6 +213,20 @@ assert.match(T.history().map(x=>x.text).join('\n'),/I checked\. Tuesday works/);
 T.start('A',false);saved=JSON.parse(savedItems.get(saveKey));assert.equal(saved.ch,1);assert.equal(saved.unlocked,5);
 T.chapter(5);assert.equal(T.G.day,'C','a new Monday must not rewrite a previous Friday');
 T.chapter(1);assert.equal(T.G.day,'A','replaying Monday keeps the saved kind of Monday');
+// Two settings a reader may need: bigger text, and a response window that is survivable.
+{const t=element('textsize'),w=element('slow'),html=document.documentElement;
+ assert.equal(t.textContent,'Text: normal');assert.equal(html.style.props['--ts'],1);
+ fire(t,'click',{});assert.equal(t.textContent,'Text: large');assert.ok(html.style.props['--ts']>1);
+ assert.equal(savedItems.get('ekskyysmi.text'),'1');
+ fire(t,'click',{});fire(t,'click',{});assert.equal(t.textContent,'Text: normal','the size cycles back round');
+ const plain=(()=>{T.start('B',true);let n=0;while(T.state()!=='qte'&&n++<2000){T.unlock();if(T.state()==='click')T.advance();else if(T.state()==='choice')T.choose(0);else T.tick(0.2);}return T.G.qte.secs;})();
+ fire(w,'click',{});assert.equal(w.textContent,'Slow reality: on');assert.equal(savedItems.get('ekskyysmi.slow'),'on');
+ const slow=(()=>{T.start('B',true);let n=0;while(T.state()!=='qte'&&n++<2000){T.unlock();if(T.state()==='click')T.advance();else if(T.state()==='choice')T.choose(0);else T.tick(0.2);}return T.G.qte.secs;})();
+ assert.ok(slow>plain*2.5&&slow>8,'slow reality is long enough to read the options: '+slow);
+ // It is still the same joke: the window can be missed, and missing it is still the story.
+ T.tick(slow+0.5);assert.equal(T.G.qteWon,false);assert.ok(T.G.qte.end!=null||T.state()!=='qte');
+ fire(w,'click',{});assert.equal(w.textContent,'Slow reality');}
+
 // Closing the tab in the middle of a chapter: Continue picks the story up at that moment, with its history.
 function stepUntil(done){let n=0;while(!done()&&n++<6000){T.unlock();T.draw();const st=T.state();
   if(st==='click')T.advance();else if(st==='view'){T.advance();T.tick(6);T.advance();}else if(st==='stretch'||st==='hold')T.advance();
@@ -351,6 +369,21 @@ function labUntil(text){
 }
 for(const less of [false,true]){
   if(less)fire(element('motion'),'click',{});
+  T.start('A',false);T.skipIntro();labUntil('Rejection prevented.');
+  const declared=T.G.prevented;T.unlock();T.advance();
+  assert.equal(T.G.stamp.mode,'press');assert.equal(T.G.stamp.ink,false);
+  T.tick(0.3);T.draw();assert.equal(T.G.stamp.ink,false,'the ink waits for contact');
+  const stampAt=T.G.stamp.t;T.pause();T.frame(30000000);assert.equal(T.G.stamp.t,stampAt);T.pause();
+  T.tick(0.26);T.draw();assert.equal(T.G.stamp.ink,true);assert.equal(T.G.prevented,declared+1);
+  T.tick(4);T.draw();assert.equal(T.G.stamp,null,'the mark fades without waiting for another click');
+  T.chapter(5);labUntil('I’ve got a verdict ready. Three, actually. They’re very good.');
+  assert.equal(T.G.stamp.mode,'hover');const fridayDeclared=T.G.prevented;
+  T.tick(30);T.draw();assert.equal(T.G.stamp.ink,false,'reading slowly never completes the abandoned stamp');
+  T.unlock();T.advance();assert.equal(T.G.cur.text,'I know they are.');T.unlock();T.advance();
+  assert.equal(T.G.stamp.retiring,true);T.tick(0.6);T.draw();assert.equal(T.G.stamp,null);
+  assert.equal(T.state(),'choice');assert.equal(T.G.prevented,fridayDeclared,'putting the stamp away makes no prevention claim');
+  T.chapter(5);labUntil('I’ve got a verdict ready. Three, actually. They’re very good.');
+  T.chapter(2);assert.equal(T.G.stamp,null,'a chapter change clears the raised stamp');
   T.lab('colleagues');labUntil('Coats have buttons.');T.tick(0.1);T.draw();
   assert.equal(T.G.morko.pose,'coat');assert.equal(T.G.morko.coat.p===1,less,'reduced motion shows the buttons immediately');
   const at=T.G.morko.coat.p;T.pause();T.frame(10000000);assert.equal(T.G.morko.coat.p,at);T.pause();
@@ -402,6 +435,40 @@ T.title();assert.equal(T.back(),'exit');
 T.start();assert.equal(T.back(),'pause');assert.equal(T.back(),'title');assert.equal(T.G.started,false);
 T.lab('enhance');assert.equal(T.back(),'pause');assert.equal(T.back(),'title');
 // Recorded sound is optional: nothing is listed yet, and asking for an unknown effect is harmless.
+// Native and browser lifecycle events can arrive twice, and in either order.
+assert.deepEqual(Object.keys(nativeListeners).sort(),['appStateChange','backButton','pause','resume']);
+T.start('B',true);
+fire(element('menu'),'click',{stopPropagation(){}});assert.equal(T.back(),'menu');assert.equal(T.G.started,true);
+fire(element('restart'),'click',{});assert.equal(T.back(),'cancel');assert.equal(element('pause').textContent,'Pause');assert.equal(T.G.started,true);
+fire(element('journal'),'click',{});assert.equal(T.back(),'log');assert.equal(element('pause').textContent,'Pause');
+T.reset();T.title();const exitsBefore=nativeExits;nativeListeners.backButton();assert.equal(nativeExits,exitsBefore+1);
+toHold('B');T.holdDown();T.tick(0.3);const heldAt=T.G.hold.p;
+nativeListeners.pause();const awayAt=T.G.awayAt;assert.equal(T.G.hold.on,false);
+assert.equal(element('pause').textContent,'Resume');T.frame(31000000);assert.equal(T.G.hold.p,heldAt);
+document.hidden=true;fire(document,'visibilitychange',{});nativeListeners.appStateChange({isActive:false});assert.equal(T.G.awayAt,awayAt,'duplicate background signals must not reset the away timer');
+nativeListeners.resume();assert.equal(T.G.awayAt,awayAt,'still hidden in the DOM');
+document.hidden=false;fire(document,'visibilitychange',{});assert.equal(T.G.awayAt,null);
+assert.equal(element('pause').textContent,'Resume','foregrounding requires an explicit resume');
+T.pause();assert.equal(T.G.hold.on,false,'returning does not restore a held finger');
+T.start('B',true);fire(element('journal'),'click',{});nativeListeners.pause();nativeListeners.resume();T.back();
+assert.equal(element('pause').textContent,'Resume','closing a journal after an interruption must not resume');
+T.start('B',true);fire(element('restart'),'click',{});nativeListeners.pause();nativeListeners.resume();T.back();
+assert.equal(element('pause').textContent,'Resume','cancelling restart after an interruption must not resume');
+// A real AudioContext has independent playback even if requestAnimationFrame stops.
+let testAudio;
+window.AudioContext=function(){
+  testAudio=this;this.state='running';this.currentTime=0;this.destination={};
+  this.resume=()=>{this.state='running';return Promise.resolve()};
+  this.suspend=()=>{this.state='suspended';return Promise.resolve()};
+  const param={setValueAtTime(){},exponentialRampToValueAtTime(){}};
+  this.createOscillator=()=>({frequency:param,connect(){},start(){},stop(){}});
+  this.createGain=()=>({gain:param,connect(){}});
+};
+T.start('A',true);T.sound.play('hit');assert.equal(testAudio.state,'running');
+nativeListeners.pause();assert.equal(testAudio.state,'suspended');T.sound.play('hit');assert.equal(testAudio.state,'suspended');
+nativeListeners.resume();assert.equal(testAudio.state,'suspended');T.pause();assert.equal(testAudio.state,'running');
+fire(element('sound'),'click',{});assert.equal(testAudio.state,'suspended');fire(element('sound'),'click',{});assert.equal(testAudio.state,'running');
+T.reset();T.title();
 assert.equal(Object.keys(T.sound.list).length,0);T.sound.play('hit');assert.equal(T.sound.has('hit'),false);
 // Replaying Monday is noticed on the next receipt.
 function toDayEnd(){let n=0;while(!T.G.dayEnd&&n++<3000){T.unlock();T.draw();const st=T.state();

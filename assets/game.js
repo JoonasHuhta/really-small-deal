@@ -12,7 +12,12 @@ function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.client
 var COMPACT=false,HUDL=0; // the immersive layout: the on-canvas HUD shows itself briefly, then gets out of the way
 window.addEventListener('resize',resize);
 var RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-var WIDE=true,paused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
+// Two settings the player can change at any time. Slow reality only ever makes the window longer:
+// the joke is that the window is impossible, and a player who needs more time still gets the joke.
+var TEXT_STEPS=[1,1.18,1.38],textStep=0,slowReality=false;
+try{var ts=parseInt(window.localStorage.getItem('ekskyysmi.text'),10);if(ts>=0&&ts<TEXT_STEPS.length)textStep=ts;
+    slowReality=window.localStorage.getItem('ekskyysmi.slow')==='on';}catch(e){}
+var WIDE=true,paused=false,appHidden=false,nativePaused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
 var logDialog=document.getElementById('dialogue-log'),modalWasPaused=false,dragging=false;
 var Q=[],WAIT=null,TIMER=0,LOCK=0,CH=null;
 var NAMES={S:'EKSKYYSMI',H:'HUMAN',A:'SANNA',B:'EERO',P:'PHONE',N:'A MOMENT LATER',R:'RIITTA',Z:'SANNA’S SHADOW',Y:'EERO’S SHADOW',T:'BARTENDER',X:'A STRANGER',L:'LIBRARIAN'};
@@ -25,9 +30,14 @@ function ease(v,t,k){return v+(t-v)*Math.min(1,k);}
 var AC=null,soundOn=true,voiceNodes=[];
 try{soundOn=window.localStorage.getItem('ekskyysmi.sound')!=='off';}catch(e){}
 function audio(){
-  if(!soundOn)return null;var A=window.AudioContext||window.webkitAudioContext;if(!A)return null;
+  if(!soundOn||paused||appHidden)return null;var A=window.AudioContext||window.webkitAudioContext;if(!A)return null;
   if(!AC){try{AC=new A();}catch(e){return null;}}
-  if(AC.state==='suspended'&&AC.resume)AC.resume();return AC;
+  if(AC.state==='suspended')syncAudioState();return AC;
+}
+function syncAudioState(){
+  if(!AC)return;
+  var method=paused||appHidden||!soundOn?'suspend':'resume';
+  try{if(AC[method]){var p=AC[method]();if(p&&p.catch)p.catch(function(){});}}catch(e){}
 }
 function tone(f,t0,dur,type,vol,f2){
   var o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t0);
@@ -70,6 +80,7 @@ function sfx(k){
   var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;
   if(k==='hit'){tone(120,t,0.4,'sine',0.24,42);tone(900,t,0.06,'square',0.025,300);for(var hb=0;hb<3;hb++){tone(62,t+0.6+hb*0.75,0.13,'sine',0.14-hb*0.03);tone(54,t+0.78+hb*0.75,0.13,'sine',0.1-hb*0.02);}}
   else if(k==='swat'){tone(900,t,0.12,'triangle',0.07,180);tone(240,t+0.02,0.08,'square',0.02,120);}
+  else if(k==='stamp'){tone(150,t,0.09,'triangle',0.08,65);tone(780,t,0.025,'square',0.018,260);}
   else if(k==='good'){tone(660,t,0.08,'sine',0.05);tone(990,t+0.09,0.14,'sine',0.05);}
   else if(k==='enhance'){tone(300,t,0.3,'square',0.03,1400);tone(1400,t+0.32,0.08,'square',0.03);}
   else if(k==='zap'){tone(110,t,0.32,'square',0.05,55);tone(2600,t,0.05,'sawtooth',0.04,400);tone(1900,t+0.07,0.04,'square',0.03,260);tone(70,t+0.12,0.4,'sine',0.16,40);}
@@ -97,7 +108,7 @@ function reset(day){
      cz:1.025,cx:W/2,cy:H/2,
      lines:[],band:null,out:null,w:null,card:0,
      hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0};
-  G.handout=false;G.afterparty=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;
+  G.handout=false;G.afterparty=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.stamp=null;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
   document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
   C.z=1.025;C.fx=W/2;C.fy=H/2;
@@ -337,7 +348,7 @@ function drawReplay(){
 }
 function look(){G.gazeFrom='A';G.gazeT=0.5;}
 function calm(){var g=G;g.human.sweatT=0;g.gazeT=0;g.darkT=0;g.anx=0.25;g.morko.sT=1.15;g.morko.mood='calm';g.morko.pose=null;g.human.face='neutral';g.cz=1.025;g.cx=W/2;g.cy=H/2;}
-function prevent(label){return function(){G.prevented++;G.pop={text:'Ekskyysmi declares this “handled”.',t:0};};}
+function prevent(label){return function(){G.prevented++;startStamp('press');return [{wait:0.85}];};}
 function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
 function leave(){G.axT=1120;G.bxT=1200;G.aFace=1;G.bFace=1;}
 function frozen(){var g=G;sfx('startle');g.morko.st='frozen';g.startles++;g.human.flinch=1;}
@@ -749,7 +760,7 @@ function dayName(n){return CHAPTERS[n].title;} // kept under its old name: the t
 function scene(o){return function(){
   var g=G,M=g.morko,Hm=g.human;
   music(o.music||o.set||'room');
-  g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;
+  g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;
   g.cowA=g.cowB=g.cowR=false;g.yT=g.yShow=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
@@ -1018,8 +1029,10 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','I know. Stay.'],
   {hold:{kind:'stay',secs:2.6,text:'Staying. In public. With everyone looking.'}},
   set({pose:null}),
+  stampHover,
   ['S','I’ve got a verdict ready. Three, actually. They’re very good.'],
   ['H','I know they are.'],
+  stampPutAway,{wait:0.6},
   {choice:[
     {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.'],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.']]},
     {t:'Hold the verdict. Count to two.',then:[['S','One.'],['S','Two.'],['S','It’s been two seconds and nothing has happened to us.'],['H','Nothing was going to.'],['S','We didn’t KNOW that. We know it now.']]},
@@ -1185,16 +1198,17 @@ var RESPONSE=[
   {k:' ',sym:'SPACE',label:'BREATHE'}
 ];
 var QTE_SECS=2.8,QTE_SECS_TOUCH=3.1; // the original 0.8 s, plus two seconds for reading (requested by the human)
+function qteSecs(coarse){return (coarse?QTE_SECS_TOUCH:QTE_SECS)*(slowReality?3.2:1);}
 function startQte(){
   var g=G,coarse=!!(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches),order=RESPONSE.map(function(_,i){return i;});
   // on a touch screen the buttons arrive shuffled, because of course they do
   if(coarse)for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=order[i];order[i]=order[j];order[j]=t;}
-  g.qte={i:0,t:0,secs:coarse?QTE_SECS_TOUCH:QTE_SECS,end:null,endT:0,order:order,auto:false};g.qteWon=false;
+  g.qte={i:0,t:0,secs:qteSecs(coarse),end:null,endT:0,order:order,auto:false};g.qteWon=false;
   g.lines=[];g.cur={who:'S',text:'RESPOND. CORRECTLY. NOW.'};stopVoice();sfx('startle');
   WAIT='qte';LOCK=0;render();
 }
 // Friday: the same window, answered without the procedure.
-function qteAuto(){var g=G;g.qte={i:0,t:0,secs:QTE_SECS,end:null,endT:0,order:RESPONSE.map(function(_,i){return i;}),auto:true};g.lines=[];sfx('startle');}
+function qteAuto(){var g=G;g.qte={i:0,t:0,secs:qteSecs(false),end:null,endT:0,order:RESPONSE.map(function(_,i){return i;}),auto:true};g.lines=[];sfx('startle');}
 function qteInput(idx){
   var q=G.qte;if(!q||q.end||q.auto||WAIT!=='qte'||paused)return;
   if(idx===q.i){q.i++;sfx('pick');if(q.i>=RESPONSE.length)qteEnd(true);else render();}
@@ -2639,6 +2653,62 @@ function storyRows(){
   if(g.nothings)rows.push(['“it’s nothing”, said','×'+g.nothings]);
   return rows;
 }
+// ---- src/58-stamp.js ----
+/* ================= paperwork: a declaration, not a verdict from the game ================= */
+// Monday: a stamp on the human. Friday: the same tool, held above them, then put away.
+function startStamp(mode){
+  var h=G.morko.h[1];G.stamp={mode:mode,t:0,ink:false,retiring:false,from:{x:h.x,y:h.y}};
+}
+function stampHover(){startStamp('hover');}
+function stampPutAway(){
+  var s=G.stamp;if(!s)return;
+  var h=G.morko.h[1];s.retiring=true;s.t=0;s.from={x:h.x,y:h.y};
+}
+function stampToolVisible(){var s=G.stamp;return !!s&&(s.mode==='hover'||s.t<1.35);}
+function stampHand(q){
+  var s=G.stamp,x=G.human.x,y=FEETY-118;
+  var raised={x:x-62,y:y-62},down={x:x,y:y},home={x:q.bx+q.shW*0.9+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};
+  function between(a,b,p){p=clamp(p,0,1);p=p*p*(3-2*p);return {x:a.x+(b.x-a.x)*p,y:a.y+(b.y-a.y)*p};}
+  if(s.retiring)return RM?home:between(s.from,home,s.t/0.55);
+  if(s.mode==='hover')return RM?raised:between(s.from,raised,s.t/0.35);
+  if(RM)return s.t<0.55?raised:s.t<0.75?down:home;
+  if(s.t<0.35)return between(s.from,raised,s.t/0.35);
+  if(s.t<0.55)return between(raised,down,(s.t-0.35)/0.2);
+  if(s.t<0.75)return down;
+  return between(down,home,(s.t-0.75)/0.6);
+}
+function stepStamp(dt){
+  var s=G.stamp;if(!s)return;s.t+=dt;
+  if(s.retiring){if(s.t>=0.55)G.stamp=null;return;}
+  if(s.mode==='press'){
+    if(!s.ink&&s.t>=0.55){s.ink=true;sfx('stamp');}
+    if(s.t>=3.8)G.stamp=null;
+  }
+}
+function drawStamp(){
+  var s=G.stamp;if(!s)return;
+  if(s.ink){
+    var age=s.t-0.55,scale=RM?1:1+0.08*clamp(1-age/0.16,0,1);
+    // Low enough that the face still shows under it: the joke is the face, not the paperwork.
+    ctx.save();ctx.translate(G.human.x+6,FEETY-74);ctx.rotate(-0.1);ctx.scale(scale,scale);
+    ctx.globalAlpha=clamp((3.8-s.t)/0.7,0,1);
+    // Oversized, slightly crooked office ink. It never appears in the outside view.
+    ctx.fillStyle='rgba(246,241,228,.84)';rr(-91,-29,182,58,3);ctx.fill();
+    ctx.strokeStyle='#a53739';ctx.fillStyle='#a53739';ctx.lineWidth=3;rr(-86,-24,172,48,2);ctx.stroke();
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 11px system-ui,sans-serif';ctx.fillText('REJECTION',0,-12);
+    ctx.font='900 23px system-ui,sans-serif';ctx.fillText('PREVENTED',0,9);
+    ctx.restore();
+  }
+  if(!stampToolVisible())return;
+  var h=G.morko.h[1];ctx.save();ctx.translate(h.x,h.y);
+  ctx.globalAlpha=s.retiring?clamp(1-s.t/0.55,0,1):s.mode==='press'&&s.t>1?clamp((1.35-s.t)/0.35,0,1):1;
+  ctx.fillStyle='#5c3435';ctx.strokeStyle='#e6c99d';ctx.lineWidth=1.5;
+  rr(-7,-4,14,32,4);ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.ellipse(0,-4,18,11,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#9a5b43';rr(-45,24,90,12,3);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#3b2531';rr(-41,36,82,5,1);ctx.fill();
+  ctx.restore();
+}
 // ---- src/60-update.js ----
 /* ================= update ================= */
 function lampBase(){
@@ -2647,7 +2717,7 @@ function lampBase(){
   return{s:s/sw,off:off/sw};
 }
 function updHands(dt){
-  var q=geom(),ht=handTargets(q),M=G.morko,k=RM&&(M.coat||M.wobble||(G.bar&&G.bar.sdrink))?1:Math.min(1,10*dt);
+  var q=geom(),ht=handTargets(q),M=G.morko,k=stampToolVisible()||RM&&(M.coat||M.wobble||(G.bar&&G.bar.sdrink))?1:Math.min(1,10*dt);
   M.h[0].x+=(ht.a.x-M.h[0].x)*k;M.h[0].y+=(ht.a.y-M.h[0].y)*k;
   M.h[1].x+=(ht.b.x-M.h[1].x)*k;M.h[1].y+=(ht.b.y-M.h[1].y)*k;
 }
@@ -2672,7 +2742,7 @@ function update(dt,elapsed){
   for(var ci=g.cards.length-1;ci>=0;ci--){g.cards[ci].t+=dt;if(g.cards[ci].life!=null&&g.cards[ci].t>g.cards[ci].life)g.cards.splice(ci,1);}
   g.pulse=Math.max(0,g.pulse-dt*0.3);g.shake=Math.max(0,g.shake-dt*2.6);
   if(g.zoom)g.zoom.t+=dt;
-  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);
+  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);
   var hk=(g.planText||'')+'|'+g.jobDone+'|'+g.hud+'|'+g.chapter+'|'+g.lab+'|'+g.yes+'|'+(g.w?1:0);if(hk!==g.hudKey){g.hudKey=hk;g.hudAge=0;}g.hudAge=(g.hudAge||0)+dt;
   stepTics(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
   if(WAIT==='fight'&&g.fight&&!paused)stepFight(elapsed);
@@ -2866,7 +2936,9 @@ function handTargets(q){
   var M=G.morko,Hm=G.human,hy=FEETY-150;
   var L={x:q.bx-q.shW*0.9,y:q.shY},R={x:q.bx+q.shW*0.9,y:q.shY},a,b,front=false;
   var pose=M.st==='frozen'?'grow':M.st==='hide'?'hold':M.st==='pokka'?null:M.pose;
+  if(stampToolVisible())pose='stamp';
   switch(pose){
+    case 'stamp':a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b=stampHand(q);front=true;break;
     case 'grow':a={x:L.x-q.shW*0.9,y:q.shY-34*q.s};b={x:R.x+q.shW*0.9,y:q.shY-34*q.s};break;
     case 'cover':a={x:Hm.x-7,y:hy+2};b={x:Hm.x+11,y:hy+2};front=true;break;
     case 'pull':a={x:Hm.x+24,y:FEETY-96};b={x:Hm.x+22,y:FEETY-72};front=true;break;
@@ -2965,6 +3037,7 @@ function drawPair(humanOpts){
   if(up)shadowDrink(q);
   drawHuman(humanOpts);
   if(up&&ht.front)morkoArms(q,ht);
+  if(up)drawStamp();
 }
 
 /* ================= drawing: speech ================= */
@@ -3260,7 +3333,7 @@ window.addEventListener('keydown',function(e){
   }else if((e.key==='f'||e.key==='F')&&tag!=='INPUT'){toggleFull();}else if(e.key>='1'&&e.key<='4'&&tag!=='INPUT'){choose(+e.key-1);}
   else if(e.key==='p'||e.key==='P'){togglePause();}
 });
-function syncPause(){if(paused)stopVoice();document.getElementById('pause').textContent=paused?'Resume':'Pause';document.body.classList.toggle('is-paused',paused);}
+function syncPause(){if(paused||appHidden){stopVoice();holdUp();dragging=false;}syncAudioState();document.getElementById('pause').textContent=paused?'Resume':'Pause';document.body.classList.toggle('is-paused',paused);}
 function togglePause(){if(!G.started||G.ended||logDialog.open||ov.classList.contains('on'))return;paused=!paused;if(!paused)G.awayNote=null;syncPause();}
 document.getElementById('pause').addEventListener('click',togglePause);
 document.getElementById('restart').addEventListener('click',function(){
@@ -3278,19 +3351,46 @@ document.getElementById('journal').addEventListener('click',function(){
 });
 document.getElementById('close-log').addEventListener('click',function(){logDialog.close();});
 logDialog.addEventListener('close',function(){paused=modalWasPaused;syncPause();document.getElementById('journal').focus();});
+function textUI(){
+  var b=document.getElementById('textsize');
+  b.textContent='Text: '+['normal','large','largest'][textStep];
+  document.documentElement.style.setProperty('--ts',TEXT_STEPS[textStep]);
+}
+document.getElementById('textsize').addEventListener('click',function(){
+  textStep=(textStep+1)%TEXT_STEPS.length;try{window.localStorage.setItem('ekskyysmi.text',String(textStep));}catch(e){}
+  textUI();sfx('pick');
+});
+textUI();
+function slowUI(){
+  var b=document.getElementById('slow');b.setAttribute('aria-pressed',String(slowReality));
+  b.textContent=slowReality?'Slow reality: on':'Slow reality';
+  b.title=slowReality?'The window to respond correctly lasts about nine seconds.':'Give yourself about nine seconds to respond correctly.';
+}
+document.getElementById('slow').addEventListener('click',function(){
+  slowReality=!slowReality;try{window.localStorage.setItem('ekskyysmi.slow',slowReality?'on':'off');}catch(e){}
+  slowUI();sfx('pick');
+});
+slowUI();
 function motionUI(){document.getElementById('motion').setAttribute('aria-pressed',String(RM));document.body.classList.toggle('reduce-motion',RM);}
 document.getElementById('motion').addEventListener('click',function(){RM=!RM;motionUI();});
 motionUI();
-document.getElementById('sound').addEventListener('click',function(){soundOn=!soundOn;if(!soundOn){stopVoice();var mn=musicName;music(null);musicName=mn;}else{preloadSounds();var mn2=musicName;musicName=null;music(mn2);}try{window.localStorage.setItem('ekskyysmi.sound',soundOn?'on':'off');}catch(e){}soundUI();if(soundOn)sfx('pick');});
+document.getElementById('sound').addEventListener('click',function(){soundOn=!soundOn;if(!soundOn){stopVoice();var mn=musicName;music(null);musicName=mn;}else{preloadSounds();var mn2=musicName;musicName=null;music(mn2);}try{window.localStorage.setItem('ekskyysmi.sound',soundOn?'on':'off');}catch(e){}soundUI();syncAudioState();if(soundOn)sfx('pick');});
 soundUI();
 function backButton(){
   if(logDialog.open){logDialog.close();return 'log';}
-  if(!G.started||G.ended){if(ov.innerHTML.indexOf('data-go="start"')>=0)return 'exit';reset(null);showTitle();return 'title';}
+  if(ov.dataset.kind==='restart'&&ov.classList.contains('on')){hideOv();paused=modalWasPaused;syncPause();return 'cancel';}
+  if(document.body.classList.contains('menu-open')){setMenu(false);return 'menu';}
+  if(!G.started||G.ended){if(ov.dataset.kind==='title'&&ov.classList.contains('on'))return 'exit';reset(null);showTitle();return 'title';}
   if(paused){paused=false;syncPause();reset(null);showTitle();return 'title';}
   togglePause();return 'pause';
 }
 var CAP=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
-if(CAP&&CAP.addListener)CAP.addListener('backButton',function(){if(backButton()==='exit'&&CAP.exitApp)CAP.exitApp();});
+if(CAP&&CAP.addListener){
+  CAP.addListener('backButton',function(){if(backButton()==='exit'&&CAP.exitApp)CAP.exitApp();});
+  CAP.addListener('pause',function(){nativePaused=true;appVisibility();});
+  CAP.addListener('resume',function(){nativePaused=false;appVisibility();});
+  CAP.addListener('appStateChange',function(s){nativePaused=!s.isActive;appVisibility();});
+}
 /* ================= full screen and the immersive layout =================
    The scene fills the screen on a phone held sideways, and whenever the player asks for full screen.
    One class on <html> drives it; index.html sets it before first paint so phones never flash the wide layout. */
@@ -3325,13 +3425,24 @@ if(menuBtn&&menuBtn.addEventListener){
 }
 var fullBtn=document.getElementById('full');
 if(fullBtn){if(fullSupported())fullBtn.addEventListener('click',toggleFull);else fullBtn.remove();}
-document.addEventListener('visibilitychange',function(){if(document.hidden){goneAway();if(!paused)togglePause();}else cameBack();});
+// Android onPause can arrive before visibilitychange (a call, screen lock or app switch).
+// Keep the two signals separate: returning never resumes the story without the player's tap.
+function appVisibility(){
+  var hidden=!!document.hidden||nativePaused;if(hidden===appHidden)return;appHidden=hidden;
+  if(hidden){
+    goneAway();holdUp();dragging=false;setMenu(false);
+    if(G&&G.started&&!G.ended)paused=true;
+    if(logDialog.open||ov.dataset.kind==='restart'&&ov.classList.contains('on'))modalWasPaused=true;
+  }else cameBack();
+  syncPause();
+}
+document.addEventListener('visibilitychange',appVisibility);
 // ---- src/90-loop.js ----
 /* ================= loop ================= */
 var last=0;
 function frame(ts){
   var elapsed=clamp((ts-last)/1000||0,0,1),dt=Math.min(elapsed,0.05);last=Math.max(last,ts);
-  if(!paused)update(dt,elapsed);
+  if(!paused&&!appHidden)update(dt,elapsed);
   draw();
   window.requestAnimationFrame(frame);
 }

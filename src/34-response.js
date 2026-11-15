@@ -10,16 +10,17 @@ var RESPONSE=[
   {k:' ',sym:'SPACE',label:'BREATHE'}
 ];
 var QTE_SECS=2.8,QTE_SECS_TOUCH=3.1; // the original 0.8 s, plus two seconds for reading (requested by the human)
+function qteSecs(coarse){return (coarse?QTE_SECS_TOUCH:QTE_SECS)*(slowReality?3.2:1);}
 function startQte(){
   var g=G,coarse=!!(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches),order=RESPONSE.map(function(_,i){return i;});
   // on a touch screen the buttons arrive shuffled, because of course they do
   if(coarse)for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=order[i];order[i]=order[j];order[j]=t;}
-  g.qte={i:0,t:0,secs:coarse?QTE_SECS_TOUCH:QTE_SECS,end:null,endT:0,order:order,auto:false};g.qteWon=false;
+  g.qte={i:0,t:0,secs:qteSecs(coarse),end:null,endT:0,order:order,auto:false};g.qteWon=false;
   g.lines=[];g.cur={who:'S',text:'RESPOND. CORRECTLY. NOW.'};stopVoice();sfx('startle');
   WAIT='qte';LOCK=0;render();
 }
 // Friday: the same window, answered without the procedure.
-function qteAuto(){var g=G;g.qte={i:0,t:0,secs:QTE_SECS,end:null,endT:0,order:RESPONSE.map(function(_,i){return i;}),auto:true};g.lines=[];sfx('startle');}
+function qteAuto(){var g=G;g.qte={i:0,t:0,secs:qteSecs(false),end:null,endT:0,order:RESPONSE.map(function(_,i){return i;}),auto:true};g.lines=[];sfx('startle');}
 function qteInput(idx){
   var q=G.qte;if(!q||q.end||q.auto||WAIT!=='qte'||paused)return;
   if(idx===q.i){q.i++;sfx('pick');if(q.i>=RESPONSE.length)qteEnd(true);else render();}

@@ -169,7 +169,9 @@ function handTargets(q){
   var M=G.morko,Hm=G.human,hy=FEETY-150;
   var L={x:q.bx-q.shW*0.9,y:q.shY},R={x:q.bx+q.shW*0.9,y:q.shY},a,b,front=false;
   var pose=M.st==='frozen'?'grow':M.st==='hide'?'hold':M.st==='pokka'?null:M.pose;
+  if(stampToolVisible())pose='stamp';
   switch(pose){
+    case 'stamp':a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b=stampHand(q);front=true;break;
     case 'grow':a={x:L.x-q.shW*0.9,y:q.shY-34*q.s};b={x:R.x+q.shW*0.9,y:q.shY-34*q.s};break;
     case 'cover':a={x:Hm.x-7,y:hy+2};b={x:Hm.x+11,y:hy+2};front=true;break;
     case 'pull':a={x:Hm.x+24,y:FEETY-96};b={x:Hm.x+22,y:FEETY-72};front=true;break;
@@ -268,6 +270,7 @@ function drawPair(humanOpts){
   if(up)shadowDrink(q);
   drawHuman(humanOpts);
   if(up&&ht.front)morkoArms(q,ht);
+  if(up)drawStamp();
 }
 
 /* ================= drawing: speech ================= */

@@ -282,9 +282,9 @@ Trubyn 22 askelta kokonaisena on romaanin tai elokuvan työkalu. 38 minuutin kom
 
 **Sääntö:** ele kuuluu peliin, jos se on jotain, minkä vain varjo voi tehdä (venyä, litistyä, olla seinällä, tehdä käsivarjoja) tai jos se on virkamiehen ele (arkistointi, leimaaminen, lomake). Yleinen sarjakuvahätäily ei kuulu.
 
-**Ideapankki, ei vielä pelissä:**
+**Ideapankki ja toteutusten tila:**
 
-- **Leimasin.** ”Rejection prevented.” on nyt repliikki. Leima (PREVENTED, punainen, vähän vinossa) ihmisen päälle olisi kuva, ja perjantaina leimasin jää ilmaan.
+- **Leimasin — tehty 0.28.** ”Rejection prevented.” saa vinon punaisen leiman ihmisen päälle. Perjantaina leimasin jää ilmaan ”I’ve got a verdict ready” -repliikin ajaksi ja laskeutuu pois. Ei leimajälkeä eikä uutta selittävää repliikkiä.
 - **Varjo jää jälkeen.** Kun ihminen lähtee reippaasti, Ekskyysmi venyy ja napsahtaa perään kuin kuminauha.
 - **Valo määrää koon.** Lampun lähellä varjo on pitkä, ikkunan luona lyhyt. Ekskyysmi voisi valita paikkansa sen mukaan (”Stand by the lamp. I need to be taller for this.”).
 - **Käsivarjoteatteri.** Linnun lisäksi: kun Ekskyysmi matkii jotakuta, se tekee puhuvan käden. ”Quick chat.” Nimeltä mainitsematon Riitta.

@@ -8,7 +8,12 @@ function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.client
 var COMPACT=false,HUDL=0; // the immersive layout: the on-canvas HUD shows itself briefly, then gets out of the way
 window.addEventListener('resize',resize);
 var RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-var WIDE=true,paused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
+// Two settings the player can change at any time. Slow reality only ever makes the window longer:
+// the joke is that the window is impossible, and a player who needs more time still gets the joke.
+var TEXT_STEPS=[1,1.18,1.38],textStep=0,slowReality=false;
+try{var ts=parseInt(window.localStorage.getItem('ekskyysmi.text'),10);if(ts>=0&&ts<TEXT_STEPS.length)textStep=ts;
+    slowReality=window.localStorage.getItem('ekskyysmi.slow')==='on';}catch(e){}
+var WIDE=true,paused=false,appHidden=false,nativePaused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
 var logDialog=document.getElementById('dialogue-log'),modalWasPaused=false,dragging=false;
 var Q=[],WAIT=null,TIMER=0,LOCK=0,CH=null;
 var NAMES={S:'EKSKYYSMI',H:'HUMAN',A:'SANNA',B:'EERO',P:'PHONE',N:'A MOMENT LATER',R:'RIITTA',Z:'SANNA’S SHADOW',Y:'EERO’S SHADOW',T:'BARTENDER',X:'A STRANGER',L:'LIBRARIAN'};

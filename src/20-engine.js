@@ -11,7 +11,7 @@ function reset(day){
      cz:1.025,cx:W/2,cy:H/2,
      lines:[],band:null,out:null,w:null,card:0,
      hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0};
-  G.handout=false;G.afterparty=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;
+  G.handout=false;G.afterparty=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.stamp=null;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
   document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
   C.z=1.025;C.fx=W/2;C.fy=H/2;
@@ -251,7 +251,7 @@ function drawReplay(){
 }
 function look(){G.gazeFrom='A';G.gazeT=0.5;}
 function calm(){var g=G;g.human.sweatT=0;g.gazeT=0;g.darkT=0;g.anx=0.25;g.morko.sT=1.15;g.morko.mood='calm';g.morko.pose=null;g.human.face='neutral';g.cz=1.025;g.cx=W/2;g.cy=H/2;}
-function prevent(label){return function(){G.prevented++;G.pop={text:'Ekskyysmi declares this “handled”.',t:0};};}
+function prevent(label){return function(){G.prevented++;startStamp('press');return [{wait:0.85}];};}
 function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
 function leave(){G.axT=1120;G.bxT=1200;G.aFace=1;G.bFace=1;}
 function frozen(){var g=G;sfx('startle');g.morko.st='frozen';g.startles++;g.human.flinch=1;}

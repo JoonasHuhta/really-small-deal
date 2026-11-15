@@ -6,7 +6,7 @@ function dayName(n){return CHAPTERS[n].title;} // kept under its old name: the t
 function scene(o){return function(){
   var g=G,M=g.morko,Hm=g.human;
   music(o.music||o.set||'room');
-  g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;
+  g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;
   g.cowA=g.cowB=g.cowR=false;g.yT=g.yShow=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
@@ -275,8 +275,10 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','I know. Stay.'],
   {hold:{kind:'stay',secs:2.6,text:'Staying. In public. With everyone looking.'}},
   set({pose:null}),
+  stampHover,
   ['S','I’ve got a verdict ready. Three, actually. They’re very good.'],
   ['H','I know they are.'],
+  stampPutAway,{wait:0.6},
   {choice:[
     {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.'],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.']]},
     {t:'Hold the verdict. Count to two.',then:[['S','One.'],['S','Two.'],['S','It’s been two seconds and nothing has happened to us.'],['H','Nothing was going to.'],['S','We didn’t KNOW that. We know it now.']]},
