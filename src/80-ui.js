@@ -108,7 +108,7 @@ document.getElementById('restart').addEventListener('click',function(){
 document.getElementById('journal').addEventListener('click',function(){
   if(ov.classList.contains('on')&&!G.ended)return;
   modalWasPaused=paused;paused=true;syncPause();
-  document.getElementById('log-content').innerHTML=history.map(function(l){return '<div class="log-entry"><b>'+NAMES[l.who]+'</b><p>'+esc(l.text)+'</p></div>';}).join('');
+  document.getElementById('log-content').innerHTML=history.map(function(l){return '<div class="log-entry w-'+l.who+'"><b>'+NAMES[l.who]+'</b><p>'+esc(l.text)+'</p></div>';}).join('');
   logDialog.showModal();
 });
 document.getElementById('close-log').addEventListener('click',function(){logDialog.close();});

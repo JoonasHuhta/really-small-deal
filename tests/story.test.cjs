@@ -45,6 +45,7 @@ for(const day of ['A','B','C'])for(let fear=0;fear<3;fear++)for(let route=0;rout
       case 'time':T.tick(6);break;
       case 'qte':T.advance();T.tick(1);break; // clicking does nothing; the window simply closes
       case 'hold':T.advance();holds++;break;
+      case 'toss':T.advance();T.tick(0.4);break;
       case 'view':{
         const outside=T.G.out;
         T.advance();assert.equal(T.G.out,outside,'cutaway must finish its minimum animation');
@@ -120,6 +121,7 @@ function playOn(pick){
       case 'view':T.advance();T.tick(6);T.advance();break;
       case 'stretch':T.advance();break;
       case 'hold':T.advance();break;
+      case 'toss':T.advance();T.tick(0.4);break;
       case 'fight':if(T.G.fight.paced){T.swat();T.tick(0.6);}else T.tick(0.25);break;
       case 'qte':T.tick(1);break; // the story now runs through the short moments too
       case 'choice':{
@@ -275,6 +277,7 @@ function playLab(id,mode){
     switch(T.state()){
       case 'click':T.advance();break;
       case 'time':T.tick(6);break;
+      case 'toss':T.advance();T.tick(0.4);break;
       case 'view':T.advance();T.tick(6);T.advance();break;
       case 'choice':T.choose((mode==='coat'&&T.options().some(o=>o.t==='Pretend to be a coat.'))||(mode&&mode.indexOf('paced')===0&&T.options().some(o=>o.t.startsWith('One at a time.')))?1:0);break;
       case 'fight':
@@ -342,7 +345,7 @@ tr=playPosting(1);assert.equal(T.G.posting,'rejected');assert.match(tr,/You are 
 tr=playPosting(2);assert.equal(T.G.posting,'open');assert.match(tr,/Just don’t close it/);assert.doesNotMatch(tr,/one hundred percent/);
 assert.ok(!T.inside.day().ledger.some(e=>e.label==='the application, not sent'),'an open tab costs nothing extra');
 // Not now: the rehearsal is longer than the no.
-tr=playLab('notnow');assert.match(tr,/the actual “no” took four seconds/);assert.match(tr,/only one I’m allowed to drop/);assert.match(tr,/Heavy\?/);assert.ok(tr.indexOf('Heavy?')<tr.indexOf('took four seconds'));assert.equal(T.G.wT,0);assert.match(tr,/three hours and ten minutes/);assert.equal(T.G.rehearsal,true);
+tr=playLab('notnow');assert.match(tr,/the actual “no” took four seconds/);assert.match(tr,/only one I’m allowed to drop/);assert.match(tr,/Heavy\?/);assert.ok(tr.indexOf('Heavy?')<tr.indexOf('took four seconds'));assert.equal(T.G.wT,0);assert.match(tr,/I dropped ONE/);assert.ok(T.G.dropped&&T.G.dropped.tag==='2011','the 2011 card ends up on the floor');assert.match(tr,/three hours and ten minutes/);assert.equal(T.G.rehearsal,true);
 tr=playLab('reply');
 assert.match(tr,/A few small edits\. For safety\./);assert.match(tr,/“Hey! I had a on Thursday\. :\)”/,'three first-option cuts leave a message with nothing in it');
 assert.match(tr,/She decoded it/);assert.equal(T.G.replySent,'edited');assert.equal(T.G.draft,null);

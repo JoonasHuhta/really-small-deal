@@ -122,3 +122,12 @@ html.immersive body.playing .opt.qte{flex-direction:column;gap:2px;text-align:ce
 html.immersive .card:has(.end-grid){max-width:none;width:100%}
 html.immersive .end-grid{grid-template-columns:minmax(0,1fr) 250px;gap:16px}
 html.immersive .receipt{font-size:10.5px;line-height:1.35;padding:10px 11px 18px}html.immersive .receipt .rr.big{font-size:12.5px}html.immersive .receipt hr{margin:4px 0}html.immersive .rc-copy{min-height:44px;padding:6px 9px;margin-top:6px}html.immersive .receipt .rc-foot{white-space:nowrap}
+
+/* who is talking: the name takes the speaker's colour, so a quick exchange reads at a glance */
+.line .w-S b,.log-entry.w-S b{color:#b9a9f2}.line .w-H b,.log-entry.w-H b{color:var(--accent)}
+.line .w-A b,.line .w-B b,.line .w-R b,.line .w-T b,.line .w-X b,.line .w-L b,.log-entry.w-A b,.log-entry.w-B b,.log-entry.w-R b,.log-entry.w-T b,.log-entry.w-X b,.log-entry.w-L b{color:#e8ab95}
+.line .w-Z b,.line .w-Y b,.line .w-W b,.log-entry.w-Z b,.log-entry.w-Y b,.log-entry.w-W b{color:#8fb7e6}
+.line .w-P b,.log-entry.w-P b{color:#9fd3a8}.line .w-N b,.log-entry.w-N b{color:#a9b3a6}
+.line:has(.w-S) .speaker-icon{background:#b9a9f2}.line:has(.w-Z) .speaker-icon,.line:has(.w-Y) .speaker-icon,.line:has(.w-W) .speaker-icon{background:#8fb7e6;border-radius:47% 48% 30% 36%}.line:has(.w-P) .speaker-icon{background:#9fd3a8;border-radius:8px}
+/* the shortest phones: the end screen fits without scrolling */
+@media (max-height:380px){html.immersive .end-go+.small{display:none}html.immersive .title-quote{margin:6px 0}html.immersive .end-note{margin:6px 0;padding:8px 12px}}

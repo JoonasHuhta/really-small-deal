@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.31 (Claude, 15.11.2026): **puhujien värit, kamera joka nojaa sanailuun, ja yksi kortti jonka saa pudottaa.**
+
+- **Puhujan nimi on puhujan värinen.** Ekskyysmi on violetti, ihminen keltainen, muut ihmiset persikka, muiden varjot sininen, puhelin vihreä ja kertoja harmaa. Sama väri näkyy puhujan kuvakkeessa ja Dialogue-lokissa. Fontteihin ei koskettu: koko valitaan valikosta (*Text: normal / large / largest*).
+- **Kamera nojaa lähemmäs**, kun Ekskyysmi ja ihminen vaihtavat vähintään kolme lyhyttä repliikkiä peräkkäin, ja päästää irti ensimmäisestä pitkästä lauseesta, valinnasta tai tauosta. Enintään 7,5 %, ja *Less motion* pienentää sen alle puoleen. Ei käytössä kotimatkalla, ulkopuolisissa näkymissä, baarissa eikä suurennuslasin tai viestiluonnoksen aikana.
+- **Uusi käsin tehtävä asia: irti päästäminen** (`src/59-toss.js`, askel `{toss:{…}}`). *Not now.* -hetkessä Riitan varjo jättää pallon lattialle, ja Ekskyysmi haluaa kokeilla itse: yksi kortti vuodelta 2011. Kortin voi raahata ja heittää, jolloin se lentää ja pomppii. Jos vain napauttaa, Ekskyysmi keksii kaksi tekosyytä (”It’s load-bearing.”) ja avaa kätensä kolmannella. Kortti jää lattialle. ”On the floor. Not on you.” Näppäimistöllä ja Let go -napilla sama toimii ilman raahausta.
+- Maanantain loppuruutu mahtuu nyt 360 pikseliä korkeille puhelimille (vieritystä jäi 4 px, oli 54).
+
 Versio 0.30 (Claude, 15.11.2026): **Riitan varjo, kuitti kuvana ja nopeampi alku.**
 
 - ***Not now.*** sai Riitan varjon. Se jongleeraa yhtätoista asiaa eikä ehdi katsoa ketään. ”Not now” oli se yksi pallo, jonka se saa pudottaa. Isku pysyy totena (”It LANDED.” / ”They do. Sorry. Ten.”), mutta se ei ollut tuomio. Ekskyysmi ei ole pudottanut mitään vuoden 2011 jälkeen, ja varjo kysyy yhden sanan: ”Heavy?”
@@ -250,7 +257,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.30, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.31, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

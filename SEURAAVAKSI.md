@@ -2,7 +2,7 @@
 
 15.11.2026 · Claude. Tämä tiedosto korvaa [TOTEUTUKSEN_SUUNNITTELU.md](TOTEUTUKSEN_SUUNNITTELU.md):n työlistana. Lista on järjestetty sen mukaan, mikä vaikuttaa eniten siihen, että peli toimii ja että siitä kerrotaan eteenpäin.
 
-## Missä ollaan (0.30)
+## Missä ollaan (0.31)
 
 - **Peli:** viisi päivää (Oh, hi · Quick chat? · Could you just… · Seen. · For now) ja niiden välissä yksitoista lyhyttä hetkeä. Yksi läpipeluu kestää lukutahdissa noin 38 minuuttia. Selainpeli toimii myös puhelimella vaakasuunnassa. Android-kuori on valmiina, mutta sitä ei ole julkaistu.
 - **Rakenne on mitattu ja järjestetty** (Weilandin käännekohdat, Trubyn perusaskeleet): ks. [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Rakenne.
@@ -55,6 +55,16 @@ Uusin laadullinen tutkimus (Rowney-Smith ym., PLOS ONE 2026) nimeää ADHD:n hyl
 ## 4b. Laajennus muiden varjoina
 
 ~~**Riitan varjo** *Not now.* -hetkeen~~ Tehty 0.30. Seuraava: kirjastonhoitaja, jolla ei ole varjoa (Ekskyysmi etsii sitä suurennuslasilla). Perustelut ja säännöt: [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Laajennus: muiden varjot.
+
+## 4c. Vaihtelu lukemisen väliin (0.31)
+
+Pelissä on nyt kahdeksan käsin tehtävää asiaa: vastausikkuna, venytys, pito, suurennuslasi, viestien huitominen, luonnoksen leikkaus, leimasin ja **kortin pudotus** (`{toss}`). Sääntö: yksi käsin tehtävä asia hetkeä kohden, ja sen pitää tarkoittaa jotain. Seuraavat ehdokkaat samalla `{toss}`-askeleella:
+
+1. **Perjantai:** arkiston 2016 (”you too”) ja 2019 (”Love,” Facilities) saa pudottaa, jos 2011 on jo lattialla. Kolme korttia, ei pakko.
+2. **Kuminauha** (ideapankista): pelaaja vetää Ekskyysmiä kauemmas ihmisestä, ja se napsahtaa takaisin.
+3. **Kotimatka:** diat (”I’ve prepared slides”) voi pyyhkäistä pois yksi kerrallaan.
+
+**Äänet, jotka puuttuvat** (paikat `SAMPLES`-taulukossa): kortin pudotus (paperin läpsähdys), jongleerauksen pehmeä rytmi, kuittikirjoittimen rätinä, röntgenin matala ”thunk”, ja Ekskyysmille oma lyhyt ääni per mieliala (nyt piippaus). Nämä kannattaa äänittää itse suulla ja pöydällä: se sopii pelin käsintehtyyn tyyliin paremmin kuin äänipankki.
 
 ## 5. Ennen julkaisua
 
