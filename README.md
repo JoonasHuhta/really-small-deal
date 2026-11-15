@@ -252,6 +252,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 
 ## Lue seuraavassa järjestyksessä
 
+0. [Suunta](SUUNTA.md): mihin peli kasvaa viikon jälkeen, seitsemän painopistettä ja kaksi valmiiksi kirjoitettua kohtausta (15.11.2026).
 1. [Seuraavaksi](SEURAAVAKSI.md): työlista tärkeysjärjestyksessä, tutkimuksesta johdetut käsikirjoitusideat, julkaisu ja rahoitus. **Aloita tästä.**
 2. [Käsikirjoitus](KASIKIRJOITUS.md): kaari, tasapaino, Ekskyysmin hahmo ja kaksi kelloa.
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
