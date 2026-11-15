@@ -16,12 +16,15 @@ function showAbout(){
 function showWeekEnd(){
   var g=G;g.ended=true;g.dayEnd=false;WAIT=null;Q=[];render();
   var note=g.no?'One “no” was said out loud. Everyone survived, including Eero.':'The “no” is still in its box. It keeps.';
-  showOv('<div class="eyebrow">For now</div><h2>Still here. Both of you.</h2>'+
+  closeDay();var rows=runRows(g.run),rt='RECEIPT · THE WHOLE THING';
+  g.receiptText=receiptText(rt,rows,RC_FOOT_RUN);
+  showOv('<div class="end-grid"><div><div class="eyebrow">For now</div><h2>Still here. Both of you.</h2>'+
    '<p class="small job-line">Ekskyysmi’s job: <s>Keep you from being rejected.</s> Stay with you when it happens.</p>'+
    '<p>A string of small moments. One “oh, hi”, twice.<br>It went off both times. The second time, somebody stayed.</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
    '<p class="title-quote">“For the record, I intend to go off again on Monday.”</p>'+
-   '<button class="go" type="button" data-go="start">New game →</button><button class="go alt" type="button" data-go="menu">Title screen</button>','end');
+   '<div class="end-go"><button class="go" type="button" data-go="start">New game →</button><button class="go alt" type="button" data-go="menu">Title screen</button></div></div>'+
+   receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="copyrcpt">Copy receipt</button>')+'</div>','end');
 }
 function showTitle(){
   var sv=loadProgress();
@@ -40,17 +43,20 @@ function showEnd(){
   var note=g.lunch===1?'You answered inside the window. Nobody has done that before. Lunch happened. The shadow is lying down.':g.lunch===2?'Lunch didn’t happen today. A message did. Tomorrow, then.':g.day==='C'?(g.reflected?'Today hurt. You reached for someone who makes room for you.':'Today hurt. Their choice to leave you out was theirs.'):'Nobody said no. Nobody had the chance. The shadow is calling that a win.';
   if(g.day==='C'&&g.leak==='exit'&&!g.reflected)note='Today felt lonely. Not every missing piece needs filling in tonight.';
   var quote=g.lunch===1?'I would like to lodge a complaint about the speed of that hi.':{grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. We went anyway. Slightly after everyone else.'}[g.leak];
-  showOv('<div class="eyebrow">End of Monday</div><h2>Home. Both of you.</h2>'+
+  var d=closeDay()||{label:'A MONDAY',outside:AWAKE,extra:0,ledger:[],ratio:1},rows=receiptRows(d),rt='DAILY RECEIPT · '+d.label;
+  g.receiptText=receiptText(rt,rows,RC_FOOT_DAY);
+  showOv('<div class="end-grid"><div><div class="eyebrow">End of Monday</div><h2>Home. Both of you.</h2>'+
    '<p>The greeting lasted two seconds.<br>The shadow took the scenic route.</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
    '<p class="title-quote">“'+quote+'”</p>'+
-   '<button class="go" type="button" data-go="next">Carry on →</button>'+
+   '<div class="end-go"><button class="go" type="button" data-go="next">Carry on →</button>'+
    '<button class="go alt" type="button" data-go="same">Try another approach</button>'+
-   '<button class="go alt" type="button" data-go="again">Another Monday</button>'+
-   '<p class="small">Another approach replays this Monday. Another Monday changes what was happening around you.</p>','end');
+   '<button class="go alt" type="button" data-go="again">Another Monday</button></div>'+
+   '<p class="small">Another approach replays this Monday. Another Monday changes what was happening around you.</p></div>'+
+   receiptHTML(rt,rows,RC_FOOT_DAY+'<br><button class="rc-copy" type="button" data-go="copyrcpt">Copy receipt</button>')+'</div>','end');
 }
 function startGame(day,skip){
-  reset(day);G.started=true;
+  reset(day);G.started=true;G.chapter=1;newDay();
   saveProgress(1);
   if(skip){G.bx2=G.bxT=880;Q=scSanna();}
   else Q=scPrelude().concat(scIntro(),[function(){return scSanna();}]);
@@ -61,6 +67,7 @@ ov.addEventListener('click',function(e){
   if(!t||t===ov)return;var go=t.getAttribute('data-go');
   if(t.getAttribute('data-ch')){startChapter(+t.getAttribute('data-ch'));return;}
   if(t.getAttribute('data-lab')){startLab(t.getAttribute('data-lab'));return;}
+  if(go==='copyrcpt'){copyReceipt(t);return;}
   if(go==='lab'){reset(null);showLab();return;}
   if(go==='chapters'){showChapters();return;}
   if(go==='about'){showAbout();return;}
@@ -68,8 +75,8 @@ ov.addEventListener('click',function(e){
   else if(go==='cont'){var sv=loadProgress();startChapter(sv?sv.ch:1);}
   else if(go==='next'){hideOv();G.ended=false;G.dayEnd=false;Q=chain(2);run();}
   else if(go==='menu'){reset(null);showTitle();}
-  else if(go==='again')startGame(null,true);
-  else if(go==='same')startGame(G.day,true);
+  else if(go==='again'){TRIES++;startGame(null,true);}
+  else if(go==='same'){TRIES++;startGame(G.day,true);}
   else if(go==='cancel'){hideOv();paused=modalWasPaused;syncPause();}
   else if(go==='restart'){reset(null);showTitle();}
 });
@@ -88,7 +95,7 @@ window.addEventListener('keydown',function(e){
   else if(e.key==='p'||e.key==='P'){togglePause();}
 });
 function syncPause(){if(paused)stopVoice();document.getElementById('pause').textContent=paused?'Resume':'Pause';document.body.classList.toggle('is-paused',paused);}
-function togglePause(){if(!G.started||G.ended||logDialog.open||ov.classList.contains('on'))return;paused=!paused;syncPause();}
+function togglePause(){if(!G.started||G.ended||logDialog.open||ov.classList.contains('on'))return;paused=!paused;if(!paused)G.awayNote=null;syncPause();}
 document.getElementById('pause').addEventListener('click',togglePause);
 document.getElementById('restart').addEventListener('click',function(){
   if(!G.started||G.ended){reset(null);showTitle();return;}
@@ -152,4 +159,4 @@ if(menuBtn&&menuBtn.addEventListener){
 }
 var fullBtn=document.getElementById('full');
 if(fullBtn){if(fullSupported())fullBtn.addEventListener('click',toggleFull);else fullBtn.remove();}
-document.addEventListener('visibilitychange',function(){if(document.hidden&&!paused)togglePause();});
+document.addEventListener('visibilitychange',function(){if(document.hidden){goneAway();if(!paused)togglePause();}else cameBack();});

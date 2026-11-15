@@ -344,29 +344,40 @@ function jobCard(){
   ctx.restore();
 }
 function hud(){
-  var g=G,y=26,rows=g.w?[['ON THE WAY HOME',hhmm(g.clock)]]:[['A SMALL PLAN',g.planText||'Ask Sanna to lunch.']];
+  var g=G,y=26,rows=g.w?[]:[['A SMALL PLAN',g.planText||'Ask Sanna to lunch.']];
   if(g.chapter===3&&g.yes&&!g.moment)rows.push(['THINGS AGREED TO',String(g.yes)]);
   rows.unshift(['EKSKYYSMI’S JOB',g.jobDone?JOB_NEW:JOB_OLD,g.jobDone?'':'job']);
-  var show=1;if(COMPACT){show=(g.job&&g.job.t<7)||g.pop?1:clamp(7-(g.hudAge||0),0,1);if(show<=0)return;}
+  if(g.day0)rows.push([g.w?'ON THE WAY HOME':'TIME','','time']);
+  var show=1;if(COMPACT){show=(g.job&&g.job.t<7)||g.pop||g.rolling?1:clamp(7-(g.hudAge||0),0,1);if(show<=0)return;}
   ctx.save();ctx.globalAlpha=show;if(COMPACT){ctx.translate(W-14,14);ctx.scale(1.3,1.3);ctx.translate(-(W-14),-14);}
   ctx.textAlign='left';ctx.textBaseline='middle';
   for(var i=0;i<rows.length;i++){
     ctx.font='700 11px system-ui,sans-serif';var w1=ctx.measureText(rows[i][0]).width;
-    ctx.font='500 13px system-ui,sans-serif';var w2=ctx.measureText(rows[i][1]).width;
+    ctx.font='500 13px system-ui,sans-serif';var tp=rows[i][2]==='time'?timeParts():null,w2=tp?tp.reduce(function(s,p){return s+ctx.measureText(p[0]).width;},0):ctx.measureText(rows[i][1]).width;
     var x=W-14-(w1+w2+30);
     ctx.fillStyle='rgba(22,19,30,.72)';rr(x,y-11,w1+w2+30,22,11);ctx.fill();
     ctx.font='700 11px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(rows[i][0],x+10,y);
-    ctx.font='500 13px system-ui,sans-serif';ctx.fillStyle='#f1ebdd';ctx.fillText(rows[i][1],x+18+w1,y);
+    ctx.font='500 13px system-ui,sans-serif';
+    if(tp){var tx=x+18+w1;for(var p=0;p<tp.length;p++){ctx.fillStyle=tp[p][1];ctx.fillText(tp[p][0],tx,y);tx+=ctx.measureText(tp[p][0]).width;}}
+    else{ctx.fillStyle='#f1ebdd';ctx.fillText(rows[i][1],x+18+w1,y);}
     if(rows[i][2]==='job'&&g.job)jobRewrite(x+18+w1,y,w2);
     y+=rows[i][2]==='job'&&g.job?50:26;
   }
   if(g.pop){ctx.globalAlpha=clamp(2.6-g.pop.t,0,1);ctx.textAlign='right';ctx.font='700 14px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(g.pop.text,W-20,y+4-Math.min(8,g.pop.t*10));ctx.globalAlpha=1;}
   ctx.restore();
 }
+// Two parts of the TIME row: the wall clock, and the clock Ekskyysmi keeps.
+function timeParts(){
+  var g=G,p=[[hhmm(g.clock)+' outside · ','#f1ebdd'],[innerClockText()+' inside',g.rolling?'#ff8a73':g.mult>1?'#ebbd79':'#bfcfbd']];
+  if(g.mult>1)p.push([' ×'+(g.mult===2?'2':g.mult.toFixed(1)),'#ff8a73']);
+  return p;
+}
 function pausedNote(){
-  ctx.fillStyle='rgba(13,17,20,.55)';ctx.fillRect(0,0,W,H);
-  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#f1ebdd';ctx.font='650 34px Fraunces,Georgia,serif';ctx.fillText('Paused',W/2,H/2-36);
-  ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#bfcfbd';ctx.fillText('Tap the scene to carry on.',W/2,H/2+4);
+  var g=G,a=g.awayNote;
+  ctx.fillStyle='rgba(13,17,20,.76)';ctx.fillRect(0,0,W,H);
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#f1ebdd';ctx.font='650 34px Fraunces,Georgia,serif';ctx.fillText(a?a[0]:'Paused',W/2,H/2-48);
+  ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#ebbd79';ctx.fillText(a?a[1]:'Take your time. I’ll just be here, thinking about it.',W/2,H/2-8);
+  ctx.fillStyle='#bfcfbd';ctx.fillText('Tap the scene to carry on.',W/2,H/2+30);
 }
 function draw(){
   var g=G;
@@ -376,6 +387,7 @@ function draw(){
   if(g.out){drawOutside();return;}
   if(g.rep){drawReplay();return;}
   if(g.zoom){drawZoom();return;}
+  if(g.jolt&&joltPhase()){drawXray();return;}
   ctx.save();applyCamera();
   if(g.w){drawWalk();drawLines();}
   else{

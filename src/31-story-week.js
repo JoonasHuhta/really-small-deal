@@ -8,17 +8,17 @@ function scene(o){return function(){
   music(o.music||o.set||'room');
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;
   g.cowA=g.cowB=g.cowR=false;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
-  Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;
+  Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=false;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
 function begin(n,o){return [scene(o),function(){
-  var g=G;g.chapter=n;g.moment=null;g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
+  var g=G;g.chapter=n;g.moment=null;newDay();g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
   g.morko.s=1;g.morko.off=-70;g.chap={day:CHAPTERS[n].day,title:CHAPTERS[n].title,t:0};saveProgress(n);stopVoice();sfx('card');
  },{wait:2.8},function(){G.chap=null;G.fade=1;}];}
-function shadowHit(){var g=G;sfx('hit');g.pulse=0.9;g.shake=RM?0:0.8;g.lines=[];g.cur=null;g.flash=0.8;g.morko.sT=0.62;g.morko.mood='scared';g.morko.pose=null;g.anx=0.9;g.cz=1.08;g.cx=W/2-30;g.cy=300;}
-function yes(){G.yes++;G.human.grin=G.yes;}
+function shadowHit(){var g=G;trigger();addLived('the one that landed',LIVED.shadowHit);sfx('hit');g.pulse=0.9;g.shake=RM?0:0.8;g.lines=[];g.cur=null;g.flash=0.8;g.morko.sT=0.62;g.morko.mood='scared';g.morko.pose=null;g.anx=0.9;g.cz=1.08;g.cx=W/2-30;g.cy=300;}
+function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);}
 
 function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60}).concat([
   ['S','Tuesday. Nearly five. No incidents. I’d like it noted that I did nothing all day and it worked.'],
@@ -219,7 +219,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','I’ve been reviewing my job description.'],
   ['H','And?'],
   function(){G.job={t:0};G.lines=[];stopVoice();sfx('turn');},{wait:4.4},
-  function(){G.jobDone=true;G.job=null;},
+  function(){G.jobDone=true;G.job=null;easeDay();},
   ['S','I can’t stop it happening. I checked. Extensively.'],
   ['S','But I could stay. When it does.'],
   ['H','Show me.'],

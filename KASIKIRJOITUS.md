@@ -181,3 +181,22 @@ H: You could.
 S: …It’s a small comma.
 H: It’s a really small comma.
 ```
+
+## Kaksi kelloa (15.11.2026)
+
+Peruslause, jota tavallinen pelaaja ei ole ennen kuullut: **tavalliselle ihmiselle yksi päivä on yksi päivä. RSD:n kanssa samaan päivään mahtuu kaksi.** Tätä ei sanota ääneen, se tulostetaan kuittina. Kuitti on Ekskyysmin luonteva formaatti (byrokratia) ja samalla pelin jaettava esine: ”DAYS LIVED TODAY 2.1” on lause, jonka ihminen liittää viestiin kaverilleen ilman selitystä.
+
+Säännöt, jotta vitsi pysyy reiluna:
+
+- Ulkoinen aika on aina sama 16 tunnin valveillaolo. Sitä ei venytetä, ettei peli väitä, että muut eläisivät vähemmän.
+- Kerroin alkaa vasta osumasta. Salainen lounaspolku antaa 1,1, ei 1,0: uusinnat jäävät silti. Se on rehellisempi kuin nolla.
+- Perjantaina kerroin on 1,4, ei 1. Työnkuvan muutos ei poista reaktiota, se lyhentää sen hintaa.
+- Röntgen näyttää vain ihmisen sydämen säröllä. Muiden syke on normaali. Vitsi on suhteessa (fontti), ei kivussa.
+
+### Mitä vielä puuttuu, jotta sana kiertäisi
+
+1. **Ensimmäiset 90 sekuntia.** Hiljainen alku on hyvä, mutta jaettu linkki avataan puhelimella kesken muun. Oikean vastauksen ikkunan pitäisi tulla vastaan noin minuutissa, ja ”Skip the quiet bit” pitää näkyä heti toisella kerralla.
+2. **Yksi kuva, joka kertoo pelin.** Röntgen (haljennut sydän, arkistokaappi, ”HEART RATE: NORMAL” vieressä) ja kuitti ovat ne kaksi kuvaa. Tarvitaan sivu (itch.io), jossa ne ovat ensimmäisinä, ja 10 sekunnin GIF röntgenistä.
+3. **Ääni-identiteetti.** Yksi tunnistettava ääni: kuittikirjoittimen rätinä kun kuitti tulostuu ja matala ”thunk” röntgenissä. Paikat ovat valmiina (`SAMPLES`).
+4. **Toinen läpipeluu kannattaa.** Salainen lounas on nyt palkinto ilman jälkeä viikossa. Jos maanantai onnistuu, tiistaina Ekskyysmi voisi olla hämmentynyt ja vähän työtön (”I have nothing to file.”). Se on se tarina, josta pelaajat kertovat toisilleen: ”Saitko lounaan?”
+5. **Pelaaja omana itsenään kuittiin.** Tehty: jos pelaaja painaa ”Try another approach” tai ”Another Monday”, seuraavassa kuitissa lukee ”Mondays replayed, by you ×2 … noted”. Pelaaja huomaa tekevänsä samaa kuin varjo.

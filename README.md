@@ -8,11 +8,20 @@ Ei asennusta, ei kirjautumista. Toimii puhelimella vaakasuunnassa ja tietokoneel
 
 ## Pelaa paikallisesti
 
-Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.18 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
+Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.21 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
 
 **Pelin ydin (14.11.):** varjo ei opeta eikä anna vinkkejä, se vain yrittää suojella, kuten AwA:n susi. Huumori syntyy mittakaavasta: sisällä katastrofi, ulkona kaksi sekuntia. Vitsit kohdistuvat varjon byrokratiaan, arkistoon, välimerkkeihin, ylisuojeluun ja omaan arvokkuuteen, eivät ihmisen kipuun eikä toisten aitoon julmuuteen. Päämäärä on, että pelaaja nauraa, tunnistaa itsensä ja näkee lopussa suhteen muuttuvan: korjaamisesta pysymiseen.
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
+
+Versio 0.21 (Claude, 15.11.2026): **kaksi kelloa.**
+
+- **Ulkona päivä on päivä, sisällä osa päivistä tulee kahdesti.** Ensimmäisestä osumasta lähtien loppupäivä eletään kahteen kertaan, ja piikit (säpsähdykset, arkistokäynnit, uusinnat, poistetut äänitykset, ylimuokkaukset, valvominen) tulevat päälle. HUDissa on rivi TIME: ”14:05 outside · 16:02 inside ×2”. Kun sisäkello kiihtyy, numerot rullaavat punaisina.
+- **Kuitti.** Maanantain lopussa tulostuu DAILY RECEIPT: A DAY, AWAKE 16 h 00 min, ”oh, hi.” 0.4 s, eriteltynä mihin sisäinen aika meni, ja lopuksi DAYS LIVED TODAY (missattu maanantai noin 2,1; salainen lounaspolku 1,1). Viikon lopussa: DAYS ON THE CALENDAR 5, DAYS LIVED noin 8–9. Perjantai on kevein (”rest of the day, 1.4 times”), koska Ekskyysmin työ on vaihtunut. **Copy receipt** kopioi kuitin tekstinä pelin linkin kanssa jaettavaksi.
+- **Röntgensäpsähdys** (uusi hetki *One small thing.*, keskiviikon jälkeen ”THE NEXT MORNING”): Eero kehuu dioja ja sanoo ”Just one small thing.” Salama, ruutu pimenee, ja hetken näkyy röntgen: ihmisen luuranko ja haljennut sydän, varjon kohdalla ei luita vaan arkistokaappi (2011, 2016, 2019, TODAY), ja Eeron luuranko: HEART RATE: NORMAL. ”You okay?” – ”Yeah. It’s nothing.” – ”It is NOT nothing. I have the X-ray.” Pieni asia oli fontti. Vähennetty liike: ei välähdystä, pelkkä röntgen.
+- **Myös pelaajan uusinnat kirjataan:** maanantain uusiminen näkyy seuraavassa kuitissa rivinä ”Mondays replayed, by you … noted”.
+- **Välilehdeltä poistuminen huomataan.** Jos pelaaja on poissa yli kuusi sekuntia, Ekskyysmi: ”You left for 5 min. In here that was 2 h 30 min. I’ve prepared a statement.” Aika menee kuittiin riville ”waiting for you to come back”.
+- Kuittinäkymä on aseteltu niin, että napit ovat tekstin alla ja kuitti vieressä myös puhelimen vaakanäkymässä.
 
 Versio 0.20 (Claude, 15.11.2026):
 
@@ -141,6 +150,7 @@ Kotimatkalla voi käsitellä kaikki kolme aihetta tai valita suoraan jatkamisen 
 | `src/31-story-week.js` | Tiistai–perjantai |
 | `src/33-moments.js` | Tarinan järjestys: mitkä lyhyet hetket tulevat minkä luvun jälkeen |
 | `src/34-response.js` | Oikea vastaus: maanantain ikkuna, salainen haara, perjantain vastinpari |
+| `src/35-inside.js` | Kaksi kelloa, kuitit, välilehdeltä poistuminen, röntgensäpsähdys, One small thing |
 | `src/40-backdrops.js` | Koti, toimisto, Sannan varjo |
 | `src/50-lab.js` | Skenaariolaboratorio, Enhance, The group chat |
 | `src/51-quirks.js` | Outoudet, Sometime, An ordinary evening |

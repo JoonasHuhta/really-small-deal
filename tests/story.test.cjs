@@ -100,6 +100,9 @@ for(const day of ['A','B','C'])for(let fear=0;fear<3;fear++)for(let route=0;rout
   if(day==='C'){assert.equal(T.G.lunch,0);assert.equal(T.G.real,1);}
   assert.match(element('ov').innerHTML,/Try another approach/);
   assert.doesNotMatch(element('ov').innerHTML,/For the designer|Rejections prevented:/);
+  assert.match(element('ov').innerHTML,/DAYS LIVED TODAY/);assert.match(element('ov').innerHTML,/A DAY, AWAKE/);
+  {const d=T.inside.run().at(-1);assert.equal(d.label,'A MONDAY');assert.ok(d.ratio>1.6&&d.ratio<2.8,'a missed Monday is lived about twice: '+d.ratio);
+   assert.match(T.inside.receipt(),/DAYS LIVED TODAY/);assert.match(T.inside.receipt(),/“oh, hi\.”\s+0\.4 s/);}
   runs++;
 }
 // The whole week: Monday through Friday on every kind of Monday, with rotating choices.
@@ -138,6 +141,11 @@ for(const day of ['A','B','C'])for(let v=0;v<4;v++){
   assert.equal(T.G.human.grin,0,'the grin wears off by the evening');
   for(const must of [/Quick chat tomorrow at 9/,/smoke alarm/,/rejection exchange programme/,/Seen 17:31/,/paper cut from an amputation/,/reviewing my job description/,/Her phone died/,/She HAS one/,/That’s MY name/,/Under the other pile/,/The puddle is MY department/,/I intend to go off again on Monday/])assert.match(tr,must);
   assert.ok(T.G.yes>=3,'Wednesday cannot be refused');
+  // Two clocks: five days on the calendar, more than that lived, and Friday costs less than Monday.
+  {const days=T.inside.run().filter(d=>d.label!=='SCENARIO LAB');assert.equal(days.length,5,days.map(d=>d.label).join());
+   assert.ok(days[0].ratio>days[4].ratio,'Friday is lighter than Monday');assert.ok(days.every(d=>d.ratio>=1));
+   assert.match(element('ov').innerHTML,/DAYS ON THE CALENDAR/);assert.match(T.inside.receipt(),/DAYS ON THE CALENDAR\s+5/);
+   assert.match(days[4].ledger[0].label,/1\.4 times/);}
   // The short moments are part of the story now, in order, each behind its own card and never labelled as lab scenes.
   for(const must of [/You showed someone a drawing/,/Last time you showed someone a drawing/,/Eleven people liked it/,/The eyebrow was HUNGER/,/falls off a printer/,/I rounded up/,/Nothing in it can be rejected/,/I always thought that was the bad outcome/,/busy near each other/,/I’m keeping the headband/])assert.match(tr,must);
   assert.ok(tr.indexOf('The eyebrow was HUNGER')<tr.indexOf('rejection exchange programme'),'the eyebrow comes before the favours');
@@ -245,6 +253,14 @@ assert.equal(T.G.bar.sdrink,true);assert.equal(T.G.bar.glass,true);
 T.chapter(2);assert.equal(T.G.bar,null,'the bar does not follow you to work');
 tr=playLab('voice');
 assert.match(tr,/Are you her bank/);assert.match(tr,/take fourteen/);assert.match(tr,/oh, nice\. It’s Sanna/);assert.match(tr,/One for safety/);assert.equal(T.G.rec,null);
+tr=playLab('detail');
+assert.match(tr,/Just one small thing/);assert.match(tr,/I have the X-ray/);assert.match(tr,/The font’s a bit small/);assert.match(tr,/You always keep the font/);
+assert.equal(T.G.jolt,null,'the X-ray is over when the scene is');
+// Leaving the tab is noticed, and filed.
+T.lab('detail');T.G.awayAt=Date.now()-120000;T.inside.cameBack();
+assert.match(T.G.awayNote[0],/You left for 2 min/);assert.match(T.G.awayNote[1],/In here that was 1 h 00 min/);
+assert.ok(T.inside.day().ledger.some(e=>e.label==='waiting for you to come back'));
+T.G.awayAt=Date.now()-2000;T.G.awayNote=null;T.inside.cameBack();assert.equal(T.G.awayNote,null,'a glance away is not a departure');
 tr=playLab('reply');
 assert.match(tr,/A few small edits\. For safety\./);assert.match(tr,/“Hey! I had a on Thursday\. :\)”/,'three first-option cuts leave a message with nothing in it');
 assert.match(tr,/She decoded it/);assert.equal(T.G.replySent,'edited');assert.equal(T.G.draft,null);
@@ -287,6 +303,16 @@ T.start();assert.equal(T.back(),'pause');assert.equal(T.back(),'title');assert.e
 T.lab('enhance');assert.equal(T.back(),'pause');assert.equal(T.back(),'title');
 // Recorded sound is optional: nothing is listed yet, and asking for an unknown effect is harmless.
 assert.equal(Object.keys(T.sound.list).length,0);T.sound.play('hit');assert.equal(T.sound.has('hit'),false);
+// Replaying Monday is noticed on the next receipt.
+function toDayEnd(){let n=0;while(!T.G.dayEnd&&n++<3000){T.unlock();T.draw();const st=T.state();
+  if(st==='click')T.advance();else if(st==='time'||st==='qte')T.tick(6);else if(st==='view'){T.advance();T.tick(6);T.advance();}
+  else if(st==='stretch'||st==='hold')T.advance();else if(st==='choice')T.choose(T.options().findIndex(o=>!o.off));else T.tick(1);}
+  assert.ok(T.G.dayEnd,'Monday reaches its receipt');}
+T.start('B',true);toDayEnd();
+fire(element('ov'),'click',{target:{getAttribute(k){return k==='data-go'?'same':null}}});toDayEnd();
+assert.match(T.inside.receipt(),/Mondays replayed, by you\s+noted/);
+fire(element('ov'),'click',{target:{getAttribute(k){return k==='data-go'?'again':null}}});toDayEnd();
+assert.match(T.inside.receipt(),/Mondays replayed, by you ×2\s+noted/);
 // The correct response: a window of 2.8 seconds (0.8 plus two for reading), right after "oh, hi.".
 function toWindow(day){T.start(day,true);let n=0;while(T.state()!=='qte'&&n++<200){T.unlock();if(T.state()==='click')T.advance();else T.tick(1);}assert.equal(T.state(),'qte','Monday reaches the window');}
 // 1. Doing nothing: too late, and the spiral begins.
@@ -306,7 +332,9 @@ assert.equal(T.G.qte.end,'won');T.tick(1.3);assert.equal(T.G.qteWon,true);
 {const tr=T.history().map(x=>x.text).join('\n');
  assert.match(tr,/Nobody has ever done it/);assert.match(tr,/Those are the same thing and I resent it/);assert.doesNotMatch(tr,/Nobody panic/);
  assert.equal(T.G.lunch,1);assert.equal(T.G.real,0,'even on the dismissive Monday, answering in time means lunch');
- assert.match(element('ov').innerHTML,/complaint about the speed/);}
+ assert.match(element('ov').innerHTML,/complaint about the speed/);
+ {const d=T.inside.run().at(-1);assert.ok(d.ratio<1.2,'answering in time keeps the day almost a day: '+d.ratio);assert.equal(d.hits,0);}
+ assert.doesNotMatch(T.inside.receipt(),/oh, hi\./,'the secret Monday has no 0.4 seconds on it');}
 // 4. Friday: the same window opens, and one word answers all of it.
 T.chapter(5);{let n=0;while(n++<120){T.unlock();const st=T.state();if(T.G.qte&&T.G.qte.auto)break;if(st==='click')T.advance();else T.tick(1);}}
 assert.ok(T.G.qte&&T.G.qte.auto,'Friday opens the window again');T.tick(0.3);T.tick(0.3);T.tick(0.3);T.tick(0.3);
@@ -355,4 +383,4 @@ T.tick(0.05,0.5);T.advance();
 assert.notEqual(T.G.cur.text,throttledLine,'shortcut delay must not depend on animation frame rate');
 // Direct file entry must resolve all resources locally, including font licenses.
 for(const file of ['assets/game.css','assets/game.js','assets/icon.svg','assets/fonts/Fraunces.ttf','assets/fonts/DMSans.ttf','assets/fonts/Fraunces-OFL.txt','assets/fonts/DMSans-OFL.txt'])assert.ok(fs.statSync(path.join(root,file)).size>0,file);
-console.log(`PASS: the correct response (4 ways); 11 lab scenes (13 runs, including four paced chat strategies), quiet opening; ${weeks} full weeks and 4 chapter starts; ${runs} complete Monday paths, ${views} reader-paced cutaways, ${stretches} size interactions; pause, journal, keyboard, reset and local assets.`);
+console.log(`PASS: the correct response (4 ways); 12 lab scenes (14 runs, including four paced chat strategies), quiet opening; ${weeks} full weeks and 4 chapter starts; ${runs} complete Monday paths, ${views} reader-paced cutaways, ${stretches} size interactions; two clocks and receipts; pause, journal, keyboard, reset and local assets.`);

@@ -10,7 +10,7 @@ function wake(){var g=G,M=g.morko;M.asleep=false;M.sT=1.35;M.mood='surprised';g.
 function scPrelude(){return [
   function(){var g=G,Hm=g.human,M=g.morko;music('intro');g.skippable=true;g.hud=false;g.clock=8*3600+51*60+20;
     Hm.gone=true;Hm.x=Hm.xT=1010;Hm.facing=-1;g.noCup=true;g.mugFixed=false;M.asleep=true;M.wake=0;M.s=M.sT=0.3;
-    g.chap={day:CHAPTERS[1].day,title:CHAPTERS[1].title,t:0};sfx('card');},
+    g.chap={day:CHAPTERS[1].day,title:CHAPTERS[1].title,t:0};g.chapter=1;newDay();sfx('card');},
   {wait:2.8},
   function(){G.chap=null;G.fade=1;G.fadeRate=0.36;},
   addTic('Monday, 8:52. Nobody here yet.',190,62,{at:1.6,life:4.2,size:19}),

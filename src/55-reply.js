@@ -2,7 +2,7 @@
 // The draft is a row of pieces. Cutting a piece strikes it through, then it fades and the rest closes up.
 var DRAFT0=[['hey','Hey!'],['i','I had a'],['really','really'],['nice','nice time'],['thu','on Thursday.'],['again','We should do it again'],['soon','soon'],['smiley',':)']];
 function draftOpen(){G.draft={tokens:DRAFT0.map(function(d){return {id:d[0],t:d[1],on:true,k:0};}),sent:null,reply:null,t:0};sfx('card');}
-function draftCut(ids){return function(){var D=G.draft;D.tokens.forEach(function(k){if(ids.indexOf(k.id)>=0&&k.on){k.on=false;k.k=0;}});sfx('nope');};}
+function draftCut(ids){return function(){addLived('edits, for safety',10);var D=G.draft;D.tokens.forEach(function(k){if(ids.indexOf(k.id)>=0&&k.on){k.on=false;k.k=0;}});sfx('nope');};}
 function draftSwap(id,text){return function(){var D=G.draft;D.tokens.forEach(function(k){if(k.id===id){k.t=text;k.flash=1;}});sfx('pick');};}
 function draftRestore(extra){return function(){var D=G.draft;D.tokens=DRAFT0.map(function(d){return {id:d[0],t:d[0]==='really'&&extra?'really really':d[1],on:true,k:0,flash:1};});sfx('good');};}
 function draftText(){var D=G.draft,o=[];D.tokens.forEach(function(k){if(k.on)o.push(k.t);});return o.join(' ')||'…';}

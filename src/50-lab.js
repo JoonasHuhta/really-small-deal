@@ -9,12 +9,13 @@ var LABS={
   voice:{title:'The voice message',blurb:'Replying to a voice message with a voice message. Take one. Take two. Take fourteen.',script:labVoice},
   reply:{title:'The reply',blurb:'A few small edits before sending. For safety. Until nothing in the message can be rejected.',script:labReply},
   library:{title:'A fine.',blurb:'The overdue lighthouse book goes back. The librarian says it’ll be a fine.',script:labLibrary},
+  detail:{title:'One small thing.',blurb:'Eero likes the slides. Just one small thing. For a moment everything is an X-ray.',script:labDetail},
   enhance:{title:'Enhance.',blurb:'One eyebrow. Four levels of zoom. A forensic investigation nobody asked for.',script:labEnhance},
   comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments}
 };
 function labScene(o){return [scene(o),function(){
   var g=G;g.planText=o.plan;g.hud=true;g.plan=true;g.fade=0;
-  if(g.lab){g.label='Scenario lab / '+o.title;return;}
+  if(g.lab){g.label='Scenario lab / '+o.title;newDay();return;}
   // In the story the same scene opens with a card, like any other moment.
   g.label=o.title;g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0};stopVoice();sfx('card');
  },function(){return G.lab?[]:[{wait:2.8},function(){G.chap=null;G.fade=1;}];}];}
@@ -167,6 +168,7 @@ function swat(){
   var best=null;F.msgs.forEach(function(m){if((m.state==='fly'||m.state==='open')&&m.x<W-10&&(!best||m.x<best.x))best=m;});
   F.cool=0.3;
   if(!best){F.shout={text:'Nothing there. Swatting anyway.',t:0};sfx('swat');return;}
+  addLived('replies swatted unread',12);
   best.wasOpen=best.state==='open';best.state='swatted';best.t=0;best.vx=460;best.vy=-300;
   F.swat={x:best.x-40,y:best.y,t:0};G.morko.pose='swat';G.morko.mood='stern';
   F.shout={text:SHOUTS[(F.n++)%SHOUTS.length],t:0};sfx('swat');

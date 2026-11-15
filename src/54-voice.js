@@ -1,6 +1,6 @@
 /* ================= Lab: The voice message. Fourteen takes of “hi”. ================= */
 function take(n,line,verdict){return [
-  function(){G.rec={take:n,on:true,t:0};sfx('pick');},
+  function(){G.rec={take:n,on:true,t:0};addLived('takes, deleted',n>3?40:4);sfx('pick');},
   ['H',line],
   function(){G.rec.on=false;sfx('nope');},
   ['S',verdict]
