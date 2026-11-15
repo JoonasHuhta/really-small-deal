@@ -181,11 +181,14 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 
 ## Lue seuraavassa järjestyksessä
 
-1. [Pelin konsepti](PELIKONSEPTI.md) — ensisijainen suunnittelupohja: hahmot, maailman säännöt, huumori, perustelut ja avoimet päätökset.
-2. [Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md) — seuraavien kokeiden rajaus ja toteutustapojen alustava vertailu. Sisältää ehdotuksia, ei lukittua toteutussuunnitelmaa.
+1. [Seuraavaksi](SEURAAVAKSI.md): työlista tärkeysjärjestyksessä, tutkimuksesta johdetut käsikirjoitusideat, julkaisu ja rahoitus. **Aloita tästä.**
+2. [Käsikirjoitus](KASIKIRJOITUS.md): kaari, tasapaino, Ekskyysmin hahmo ja kaksi kelloa.
+3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
+4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
+5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
+6. [Peli](index.html): versio 0.21, viisi päivää ja kahdeksan välihetkeä, läpipeluu noin 30 minuuttia.
 
-3. [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md) — ulkopuolinen arvio konseptista ja ehdotus pelaajan teoksi. Ei hyväksytty päätös.
-4. [Ekskyysmi-prototyyppi](index.html) — versio 0.9: noin 25 minuutin selainpeli, viisi päivää. Varjo puhuu, pelaaja valitsee sen repliikit ja kokeilee varoituksen fyysistä kokoa. Kohtaukset: aamubriiffi, mukavuusalueneuvo, ”oh, hi”, ulkopuolinen näkökulma, hetkeä myöhemmin ja kotimatka. Ei vielä testattu pelaajilla.
+Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 
 ## Taustamateriaali
 

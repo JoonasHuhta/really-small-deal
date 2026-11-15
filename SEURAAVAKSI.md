@@ -1,0 +1,73 @@
+# Seuraavaksi: mitä kannattaa tehdä ja missä järjestyksessä
+
+15.11.2026 · Claude. Tämä tiedosto korvaa [TOTEUTUKSEN_SUUNNITTELU.md](TOTEUTUKSEN_SUUNNITTELU.md):n työlistana. Lista on järjestetty sen mukaan, mikä vaikuttaa eniten siihen, että peli toimii ja että siitä kerrotaan eteenpäin.
+
+## Missä ollaan (0.21)
+
+- **Peli:** viisi päivää (Oh, hi · Quick chat? · Could you just… · Seen. · For now) ja niiden välissä kahdeksan lyhyttä hetkeä. Yksi läpipeluu kestää lukutahdissa noin 30 minuuttia. Selainpeli toimii myös puhelimella vaakasuunnassa. Android-kuori on valmiina, mutta sitä ei ole julkaistu.
+- **Kantavat ideat:** varjon byrokratia ja ylisuojelu. *Oikea vastaus* (ikkuna, joka on mahdoton ensimmäisellä kerralla). *Kaksi kelloa*: ulkona päivä on päivä, sisällä osa päivistä tulee kahdesti. Kuitti, röntgen ja kaari korjaamisesta pysymiseen.
+- **Neljä hetkeä on vain labrassa** eikä vielä tarinassa: *Sometime.*, *An ordinary evening*, *The voice message*, *A fine.*
+- **Testaus:** logiikkatestit kattavat kaikki polut (180 maanantaita, 12 viikkoa, 12 hetkeä). **Ihmispelaajia ei ole vielä testattu.** Se on isoin aukko.
+
+## 1. Nyt: pelaajatesti ennen uusia ominaisuuksia
+
+Viisi ihmistä riittää: kaksi tai kolme, jotka tunnistavat RSD:n itsestään, ja kaksi, jotka eivät tunnista. Jokainen pelaa maanantain ilman ohjeita. Sinä vain katsot ja kirjoitat ylös:
+
+- missä kohtaa ensimmäinen naurahdus tulee (tavoite: ennen kahta minuuttia)
+- missä kohtaa he lakkaavat lukemasta ja alkavat painaa eteenpäin
+- ymmärtävätkö he oikean vastauksen ikkunan vitsiksi vai kokevatko sen epäreiluksi
+- mitä he sanovat kuitista (luku 2.1)
+
+Lopuksi kysy kaksi kysymystä: ”Kenelle näyttäisit tämän?” ja ”Mikä kohta jäi mieleen?”. Jos vastaus jälkimmäiseen on röntgen tai kuitti, jakaminen toimii.
+
+## 2. Ensimmäiset 90 sekuntia
+
+Täysi intro kestää lukutahdissa mitattuna noin 2 min 20 s ennen oikean vastauksen ikkunaa. Jaettu linkki avataan usein puhelimella kesken muun tekemisen, joten tavoite on noin 75 sekuntia. Lyhennettävää on hiljaisen alun sekunneissa ja aamubriiffin repliikeissä. Itse ideaan ei tarvitse koskea.
+
+## 3. Käsikirjoitus: mitä tutkimus antaa (lähteet alla)
+
+Uusin laadullinen tutkimus (Rowney-Smith ym., PLOS ONE 2026) nimeää ADHD:n hylkäysherkkyydestä kolme teemaa: **vetäytyminen, naamioiminen ja kehon tuntemukset**. Kokemus voi kestää tunneista viikkoihin ja nousta pintaan vuosia myöhemmin. Toisen tutkimuksen mukaan **odotettu torjunta tuntui monesta pahemmalta kuin itse torjunta**. Kaikki tämä sopii pelin logiikkaan, ja osa on jo pelissä:
+
+| Teema | Pelissä nyt | Mitä puuttuu (ehdotus) |
+|---|---|---|
+| Kehon tuntemukset | Röntgen, säpsähdykset, hikilätäkkö | Riittää. Ei lisää. |
+| Naamioiminen | ”Yeah. It’s nothing.” | **Kaari:** sama repliikki toistuu viikon aikana, ja perjantaina ihminen sanoo: ”It’s something. Small. Give me a minute.” Pieni, mutta se on naamion laskeminen ilman terapiapuhetta. |
+| Vetäytyminen | Maanantain kotimatka yksin | **Uusi hetki *The posting.*:** ihminen katsoo työpaikkailmoitusta, Ekskyysmi arkistoi sen. Kuittiin: ”applications not sent: 1 · rejections avoided: 1 · success rate: 100 %”. |
+| Odotus pahempi kuin itse asia | Kolme skenaariota klo 03:07 | ***Not now.*-kuittiin** kaksi riviä: ”rehearsal 3 h 10 min” ja ”the actual no 4 s”. |
+| Ympäristö ratkaisee (Sandland 2025) | Sanna, Eero | **Yksi hetki, jossa joku on täysin yksiselitteinen** (”This is not a criticism. It’s a font.”). Ekskyysmillä ei ole lomaketta yksiselitteiselle viestille. |
+
+Ääni pysyy samana: varjo on absurdi, ihmiset ovat rauhallisia, eikä peli opeta.
+
+**Varo:** RSD ei ole diagnoosi, ja termiä on kritisoitu myös tutkimuksessa (van Asselt 2026). Pelin sivulla ja About-ruudussa kannattaa puhua kokemuksesta (”rejection sensitivity”), ei diagnoosista, eikä esittää kliinisiä väitteitä.
+
+## 4. Pienet tarinakorjaukset
+
+1. **Salainen lounas jättää jäljen viikkoon.** Jos maanantai onnistuu, tiistaina Ekskyysmi on hämmentynyt ja vähän työtön: ”I have nothing to file.” Tästä pelaajat kysyvät toisiltaan: ”Saitko lounaan?”
+2. **Labrahetkien paikat:** *Sometime.* maanantain jälkeen, *The voice message* torstai-iltaan ja *A fine.* (”twenty-three days later”) aivan loppuun ennen kuittia. *An ordinary evening* on rauhallinen hengähdys. Se sopii keskiviikon jälkeen, tai sen voi jättää pelkäksi labrahetkeksi.
+3. **Kuittiin rivi ”the actual no”** (ks. edellinen kohta).
+
+## 5. Ennen julkaisua
+
+1. **Ääni-identiteetti:** kuittikirjoittimen rätinä, matala ”thunk” röntgenissä, toimiston huminaa ja yksi lyhyt teema. Paikat ovat valmiina (`SAMPLES`, `MUSIC`).
+2. **Saavutettavuus:** asetus *Slow reality*, joka pidentää oikean vastauksen ikkunan noin kymmeneen sekuntiin. Vitsi säilyy, mutta salainen haara ei vaadi nopeita sormia. Tekstin nopeus. Vähennetty liike on jo tehty.
+3. **itch.io-sivu:** selainversio upotettuna, kansikuvana röntgen, ensimmäisenä kuvana kuitti, 10 sekunnin GIF röntgenistä ja lyhyt kuvaus. Selaimessa pelattavat pelit saavat itch.io:ssa selvästi enemmän pelikertoja kuin ladattavat, mutta näkyvyys tulee lähes kokonaan omista jaoista, devlogeista ja jameista.
+4. **Jamit ja tapahtumat:** *Psyche Game Jam* (huhti–toukokuu, mielenterveysaiheinen, keskeneräiset pelit sallittu). **Huom:** säännön mukaan peliä ei saa olla julkaistu muualla, ja GitHub Pages voi tulkita julkaisuksi, joten se kannattaa tarkistaa järjestäjältä. *Global Game Jam / Finnish Game Jam* on 23.–25.1.2027, mutta se on uutta peliä varten eikä tätä.
+5. **Rahoitus (jos MoshBitSurfersilla on Y-tunnus):** AVEKin demotuki (DigiDemo/CreaDemo). Vuoden 2026 haku oli 18.6.–21.9., ja omaa rahoitusta tarvitaan vähintään 20 %. Seuraava kierros kannattaa tarkistaa keväällä 2027.
+
+## Mitä ei kannata tehdä
+
+- Lisää HUD-infoa (kokeiltu kellon kanssa, oli liikaa).
+- Selviytymisvinkkejä tai terapiakieltä.
+- Peliä pidemmäksi. Kokonaisuus on jo noin 30 minuuttia, ja paras versio on luultavasti lyhyempi.
+- Diagnoosisanastoa pelin sisällä.
+
+## Lähteet
+
+- Rowney-Smith, Sutton, Quadt & Eccles (2026): [The lived experience of rejection sensitivity in ADHD](https://pmc.ncbi.nlm.nih.gov/articles/PMC12822938/), PLOS ONE. Ks. myös [BSMS:n tiedote](https://www.bsms.ac.uk/about/news/2026/it-hurts-in-your-body-new-bsms-research-explores-rejection-sensitivity-in-adhd.aspx).
+- [Psychology Today: RSD, the actual research](https://www.psychologytoday.com/us/blog/if-i-be-waspish/202604/rejection-sensitivity-dysphoria-the-actual-research) (tutkimuksen tila; Sandland 2025)
+- [LifeStance: odotettu torjunta](https://lifestance.com/blog/rejection-sensitive-dysphoria-adhd/)
+- [Early Years TV: termin kritiikki](https://www.earlyyears.tv/?p=541282) (van Asselt 2026)
+- [Cinevva: itch.io-pelikerrat 2026](https://app.cinevva.com/guides/get-more-plays-itch-io)
+- [Psyche Game Jam 2026](https://itch.io/jam/psyche-game-jam-2026)
+- [Global Game Jam 2027](https://www.pocketgamer.biz/events/global-game-jam-2027/)
+- [AVEK CreaDemo/DigiDemo](https://kopiosto.fi/en/AVEK/funding/avek-grants-and-support-guidelines/creademo-digidemo/)

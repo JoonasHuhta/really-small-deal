@@ -2,7 +2,9 @@
 
 Versio 0.3 · 14.11.2026
 
-**Käyttäjän hyväksymä pelin työnimi: Ekskyysmi.** Nimeä käytetään toistaiseksi. Se voi toimia myös varjohahmon työnimenä.
+> **Tila 15.11.2026:** pelin nimi on **Really Small Deal**, ja varjo on **Ekskyysmi**. Ydin (ihminen ja elävä varjo, huumori varjon ylisuojelusta, ei opettamista) on ennallaan ja toteutettu pelattavaksi prototyypiksi. Ajantasainen tilanne on [README.md](README.md):ssä, työlista [SEURAAVAKSI.md](SEURAAVAKSI.md):ssä ja kaari [KASIKIRJOITUS.md](KASIKIRJOITUS.md):ssä. Tämä tiedosto säilyy konseptin perusteluna.
+
+~~Käyttäjän hyväksymä pelin työnimi: Ekskyysmi.~~ (Myöhemmin: peli on Really Small Deal, varjo on Ekskyysmi.)
 
 Tämä dokumentti kokoaa käyttäjän hyväksymän konseptisuunnan. Se erottaa yhteisen perustan kokeiltavista yksityiskohdista. Aiemmat päivystys-, manageri- ja velkakirjanpitokonseptit eivät määritä tämän pelin toteutusta.
 
@@ -89,7 +91,7 @@ Kokemusaineistosta johdetut sisältöperiaatteet:
 | Tila | Asia |
 | --- | --- |
 | Hyväksytty perusta | Vaikea aihe, huumori ja pelattava vertauskuva; ihminen ja elävä varjo; itseäänkin säikähtävä mörkö; tapahtuman jälkivaikutus. |
-| Hyväksytty työnimi | Ekskyysmi. Lopullinen julkaisunimi voidaan arvioida myöhemmin. |
+| Nimi | Peli: Really Small Deal (15.11.2026). Varjo: Ekskyysmi. |
 | Jatkosuunnittelun lähtökohta | Arkinen maailma, sisäisen ja ulkoisen näkökulman ero, vähäeleinen huumori, hahmojen näkyvä sukulaisuus. |
 | Kokeiltava | Mörön tarkka muoto, olemuksen muuttuminen, ihmisen ja varjon eritahtisuus sekä varoituksen synnyttämä uusi reaktio. |
 | Avoin | Pelaajan rooli, toistuva teko, tavoite, eteneminen, ohjaus, pelimuoto, moottori, alustat, pituus, tarina, lopullinen julkaisunimi ja ansainta. |

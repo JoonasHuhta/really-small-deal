@@ -2,6 +2,8 @@
 
 14.11.2026 · Ehdotus seuraavan työvaiheen pohjaksi
 
+> **Tila 15.11.2026: vanhentunut.** Peli on toteutettu HTML5-canvaksella (`src/` → `assets/game.js`), ja se on pelattavissa selaimessa ja Android-kuoressa. Ajantasainen työlista on [SEURAAVAKSI.md](SEURAAVAKSI.md). Tämä tiedosto säilyy historiana.
+
 [Pelin konsepti](PELIKONSEPTI.md) määrittää hyväksytyn ytimen. Tämä tiedosto ei lukitse pelimekaniikkaa, alustaa tai tekniikkaa. Peliä ei ole vielä toteutettu tai testattu pelaajilla.
 
 ## 1. Ensimmäinen ratkaistava asia

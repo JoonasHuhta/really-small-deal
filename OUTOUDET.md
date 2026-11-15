@@ -14,7 +14,7 @@
 | Outous | Tila pelissä |
 |---|---|
 | Rekisterikilpien numeroiden summat, samaa summaa etsitään | **Maanantain kotimatka:** kolme pysäköityä autoa. 3+0+4 = 7, 1+5+1 = 7 ✓ (ihminen hymyilee hetken), 9+9+9 = 27. no. Ei dialogia. |
-| ”Soitellaan”, ”nähdään”: missä ja milloin? | **Lab: Sometime.** Olli sanoo ”we should grab a coffee sometime” ja lähtee. Ihminen haluaa päivän ja kellonajan, varjo haluaa tietää, tarkoittiko Olli sitä. ”Same question.” – ”Very different departments.” |
+| ”Soitellaan”, ”nähdään”: missä ja milloin? | **Lab: Sometime.** Eero sanoo ”we should grab a coffee sometime” ja lähtee. Ihminen haluaa päivän ja kellonajan, varjo haluaa tietää, tarkoittiko Olli sitä. ”Same question.” – ”Very different departments.” |
 | Pakko korjata, kun joku liioittelee | **Lab: An ordinary evening.** Kaisa: ”I ran like twenty kilometres.” Varjo yrittää estää. Ihminen: ”Twelve.” Kaisa nauraa. ”She knows I count.” |
 | Kirjaa ei voi palauttaa ennen kuin se on luettu | **Lab: An ordinary evening.** Kirja on 23 päivää myöhässä. Varjo: ”They’d KNOW.” Ihminen: ”That’s not why.” |
 | Lautasen tiskaus: 3 vasemmalle, 3 oikealle alta, sama päältä, kantti 3 kierrosta | **Lab: An ordinary evening.** Koko proseduuri näkyy laskurina ilman sanoja. Varjo: ”It’s the only system in this house that works.” |

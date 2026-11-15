@@ -195,6 +195,8 @@ Säännöt, jotta vitsi pysyy reiluna:
 
 ### Mitä vielä puuttuu, jotta sana kiertäisi
 
+(Ajantasainen, tärkeysjärjestetty lista ja tutkimuksesta johdetut käsikirjoitusideat ovat tiedostossa [SEURAAVAKSI.md](SEURAAVAKSI.md).)
+
 1. **Ensimmäiset 90 sekuntia.** Hiljainen alku on hyvä, mutta jaettu linkki avataan puhelimella kesken muun. Oikean vastauksen ikkunan pitäisi tulla vastaan noin minuutissa, ja ”Skip the quiet bit” pitää näkyä heti toisella kerralla.
 2. **Yksi kuva, joka kertoo pelin.** Röntgen (haljennut sydän, arkistokaappi, ”HEART RATE: NORMAL” vieressä) ja kuitti ovat ne kaksi kuvaa. Tarvitaan sivu (itch.io), jossa ne ovat ensimmäisinä, ja 10 sekunnin GIF röntgenistä.
 3. **Ääni-identiteetti.** Yksi tunnistettava ääni: kuittikirjoittimen rätinä kun kuitti tulostuu ja matala ”thunk” röntgenissä. Paikat ovat valmiina (`SAMPLES`).
