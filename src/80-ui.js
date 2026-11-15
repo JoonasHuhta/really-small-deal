@@ -9,7 +9,7 @@ function showChapters(){
 function showAbout(){
   showOv('<div class="eyebrow">About</div><h2>What is this?</h2>'+
    '<p>You play Ekskyysmi, the overprotective shadow of a perfectly ordinary person. They have small plans. You have concerns.</p>'+
-   '<p>Small moments from one ordinary life, in no particular hurry. About 45 minutes. Read at your own pace. Nothing is timed.</p>'+
+   '<p>Small moments from one ordinary life, in no particular hurry. About 45 minutes. Read at your own pace. Almost nothing is timed. The one thing that is, isn’t fair. That’s the point.</p>'+
    '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice.</p>'+
    '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
 }
@@ -37,9 +37,9 @@ function showTitle(){
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
 function showEnd(){
   var g=G,n=g.startles;g.ended=true;g.dayEnd=true;WAIT=null;Q=[];render();saveProgress(2);
-  var note=g.lunch===1?'Lunch happened. So did the worrying. Both fitted into the same day.':g.lunch===2?'A message sent. Lunch tomorrow. The shadow is reviewing the menu.':g.day==='C'?(g.reflected?'Today hurt. You reached for someone who makes room for you.':'Today hurt. Their choice to leave you out was theirs.'):'The invitation stayed unspoken. The story can still continue tomorrow.';
+  var note=g.lunch===1?'You answered in under a second. Nobody has done that before. Lunch happened. The shadow is lying down.':g.lunch===2?'Lunch didn’t happen today. A message did. Tomorrow, then.':g.day==='C'?(g.reflected?'Today hurt. You reached for someone who makes room for you.':'Today hurt. Their choice to leave you out was theirs.'):'Nobody said no. Nobody had the chance. The shadow is calling that a win.';
   if(g.day==='C'&&g.leak==='exit'&&!g.reflected)note='Today felt lonely. Not every missing piece needs filling in tonight.';
-  var quote={grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. We went anyway.'}[g.leak];
+  var quote=g.lunch===1?'I would like to lodge a complaint about the speed of that hi.':{grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. We went anyway. Slightly after everyone else.'}[g.leak];
   showOv('<div class="eyebrow">End of Monday</div><h2>Home. Both of you.</h2>'+
    '<p>The greeting lasted two seconds.<br>The shadow took the scenic route.</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
@@ -78,6 +78,7 @@ ov.addEventListener('click',function(e){
 window.addEventListener('keydown',function(e){
   if(logDialog.open||ov.dataset.kind==='restart'&&ov.classList.contains('on'))return;
   if(e.repeat)return;
+  if(WAIT==='qte'&&G.qte&&!G.qte.end&&!paused){if(qteKey(e))e.preventDefault();return;}
   var tag=e.target.tagName;
   if(e.key===' '||e.key==='Enter'){
     if(tag==='BUTTON'||tag==='INPUT'||tag==='A')return;

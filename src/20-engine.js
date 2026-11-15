@@ -4,7 +4,7 @@ function reset(day){
   if(!r){var opts=['A','B','C'].filter(function(x){return x!==lastDay;});r=opts[Math.floor(Math.random()*opts.length)];}
   lastDay=r;
   G={time:0,day:r,clock:9*3600+41*60+12,rate:1,started:false,ended:false,
-     human:{x:HOME,xT:HOME,flinch:0,gone:false,face:'neutral',back:false,sweat:0,sweatT:0,blush:0,grin:0,puddle:0},aSweat:0,cards:[],rep:null,zoom:null,fight:null,fightRes:null,fightLog:null,boss:null,ninja:false,rBrow:0,lab:null,labEnd:false,tics:[],carsSeen:[],dish:null,kitchen:false,smileT:0,lens:null,lensView:false,glassN:0,skippable:false,moment:null,bar:null,rec:null,draft:null,lib:null,replySent:null,noCup:false,mugFixed:true,fadeRate:1.6,
+     human:{x:HOME,xT:HOME,flinch:0,gone:false,face:'neutral',back:false,sweat:0,sweatT:0,blush:0,grin:0,puddle:0},aSweat:0,cards:[],rep:null,zoom:null,fight:null,fightRes:null,fightLog:null,boss:null,ninja:false,rBrow:0,lab:null,labEnd:false,tics:[],carsSeen:[],dish:null,kitchen:false,smileT:0,lens:null,lensView:false,glassN:0,skippable:false,moment:null,qte:null,qteWon:false,bar:null,rec:null,draft:null,lib:null,replySent:null,noCup:false,mugFixed:true,fadeRate:1.6,
      morko:{s:1,sT:1,off:-70,mood:'calm',st:'free',pose:null,h:[{x:340,y:380},{x:420,y:380}]},
      gaze:0,gazeT:0,gazeFrom:'A',dark:0,darkT:0,flash:0,anx:0,
      ax:1010,axT:1010,bx2:1090,bxT:1090,aFace:-1,bFace:-1,aWave:false,cowA:false,cowB:false,cupLeft:false,
@@ -29,11 +29,12 @@ function run(){
     if(s.view){WAIT='view';TIMER=2.4;render();return;}
     if(s.stretch){WAIT='stretch';G.morko.pose='grow';G.morko.sT=2.1;G.morko.mood='stern';LOCK=0.2;render();return;}
     if(s.hold){G.hold={kind:s.hold.kind,secs:s.hold.secs||3,p:0,on:false,tap:0,o:s.hold};G.lines=[];G.cur={who:'S',text:''};WAIT='hold';LOCK=0.2;render();return;}
+    if(s.qte){startQte();return;}
     if(s.fight){startFight(s.fight);return;}
     if(s.choice){G.nopeMsg=null;CH=typeof s.choice==='function'?s.choice():s.choice;WAIT='choice';LOCK=0.4;render();return;}
   }
 }
-function advance(){if(paused||LOCK>0)return;if(WAIT==='fight'){swat();return;}if(WAIT==='hold'){holdTap();return;}if(WAIT==='stretch'){G.warningSize=G.morko.sT;G.morko.pose=null;run();}else if(WAIT==='click'||(WAIT==='view'&&TIMER<=0))run();}
+function advance(){if(paused||LOCK>0||WAIT==='qte')return;if(WAIT==='fight'){swat();return;}if(WAIT==='hold'){holdTap();return;}if(WAIT==='stretch'){G.warningSize=G.morko.sT;G.morko.pose=null;run();}else if(WAIT==='click'||(WAIT==='view'&&TIMER<=0))run();}
 function choose(i){
   if(paused||WAIT!=='choice'||LOCK>0||!CH||!CH[i])return;
   if(CH[i].off){nope(i);return;}
@@ -67,6 +68,9 @@ function render(){
   }else if(WAIT==='hold'){
     speaker='S';text=holdText();g.hold.shown=text;
     html='<div class="hold-controls"><button class="opt cont" type="button" data-i="hold">'+HOLD_LABEL[g.hold.kind]+'</button><div class="holdbar"><i id="holdfill"></i></div></div>';
+  }else if(WAIT==='qte'&&g.qte){
+    var qq=g.qte;speaker='S';text='RESPOND. CORRECTLY. NOW.';
+    html=qq.order.map(function(i){var r=RESPONSE[i],done=i<qq.i;return '<button class="opt qte'+(done?' done':'')+'" type="button" data-i="q'+i+'"'+(qq.end||done?' disabled':'')+'><b>'+r.sym+'</b><span>'+r.label+'</span></button>';}).join('');
   }else if(WAIT==='fight'){
     speaker='S';text='Incoming! I’ve got this. Probably.';
     html='<button class="opt cont swat" type="button" data-i="go">Swat! <span>(or tap the scene)</span></button>';
@@ -90,7 +94,7 @@ function render(){
   if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
     var nextControl=elOpts.querySelector('[data-i=read]');if(nextControl&&!nextControl.disabled)nextControl.focus();
   }
-  document.getElementById('hint').textContent=lensFree()?'Move the glass over the room. Everything looks worse through it. That is its job.':WAIT==='fight'?'Tap to swat the nearest reply. Waiting lets it come close enough to read.':WAIT==='hold'?'Press and hold the button or the scene. A few taps work too. Letting go is allowed.':WAIT==='stretch'?'Drag up on the scene, or use the slider. No rush.':WAIT==='choice'?'Choose a line · keys 1–4 · every choice keeps the story moving.':g.started?'Space / Enter to continue · P to pause · Dialogue to look back.':'Take your time. The coffee can wait.';
+  document.getElementById('hint').textContent=WAIT==='qte'?'Arrow keys and Space, in this order. Or tap the buttons. The window is under a second. Sorry.':lensFree()?'Move the glass over the room. Everything looks worse through it. That is its job.':WAIT==='fight'?'Tap to swat the nearest reply. Waiting lets it come close enough to read.':WAIT==='hold'?'Press and hold the button or the scene. A few taps work too. Letting go is allowed.':WAIT==='stretch'?'Drag up on the scene, or use the slider. No rush.':WAIT==='choice'?'Choose a line · keys 1–4 · every choice keeps the story moving.':g.started?'Space / Enter to continue · P to pause · Dialogue to look back.':'Take your time. The coffee can wait.';
   if(WAIT==='fight'&&g.fight.paced)document.getElementById('hint').textContent='No timer. Use the buttons to read or swat. Space / Enter or tapping the scene swats.';
   resize();
 }
@@ -118,6 +122,7 @@ elOpts.addEventListener('click',function(e){
   var t=e.target;while(t&&t!==elOpts&&!(t.getAttribute&&t.getAttribute('data-i')))t=t.parentNode;
   if(!t||t===elOpts)return;var i=t.getAttribute('data-i');LOCK=0;
   if(WAIT==='fight'&&G.fight.paced)G.fight.focusControls=document.activeElement===t;
+  if(i.charAt(0)==='q'){qteInput(+i.slice(1));return;}
   if(i==='hold'){holdClick();return;}
   if(i==='skip'){skipIntro();return;}
   if(i==='read'){readReply();return;}

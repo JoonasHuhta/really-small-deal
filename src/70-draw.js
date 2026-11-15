@@ -397,6 +397,7 @@ function draw(){
     if(g.set==='bar'&&g.bar)barFront();
     drawLens();
     drawLines();
+    drawQte();
   }
   ctx.restore();
   if(g.flash>0.01&&!RM){ctx.fillStyle='rgba(255,250,235,'+(0.22*g.flash)+')';ctx.fillRect(0,0,W,H);}
@@ -411,7 +412,7 @@ function draw(){
   if(g.draft)drawDraft();
   if(g.boss)drawBoss();
   if(g.rec)drawRec();
-  if(g.hud&&g.started)hud();
+  if(g.hud&&g.started&&!g.qte)hud(); // the window has the screen for its second
   if(g.job&&!g.ended)jobCard();
   if(g.w){
         if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText('THE WALK HOME',W/2,74);

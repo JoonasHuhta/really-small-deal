@@ -39,6 +39,7 @@ for(const day of ['A','B','C'])for(let fear=0;fear<3;fear++)for(let route=0;rout
     switch(T.state()){
       case 'click':T.advance();break;
       case 'time':T.tick(6);break;
+      case 'qte':T.advance();T.tick(1);break; // clicking does nothing; the window simply closes
       case 'hold':T.advance();holds++;break;
       case 'view':{
         const outside=T.G.out;
@@ -72,9 +73,11 @@ for(const day of ['A','B','C'])for(let fear=0;fear<3;fear++)for(let route=0;rout
   assert.equal(T.G.leak,routes[route]);
   assert.equal(T.G.fear,fear+1);
   assert.ok(T.history().length>20);
-  if(day==='A')assert.equal(T.G.lunch,1);
-  if(day==='B')assert.equal(T.G.lunch,route===3?1:(walk===0||walk===4)?2:0);
+  // Every path misses the window and nobody goes to lunch. The walk home is where the human can still send one message.
+  assert.equal(T.G.qteWon,false);
+  if(day!=='C')assert.equal(T.G.lunch,(walk===0||walk===4)?2:0);
   const transcript=T.history().map(x=>x.text).join('\n');
+  assert.match(transcript,/We missed the window/);assert.doesNotMatch(transcript,/Nobody has ever done it/);
   if(walk===4){
     assert.match(transcript,/Exhibit A/);
     assert.match(transcript,/Director’s cut/);assert.match(transcript,/shorter than I remember/);assert.equal(T.G.rep,null,'the replay must close');
@@ -110,7 +113,8 @@ function playOn(pick){
       case 'view':T.advance();T.tick(6);T.advance();break;
       case 'stretch':T.advance();break;
       case 'hold':T.advance();break;
-      case 'fight':if(T.G.fight.paced){T.swat();T.tick(0.6);}else T.tick(0.25);break; // the story now runs through the short moments too
+      case 'fight':if(T.G.fight.paced){T.swat();T.tick(0.6);}else T.tick(0.25);break;
+      case 'qte':T.tick(1);break; // the story now runs through the short moments too
       case 'choice':{
         const opts=T.options(),live=opts.map((o,i)=>o.off?-1:i).filter(i=>i>=0);
         const off=opts.findIndex(o=>o.off);
@@ -189,7 +193,7 @@ const storage=window.localStorage;window.localStorage={getItem(){throw Error('Un
 T.start();T.title();assert.match(element('ov').innerHTML,/New game/);window.localStorage=storage;
 savedItems.delete(saveKey);
 // Hands-on moments: holding covers the human's eyes; letting go while Sanna waves lets the human see it.
-function toHold(day){T.start(day,true);let st=0;while(T.state()!=='hold'&&st++<200){T.unlock();const s=T.state();if(s==='click')T.advance();else if(s==='time')T.tick(6);else if(s==='stretch')T.advance();else if(s==='choice'){const o=T.options();T.choose(o[0].preview?1:0);}}assert.equal(T.state(),'hold');assert.equal(T.G.hold.kind,'cover');}
+function toHold(day){T.start(day,true);let st=0;while(T.state()!=='hold'&&st++<200){T.unlock();const s=T.state();if(s==='click')T.advance();else if(s==='time'||s==='qte')T.tick(6);else if(s==='stretch')T.advance();else if(s==='choice'){const o=T.options();T.choose(o[0].preview?1:0);}}assert.equal(T.state(),'hold');assert.equal(T.G.hold.kind,'cover');}
 toHold('B');T.holdDown();T.tick(0.5);T.tick(0.5);T.tick(0.3);assert.equal(T.G.aWave,true,'Sanna waves while the eyes are covered');
 T.holdUp();T.tick(0.35);T.tick(0.35);assert.equal(T.G.peeked,true);assert.equal(T.G.leak,'none');assert.match(T.G.cur.text,/She’s waving/);
 toHold('B');T.holdDown();for(let i=0;i<8;i++)T.tick(0.5);assert.equal(T.G.peeked,false);assert.equal(T.G.leak,'cover');assert.notEqual(T.state(),'hold');
@@ -283,6 +287,30 @@ T.start();assert.equal(T.back(),'pause');assert.equal(T.back(),'title');assert.e
 T.lab('enhance');assert.equal(T.back(),'pause');assert.equal(T.back(),'title');
 // Recorded sound is optional: nothing is listed yet, and asking for an unknown effect is harmless.
 assert.equal(Object.keys(T.sound.list).length,0);T.sound.play('hit');assert.equal(T.sound.has('hit'),false);
+// The correct response: a window under a second long, right after "oh, hi.".
+function toWindow(day){T.start(day,true);let n=0;while(T.state()!=='qte'&&n++<200){T.unlock();if(T.state()==='click')T.advance();else T.tick(1);}assert.equal(T.state(),'qte','Monday reaches the window');}
+// 1. Doing nothing: too late, and the spiral begins.
+toWindow('A');T.advance();assert.equal(T.state(),'qte','clicking does not skip the window');
+T.tick(0.5);assert.equal(T.G.qte.end,null,'still open at half a second');T.tick(0.4);assert.equal(T.G.qte.end,'late');
+T.tick(1.3);assert.notEqual(T.state(),'qte');assert.equal(T.G.qteWon,false);
+// 2. The wrong key, or Enter out of habit: incorrect.
+toWindow('B');T.qteKey('ArrowDown');assert.equal(T.G.qte.end,'wrong');
+toWindow('B');T.qteKey('Enter');assert.equal(T.G.qte.end,'wrong','Enter is not part of the procedure');
+// 3. The procedure, in order, in time: the secret branch. Lunch happens, and nobody panics.
+toWindow('C');for(const k of ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' ']){T.tick(0.1);T.qteKey(k);}
+assert.equal(T.G.qte.end,'won');T.tick(1.3);assert.equal(T.G.qteWon,true);
+{let n=0;while(!T.G.ended&&n++<400){T.unlock();T.draw();const st=T.state();
+  if(st==='click')T.advance();else if(st==='time')T.tick(6);else if(st==='view'){T.advance();T.tick(6);T.advance();}
+  else if(st==='choice'){const o=T.options();const i=o.findIndex(x=>x.t.startsWith('Mention what'));T.choose(i>=0?i:o.findIndex(x=>x.t.startsWith('We can walk')));}
+  else throw new Error('secret branch stalled: '+st);}}
+{const tr=T.history().map(x=>x.text).join('\n');
+ assert.match(tr,/Nobody has ever done it/);assert.match(tr,/Those are the same thing and I resent it/);assert.doesNotMatch(tr,/Nobody panic/);
+ assert.equal(T.G.lunch,1);assert.equal(T.G.real,0,'even on the dismissive Monday, answering in time means lunch');
+ assert.match(element('ov').innerHTML,/complaint about the speed/);}
+// 4. Friday: the same window opens, and one word answers all of it.
+T.chapter(5);{let n=0;while(n++<120){T.unlock();const st=T.state();if(T.G.qte&&T.G.qte.auto)break;if(st==='click')T.advance();else T.tick(1);}}
+assert.ok(T.G.qte&&T.G.qte.auto,'Friday opens the window again');T.tick(0.3);T.tick(0.3);T.tick(0.3);T.tick(0.3);
+assert.equal(T.G.qte.end,'won');assert.equal(T.G.qte.i,5);
 // Full screen and the immersive layout: one class on <html>, driven by the media query and by the fullscreen state.
 assert.equal(T.immersive(),false);
 assert.equal(element('full').textContent,'Full screen');
@@ -327,4 +355,4 @@ T.tick(0.05,0.5);T.advance();
 assert.notEqual(T.G.cur.text,throttledLine,'shortcut delay must not depend on animation frame rate');
 // Direct file entry must resolve all resources locally, including font licenses.
 for(const file of ['assets/game.css','assets/game.js','assets/icon.svg','assets/fonts/Fraunces.ttf','assets/fonts/DMSans.ttf','assets/fonts/Fraunces-OFL.txt','assets/fonts/DMSans-OFL.txt'])assert.ok(fs.statSync(path.join(root,file)).size>0,file);
-console.log(`PASS: 11 lab scenes (13 runs, including four paced chat strategies), quiet opening; ${weeks} full weeks and 4 chapter starts; ${runs} complete Monday paths, ${views} reader-paced cutaways, ${stretches} size interactions; pause, journal, keyboard, reset and local assets.`);
+console.log(`PASS: the correct response (4 ways); 11 lab scenes (13 runs, including four paced chat strategies), quiet opening; ${weeks} full weeks and 4 chapter starts; ${runs} complete Monday paths, ${views} reader-paced cutaways, ${stretches} size interactions; pause, journal, keyboard, reset and local assets.`);

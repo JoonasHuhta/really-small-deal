@@ -14,6 +14,15 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.18 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.19 (Claude, 15.11.2026): **oikea vastaus.**
+
+- Heti kun Sanna sanoo ”oh, hi.”, ruudulle avautuu ikkuna: **RESPOND CORRECTLY** ja viisi askelta (↑ hymy, ↓ nyökkäys, ← katsekontakti mutta ei liikaa, → sano ”hi”, välilyönti hengitä). Aikaa on 0,8 sekuntia (kosketusnäytöllä 1,1 s ja napit sekaisin). Väärä näppäin, myös Enter, on ”INCORRECT.”
+- Ikkuna on käytännössä mahdoton ensimmäisellä kerralla, joten **kaikki polut johtavat siihen, että kävelet kotiin yksin**: Sanna ja Eero lähtevät lounaalle ilman sinua. Kukaan ei torju ketään, hetki vain menee ohi sillä aikaa kun varjo analysoi. Rohkeinkin vaihtoehto (”Say hi back”) ehtii perille vasta tyhjään ovensuuhun.
+- **Salainen haara:** joka osaa järjestyksen ja on tarpeeksi nopea, saa vastata ajoissa. Silloin koko spiraali jää väliin, lounas toteutuu, ja Ekskyysmi: ”Nobody has ever done it. I designed it so that nobody could do it.”
+- Kotimatkalla ihminen voi silti lähettää yhden viestin (”Mention what I actually saw”), ja lounas siirtyy huomiseen.
+- **Perjantaina sama ikkuna aukeaa uudestaan.** Ihminen sanoo vain ”Hi.”, ja kaikki viisi askelta syttyvät vihreiksi. ”That’s not the procedure.” – ”That’s the whole procedure.” Hälytys laukeaa silti: ”It still went off. Even though we got it right.”
+- About-tekstissä lukee nyt: ”Almost nothing is timed. The one thing that is, isn’t fair. That’s the point.”
+
 Versio 0.18 (Claude, 15.11.2026): **aika kelluu.**
 
 - Peli ei ole enää ”viikko”, vaan jono pieniä hetkiä yhdestä elämästä. Viisi pitkää lukua ovat selkäranka, ja niiden väliin on sijoitettu seitsemän lyhyttä hetkeä (samat käsikirjoitukset kuin laboratoriossa).
@@ -123,6 +132,7 @@ Kotimatkalla voi käsitellä kaikki kolme aihetta tai valita suoraan jatkamisen 
 | `src/30-story-monday.js` | Maanantai ja kotimatka |
 | `src/31-story-week.js` | Tiistai–perjantai |
 | `src/33-moments.js` | Tarinan järjestys: mitkä lyhyet hetket tulevat minkä luvun jälkeen |
+| `src/34-response.js` | Oikea vastaus: maanantain ikkuna, salainen haara, perjantain vastinpari |
 | `src/40-backdrops.js` | Koti, toimisto, Sannan varjo |
 | `src/50-lab.js` | Skenaariolaboratorio, Enhance, The group chat |
 | `src/51-quirks.js` | Outoudet, Sometime, An ordinary evening |

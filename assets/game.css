@@ -98,3 +98,9 @@ html.immersive dialog{max-height:92dvh;padding:14px}html.immersive .dialog-headi
 
 .ov[data-kind=menu]{background:#1c262cf5;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .menu-links{display:flex;flex-wrap:wrap;gap:4px 22px;margin-top:18px}.link{background:none;border:0;padding:10px 0;min-height:44px;color:var(--sage);font-size:14px;text-decoration:underline;text-decoration-color:#bfcfbd66;text-underline-offset:5px}.link:hover,.link:focus-visible{color:var(--ink);text-decoration-color:var(--accent)}
+
+/* the correct response: a list in the side panel, a row of five along the bottom band */
+.opt.qte{display:flex;align-items:center;gap:12px;text-align:left;padding:8px 12px;min-height:44px}.opt.qte b{font-size:17px;line-height:1;min-width:54px;text-align:center}.opt.qte span{font-size:11px;letter-spacing:.4px;color:var(--mute)}
+.opt.qte.done{background:#2f6b4f;border-color:#9fd3a8}.opt.qte.done span{color:#e9ffe9}
+html.immersive body.playing .opts:has(.opt.qte){grid-column:1/-1;grid-template-columns:repeat(5,minmax(0,1fr))}
+html.immersive body.playing .opt.qte{flex-direction:column;gap:2px;text-align:center;padding:6px}html.immersive body.playing .opt.qte b{min-width:0}html.immersive body.playing .opt.qte span{font-size:10px}

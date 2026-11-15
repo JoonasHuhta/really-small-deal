@@ -6,6 +6,8 @@
 
 > Päivitys 0.18: peli ei ole enää sidottu yhteen viikkoon. Luvut ja lyhyet hetket ovat jonossa, ja aika kelluu niiden välissä. Alla oleva ”Viikko nyt” -taulukko kuvaa edelleen viittä pitkää lukua. Nykyinen järjestys on tiedostossa `src/33-moments.js`. Piirros-lanka on jo osittain paikallaan: *The group chat* on nyt pelin viimeinen hetki. Arkistokortti ja varjon alkuperä (luonnos B) puuttuvat vielä.
 
+> Päivitys 0.19: ensimmäinen maanantai epäonnistuu nyt aina, ellei pelaaja osu alle sekunnin ”RESPOND CORRECTLY” -ikkunaan. Joonaksen idea: pelin ajatus tulee selväksi heti alussa. Tärkein valinta: rohkea polku ei epäonnistu rohkeuden takia vaan ajoituksen takia. Kysymys oli oikea, hetki oli jo mennyt. Perjantain ”Hi.” on sama ikkuna ilman proseduuria.
+
 ## Pelin väite yhdellä lauseella
 
 **Ekskyysmi on yleensä oikeassa siitä, että jotain tapahtui, ja väärässä siitä, kuinka isoa se oli.**
