@@ -79,3 +79,18 @@ Pelissä on nyt myös `manifest.webmanifest` (koko ruutu, vaakasuunta). Jos peli
 - Sovelluksen `versionCode` ja `versionName` tulevat automaattisesti `package.json`:ista, joten puhelimessa näkee, mikä versio on asennettuna.
 - `webview-error.html` näkyy, jos laitteen WebView on liian vanha (vaatimus 108).
 - Valikko on kaksipalstainen vaakanäytöllä: kahdeksan nappia ei mahtunut yhteen pylvääseen 360 px korkealla näytöllä.
+
+## Sovelluksen kuvake ja aloitusruutu
+
+Lähdekuvat ovat `resources/`-kansiossa ja ne ovat gitissä, joten kuvake säilyy, vaikka `android/`-kansio tehtäisiin uudelleen:
+
+| Tiedosto | Koko | Mihin |
+|---|---|---|
+| `icon-foreground.png` | 1024×1024, läpinäkyvä | Adaptiivisen kuvakkeen etuala. Android rajaa ympyräksi tai neliöksi, joten kuva on keskellä noin 55 %:n kokoisena. |
+| `icon-background.png` | 1024×1024 | Taustaväri `#1d242e`. |
+| `icon.png` | 1024×1024 | Vanhempien Androidien neliökuvake. |
+| `splash.png`, `splash-dark.png` | 2732×2732 | Aloitusruutu. |
+
+Kuvakkeen vaihtaminen: korvaa nämä tiedostot ja aja `npm run android:icons`. Se kirjoittaa kaikki koot `android/app/src/main/res/`-kansioon. Älä muokkaa `res/`-kansion tiedostoja käsin, koska komento ylikirjoittaa ne.
+
+**Huom:** `android/`-kansio ei ole gitissä, vaan se syntyy koneella komennolla `npm run android:sync`. Siksi kaikki kuvakkeeseen liittyvä kannattaa tehdä `resources/`-kansion kautta eikä suoraan Android Studiossa.
