@@ -242,6 +242,7 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   ['S','The drawing.'],
   ['H','In the group chat.'],
   ['S','With the PEOPLE in it?'],
+  function(){return G.lab?[]:[['S','Last time you showed someone a drawing, I got this job.'],['H','I know. I’m doing it anyway.'],['S','…Then I’m doing it with you.']];},
   {choice:[
     {t:'Add a disclaimer. Several.',then:[['P','You: “made a thing!! it’s not very good, ignore the hands, and the left side, and the idea, sorry”'],['S','Perfect. Now nobody can be disappointed. We pre-disappointed them.']]},
     {t:'Delete the drawing. Delete drawing as a concept.',then:[['H','Already sent.'],['S','…Then we go to war.']]},
@@ -282,6 +283,7 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   },
   function(){G.boss.friendly=true;G.boss.name='THE GROUP CHAT';sfx('turn');},
   ['N','BOSS DEFEATED. Correction: there was no boss.'],
+  function(){return G.lab?[]:[['S','Year two. Somebody laughed.'],['H','Eleven people liked it.'],['S','…I’ll update the file.'],function(){var g=G;g.cards.push({kind:'good',year:'TODAY',text:'Showed eleven people a drawing. They liked the cat.',t:0,life:null,x:790,y:178,rot:-0.03});sfx('card');},{wait:2.2},closeArchive];},
   ['S','I’m keeping the headband.']
  ]);}
 function drawChatlog(o){

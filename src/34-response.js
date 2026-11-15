@@ -9,7 +9,7 @@ var RESPONSE=[
   {k:'ArrowRight',sym:'→',label:'SAY “HI”'},
   {k:' ',sym:'SPACE',label:'BREATHE'}
 ];
-var QTE_SECS=0.8,QTE_SECS_TOUCH=1.1;
+var QTE_SECS=2.8,QTE_SECS_TOUCH=3.1; // the original 0.8 s, plus two seconds for reading (requested by the human)
 function startQte(){
   var g=G,coarse=!!(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches),order=RESPONSE.map(function(_,i){return i;});
   // on a touch screen the buttons arrive shuffled, because of course they do
@@ -59,7 +59,7 @@ function drawQte(){
   ctx.fillStyle='#ffffff1a';rr(x-bw/2,y+72,bw,6,3);ctx.fill();
   ctx.fillStyle=left>0.35?'#ebbd79':'#e0563e';rr(x-bw/2,y+72,bw*left,6,3);ctx.fill();
   ctx.font='600 10px system-ui,sans-serif';ctx.fillStyle='#8b8070';
-  ctx.fillText(q.auto?'WINDOW: NOT REQUIRED':'WINDOW: '+q.secs.toFixed(1)+' s · HUMAN REACTION TIME: ABOUT 0.25 s PER STEP',x,y+90);
+  ctx.fillText(q.auto?'WINDOW: NOT REQUIRED':'WINDOW: '+q.secs.toFixed(1)+' s · INCLUDES TWO SECONDS FOR READING · REALITY: ALREADY MOVING',x,y+90);
   if(q.end){
     var a=clamp(q.endT/0.15,0,1),sc=RM?1:1.4-0.4*a,txt=q.end==='won'?'CORRECT.':q.end==='wrong'?'INCORRECT.':'TOO LATE.',col=q.end==='won'?'#7fc08a':'#e0563e';
     ctx.globalAlpha=a;ctx.translate(x,y+12);ctx.rotate(-0.06);ctx.scale(sc,sc);
@@ -81,7 +81,7 @@ function scResponded(){return [
   ['S','You did it.'],
   ['S','Nobody has ever done it. I designed it so that nobody could do it.'],
   ['H','I said hi.'],
-  ['S','In under a second. With BREATHING.'],
+  ['S','In under three seconds. With BREATHING.'],
   set({mood:'calm',s:0.8}),
   ['S','I’m going to need to lie down.'],
   function(){var g=G;g.lunch=1;g.leak='none';}

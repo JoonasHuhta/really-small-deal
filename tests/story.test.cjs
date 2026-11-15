@@ -139,7 +139,7 @@ for(const day of ['A','B','C'])for(let v=0;v<4;v++){
   for(const must of [/Quick chat tomorrow at 9/,/smoke alarm/,/rejection exchange programme/,/Seen 17:31/,/paper cut from an amputation/,/reviewing my job description/,/Her phone died/,/She HAS one/,/That’s MY name/,/Under the other pile/,/The puddle is MY department/,/I intend to go off again on Monday/])assert.match(tr,must);
   assert.ok(T.G.yes>=3,'Wednesday cannot be refused');
   // The short moments are part of the story now, in order, each behind its own card and never labelled as lab scenes.
-  for(const must of [/The eyebrow was HUNGER/,/falls off a printer/,/I rounded up/,/Nothing in it can be rejected/,/I always thought that was the bad outcome/,/busy near each other/,/I’m keeping the headband/])assert.match(tr,must);
+  for(const must of [/You showed someone a drawing/,/Last time you showed someone a drawing/,/Eleven people liked it/,/The eyebrow was HUNGER/,/falls off a printer/,/I rounded up/,/Nothing in it can be rejected/,/I always thought that was the bad outcome/,/busy near each other/,/I’m keeping the headband/])assert.match(tr,must);
   assert.ok(tr.indexOf('The eyebrow was HUNGER')<tr.indexOf('rejection exchange programme'),'the eyebrow comes before the favours');
   assert.ok(tr.indexOf('Seen 17:31')<tr.indexOf('Nothing in it can be rejected'),'the reply comes after board game night');
   assert.equal(T.G.moment,'comments');assert.equal(T.G.lab,null);
@@ -287,11 +287,11 @@ T.start();assert.equal(T.back(),'pause');assert.equal(T.back(),'title');assert.e
 T.lab('enhance');assert.equal(T.back(),'pause');assert.equal(T.back(),'title');
 // Recorded sound is optional: nothing is listed yet, and asking for an unknown effect is harmless.
 assert.equal(Object.keys(T.sound.list).length,0);T.sound.play('hit');assert.equal(T.sound.has('hit'),false);
-// The correct response: a window under a second long, right after "oh, hi.".
+// The correct response: a window of 2.8 seconds (0.8 plus two for reading), right after "oh, hi.".
 function toWindow(day){T.start(day,true);let n=0;while(T.state()!=='qte'&&n++<200){T.unlock();if(T.state()==='click')T.advance();else T.tick(1);}assert.equal(T.state(),'qte','Monday reaches the window');}
 // 1. Doing nothing: too late, and the spiral begins.
 toWindow('A');T.advance();assert.equal(T.state(),'qte','clicking does not skip the window');
-T.tick(0.5);assert.equal(T.G.qte.end,null,'still open at half a second');T.tick(0.4);assert.equal(T.G.qte.end,'late');
+T.tick(2.5);assert.equal(T.G.qte.end,null,'still open after two and a half seconds: time to read');T.tick(0.4);assert.equal(T.G.qte.end,'late');
 T.tick(1.3);assert.notEqual(T.state(),'qte');assert.equal(T.G.qteWon,false);
 // 2. The wrong key, or Enter out of habit: incorrect.
 toWindow('B');T.qteKey('ArrowDown');assert.equal(T.G.qte.end,'wrong');

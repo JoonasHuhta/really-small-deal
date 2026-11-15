@@ -144,7 +144,7 @@ var LATER={
 };
 function realObs(){
   var g=G;
-  if(g.lunch===1)return [['S','For the record. We had lunch.'],['H','We did.'],['S','Because you answered in under a second.'],['H','Because I said hi.'],['S','Those are the same thing and I resent it.']];
+  if(g.lunch===1)return [['S','For the record. We had lunch.'],['H','We did.'],['S','Because you answered inside the window.'],['H','Because I said hi.'],['S','Those are the same thing and I resent it.']];
   if(g.day==='A')return [['S','For the record, she wasn’t being cold. I’ve rewatched it.'],['H','You said the “oh” was a verdict.'],['S','I said a lot of things. Quickly.'],['P','Sanna: “Missed you at lunch! The noodle place has a new spicy one. Tomorrow?”'],set({mood:'surprised'}),['S','She MISSED us?'],['H','She missed me.'],['S','Same thing. I’m attached.'],['P','You: “Tomorrow!”'],function(){G.lunch=2;}];
   if(g.day==='B'){
     var opening=g.leak==='exit'?

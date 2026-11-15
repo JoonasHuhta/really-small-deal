@@ -14,9 +14,17 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.18 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.20 (Claude, 15.11.2026):
+
+- **Oikean vastauksen ikkuna on nyt 2,8 sekuntia** (kosketusnäytöllä 3,1 s): alkuperäiset 0,8 sekuntia plus kaksi sekuntia lukemiseen. Ikkunan alareunassa lukee ”INCLUDES TWO SECONDS FOR READING · REALITY: ALREADY MOVING”. Salainen haara on nyt tarkkaavaiselle pelaajalle saavutettavissa, mutta ensimmäisellä kerralla useimmat lukevat vielä, kun aika loppuu.
+- **Piirros-lanka on paikallaan:**
+  - *Quick chat?*: arkiston vanhin kortti on ”YEAR 2 — Showed someone a drawing. Somebody laughed.”
+  - *Seen.*: käänteen jälkeen ihminen kysyy, kauanko varjo on tehnyt tätä. ”Since a Tuesday. You were seven. … You showed someone a drawing. … I’ve been on shift ever since.” – ”Nobody came to relieve me.”
+  - *The group chat* (pelin viimeinen hetki): ”Last time you showed someone a drawing, I got this job.” – ”I know. I’m doing it anyway.” Lopussa ”Year two. Somebody laughed.” – ”Eleven people liked it.” – ”…I’ll update the file.”, ja arkistoon ilmestyy ensimmäinen kortti toiseen pinoon.
+
 Versio 0.19 (Claude, 15.11.2026): **oikea vastaus.**
 
-- Heti kun Sanna sanoo ”oh, hi.”, ruudulle avautuu ikkuna: **RESPOND CORRECTLY** ja viisi askelta (↑ hymy, ↓ nyökkäys, ← katsekontakti mutta ei liikaa, → sano ”hi”, välilyönti hengitä). Aikaa on 0,8 sekuntia (kosketusnäytöllä 1,1 s ja napit sekaisin). Väärä näppäin, myös Enter, on ”INCORRECT.”
+- Heti kun Sanna sanoo ”oh, hi.”, ruudulle avautuu ikkuna: **RESPOND CORRECTLY** ja viisi askelta (↑ hymy, ↓ nyökkäys, ← katsekontakti mutta ei liikaa, → sano ”hi”, välilyönti hengitä). Aikaa on 0,8 sekuntia (kosketusnäytöllä 1,1 s ja napit sekaisin; versiosta 0.20 alkaen 2,8 / 3,1 s). Väärä näppäin, myös Enter, on ”INCORRECT.”
 - Ikkuna on käytännössä mahdoton ensimmäisellä kerralla, joten **kaikki polut johtavat siihen, että kävelet kotiin yksin**: Sanna ja Eero lähtevät lounaalle ilman sinua. Kukaan ei torju ketään, hetki vain menee ohi sillä aikaa kun varjo analysoi. Rohkeinkin vaihtoehto (”Say hi back”) ehtii perille vasta tyhjään ovensuuhun.
 - **Salainen haara:** joka osaa järjestyksen ja on tarpeeksi nopea, saa vastata ajoissa. Silloin koko spiraali jää väliin, lounas toteutuu, ja Ekskyysmi: ”Nobody has ever done it. I designed it so that nobody could do it.”
 - Kotimatkalla ihminen voi silti lähettää yhden viestin (”Mention what I actually saw”), ja lounas siirtyy huomiseen.

@@ -179,7 +179,7 @@ function render(){
   if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
     var nextControl=elOpts.querySelector('[data-i=read]');if(nextControl&&!nextControl.disabled)nextControl.focus();
   }
-  document.getElementById('hint').textContent=WAIT==='qte'?'Arrow keys and Space, in this order. Or tap the buttons. The window is under a second. Sorry.':lensFree()?'Move the glass over the room. Everything looks worse through it. That is its job.':WAIT==='fight'?'Tap to swat the nearest reply. Waiting lets it come close enough to read.':WAIT==='hold'?'Press and hold the button or the scene. A few taps work too. Letting go is allowed.':WAIT==='stretch'?'Drag up on the scene, or use the slider. No rush.':WAIT==='choice'?'Choose a line · keys 1–4 · every choice keeps the story moving.':g.started?'Space / Enter to continue · P to pause · Dialogue to look back.':'Take your time. The coffee can wait.';
+  document.getElementById('hint').textContent=WAIT==='qte'?'Arrow keys and Space, in this order. Or tap the buttons. Two seconds have been added for reading. Reality did not add them.':lensFree()?'Move the glass over the room. Everything looks worse through it. That is its job.':WAIT==='fight'?'Tap to swat the nearest reply. Waiting lets it come close enough to read.':WAIT==='hold'?'Press and hold the button or the scene. A few taps work too. Letting go is allowed.':WAIT==='stretch'?'Drag up on the scene, or use the slider. No rush.':WAIT==='choice'?'Choose a line · keys 1–4 · every choice keeps the story moving.':g.started?'Space / Enter to continue · P to pause · Dialogue to look back.':'Take your time. The coffee can wait.';
   if(WAIT==='fight'&&g.fight.paced)document.getElementById('hint').textContent='No timer. Use the buttons to read or swat. Space / Enter or tapping the scene swats.';
   resize();
 }
@@ -642,7 +642,7 @@ var LATER={
 };
 function realObs(){
   var g=G;
-  if(g.lunch===1)return [['S','For the record. We had lunch.'],['H','We did.'],['S','Because you answered in under a second.'],['H','Because I said hi.'],['S','Those are the same thing and I resent it.']];
+  if(g.lunch===1)return [['S','For the record. We had lunch.'],['H','We did.'],['S','Because you answered inside the window.'],['H','Because I said hi.'],['S','Those are the same thing and I resent it.']];
   if(g.day==='A')return [['S','For the record, she wasn’t being cold. I’ve rewatched it.'],['H','You said the “oh” was a verdict.'],['S','I said a lot of things. Quickly.'],['P','Sanna: “Missed you at lunch! The noodle place has a new spicy one. Tomorrow?”'],set({mood:'surprised'}),['S','She MISSED us?'],['H','She missed me.'],['S','Same thing. I’m attached.'],['P','You: “Tomorrow!”'],function(){G.lunch=2;}];
   if(g.day==='B'){
     var opening=g.leak==='exit'?
@@ -791,7 +791,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['R','And people like working with you. Sanna said so, actually.'],
   ['S','Padding.'],
   ['R','One small thing: the summary could be shorter next time.'],
-  hit(0.95,'R'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 4','“Neat handwriting. Could be neater.”'],['2014','Feedback form, one word: “fine”.'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
+  hit(0.95,'R'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.'],['YEAR 4','“Neat handwriting. Could be neater.”'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
   ['S','THERE it is.'],
   ['S','“Shorter.” The summary is too long. YOU are too long. Your whole deal is too long.'],
   ['R','Otherwise, great work. Keep it up.'],
@@ -923,6 +923,14 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
     {t:'I don’t know how to be smaller.',then:[['H','You don’t have to be smaller. You have to stop driving.'],['S','I can sit in the passenger seat?'],['H','You can do the map.'],['S','I’m excellent at worst-case routes.']]},
     {t:'It’s going to keep happening, isn’t it.',then:[['H','Probably. Tomorrow. Next week.'],['S','And I’ll still go off.'],['H','And I’ll still be here when you’re done.']]}
   ]},
+  ['H','How long have you been doing this?'],
+  ['S','Since a Tuesday. You were seven.'],
+  ['H','What happened?'],
+  ['S','You showed someone a drawing.'],
+  {wait:1.4},
+  ['S','I’ve been on shift ever since.'],
+  ['H','That’s a long shift.'],
+  ['S','Nobody came to relieve me.'],
   set({mood:'care',s:1.1,pose:'comfort'}),
   ['S','I’ve been reviewing my job description.'],
   ['H','And?'],
@@ -1082,7 +1090,7 @@ var RESPONSE=[
   {k:'ArrowRight',sym:'→',label:'SAY “HI”'},
   {k:' ',sym:'SPACE',label:'BREATHE'}
 ];
-var QTE_SECS=0.8,QTE_SECS_TOUCH=1.1;
+var QTE_SECS=2.8,QTE_SECS_TOUCH=3.1; // the original 0.8 s, plus two seconds for reading (requested by the human)
 function startQte(){
   var g=G,coarse=!!(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches),order=RESPONSE.map(function(_,i){return i;});
   // on a touch screen the buttons arrive shuffled, because of course they do
@@ -1132,7 +1140,7 @@ function drawQte(){
   ctx.fillStyle='#ffffff1a';rr(x-bw/2,y+72,bw,6,3);ctx.fill();
   ctx.fillStyle=left>0.35?'#ebbd79':'#e0563e';rr(x-bw/2,y+72,bw*left,6,3);ctx.fill();
   ctx.font='600 10px system-ui,sans-serif';ctx.fillStyle='#8b8070';
-  ctx.fillText(q.auto?'WINDOW: NOT REQUIRED':'WINDOW: '+q.secs.toFixed(1)+' s · HUMAN REACTION TIME: ABOUT 0.25 s PER STEP',x,y+90);
+  ctx.fillText(q.auto?'WINDOW: NOT REQUIRED':'WINDOW: '+q.secs.toFixed(1)+' s · INCLUDES TWO SECONDS FOR READING · REALITY: ALREADY MOVING',x,y+90);
   if(q.end){
     var a=clamp(q.endT/0.15,0,1),sc=RM?1:1.4-0.4*a,txt=q.end==='won'?'CORRECT.':q.end==='wrong'?'INCORRECT.':'TOO LATE.',col=q.end==='won'?'#7fc08a':'#e0563e';
     ctx.globalAlpha=a;ctx.translate(x,y+12);ctx.rotate(-0.06);ctx.scale(sc,sc);
@@ -1154,7 +1162,7 @@ function scResponded(){return [
   ['S','You did it.'],
   ['S','Nobody has ever done it. I designed it so that nobody could do it.'],
   ['H','I said hi.'],
-  ['S','In under a second. With BREATHING.'],
+  ['S','In under three seconds. With BREATHING.'],
   set({mood:'calm',s:0.8}),
   ['S','I’m going to need to lie down.'],
   function(){var g=G;g.lunch=1;g.leak='none';}
@@ -1462,6 +1470,7 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   ['S','The drawing.'],
   ['H','In the group chat.'],
   ['S','With the PEOPLE in it?'],
+  function(){return G.lab?[]:[['S','Last time you showed someone a drawing, I got this job.'],['H','I know. I’m doing it anyway.'],['S','…Then I’m doing it with you.']];},
   {choice:[
     {t:'Add a disclaimer. Several.',then:[['P','You: “made a thing!! it’s not very good, ignore the hands, and the left side, and the idea, sorry”'],['S','Perfect. Now nobody can be disappointed. We pre-disappointed them.']]},
     {t:'Delete the drawing. Delete drawing as a concept.',then:[['H','Already sent.'],['S','…Then we go to war.']]},
@@ -1502,6 +1511,7 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   },
   function(){G.boss.friendly=true;G.boss.name='THE GROUP CHAT';sfx('turn');},
   ['N','BOSS DEFEATED. Correction: there was no boss.'],
+  function(){return G.lab?[]:[['S','Year two. Somebody laughed.'],['H','Eleven people liked it.'],['S','…I’ll update the file.'],function(){var g=G;g.cards.push({kind:'good',year:'TODAY',text:'Showed eleven people a drawing. They liked the cat.',t:0,life:null,x:790,y:178,rot:-0.03});sfx('card');},{wait:2.2},closeArchive];},
   ['S','I’m keeping the headband.']
  ]);}
 function drawChatlog(o){
@@ -2690,7 +2700,7 @@ function showTitle(){
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
 function showEnd(){
   var g=G,n=g.startles;g.ended=true;g.dayEnd=true;WAIT=null;Q=[];render();saveProgress(2);
-  var note=g.lunch===1?'You answered in under a second. Nobody has done that before. Lunch happened. The shadow is lying down.':g.lunch===2?'Lunch didn’t happen today. A message did. Tomorrow, then.':g.day==='C'?(g.reflected?'Today hurt. You reached for someone who makes room for you.':'Today hurt. Their choice to leave you out was theirs.'):'Nobody said no. Nobody had the chance. The shadow is calling that a win.';
+  var note=g.lunch===1?'You answered inside the window. Nobody has done that before. Lunch happened. The shadow is lying down.':g.lunch===2?'Lunch didn’t happen today. A message did. Tomorrow, then.':g.day==='C'?(g.reflected?'Today hurt. You reached for someone who makes room for you.':'Today hurt. Their choice to leave you out was theirs.'):'Nobody said no. Nobody had the chance. The shadow is calling that a win.';
   if(g.day==='C'&&g.leak==='exit'&&!g.reflected)note='Today felt lonely. Not every missing piece needs filling in tonight.';
   var quote=g.lunch===1?'I would like to lodge a complaint about the speed of that hi.':{grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. We went anyway. Slightly after everyone else.'}[g.leak];
   showOv('<div class="eyebrow">End of Monday</div><h2>Home. Both of you.</h2>'+

@@ -8,6 +8,8 @@
 
 > Päivitys 0.19: ensimmäinen maanantai epäonnistuu nyt aina, ellei pelaaja osu alle sekunnin ”RESPOND CORRECTLY” -ikkunaan. Joonaksen idea: pelin ajatus tulee selväksi heti alussa. Tärkein valinta: rohkea polku ei epäonnistu rohkeuden takia vaan ajoituksen takia. Kysymys oli oikea, hetki oli jo mennyt. Perjantain ”Hi.” on sama ikkuna ilman proseduuria.
 
+> Päivitys 0.20: piirros-lanka on nyt pelissä alusta loppuun (Quick chat? → Seen. → The group chat), ja varjon alkuperä (luonnos B) on torstaina käänteen jälkeen.
+
 ## Pelin väite yhdellä lauseella
 
 **Ekskyysmi on yleensä oikeassa siitä, että jotain tapahtui, ja väärässä siitä, kuinka isoa se oli.**
