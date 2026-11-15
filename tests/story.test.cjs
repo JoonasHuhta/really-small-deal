@@ -175,7 +175,7 @@ const checkpointFixture={version:2,ch:5,unlocked:5,chapters:{
   1:{day:'A'},
   3:{day:'A',lunch:1,leak:'cover',fear:2,fb:'ask',yes:0},
   4:{day:'B',lunch:2,leak:'grow',yes:5,handout:true,afterparty:true,fb:'explain'},
-  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true}
+  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true}
 }};
 savedItems.set(saveKey,JSON.stringify(checkpointFixture));
 T.chapter(3);
@@ -187,7 +187,10 @@ T.title();assert.match(element('ov').innerHTML,/Continue · Could you just…/);
 T.chapters();assert.match(element('ov').innerHTML,/data-ch="5"/);assert.match(element('ov').innerHTML,/Oh, hi\. Again\./);assert.match(element('ov').innerHTML,/Not necessarily that one/i);T.about();assert.match(element('ov').innerHTML,/You play Ekskyysmi/);T.title();
 T.chapter(4);assert.equal(T.G.day,'B');assert.equal(T.G.yes,5);assert.equal(T.G.afterparty,true);
 T.chapter(5);assert.equal(T.G.leak,'exit');assert.equal(T.G.real,1);assert.equal(T.G.txt,'cancel');assert.equal(T.G.handout,true);
-assert.equal(T.G.metSannaShadow,true,'Friday restores the earlier meeting');
+assert.equal(T.G.metSannaShadow,true,'Friday restores the earlier meeting');assert.equal(T.G.posting,'open');assert.equal(T.G.nothings,2);
+{T.history().length=0;playOn(()=>0);const ft=T.history().map(x=>x.text).join('\n');
+ assert.match(ft,/It’s something\. Small\. Give me a minute\./);assert.match(ft,/We’ve said it twice this week/);assert.match(ft,/You can draft\. I’ll send\./);
+ const rc=T.inside.receipt();assert.match(rc,/applications\s+pending/);assert.match(rc,/“it’s nothing”, said\s+×2/);assert.match(rc,/“not now”, actual\s+4 s/);}
 const fridayStart=savedItems.get(saveKey);playOn(()=>1);
 assert.equal(savedItems.get(saveKey),fridayStart,'finishing Friday must not overwrite its starting checkpoint with end-of-day choices');
 assert.doesNotMatch(T.history().map(x=>x.text).join('\n'),/Monday stung, though/);
@@ -270,6 +273,18 @@ T.lab('detail');T.G.awayAt=Date.now()-120000;T.inside.cameBack();
 assert.match(T.G.awayNote[0],/You left for 2 min/);assert.match(T.G.awayNote[1],/In here that was 1 h 00 min/);
 assert.ok(T.inside.day().ledger.some(e=>e.label==='waiting for you to come back'));
 T.G.awayAt=Date.now()-2000;T.G.awayNote=null;T.inside.cameBack();assert.equal(T.G.awayNote,null,'a glance away is not a departure');
+// The posting: withdrawal filed as a perfect record. Three tactics; the third one asks.
+function playPosting(k){T.lab('posting');let st=0;
+  while(!T.G.labEnd&&st++<3000){T.unlock();T.draw();const w=T.state();
+    if(w==='click')T.advance();else if(w==='view'){T.advance();T.tick(6);T.advance();}else if(w==='choice')T.choose(k);else T.tick(0.5);}
+  assert.ok(T.G.labEnd);return T.history().map(x=>x.text).join('\n');}
+tr=playPosting(0);assert.equal(T.G.posting,'archived');assert.match(tr,/Filed under “later”/);assert.match(tr,/Success rate: one hundred percent/);
+assert.ok(T.inside.day().ledger.some(e=>e.label==='the application, not sent'));
+tr=playPosting(1);assert.equal(T.G.posting,'rejected');assert.match(tr,/You are too long/);
+tr=playPosting(2);assert.equal(T.G.posting,'open');assert.match(tr,/Just don’t close it/);assert.doesNotMatch(tr,/one hundred percent/);
+assert.ok(!T.inside.day().ledger.some(e=>e.label==='the application, not sent'),'an open tab costs nothing extra');
+// Not now: the rehearsal is longer than the no.
+tr=playLab('notnow');assert.match(tr,/the actual “no” took four seconds/);assert.match(tr,/three hours and ten minutes/);assert.equal(T.G.rehearsal,true);
 tr=playLab('reply');
 assert.match(tr,/A few small edits\. For safety\./);assert.match(tr,/“Hey! I had a on Thursday\. :\)”/,'three first-option cuts leave a message with nothing in it');
 assert.match(tr,/She decoded it/);assert.equal(T.G.replySent,'edited');assert.equal(T.G.draft,null);
@@ -433,4 +448,4 @@ T.tick(0.05,0.5);T.advance();
 assert.notEqual(T.G.cur.text,throttledLine,'shortcut delay must not depend on animation frame rate');
 // Direct file entry must resolve all resources locally, including font licenses.
 for(const file of ['assets/game.css','assets/game.js','assets/icon.svg','assets/fonts/Fraunces.ttf','assets/fonts/DMSans.ttf','assets/fonts/Fraunces-OFL.txt','assets/fonts/DMSans-OFL.txt'])assert.ok(fs.statSync(path.join(root,file)).size>0,file);
-console.log(`PASS: the correct response (4 ways); 12 lab scenes including four paced chat strategies; coat and umbrella gags with reduced motion, pause and scene cleanup; quiet opening; ${weeks} full weeks and 4 chapter starts; ${runs} complete Monday paths, ${views} reader-paced cutaways, ${stretches} size interactions; two clocks and receipts; pause, journal, keyboard, reset and local assets.`);
+console.log(`PASS: the correct response (4 ways); 13 lab scenes including four paced chat strategies and three posting tactics; the mask coming off on Friday; coat and umbrella gags with reduced motion, pause and scene cleanup; quiet opening; ${weeks} full weeks and 4 chapter starts; ${runs} complete Monday paths, ${views} reader-paced cutaways, ${stretches} size interactions; two clocks and receipts; pause, journal, keyboard, reset and local assets.`);

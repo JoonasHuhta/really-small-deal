@@ -97,7 +97,7 @@ function reset(day){
      cz:1.025,cx:W/2,cy:H/2,
      lines:[],band:null,out:null,w:null,card:0,
      hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0};
-  G.handout=false;G.afterparty=false;G.metSannaShadow=false;
+  G.handout=false;G.afterparty=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
   document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
   C.z=1.025;C.fx=W/2;C.fy=H/2;
@@ -354,7 +354,9 @@ function checkpoint(g){
     fb:['sorry','explain','quiet','ask'].indexOf(g.fb)>=0?g.fb:null,
     txt:['worries','cancel','freezer','bite'].indexOf(g.txt)>=0?g.txt:null,
     yes:Number.isFinite(g.yes)?clamp(Math.floor(g.yes),0,20):0,
-    handout:!!g.handout,afterparty:!!g.afterparty,reflected:!!g.reflected,peeked:!!g.peeked,metSannaShadow:!!g.metSannaShadow};
+    handout:!!g.handout,afterparty:!!g.afterparty,reflected:!!g.reflected,peeked:!!g.peeked,metSannaShadow:!!g.metSannaShadow,
+    posting:['archived','rejected','open'].indexOf(g.posting)>=0?g.posting:null,
+    nothings:Number.isFinite(g.nothings)?clamp(Math.floor(g.nothings),0,20):0,rehearsal:!!g.rehearsal};
 }
 function loadProgress(){
   try{
@@ -501,7 +503,12 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   ['S','And we’re… fine?'],
   ['H','A bit stung. And fine.'],
   ['S','I don’t have a drawer for that.'],
-  ['H','Make one.']
+  ['H','Make one.'],
+  function(){G.rehearsal=true;addLived('“not now”, rehearsed',190);},
+  ['S','For the record: the actual “no” took four seconds.'],
+  ['S','I rehearsed it for three hours and ten minutes.'],
+  ['H','Before or after?'],
+  ['S','Both. I’m thorough.']
  ]);}
 // ---- src/30-story-monday.js ----
 /* ================= the script (all player-facing text) ================= */
@@ -639,7 +646,7 @@ var CTAIL={
 function cDay(tail){return function(){return [set({aFace:1}),['A','Lunch? No need to ask the others, right?'],['B','No need.'],leave,{wait:1.4},function(){G.real=1;}].concat(CTAIL[tail],[lunch(0)]);};}
 var LATER={
  A_none:function(){return [set({aFace:1}),['A','Eero, lunch? The noodle place?'],['B','Starving.'],leave,{wait:1.4},['H','…Hi.'],['N','The “hi” arrives. Nobody is left to receive it.'],set({mood:'worry'}),['S','It took us four minutes to agree on “hi”.'],['H','It took them four seconds to go to lunch.'],['S','Different departments.'],lunch(0)];},
- A_grow:function(){return [set({ax:640,aFace:-1}),{wait:1.1},['A','You okay? You look like you’ve seen something big.'],['H','Nothing big.'],set({st:'pokka'}),['S','I’m medium. At most.'],set({st:'free'}),['A','Okay! We’re off to lunch. See you!'],set({ax:780,aFace:1}),leave,{wait:1.2},['S','Rejection prevented.'],['H','She said “see you”.'],['S','Not “come with us”. I noticed.'],['H','I was standing like a wardrobe.'],['S','A very convincing wardrobe. Nobody invites a wardrobe.'],lunch(0)];},
+ A_grow:function(){return [set({ax:640,aFace:-1}),{wait:1.1},['A','You okay? You look like you’ve seen something big.'],['H','Nothing big.'],said,set({st:'pokka'}),['S','I’m medium. At most.'],set({st:'free'}),['A','Okay! We’re off to lunch. See you!'],set({ax:780,aFace:1}),leave,{wait:1.2},['S','Rejection prevented.'],['H','She said “see you”.'],['S','Not “come with us”. I noticed.'],['H','I was standing like a wardrobe.'],['S','A very convincing wardrobe. Nobody invites a wardrobe.'],lunch(0)];},
  A_cover:function(){return [set({near:1,aFace:-1}),{wait:1.2},['A','I waved just now.'],['H','I was looking at the cup.'],['A','Ha. Good cup. Anyway, we’re heading to lunch!'],set({aFace:1}),leave,{wait:1.2},['S','She likes the cup.'],['H','She went to lunch.'],['S','With the cup’s blessing.'],['H','Without me.'],set({mood:'worry'}),['S','…The cup didn’t mention that part.'],lunch(0)];},
  A_exit:function(){return [set({aFace:-1}),['A','Where did they go?'],['B','They left their coffee.'],['A','Shame. I was going to ask about lunch.'],leave,{wait:1},['N','In the corridor, a shadow records one more rejection prevented. Nobody had been planning one.'],lunch(0)];},
  B_none:function(){return [['S','Good. We said hi. Eventually. Let’s never speak again.'],['H','I’m going to ask.'],['S','Don’t.'],set({flinch:0.6,pose:'selfeyes'}),['H','Sanna, do you want to—'],set({pose:null,aFace:1}),['A','Eero! Wait up, I’m coming!'],leave,{wait:1.3},['H','—get lunch.'],['N','The question arrives at an empty doorway. It was a good question.'],set({mood:'worry'}),['S','She didn’t hear it.'],['H','No.'],['S','So technically she didn’t say no.'],['H','Technically nobody said anything.'],lunch(0)];},
@@ -808,7 +815,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   {choice:[
     {t:'Apologise. For the summary, and in general.',f:function(){G.fb='sorry';},then:[['H','Sorry, I— sorry. I’ll fix it. Sorry.'],['R','It’s… fine? It’s one note.']]},
     {t:'Explain why it was long. At length.',f:function(){G.fb='explain';},then:[['N','The explanation of why the summary was long takes four minutes.'],['R','…Right. So. Shorter.']]},
-    {t:'Go very quiet. Nod. Leave the body.',f:function(){G.fb='quiet';},then:[['H','Mm.'],['R','You okay? You went somewhere.']]},
+    {t:'Go very quiet. Nod. Leave the body.',f:function(){G.fb='quiet';},then:[['H','Mm.'],['R','You okay? You went somewhere.'],['H','Fine. It’s nothing.'],said]},
     {t:'…Ask what “shorter” means.',f:function(){G.fb='ask';},then:[['S','That’s walking TOWARDS it.'],['H','How short is shorter?'],['R','Half a page. That’s all. The content’s great.'],['S','…Half a page. That’s not a character flaw. That’s a measurement.']]}
   ]},
   function(){G.bigNote=null;G.human.sweatT=0;return outside({title:'WHAT RIITTA SAW',dur:'duration: 3 minutes',anim:'text',
@@ -998,7 +1005,15 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
     {t:'Stay. Wobble visibly.',then:[wobbleOn,['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.'],wobbleOff]}
   ]},
   calm,set({aFace:-1,near:1}),
-  ['H','Hi, Sanna. Can I say something odd?'],
+  ['A','You okay?'],
+  ['H','It’s something. Small. Give me a minute.'],
+  set({mood:'surprised'}),
+  ['S','…That’s not what we say.'],
+  function(){var n=G.nothings||0;return [['S',n>1?'We say “nothing”. We’ve said it '+(n===2?'twice':n===3?'three times':n+' times')+' this week. I keep them in a folder.':'We say “nothing”. There’s a folder.']];},
+  ['A','Take your minute.'],
+  {wait:1.4},
+  set({mood:'calm'}),
+  ['H','Okay. Can I say something odd?'],
   ['A','Always.'],
   ['H','When someone says “oh, hi”, my brain hears a verdict. It’s very loud for two seconds. Then I spend a day on it.'],
   ['S','A WEEK. Be accurate.'],
@@ -1030,7 +1045,8 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['S','It’s a tr—'],
   ['S','…No. It’s lunch.'],
   set({face:'smile'}),
-  ['H','Lunch.']
+  ['H','Lunch.'],
+  postingPayoff
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 seconds',cap:'Two colleagues going to lunch.',anim:'none'}),[
   ['S','For the record, I intend to go off again on Monday.'],
   ['H','I know. I’ll be there.'],
@@ -1098,12 +1114,12 @@ function mondayRepair(){
 // The five long chapters are the spine. Between them sit shorter moments (the same scripts the Scenario lab plays).
 // Time floats on purpose: a card says roughly when, never which week. To reorder the story, edit AFTER.
 var AFTER={
-  2:['enhance'],
+  2:['enhance','posting'],
   3:['detail','glass'],
   4:['reply','notnow','bar','colleagues'],
   5:['comments']
 };
-var WHEN={detail:'THE NEXT MORNING',enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'AFTERWARDS',bar:'AN EVENING',
+var WHEN={posting:'THAT NIGHT, LATE',detail:'THE NEXT MORNING',enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'AFTERWARDS',bar:'AN EVENING',
   colleagues:'AFTER LUNCH, SOME DAY',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'AN ORDINARY EVENING',voice:'LATER THAT EVENING',library:'TWENTY-THREE DAYS LATER'};
 function interlude(id){return function(){G.lab=null;G.moment=id;return LABS[id].script();};}
 function momentsAfter(n){return (AFTER[n]||[]).map(interlude);}
@@ -1276,6 +1292,7 @@ function receiptRows(d){
 function runRows(run){
   var rows=[],cal=0,livedDays=0;
   run.forEach(function(d){if(d.label==='SCENARIO LAB')return;cal++;livedDays+=d.ratio;rows.push([d.label.toLowerCase().replace(/\. not necessarily that one\./,''),'×'+d.ratio.toFixed(1)]);});
+  var extra=storyRows();if(extra.length)rows.push('-');rows=rows.concat(extra);
   rows.push('-',['DAYS ON THE CALENDAR',String(cal)],['DAYS LIVED',livedDays.toFixed(1),'big']);
   return rows;
 }
@@ -1376,7 +1393,7 @@ function labDetail(){return labScene({set:'office',title:'One small thing.',plan
   ['B','Just one small thing.']
  ],jolt({label:'“just one small thing”',mins:120,tag:'SOURCE: “JUST ONE SMALL THING”'}),[
   ['B','You okay?'],
-  ['H','Yeah. It’s nothing.'],
+  ['H','Yeah. It’s nothing.'],said,
   set({mood:'scared',s:1.6}),
   ['S','It is NOT nothing. I have the X-ray.'],
   {choice:[
@@ -1476,6 +1493,7 @@ var LABS={
   voice:{title:'The voice message',blurb:'Replying to a voice message with a voice message. Take one. Take two. Take fourteen.',script:labVoice},
   reply:{title:'The reply',blurb:'A few small edits before sending. For safety. Until nothing in the message can be rejected.',script:labReply},
   library:{title:'A fine.',blurb:'The overdue lighthouse book goes back. The librarian says it’ll be a fine.',script:labLibrary},
+  posting:{title:'The posting.',blurb:'A job posting that is SO you. Ekskyysmi has a perfect record of never being rejected. It intends to keep it.',script:labPosting},
   detail:{title:'One small thing.',blurb:'Eero likes the slides. Just one small thing. For a moment everything is an X-ray.',script:labDetail},
   enhance:{title:'Enhance.',blurb:'One eyebrow. Four levels of zoom. A forensic investigation nobody asked for.',script:labEnhance},
   comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments}
@@ -2433,6 +2451,98 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
   ['H','Day one.'],
   ['S','…Day one.']
  ]);}
+// ---- src/57-posting.js ----
+/* ================= The posting: withdrawal, filed as success ================= */
+// A rejection that cannot happen because nothing was sent. Ekskyysmi counts this as a perfect record.
+// The player still only chooses Ekskyysmi's tactics; the third one is the one where it asks.
+function said(){G.nothings=(G.nothings||0)+1;}   // every "it's nothing" the human says this week, for the receipt
+
+function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Read a job posting. Only read it.',clock:22*3600+47*60}).concat([
+  ['N','Late. The sofa. A job posting someone forwarded with “this is SO you”.'],
+  ['P','Content designer. Small team. Four-day weeks. A library across the street.'],
+  ['H','Huh.'],
+  ['H','That is… actually me.'],
+  set({mood:'alert',s:1.3}),
+  ['S','Let’s not be hasty.'],
+  ['P','Requirements: excellent communication skills. Attention to detail. Applications by Friday.'],
+  ['S','“Excellent.” Not “good”. Excellent.'],
+  archive('bad',[['2019','Applied. Heard nothing. Still checking.'],['2021','“We went with someone with more experience.”'],['2023','Got the interview. Said “you too” to “enjoy your weekend”.']]),
+  ['S','I’ve pulled the relevant files.'],
+  ['H','They’re not relevant. They’re just old.'],
+  ['S','Old AND relevant. Very rare. Very valuable.'],
+  closeArchive,
+  {choice:[
+    {t:'Archive it. For safety.',f:function(){G.posting='archived';},then:[
+      ['S','Done. Filed under “later”.'],
+      ['N','The “later” drawer does not close properly. It has not closed properly for years.'],
+      ['H','I hadn’t decided anything.'],
+      ['S','I decided for both of us. It’s quicker.']]},
+    {t:'Pre-write their rejection. Save everyone time.',f:function(){G.posting='rejected';},then:[
+      ['P','Draft: “Dear applicant. Thank you for your interest. You are too long.”'],
+      ['H','They haven’t read anything.'],
+      ['S','Neither have I. That’s how confident I am.'],
+      ['H','You wrote a rejection. To me. From them.'],
+      ['S','In their voice. I did research.']]},
+    {t:'…Ask what the human wants.',f:function(){G.posting='open';},then:[
+      set({mood:'surprised',s:1.05}),
+      ['S','What do you… want?'],
+      ['H','I want to read it again tomorrow.'],
+      ['S','Tomorrow is very far away.'],
+      ['H','It’s eleven hours.'],
+      ['S','Eleven hours unsupervised. With a TAB open.'],
+      ['H','You can supervise. Just don’t close it.']]}
+  ]},
+  function(){if(G.posting!=='open')addLived('the application, not sent',45);
+    return outside({title:'WHAT ACTUALLY HAPPENED',dur:'0 applications',anim:'text',
+      cap:G.posting==='open'?'Nobody rejected you tonight. The tab is still open.':'Nobody rejected you tonight. Nobody got the chance.'});},
+  calm,
+  function(){return G.posting==='open'?[
+    ['S','For the record, it’s looking at us.'],
+    ['H','It’s a tab.'],
+    ['S','A tab with a deadline.'],
+    ['H','Friday.'],
+    ['S','I know when Friday is. I have a countdown.']
+  ]:[
+    ['S','Applications sent: zero. Rejections: zero.'],
+    ['S','Success rate: one hundred percent.'],
+    ['H','Of nothing.'],
+    ['S','…It’s still a hundred percent.']
+  ];}
+]);}
+
+// Friday, after lunch is agreed: the posting comes back, whatever drawer it went into.
+function postingPayoff(){
+  var p=G.posting;
+  if(p==='open')return [
+    ['H','And tonight I’m sending that application.'],
+    set({mood:'alert'}),
+    ['S','I’ll pre-write their—'],
+    ['H','You can draft. I’ll send.'],
+    set({mood:'calm'}),
+    ['S','…Deal. A small one.']
+  ];
+  if(p)return [
+    ['H','And I’m taking that posting out of the drawer.'],
+    set({mood:'surprised'}),
+    ['S','It’s been filed.'],
+    ['H','Then unfile it.'],
+    ['S','There’s no form for that.'],
+    ['H','Make one.'],
+    set({mood:'calm'}),
+    ['S','…Draft one. Small. Applications close today.']
+  ];
+  return [];
+}
+
+// Rows the whole-story receipt adds when these moments happened.
+function storyRows(){
+  var g=G,rows=[];
+  if(g.rehearsal)rows.push(['“not now”, rehearsed','3 h 10 min'],['“not now”, actual','4 s']);
+  if(g.posting&&g.posting!=='open')rows.push(['applications sent','0'],['rejections avoided','1'],['success rate','100 %']);
+  if(g.posting==='open')rows.push(['applications','pending']);
+  if(g.nothings)rows.push(['“it’s nothing”, said','×'+g.nothings]);
+  return rows;
+}
 // ---- src/60-update.js ----
 /* ================= update ================= */
 function lampBase(){

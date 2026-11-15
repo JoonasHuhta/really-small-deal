@@ -84,7 +84,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   {choice:[
     {t:'Apologise. For the summary, and in general.',f:function(){G.fb='sorry';},then:[['H','Sorry, I— sorry. I’ll fix it. Sorry.'],['R','It’s… fine? It’s one note.']]},
     {t:'Explain why it was long. At length.',f:function(){G.fb='explain';},then:[['N','The explanation of why the summary was long takes four minutes.'],['R','…Right. So. Shorter.']]},
-    {t:'Go very quiet. Nod. Leave the body.',f:function(){G.fb='quiet';},then:[['H','Mm.'],['R','You okay? You went somewhere.']]},
+    {t:'Go very quiet. Nod. Leave the body.',f:function(){G.fb='quiet';},then:[['H','Mm.'],['R','You okay? You went somewhere.'],['H','Fine. It’s nothing.'],said]},
     {t:'…Ask what “shorter” means.',f:function(){G.fb='ask';},then:[['S','That’s walking TOWARDS it.'],['H','How short is shorter?'],['R','Half a page. That’s all. The content’s great.'],['S','…Half a page. That’s not a character flaw. That’s a measurement.']]}
   ]},
   function(){G.bigNote=null;G.human.sweatT=0;return outside({title:'WHAT RIITTA SAW',dur:'duration: 3 minutes',anim:'text',
@@ -274,7 +274,15 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
     {t:'Stay. Wobble visibly.',then:[wobbleOn,['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.'],wobbleOff]}
   ]},
   calm,set({aFace:-1,near:1}),
-  ['H','Hi, Sanna. Can I say something odd?'],
+  ['A','You okay?'],
+  ['H','It’s something. Small. Give me a minute.'],
+  set({mood:'surprised'}),
+  ['S','…That’s not what we say.'],
+  function(){var n=G.nothings||0;return [['S',n>1?'We say “nothing”. We’ve said it '+(n===2?'twice':n===3?'three times':n+' times')+' this week. I keep them in a folder.':'We say “nothing”. There’s a folder.']];},
+  ['A','Take your minute.'],
+  {wait:1.4},
+  set({mood:'calm'}),
+  ['H','Okay. Can I say something odd?'],
   ['A','Always.'],
   ['H','When someone says “oh, hi”, my brain hears a verdict. It’s very loud for two seconds. Then I spend a day on it.'],
   ['S','A WEEK. Be accurate.'],
@@ -306,7 +314,8 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['S','It’s a tr—'],
   ['S','…No. It’s lunch.'],
   set({face:'smile'}),
-  ['H','Lunch.']
+  ['H','Lunch.'],
+  postingPayoff
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 seconds',cap:'Two colleagues going to lunch.',anim:'none'}),[
   ['S','For the record, I intend to go off again on Monday.'],
   ['H','I know. I’ll be there.'],

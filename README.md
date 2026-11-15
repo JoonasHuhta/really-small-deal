@@ -8,11 +8,19 @@ Ei asennusta, ei kirjautumista. Toimii puhelimella vaakasuunnassa ja tietokoneel
 
 ## Pelaa paikallisesti
 
-Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.23 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
+Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.24 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
 
 **Pelin ydin (14.11.):** varjo ei opeta eikä anna vinkkejä, se vain yrittää suojella, kuten AwA:n susi. Huumori syntyy mittakaavasta: sisällä katastrofi, ulkona kaksi sekuntia. Vitsit kohdistuvat varjon byrokratiaan, arkistoon, välimerkkeihin, ylisuojeluun ja omaan arvokkuuteen, eivät ihmisen kipuun eikä toisten aitoon julmuuteen. Päämäärä on, että pelaaja nauraa, tunnistaa itsensä ja näkee lopussa suhteen muuttuvan: korjaamisesta pysymiseen.
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
+
+Versio 0.24 (Claude, 15.11.2026): **naamio, vetäytyminen ja harjoittelu.**
+
+- **Naamion kaari:** ”Nothing big.” (maanantai), ”Fine. It’s nothing.” (tiistain hiljainen polku), ”Yeah. It’s nothing.” (One small thing.). Perjantaina Sanna kysyy ”You okay?”, ja ihminen vastaa ensimmäistä kertaa toisin: ”It’s something. Small. Give me a minute.” Ekskyysmi: ”…That’s not what we say. We’ve said it twice this week. I keep them in a folder.”
+- **Uusi hetki *The posting.*** (tiistain jälkeen, THAT NIGHT, LATE): työpaikkailmoitus, joka on ”SO you”. Ekskyysmin taktiikat: arkistoi se laatikkoon ”later”, kirjoita heidän hylkäyksensä valmiiksi (”You are too long.”) tai kysy, mitä ihminen haluaa. Kahdessa ensimmäisessä: ”Applications sent: zero. Rejections: zero. Success rate: one hundred percent.” – ”Of nothing.” Perjantaina ilmoitus palaa: joko ”You can draft. I’ll send.” tai ”Then unfile it.” – ”There’s no form for that.” – ”Make one.”
+- ***Not now.* -hetkeen:** ”the actual ‘no’ took four seconds. I rehearsed it for three hours and ten minutes.” – ”Before or after?” – ”Both. I’m thorough.”
+- **Koko tarinan kuitti** muistaa nämä: ”“not now”, rehearsed 3 h 10 min / actual 4 s”, ”rejections avoided 1 · success rate 100 %” tai ”applications pending”, ja ”“it’s nothing”, said ×2”.
+- Taustalla: Rowney-Smith ym. 2026 (vetäytyminen, naamioiminen, kehon tuntemukset) ja havainto, että odotettu torjunta tuntuu usein pahemmalta kuin itse torjunta. Ks. [SEURAAVAKSI.md](SEURAAVAKSI.md).
 
 Versio 0.23 (15.11.2026): **varjot muistavat toisensa.**
 
@@ -164,6 +172,7 @@ Kotimatkalla voi käsitellä kaikki kolme aihetta tai valita suoraan jatkamisen 
 | `src/33-moments.js` | Tarinan järjestys: mitkä lyhyet hetket tulevat minkä luvun jälkeen |
 | `src/34-response.js` | Oikea vastaus: maanantain ikkuna, salainen haara, perjantain vastinpari |
 | `src/35-inside.js` | Kaksi kelloa, kuitit, välilehdeltä poistuminen, röntgensäpsähdys, One small thing |
+| `src/57-posting.js` | The posting., naamion laskuri, perjantain paluu ja koko tarinan kuittirivit |
 | `src/40-backdrops.js` | Koti, toimisto, Sannan varjo |
 | `src/50-lab.js` | Skenaariolaboratorio, Enhance, The group chat |
 | `src/51-quirks.js` | Outoudet, Sometime, An ordinary evening |
@@ -198,7 +207,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.23, viisi päivää ja kahdeksan välihetkeä, läpipeluu noin 30 minuuttia.
+6. [Peli](index.html): versio 0.24, viisi päivää ja kahdeksan välihetkeä, läpipeluu noin 30 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

@@ -75,6 +75,7 @@ function receiptRows(d){
 function runRows(run){
   var rows=[],cal=0,livedDays=0;
   run.forEach(function(d){if(d.label==='SCENARIO LAB')return;cal++;livedDays+=d.ratio;rows.push([d.label.toLowerCase().replace(/\. not necessarily that one\./,''),'×'+d.ratio.toFixed(1)]);});
+  var extra=storyRows();if(extra.length)rows.push('-');rows=rows.concat(extra);
   rows.push('-',['DAYS ON THE CALENDAR',String(cal)],['DAYS LIVED',livedDays.toFixed(1),'big']);
   return rows;
 }
@@ -175,7 +176,7 @@ function labDetail(){return labScene({set:'office',title:'One small thing.',plan
   ['B','Just one small thing.']
  ],jolt({label:'“just one small thing”',mins:120,tag:'SOURCE: “JUST ONE SMALL THING”'}),[
   ['B','You okay?'],
-  ['H','Yeah. It’s nothing.'],
+  ['H','Yeah. It’s nothing.'],said,
   set({mood:'scared',s:1.6}),
   ['S','It is NOT nothing. I have the X-ray.'],
   {choice:[

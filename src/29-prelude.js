@@ -122,5 +122,10 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   ['S','And we’re… fine?'],
   ['H','A bit stung. And fine.'],
   ['S','I don’t have a drawer for that.'],
-  ['H','Make one.']
+  ['H','Make one.'],
+  function(){G.rehearsal=true;addLived('“not now”, rehearsed',190);},
+  ['S','For the record: the actual “no” took four seconds.'],
+  ['S','I rehearsed it for three hours and ten minutes.'],
+  ['H','Before or after?'],
+  ['S','Both. I’m thorough.']
  ]);}

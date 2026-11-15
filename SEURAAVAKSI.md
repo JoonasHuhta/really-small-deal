@@ -2,7 +2,7 @@
 
 15.11.2026 · Claude. Tämä tiedosto korvaa [TOTEUTUKSEN_SUUNNITTELU.md](TOTEUTUKSEN_SUUNNITTELU.md):n työlistana. Lista on järjestetty sen mukaan, mikä vaikuttaa eniten siihen, että peli toimii ja että siitä kerrotaan eteenpäin.
 
-## Missä ollaan (0.23)
+## Missä ollaan (0.24)
 
 - **Peli:** viisi päivää (Oh, hi · Quick chat? · Could you just… · Seen. · For now) ja niiden välissä kahdeksan lyhyttä hetkeä. Yksi läpipeluu kestää lukutahdissa noin 30 minuuttia. Selainpeli toimii myös puhelimella vaakasuunnassa. Android-kuori on valmiina, mutta sitä ei ole julkaistu.
 - **Kantavat ideat:** varjon byrokratia ja ylisuojelu. *Oikea vastaus* (ikkuna, joka on mahdoton ensimmäisellä kerralla). *Kaksi kelloa*: ulkona päivä on päivä, sisällä osa päivistä tulee kahdesti. Kuitti, röntgen ja kaari korjaamisesta pysymiseen.
@@ -31,9 +31,9 @@ Uusin laadullinen tutkimus (Rowney-Smith ym., PLOS ONE 2026) nimeää ADHD:n hyl
 | Teema | Pelissä nyt | Mitä puuttuu (ehdotus) |
 |---|---|---|
 | Kehon tuntemukset | Röntgen, säpsähdykset, hikilätäkkö | Riittää. Ei lisää. |
-| Naamioiminen | ”Yeah. It’s nothing.” | **Kaari:** sama repliikki toistuu viikon aikana, ja perjantaina ihminen sanoo: ”It’s something. Small. Give me a minute.” Pieni, mutta se on naamion laskeminen ilman terapiapuhetta. |
-| Vetäytyminen | Maanantain kotimatka yksin | **Uusi hetki *The posting.*:** ihminen katsoo työpaikkailmoitusta, Ekskyysmi arkistoi sen. Kuittiin: ”applications not sent: 1 · rejections avoided: 1 · success rate: 100 %”. |
-| Odotus pahempi kuin itse asia | Kolme skenaariota klo 03:07 | ***Not now.*-kuittiin** kaksi riviä: ”rehearsal 3 h 10 min” ja ”the actual no 4 s”. |
+| Naamioiminen | ”Yeah. It’s nothing.” | ✅ **Tehty 0.24.** **Kaari:** sama repliikki toistuu viikon aikana, ja perjantaina ihminen sanoo: ”It’s something. Small. Give me a minute.” Pieni, mutta se on naamion laskeminen ilman terapiapuhetta. |
+| Vetäytyminen | Maanantain kotimatka yksin | ✅ **Tehty 0.24.** **Uusi hetki *The posting.*:** ihminen katsoo työpaikkailmoitusta, Ekskyysmi arkistoi sen. Kuittiin: ”applications not sent: 1 · rejections avoided: 1 · success rate: 100 %”. |
+| Odotus pahempi kuin itse asia | Kolme skenaariota klo 03:07 | ✅ **Tehty 0.24** (repliikkinä ja koko tarinan kuitissa). ***Not now.*-kuittiin** kaksi riviä: ”rehearsal 3 h 10 min” ja ”the actual no 4 s”. |
 | Ympäristö ratkaisee (Sandland 2025) | Sanna, Eero | **Yksi hetki, jossa joku on täysin yksiselitteinen** (”This is not a criticism. It’s a font.”). Ekskyysmillä ei ole lomaketta yksiselitteiselle viestille. |
 
 Ääni pysyy samana: varjo on absurdi, ihmiset ovat rauhallisia, eikä peli opeta.
@@ -44,7 +44,7 @@ Uusin laadullinen tutkimus (Rowney-Smith ym., PLOS ONE 2026) nimeää ADHD:n hyl
 
 1. ~~**Salainen lounas jättää jäljen viikkoon.**~~ Tehty 0.23 (Codex): ”I’ve filed the blank. For completeness.” Samassa versiossa perjantaina varjot muistavat toisensa.
 2. **Labrahetkien paikat:** *Sometime.* maanantain jälkeen, *The voice message* torstai-iltaan ja *A fine.* (”twenty-three days later”) aivan loppuun ennen kuittia. *An ordinary evening* on rauhallinen hengähdys. Se sopii keskiviikon jälkeen, tai sen voi jättää pelkäksi labrahetkeksi.
-3. **Kuittiin rivi ”the actual no”** (ks. edellinen kohta).
+3. ~~**Kuittiin rivi ”the actual no”**~~ Tehty 0.24.
 
 ## 5. Ennen julkaisua
 
