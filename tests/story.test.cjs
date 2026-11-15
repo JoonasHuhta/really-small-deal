@@ -153,6 +153,17 @@ for(const day of ['A','B','C'])for(let v=0;v<4;v++){
   for(const must of [/You showed someone a drawing/,/Last time you showed someone a drawing/,/Eleven people liked it/,/The eyebrow was HUNGER/,/falls off a printer/,/I rounded up/,/Nothing in it can be rejected/,/I always thought that was the bad outcome/,/busy near each other/,/I’m keeping the headband/])assert.match(tr,must);
   assert.ok(tr.indexOf('The eyebrow was HUNGER')<tr.indexOf('rejection exchange programme'),'the eyebrow comes before the favours');
   assert.ok(tr.indexOf('Seen 17:31')<tr.indexOf('Nothing in it can be rejected'),'the reply comes after board game night');
+  // Structure: the shadow that says "oh. hi." to Ekskyysmi comes before Thursday, so Thursday's line lands on something;
+  // everything after Thursday is the new job being tried out, starting with a relapse that knows it is one.
+  assert.ok(tr.indexOf('busy near each other')<tr.indexOf('Seen 17:31'),'Colleagues. comes before board game night');
+  assert.ok(tr.indexOf('busy near each other')<tr.indexOf('She knows I count')&&tr.indexOf('She knows I count')<tr.indexOf('Seen 17:31'),'the quiet evening is the calm before Thursday');
+  assert.equal(T.G.kitchen,false,'the kitchen does not follow the story around');
+  // What the human wants stays open until the last scene: a lunch arranged on Monday moves to Friday.
+  if(T.G.lunch===2){assert.match(tr,/Dentist!! Sorry!! Friday\?/);assert.match(tr,/It’s Friday\. No dentist\./);}else assert.doesNotMatch(tr,/No dentist/);
+  assert.ok(tr.indexOf('That one landed')<tr.lastIndexOf('With a full stop.')&&tr.lastIndexOf('With a full stop.')<tr.indexOf('You showed someone a drawing'),'Thursday’s hit remembers the full stop');
+  assert.ok(tr.indexOf('Same hours. Fewer exits')<tr.indexOf('I’m working out my notice'),'the relapse comes after the new job');
+  assert.ok(tr.indexOf('I’m working out my notice')<tr.indexOf('This is the staying part')&&tr.indexOf('This is the staying part')<tr.indexOf('I always thought that was the bad outcome'));
+  assert.ok(tr.indexOf('You look smaller')>tr.length*0.35&&tr.indexOf('You look smaller')<tr.length*0.6,'the glass turned on its owner sits near the middle');
   assert.equal(T.G.moment,'comments');assert.equal(T.G.lab,null);
   assert.ok(['sorry','explain','quiet','ask'].includes(T.G.fb));assert.ok(['worries','cancel','freezer','bite'].includes(T.G.txt));
   if(T.G.txt==='cancel')assert.match(tr,/Ignore that\. I panicked/);

@@ -188,6 +188,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['H','You’re not protecting me. You’re just the loudest thing in the room.'],
   shadowHit,set({sweat:0}),{wait:2.2},
   ['S','…That one landed.'],
+  function(){return G.metSannaShadow?[['S','With a full stop.']]:[];},
   set({face:'down'}),
   ['H','Sorry.'],
   ['S','No. It’s fine. It’s just— that’s what it’s like.'],
@@ -311,7 +312,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
     {t:'Say yes. Old habits.',f:yes,then:[['H','Sure.'],['S','Next time, then.'],['H','Next time.'],['S','I’ll put the “no” in the archive. Under “pending”.']]}
   ]},
   set({aFace:-1,mood:'calm'}),
-  ['A','Lunch?'],
+  function(){return [['A',G.lunch===2?'Lunch? It’s Friday. No dentist.':'Lunch?']];},
   ['S','It’s a tr—'],
   ['S','…No. It’s lunch.'],
   set({face:'smile'}),

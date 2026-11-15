@@ -8,11 +8,19 @@ Ei asennusta, ei kirjautumista. Toimii puhelimella vaakasuunnassa ja tietokoneel
 
 ## Pelaa paikallisesti
 
-Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.25 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
+Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.26 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
 
 **Pelin ydin (14.11.):** varjo ei opeta eikä anna vinkkejä, se vain yrittää suojella, kuten AwA:n susi. Huumori syntyy mittakaavasta: sisällä katastrofi, ulkona kaksi sekuntia. Vitsit kohdistuvat varjon byrokratiaan, arkistoon, välimerkkeihin, ylisuojeluun ja omaan arvokkuuteen, eivät ihmisen kipuun eikä toisten aitoon julmuuteen. Päämäärä on, että pelaaja nauraa, tunnistaa itsensä ja näkee lopussa suhteen muuttuvan: korjaamisesta pysymiseen.
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
+
+Versio 0.26 (Claude, 15.11.2026): **rakenne.** Tarinan käännekohdat mitattiin ja keskikohta järjestettiin uudelleen. Perustelut ja taulukko: [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Rakenne.
+
+- **Uusi järjestys:** maanantai · tiistai · *Enhance.* · *The posting.* · keskiviikko · *One small thing.* · *Evidence.* (keskikohta) · *Sometime.* · *Colleagues.* · *An ordinary evening* · torstai (pohja ja uusi työnkuva) · *The reply* · *Not now.* · *A quiet drink.* · perjantai · *The group chat*.
+- ***An ordinary evening* on nyt tarinassa** (THE EVENING BEFORE): lautasjärjestys, laskeminen, hyräily ja Kaisa, joka nauraa, kun häntä korjataan. Läpipeluu on noin 38 minuuttia.
+- **Torstai:** jos varjot ovat tavanneet, Ekskyysmi sanoo osuman jälkeen ”With a full stop.”
+- **Torstain jälkeen:** *The reply*: ”This is the OLD job. I’m working out my notice.” – ”How long is the notice?” – ”Unclear. I wrote the contract.” *Not now.*: ”…Is this the staying part?” – ”This is the staying part.” – ”It’s mostly standing.”
+- **Lounas pysyy auki perjantaihin:** maanantaina viestillä sovittu lounas siirtyy (”Dentist!! Sorry!! Friday?”), ja perjantaina Sanna sanoo ”Lunch? It’s Friday. No dentist.”
 
 Versio 0.25 (Claude, 15.11.2026): **suurennuslasi kulkee mukana, ja Eerolla on varjo.**
 
@@ -213,7 +221,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.25, viisi päivää ja kymmenen välihetkeä, läpipeluu noin 30 minuuttia.
+6. [Peli](index.html): versio 0.26, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

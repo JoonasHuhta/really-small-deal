@@ -47,6 +47,8 @@ function labReply(){return labScene({set:'home',title:'The reply',plan:'Answer o
   ['H','“Hey! I had a really nice time on Thursday. We should do it again soon.” Smiley.'],
   set({mood:'alert',s:1.3}),
   ['S','Before we send that. A few small edits. For safety.'],
+  // In the story this comes after the job description changed: a relapse, and it knows.
+  function(){return G.jobDone?[['H','New job description. Remember?'],['S','This is the OLD job. I’m working out my notice.'],['H','How long is the notice?'],['S','Unclear. I wrote the contract.']]:[];},
   {choice:[
     {t:'Cut “really”. Nobody needs to know how nice.',f:draftCut(['really']),then:[['S','A nice time. Measured. Like a person with other nice times.'],['H','It was really nice.'],['S','That’s between us.']]},
     {t:'Cut the smiley. We are not a smiley household.',f:draftCut(['smiley']),then:[['S','A smiley is a face you can’t take back.']]},

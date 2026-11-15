@@ -5,6 +5,13 @@ function tuesdayOpening(){
     ['H','You could leave it blank.'],
     ['S','I’ve filed the blank. For completeness.']
   ];
+  // The lunch arranged by message on Monday does not quietly happen off-screen: it moves to Friday.
+  // What the human wants (lunch with Sanna) stays open until the last scene.
+  if(G.lunch===2)return [
+    ['S','Tuesday. Nearly five. Lunch report: moved. Sanna, 11:40: “Dentist!! Sorry!! Friday?”'],
+    ['H','You reviewed the exclamation marks for an hour.'],
+    ['S','There are four. That’s either remorse or enthusiasm. I’ve filed it under both.']
+  ];
   return [
     ['S','Tuesday. Nearly five. No incidents. I’d like it noted that I did nothing all day and it worked.'],
     ['H','You reviewed a comma for an hour.'],
@@ -28,7 +35,7 @@ function mondayCallback(){
   if(g.real&&g.leak!=='exit')return [['H','They left me out of lunch.'],['S','And now there’s a meeting. The plot has acquired a calendar.']];
   if(g.leak==='exit')return [['H','I left the room.'],['S','An exit. Followed by an interview.'],['H','Don’t put those together.']];
   if(g.lunch===1)return [['H','We had lunch.'],['S','With witnesses.'],['H','They’re called colleagues.'],['S','Dual roles. Very efficient.']];
-  if(g.lunch===2)return [['H','We arranged lunch for Tuesday.'],['S','In writing. A paper trail.']];
+  if(g.lunch===2)return [['H','Sanna moved lunch to Friday. That’s all that happened.'],['S','Exactly. First the lunch moves. Then the desk.']];
   return [['H','We barely spoke.'],['S','Exactly. A suspicious lack of evidence.']];
 }
 function extraWorkCallback(){

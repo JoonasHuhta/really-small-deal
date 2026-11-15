@@ -495,6 +495,7 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   ['H','It stung.'],
   ['S','For how long?'],
   ['H','About this long.'],
+  function(){return G.jobDone?[['S','…Is this the staying part?'],['H','This is the staying part.'],['S','It’s mostly standing.'],['H','Mostly.']]:[];},
   {wait:1.8},
   ['H','There.'],
   ['S','That’s IT? I had a whole evening planned.'],
@@ -919,6 +920,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['H','You’re not protecting me. You’re just the loudest thing in the room.'],
   shadowHit,set({sweat:0}),{wait:2.2},
   ['S','…That one landed.'],
+  function(){return G.metSannaShadow?[['S','With a full stop.']]:[];},
   set({face:'down'}),
   ['H','Sorry.'],
   ['S','No. It’s fine. It’s just— that’s what it’s like.'],
@@ -1042,7 +1044,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
     {t:'Say yes. Old habits.',f:yes,then:[['H','Sure.'],['S','Next time, then.'],['H','Next time.'],['S','I’ll put the “no” in the archive. Under “pending”.']]}
   ]},
   set({aFace:-1,mood:'calm'}),
-  ['A','Lunch?'],
+  function(){return [['A',G.lunch===2?'Lunch? It’s Friday. No dentist.':'Lunch?']];},
   ['S','It’s a tr—'],
   ['S','…No. It’s lunch.'],
   set({face:'smile'}),
@@ -1069,6 +1071,13 @@ function tuesdayOpening(){
     ['H','You could leave it blank.'],
     ['S','I’ve filed the blank. For completeness.']
   ];
+  // The lunch arranged by message on Monday does not quietly happen off-screen: it moves to Friday.
+  // What the human wants (lunch with Sanna) stays open until the last scene.
+  if(G.lunch===2)return [
+    ['S','Tuesday. Nearly five. Lunch report: moved. Sanna, 11:40: “Dentist!! Sorry!! Friday?”'],
+    ['H','You reviewed the exclamation marks for an hour.'],
+    ['S','There are four. That’s either remorse or enthusiasm. I’ve filed it under both.']
+  ];
   return [
     ['S','Tuesday. Nearly five. No incidents. I’d like it noted that I did nothing all day and it worked.'],
     ['H','You reviewed a comma for an hour.'],
@@ -1092,7 +1101,7 @@ function mondayCallback(){
   if(g.real&&g.leak!=='exit')return [['H','They left me out of lunch.'],['S','And now there’s a meeting. The plot has acquired a calendar.']];
   if(g.leak==='exit')return [['H','I left the room.'],['S','An exit. Followed by an interview.'],['H','Don’t put those together.']];
   if(g.lunch===1)return [['H','We had lunch.'],['S','With witnesses.'],['H','They’re called colleagues.'],['S','Dual roles. Very efficient.']];
-  if(g.lunch===2)return [['H','We arranged lunch for Tuesday.'],['S','In writing. A paper trail.']];
+  if(g.lunch===2)return [['H','Sanna moved lunch to Friday. That’s all that happened.'],['S','Exactly. First the lunch moves. Then the desk.']];
   return [['H','We barely spoke.'],['S','Exactly. A suspicious lack of evidence.']];
 }
 function extraWorkCallback(){
@@ -1114,14 +1123,21 @@ function mondayRepair(){
 /* ================= the order of things: a life in small moments, not a calendar ================= */
 // The five long chapters are the spine. Between them sit shorter moments (the same scripts the Scenario lab plays).
 // Time floats on purpose: a card says roughly when, never which week. To reorder the story, edit AFTER.
+// The order is not arbitrary (see KASIKIRJOITUS.md, "Rakenne"):
+//   after 2: Ekskyysmi doubles down (zoom, withdrawal)            first half of act two: the old job, getting costlier
+//   after 3: the glass turned on its owner = MIDPOINT; then other people's shadows, ending with one that
+//            says "oh. hi." to Ekskyysmi itself, so it walks into Thursday knowing how that lands;
+//            last, an evening where nothing happens (a friend who already knows you count): the calm before Thursday
+//   after 4: the job description has changed. A relapse, a real one survived, an evening of nothing.
+//   after 5: the drawing. The oldest file gets updated.
 var AFTER={
   2:['enhance','posting'],
-  3:['detail','glass','sometime'],
-  4:['reply','notnow','bar','colleagues'],
+  3:['detail','glass','sometime','colleagues','evening'],
+  4:['reply','notnow','bar'],
   5:['comments']
 };
 var WHEN={posting:'THAT NIGHT, LATE',detail:'THE NEXT MORNING',enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'AFTERWARDS',bar:'AN EVENING',
-  colleagues:'AFTER LUNCH, SOME DAY',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'AN ORDINARY EVENING',voice:'LATER THAT EVENING',library:'TWENTY-THREE DAYS LATER'};
+  colleagues:'AFTER LUNCH, SOME DAY',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'THE EVENING BEFORE',voice:'LATER THAT EVENING',library:'TWENTY-THREE DAYS LATER'};
 function interlude(id){return function(){G.lab=null;G.moment=id;return LABS[id].script();};}
 function momentsAfter(n){return (AFTER[n]||[]).map(interlude);}
 // ---- src/34-response.js ----
@@ -2380,6 +2396,8 @@ function labReply(){return labScene({set:'home',title:'The reply',plan:'Answer o
   ['H','“Hey! I had a really nice time on Thursday. We should do it again soon.” Smiley.'],
   set({mood:'alert',s:1.3}),
   ['S','Before we send that. A few small edits. For safety.'],
+  // In the story this comes after the job description changed: a relapse, and it knows.
+  function(){return G.jobDone?[['H','New job description. Remember?'],['S','This is the OLD job. I’m working out my notice.'],['H','How long is the notice?'],['S','Unclear. I wrote the contract.']]:[];},
   {choice:[
     {t:'Cut “really”. Nobody needs to know how nice.',f:draftCut(['really']),then:[['S','A nice time. Measured. Like a person with other nice times.'],['H','It was really nice.'],['S','That’s between us.']]},
     {t:'Cut the smiley. We are not a smiley household.',f:draftCut(['smiley']),then:[['S','A smiley is a face you can’t take back.']]},

@@ -2,12 +2,13 @@
 
 15.11.2026 · Claude. Tämä tiedosto korvaa [TOTEUTUKSEN_SUUNNITTELU.md](TOTEUTUKSEN_SUUNNITTELU.md):n työlistana. Lista on järjestetty sen mukaan, mikä vaikuttaa eniten siihen, että peli toimii ja että siitä kerrotaan eteenpäin.
 
-## Missä ollaan (0.25)
+## Missä ollaan (0.26)
 
-- **Peli:** viisi päivää (Oh, hi · Quick chat? · Could you just… · Seen. · For now) ja niiden välissä kahdeksan lyhyttä hetkeä. Yksi läpipeluu kestää lukutahdissa noin 30 minuuttia. Selainpeli toimii myös puhelimella vaakasuunnassa. Android-kuori on valmiina, mutta sitä ei ole julkaistu.
-- **Kantavat ideat:** varjon byrokratia ja ylisuojelu. *Oikea vastaus* (ikkuna, joka on mahdoton ensimmäisellä kerralla). *Kaksi kelloa*: ulkona päivä on päivä, sisällä osa päivistä tulee kahdesti. Kuitti, röntgen ja kaari korjaamisesta pysymiseen.
-- **Neljä hetkeä on vain labrassa** eikä vielä tarinassa: *Sometime.*, *An ordinary evening*, *The voice message*, *A fine.*
-- **Testaus:** logiikkatestit kattavat kaikki polut (180 maanantaita, 12 viikkoa, 12 hetkeä). **Ihmispelaajia ei ole vielä testattu.** Se on isoin aukko.
+- **Peli:** viisi päivää (Oh, hi · Quick chat? · Could you just… · Seen. · For now) ja niiden välissä yksitoista lyhyttä hetkeä. Yksi läpipeluu kestää lukutahdissa noin 38 minuuttia. Selainpeli toimii myös puhelimella vaakasuunnassa. Android-kuori on valmiina, mutta sitä ei ole julkaistu.
+- **Rakenne on mitattu ja järjestetty** (Weilandin käännekohdat, Trubyn perusaskeleet): ks. [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Rakenne.
+- **Kantavat ideat:** varjon byrokratia ja ylisuojelu, *oikea vastaus* (mahdoton ikkuna), kaksi kelloa ja kuitti, röntgen, suurennuslasi, muiden ihmisten varjot ja kaari korjaamisesta pysymiseen.
+- **Vain labrassa:** *The voice message* ja *A fine.*
+- **Ensimmäinen pelaajapalaute:** ”hauska ja deep samalla”, ”kuin Disco Elysium casual-yleisölle”. Laajempi testi on yhä tekemättä.
 
 ## 1. Nyt: pelaajatesti ennen uusia ominaisuuksia
 
@@ -43,8 +44,13 @@ Uusin laadullinen tutkimus (Rowney-Smith ym., PLOS ONE 2026) nimeää ADHD:n hyl
 ## 4. Pienet tarinakorjaukset
 
 1. ~~**Salainen lounas jättää jäljen viikkoon.**~~ Tehty 0.23 (Codex): ”I’ve filed the blank. For completeness.” Samassa versiossa perjantaina varjot muistavat toisensa.
-2. **Labrahetkien paikat:** ~~*Sometime.*~~ (tehty 0.25, keskiviikon jälkeen, mukana Eeron varjo), *The voice message* torstai-iltaan ja *A fine.* (”twenty-three days later”) aivan loppuun ennen kuittia. *An ordinary evening* on rauhallinen hengähdys. Se sopii keskiviikon jälkeen, tai sen voi jättää pelkäksi labrahetkeksi.
+2. **Labrahetkien paikat:** ~~*Sometime.*~~ (0.25) ja ~~*An ordinary evening*~~ (0.26) ovat tarinassa. Jäljellä: *The voice message* torstai-iltaan ja *A fine.* (”twenty-three days later”) aivan loppuun ennen kuittia. *An ordinary evening* on rauhallinen hengähdys. Se sopii keskiviikon jälkeen, tai sen voi jättää pelkäksi labrahetkeksi.
 3. ~~**Kuittiin rivi ”the actual no”**~~ Tehty 0.24.
+
+## 4a. Rakenteen avoimet kohdat
+
+1. **Salainen lounaspolku** tarvitsee loppuviikolle oman kysymyksensä (”pystyykö sen toistamaan?”).
+2. ***A fine.*** jälkikohtaukseksi kuitin jälkeen.
 
 ## 4b. Laajennus muiden varjoina
 
@@ -62,7 +68,7 @@ Seuraava: **Riitan varjo** *Not now.* -hetkeen (jongleeraa yhtätoista asiaa, �
 
 - Lisää HUD-infoa (kokeiltu kellon kanssa, oli liikaa).
 - Selviytymisvinkkejä tai terapiakieltä.
-- Peliä pidemmäksi. Kokonaisuus on jo noin 30 minuuttia, ja paras versio on luultavasti lyhyempi.
+- Peliä tästä pidemmäksi. Kokonaisuus on nyt noin 38 minuuttia. Uusi hetki tulee mukaan vain, jos jokin vanha lähtee tai se liikuttaa kaarta (ks. välihetkien sääntö).
 - Diagnoosisanastoa pelin sisällä.
 
 ## Lähteet

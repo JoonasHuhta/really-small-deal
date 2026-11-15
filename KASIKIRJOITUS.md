@@ -219,3 +219,57 @@ Muut piirteet tulevat **muiden ihmisten varjoina**, jokaisella oma osastonsa. Si
 Säännöt: muiden varjot ovat ystävällisiä ja omassa työssään yhtä huonoja kuin Ekskyysmi omassaan. Niiden piirrettä ei nimetä diagnoosina. Jokainen kohtaaminen pienentää Ekskyysmin maailmaa vähän: tuomio olikin toisen osaston asia.
 
 Disco Elysium -vertaus (ensimmäinen palaute: ”hauska ja deep samalla”) pitää: siellä äänet ovat taitoja, täällä varjot ovat osastoja. Ero on mittakaava: yksi ihminen, yksi viikko, pienet hetket. Se on casual-yleisön versio, ja sellaisena se kannattaa pitää.
+
+## Rakenne: kaari vai kohkaamista? (15.11.2026, versio 0.26)
+
+Kysymys: tarvitaanko K. M. Weilandin käännekohtia ja prosentteja tai Trubyn 22 askelta, vai onko peli sarja kohkaamista? Mittasin koko läpipeluun lukutahdissa (noin 38 min) ja katsoin, mihin kohtaan mikäkin repliikki osuu. **Kaari on olemassa.** Keskikohta oli epäjärjestyksessä, ja se on nyt korjattu.
+
+### Kuka on päähenkilö
+
+Ekskyysmi, eli pelaaja. Ihminen on se, jota tarina koskee, mutta muutos tapahtuu varjossa.
+
+- **Valhe** (Weiland): ”My job is simple. Keep you from being rejected. By anyone. Ever.” (2 %)
+- **Totuus:** ”I can’t stop it happening. But I could stay.” (68 %)
+- **Ihmisen halu** (Truby): lounas Sannan kanssa. Se on pelin ensimmäinen repliikki ja viimeisen kohtauksen viimeinen sana.
+- **Vastustaja:** pahista ei ole. Trubyn termein Ekskyysmi on ihmisen *fake-ally opponent*: näyttää liittolaiselta ja seisoo halun tiellä. Pelin perusoivallus on, että **pelaaja pelaa sitä, joka on tiellä, ja se rakastaa sitä, jonka tiellä se on.**
+- **Haamu** (Truby: ghost): piirustus toisella luokalla. Istutetaan tiistaina arkistokortissa, paljastuu torstaina (”Since a Tuesday. You were seven.”) ja suljetaan epilogissa (”…I’ll update the file.”).
+
+### Käännekohdat mitattuna
+
+| Weiland | Ihanne | Pelissä | Mikä |
+|---|---|---|---|
+| Koukku ja valhe | 0–2 % | 2 % | Aamukahvi. ”My job is simple.” |
+| Alkusysäys | noin 12 % | 6 % | ”oh, hi.” ja mahdoton ikkuna |
+| 1. käännekohta | 25 % | 26 % | ”I was praised. Twice. You talked over it.” Ihminen panee ensimmäisen kerran vastaan. |
+| 1. puristus | 37 % | 38 % | ”It works on everyone except me.” Suojelun hinta. |
+| Keskikohta, peili | 50 % | 47 % | Ihminen kääntää suurennuslasin Ekskyysmiin: ”You look smaller.” |
+| 2. puristus | 62 % | 54 % | Sannan varjo sanoo Ekskyysmille ”oh. hi.” Nyt se tietää, miltä se tuntuu. |
+| Tyyni ennen myrskyä | | 59 % | *An ordinary evening*: Kaisa nauraa. ”She knows I count.” |
+| 3. käännekohta, pohja | 75 % | 64–68 % | ”You’re just the loudest thing in the room.” → ”With a full stop.” → piirustus → uusi työnkuva |
+| Valheen viimeinen yritys | | 71 % | *The reply*: ”This is the OLD job. I’m working out my notice.” |
+| Uusi työ koetuksella | | 78 % | *Not now.*: oikea torjunta. ”This is the staying part.” – ”It’s mostly standing.” |
+| Huipennus | 88 % | 87–91 % | ”Hi.” – ”That’s the whole procedure.” Hälytys soi silti. Pysytään. Naamio lasketaan. |
+| Ratkaisu | 98 % | 91–94 % | ”Lunch.” |
+| Epilogi | | 95–100 % | Piirustus ryhmächattiin. Vanhin arkistokortti päivitetään. |
+
+Pohja tulee tarkoituksella aiemmin kuin Weilandin 75 %. Kolmannessa näytöksessä uusi työ kokeillaan kolmesti (retkahdus, oikea torjunta, ilta jossa ei tapahdu mitään), ja komedia tarvitsee ne kolme. Prosentit ovat diagnoosi, eivät tavoite.
+
+### Mitä muutin tämän perusteella (0.26)
+
+1. ***Colleagues.* siirtyi torstain edelle.** Ennen se oli pohjan jälkeen, jolloin se ei johtanut mihinkään. Nyt Ekskyysmi saa itse ”oh. hi.” -kohtelun ennen kuin ihmisen repliikki osuu siihen torstaina, ja se sanoo: ”With a full stop.”
+2. ***An ordinary evening* tuli tarinaan** torstain edelle (THE EVENING BEFORE). Se on ainoa kohtaus, jossa näkyy ihmissuhde, joka jo toimii, ja pyytämäsi pienet outoudet (lautasjärjestys, laskeminen, kesken jäänyt hyräily, myöhässä oleva kirja).
+3. **Torstain jälkeiset hetket tietävät, että työ on vaihtunut.** *The reply* on nyt tietoinen retkahdus ja *Not now.* ensimmäinen kerta, kun pysyminen onnistuu oikeassa torjunnassa. HUD näyttää niissä uuden työnkuvan.
+4. **Halulinja pysyy auki loppuun asti.** Jos lounas sovittiin maanantaina viestillä, se ei enää tapahdu näkymättömissä tiistaina. Sanna siirtää sen: ”Dentist!! Sorry!! Friday?” Perjantaina: ”Lunch? It’s Friday. No dentist.”
+
+### Sääntö välihetkille
+
+Hetket saavat olla kohkaamista, mutta jokaisen pitää liikuttaa vähintään yhtä kolmesta: **(1) suojelun hinta ihmiselle, (2) Ekskyysmin epäilys omasta työstään, (3) muiden ihmisten sisäinen elämä.** Hetki, joka ei liikuta mitään näistä, kuuluu labraan. Siksi *The voice message* ja *A fine.* ovat toistaiseksi vain siellä.
+
+### Mitä en ota käyttöön
+
+Trubyn 22 askelta kokonaisena on romaanin tai elokuvan työkalu. 38 minuutin komediaan riittävät seitsemän perusaskelta (heikkous ja tarve, halu, vastustaja, suunnitelma, taistelu, oivallus, uusi tasapaino), ja ne kaikki löytyvät yltä. Tuplaoivallus on jo mukana: Ekskyysmi oivaltaa torstaina, ihminen perjantaina (”I thought not being asked was the verdict.”).
+
+### Auki
+
+- **Salainen lounaspolku** (maanantain ikkunassa onnistuminen) ratkaisee halun jo 6 %:n kohdalla. Loppuviikko tarvitsee silloin oman kysymyksensä, esimerkiksi ”pystyykö sen toistamaan?”. Nyt perjantai on sillä polulla lähes sama kuin muilla.
+- ***A fine.*** olisi hyvä jälkikohtaus kuitin jälkeen: Sannan ”fine” ja kirjaston ”That’ll be a fine” maksaisivat saman vitsin kahdesti.

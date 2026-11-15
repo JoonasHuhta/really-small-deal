@@ -114,6 +114,7 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   ['H','It stung.'],
   ['S','For how long?'],
   ['H','About this long.'],
+  function(){return G.jobDone?[['S','…Is this the staying part?'],['H','This is the staying part.'],['S','It’s mostly standing.'],['H','Mostly.']]:[];},
   {wait:1.8},
   ['H','There.'],
   ['S','That’s IT? I had a whole evening planned.'],
