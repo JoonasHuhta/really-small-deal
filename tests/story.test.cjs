@@ -139,7 +139,10 @@ for(const day of ['A','B','C'])for(let v=0;v<4;v++){
   const tr=T.history().map(x=>x.text).join('\n');
   assert.equal(T.G.chapter,5);assert.equal(T.G.jobDone,true);
   assert.equal(T.G.human.grin,0,'the grin wears off by the evening');
-  for(const must of [/Quick chat tomorrow at 9/,/smoke alarm/,/rejection exchange programme/,/Seen 17:31/,/paper cut from an amputation/,/reviewing my job description/,/Her phone died/,/She HAS one/,/That’s MY name/,/Under the other pile/,/The puddle is MY department/,/I intend to go off again on Monday/])assert.match(tr,must);
+  for(const must of [/Quick chat tomorrow at 9/,/smoke alarm/,/rejection exchange programme/,/Seen 17:31/,/paper cut from an amputation/,/reviewing my job description/,/Her phone died/,/I checked\. Tuesday works/,/I moved a worry/,/Under the other pile/,/The puddle is MY department/,/I intend to go off again on Monday/])assert.match(tr,must);
+  assert.doesNotMatch(tr,/She HAS one|That’s MY name/,'the shadows already met before Friday');
+  assert.doesNotMatch(tr,/I’ve filed the blank/,'a missed Monday does not get the secret lunch callback');
+  assert.equal(T.G.metSannaShadow,true);assert.equal(T.G.morko.wobble,null);
   assert.ok(T.G.yes>=3,'Wednesday cannot be refused');
   // Two clocks: five days on the calendar, more than that lived, and Friday costs less than Monday.
   {const days=T.inside.run().filter(d=>d.label!=='SCENARIO LAB');assert.equal(days.length,5,days.map(d=>d.label).join());
@@ -172,7 +175,7 @@ const checkpointFixture={version:2,ch:5,unlocked:5,chapters:{
   1:{day:'A'},
   3:{day:'A',lunch:1,leak:'cover',fear:2,fb:'ask',yes:0},
   4:{day:'B',lunch:2,leak:'grow',yes:5,handout:true,afterparty:true,fb:'explain'},
-  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false}
+  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true}
 }};
 savedItems.set(saveKey,JSON.stringify(checkpointFixture));
 T.chapter(3);
@@ -184,9 +187,11 @@ T.title();assert.match(element('ov').innerHTML,/Continue · Could you just…/);
 T.chapters();assert.match(element('ov').innerHTML,/data-ch="5"/);assert.match(element('ov').innerHTML,/Oh, hi\. Again\./);assert.match(element('ov').innerHTML,/Not necessarily that one/i);T.about();assert.match(element('ov').innerHTML,/You play Ekskyysmi/);T.title();
 T.chapter(4);assert.equal(T.G.day,'B');assert.equal(T.G.yes,5);assert.equal(T.G.afterparty,true);
 T.chapter(5);assert.equal(T.G.leak,'exit');assert.equal(T.G.real,1);assert.equal(T.G.txt,'cancel');assert.equal(T.G.handout,true);
+assert.equal(T.G.metSannaShadow,true,'Friday restores the earlier meeting');
 const fridayStart=savedItems.get(saveKey);playOn(()=>1);
 assert.equal(savedItems.get(saveKey),fridayStart,'finishing Friday must not overwrite its starting checkpoint with end-of-day choices');
 assert.doesNotMatch(T.history().map(x=>x.text).join('\n'),/Monday stung, though/);
+assert.match(T.history().map(x=>x.text).join('\n'),/I checked\. Tuesday works/);
 T.start('A',false);saved=JSON.parse(savedItems.get(saveKey));assert.equal(saved.ch,1);assert.equal(saved.unlocked,5);
 T.chapter(5);assert.equal(T.G.day,'C','a new Monday must not rewrite a previous Friday');
 T.chapter(1);assert.equal(T.G.day,'A','replaying Monday keeps the saved kind of Monday');
@@ -194,6 +199,10 @@ T.chapter(1);assert.equal(T.G.day,'A','replaying Monday keeps the saved kind of 
 savedItems.set(saveKey,JSON.stringify({ch:4,day:'C',real:1,lunch:0,leak:'exit',fear:3}));
 T.chapter(4);assert.equal(T.G.day,'C');assert.equal(T.G.real,1);
 saved=JSON.parse(savedItems.get(saveKey));assert.equal(saved.version,2);assert.equal(saved.unlocked,4);
+assert.equal(T.G.metSannaShadow,false,'old saves do not invent a meeting');
+T.chapter(5);playOn(()=>0);
+assert.match(T.history().map(x=>x.text).join('\n'),/She HAS one/,'Friday still introduces the shadow when the earlier meeting is unknown');
+assert.doesNotMatch(T.history().map(x=>x.text).join('\n'),/I checked\. Tuesday works/);
 for(const corrupt of ['{','null','[]','{"ch":99}','{"ch":"Friday"}','{"version":2,"ch":4,"chapters":{}}']){
   savedItems.set(saveKey,corrupt);T.reset();T.title();assert.doesNotMatch(element('ov').innerHTML,/data-go="cont"/);
 }
@@ -216,7 +225,7 @@ function playLab(id,mode){
       case 'click':T.advance();break;
       case 'time':T.tick(6);break;
       case 'view':T.advance();T.tick(6);T.advance();break;
-      case 'choice':T.choose(mode&&mode.indexOf('paced')===0&&T.options().some(o=>o.t.startsWith('One at a time.'))?1:0);break;
+      case 'choice':T.choose((mode==='coat'&&T.options().some(o=>o.t==='Pretend to be a coat.'))||(mode&&mode.indexOf('paced')===0&&T.options().some(o=>o.t.startsWith('One at a time.')))?1:0);break;
       case 'fight':
         if(mode&&mode.indexOf('paced')===0){
           const m=T.G.fight.msgs.find(x=>!x.done);
@@ -269,6 +278,42 @@ assert.match(tr,/That’ll be a fine/);assert.match(tr,/THAT kind of fine/);asse
 T.chapter(2);assert.equal(T.G.lib,null);assert.equal(T.G.draft,null);
 tr=playLab('colleagues');
 assert.match(tr,/oh\. hi\./);assert.match(tr,/Since I started watching you do it/);assert.match(tr,/busy near each other/);assert.equal(T.G.zT,0);
+assert.equal(T.G.metSannaShadow,true);
+tr=playLab('colleagues','coat');
+assert.match(tr,/Your buttons blink/);assert.match(tr,/Please don’t review the coat/);assert.equal(T.G.morko.coat,null,'the disguise ends before the honest conversation');assert.equal(T.G.morko.pose,null);
+// Both physical gags remain readable when motion is reduced, pause with the game, and cannot leak into a new chapter.
+function labUntil(text){
+  for(let i=0;i<200;i++){
+    if(T.G.cur&&T.G.cur.text===text)return;
+    T.unlock();const s=T.state();
+    if(s==='click')T.advance();else if(s==='time'||s==='view')T.tick(6);
+    else if(s==='hold')T.advance();
+    else if(s==='choice')T.choose(T.options().some(o=>o.t==='Pretend to be a coat.')?1:T.options().some(o=>o.t==='Stay. Wobble visibly.')?2:0);
+    else throw Error('Unexpected state before gag: '+s);
+    if(s==='view'){T.unlock();T.advance();}
+  }
+  assert.fail('Did not reach: '+text);
+}
+for(const less of [false,true]){
+  if(less)fire(element('motion'),'click',{});
+  T.lab('colleagues');labUntil('Coats have buttons.');T.tick(0.1);T.draw();
+  assert.equal(T.G.morko.pose,'coat');assert.equal(T.G.morko.coat.p===1,less,'reduced motion shows the buttons immediately');
+  const at=T.G.morko.coat.p;T.pause();T.frame(10000000);assert.equal(T.G.morko.coat.p,at);T.pause();
+  T.tick(1);T.draw();assert.equal(T.G.morko.coat.p,1);
+  T.chapter(2);assert.equal(T.G.morko.coat,null,'chapter changes clear the coat');
+  T.lab('bar');labUntil('For cover.');T.tick(1);T.draw();
+  assert.equal(T.G.bar.shelter,true);assert.equal(T.G.bar.umbrella,1);assert.equal(T.G.morko.pose,'shelter');
+  T.unlock();T.advance();T.tick(0.25);T.draw();assert.equal(T.G.bar.umbrella===0,less,'reduced motion returns the umbrella without a sweep');
+  T.tick(1);T.draw();assert.equal(T.G.bar.umbrella,0);
+  T.chapter(2);assert.equal(T.G.bar,null);assert.equal(T.G.morko.pose,null);
+  T.chapter(5);labUntil('I’m wobbling.');T.tick(0.2);T.draw();
+  assert.equal(T.G.morko.pose,'balance');
+  const wobbleAt=T.G.morko.wobble.t;T.pause();T.frame(20000000);assert.equal(T.G.morko.wobble.t,wobbleAt,'pause freezes the balancing act');T.pause();
+  T.tick(10);T.draw();assert.equal(T.G.morko.wobble.t,3.2,'the wobble settles instead of looping while the player reads');
+  labUntil('It’s the principle.');T.unlock();T.advance();assert.equal(T.G.morko.wobble,null);assert.equal(T.G.morko.pose,null);
+  T.chapter(5);labUntil('I’m wobbling.');T.chapter(2);assert.equal(T.G.morko.wobble,null,'a chapter change clears a wobble in progress');
+  if(less)fire(element('motion'),'click',{});
+}
 tr=playLab('notnow');
 assert.match(tr,/That one was real/);assert.match(tr,/I rounded up/);assert.match(tr,/A bit stung\. And fine\./);
 // The quiet opening: an ordinary shadow until the human has a plan. It can be skipped.
@@ -335,6 +380,11 @@ assert.equal(T.G.qte.end,'won');T.tick(1.3);assert.equal(T.G.qteWon,true);
  assert.match(element('ov').innerHTML,/complaint about the speed/);
  {const d=T.inside.run().at(-1);assert.ok(d.ratio<1.2,'answering in time keeps the day almost a day: '+d.ratio);assert.equal(d.hits,0);}
  assert.doesNotMatch(T.inside.receipt(),/oh, hi\./,'the secret Monday has no 0.4 seconds on it');}
+fire(element('ov'),'click',{target:{getAttribute(k){return k==='data-go'?'next':null}}});
+labUntil('I’ve filed the blank. For completeness.');
+assert.match(T.history().map(x=>x.text).join('\n'),/Monday’s lunch report: we had lunch/);
+T.chapter(2);labUntil('I’ve filed the blank. For completeness.');
+assert.equal(T.G.lunch,1,'continuing from Tuesday remembers the successful Monday');
 // 4. Friday: the same window opens, and one word answers all of it.
 T.chapter(5);{let n=0;while(n++<120){T.unlock();const st=T.state();if(T.G.qte&&T.G.qte.auto)break;if(st==='click')T.advance();else T.tick(1);}}
 assert.ok(T.G.qte&&T.G.qte.auto,'Friday opens the window again');T.tick(0.3);T.tick(0.3);T.tick(0.3);T.tick(0.3);
@@ -383,4 +433,4 @@ T.tick(0.05,0.5);T.advance();
 assert.notEqual(T.G.cur.text,throttledLine,'shortcut delay must not depend on animation frame rate');
 // Direct file entry must resolve all resources locally, including font licenses.
 for(const file of ['assets/game.css','assets/game.js','assets/icon.svg','assets/fonts/Fraunces.ttf','assets/fonts/DMSans.ttf','assets/fonts/Fraunces-OFL.txt','assets/fonts/DMSans-OFL.txt'])assert.ok(fs.statSync(path.join(root,file)).size>0,file);
-console.log(`PASS: the correct response (4 ways); 12 lab scenes (14 runs, including four paced chat strategies), quiet opening; ${weeks} full weeks and 4 chapter starts; ${runs} complete Monday paths, ${views} reader-paced cutaways, ${stretches} size interactions; two clocks and receipts; pause, journal, keyboard, reset and local assets.`);
+console.log(`PASS: the correct response (4 ways); 12 lab scenes including four paced chat strategies; coat and umbrella gags with reduced motion, pause and scene cleanup; quiet opening; ${weeks} full weeks and 4 chapter starts; ${runs} complete Monday paths, ${views} reader-paced cutaways, ${stretches} size interactions; two clocks and receipts; pause, journal, keyboard, reset and local assets.`);

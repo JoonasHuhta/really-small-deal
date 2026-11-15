@@ -5,7 +5,7 @@ function lampBase(){
   return{s:s/sw,off:off/sw};
 }
 function updHands(dt){
-  var q=geom(),ht=handTargets(q),M=G.morko,k=Math.min(1,10*dt);
+  var q=geom(),ht=handTargets(q),M=G.morko,k=RM&&(M.coat||M.wobble||(G.bar&&G.bar.sdrink))?1:Math.min(1,10*dt);
   M.h[0].x+=(ht.a.x-M.h[0].x)*k;M.h[0].y+=(ht.a.y-M.h[0].y)*k;
   M.h[1].x+=(ht.b.x-M.h[1].x)*k;M.h[1].y+=(ht.b.y-M.h[1].y)*k;
 }
@@ -13,6 +13,8 @@ function update(dt,elapsed){
   // Reading/input delays follow elapsed time even when the browser draws fewer frames.
   elapsed=elapsed==null?dt:elapsed;
   var g=G,M=g.morko,Hm=g.human;g.time+=dt;LOCK=Math.max(0,LOCK-elapsed);
+  if(M.coat){var coat=M.coat;coat.p=RM?(coat.buttons?1:0):approach(coat.p,coat.buttons?1:0,dt*1.7);if(coat.blink>=0)coat.blink+=dt;}
+  if(M.wobble)M.wobble.t=Math.min(3.2,M.wobble.t+dt);
   if(WAIT==='time'){TIMER-=elapsed;if(TIMER<=0)run();}
   else if(WAIT==='view'&&TIMER>0){TIMER-=elapsed;if(TIMER<=0)render();}
   g.clock+=dt*g.rate;

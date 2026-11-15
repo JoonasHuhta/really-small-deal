@@ -46,6 +46,11 @@ function scPrelude(){return [
 
 /* ---------- Lab: Colleagues. Ekskyysmi gets an “oh. hi.” of its own. ---------- */
 function selfHit(){var g=G;sfx('hit');g.pulse=0.55;g.shake=RM?0:0.45;g.lines=[];g.cur=null;g.flash=0.5;g.morko.sT=0.8;g.morko.mood='scared';g.morko.pose=null;g.anx=0.7;}
+// A disguise in three beats: hang perfectly still, relocate the evidence, accidentally blink.
+function coatOn(){var m=G.morko;m.st='free';m.pose='coat';m.coat={p:0,buttons:false,blink:-1};m.sT=1.25;if(RM)m.s=m.sT;G.anx=0;}
+function coatButtons(){G.morko.coat.buttons=true;}
+function coatBlink(){G.morko.coat.blink=0;}
+function coatOff(){var m=G.morko;m.coat=null;m.pose=null;m.mood='worry';m.sT=1;if(RM){m.s=m.sT;updHands(1);}}
 function labColleagues(){return labScene({set:'room',title:'Colleagues.',plan:'Let the humans talk.',clock:13*3600+10*60}).concat([
   function(){var g=G;g.cowA=true;g.ax=g.axT=780;g.aFace=-1;},
   ['N','After lunch. Your human and Sanna are talking about a printer. It is going fine.'],
@@ -60,7 +65,7 @@ function labColleagues(){return labScene({set:'room',title:'Colleagues.',plan:'L
   ['S','With a FULL STOP. Nobody puts a full stop after “oh” unless they mean it.'],
   {choice:[
     {t:'Greet it back. Formally.',then:[['S','Good afternoon. Ekskyysmi. Rejection prevention, third floor.'],['Z','…I know. We share a wall.'],['S','It KNOWS. It’s been watching.'],['H','You share a wall.']]},
-    {t:'Pretend to be a coat.',then:[pokka,{wait:1.3},['Z','…I can see your eyes.'],['S','Coats have buttons.'],free,set({mood:'worry'})]},
+    {t:'Pretend to be a coat.',then:[coatOn,{wait:1.3},['Z','…I can see your eyes.'],coatButtons,['S','Coats have buttons.'],coatBlink,{wait:0.5},['Z','Your buttons blink.'],['S','Please don’t review the coat.'],coatOff]},
     {t:'Review the “oh”. Frame by frame.',then:[['S','Exhibit A. “Oh.” Flat. Like a door closing.'],['H','You do realise what you’re doing.'],['S','Thorough work.'],['H','Monday. You’re doing Monday. To yourself.']]}
   ]}
  ],outside({title:'WHAT THE HUMANS NOTICED',dur:'duration: 40 seconds',cap:'Nothing. They were talking about a printer.',anim:'text'}),[
@@ -80,7 +85,7 @@ function labColleagues(){return labScene({set:'room',title:'Colleagues.',plan:'L
   set({mood:'care'}),
   ['S','…Tuesday. By the radiator. We could be busy near each other.'],
   ['Z','I’ll check my archive.'],
-  function(){G.zT=0;}
+  function(){G.zT=0;G.metSannaShadow=true;}
  ]);}
 
 /* ---------- Lab: Not now. The one that is real. ---------- */

@@ -9,7 +9,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;
   g.cowA=g.cowB=g.cowR=false;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=false;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -21,9 +21,7 @@ function shadowHit(){var g=G;trigger();addLived('the one that landed',LIVED.shad
 function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);}
 
 function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60}).concat([
-  ['S','Tuesday. Nearly five. No incidents. I’d like it noted that I did nothing all day and it worked.'],
-  ['H','You reviewed a comma for an hour.'],
-  ['S','Quietly.'],
+  tuesdayOpening,
   {wait:0.6},
   ['P','Riitta: “Quick chat tomorrow at 9?”'],
   hit(0.9,'P'),set({sweat:0.7}),{wait:1.2},
@@ -244,6 +242,8 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   {wait:0.8}
  ]);}
 
+function wobbleOn(){var m=G.morko;m.wobble={t:0};m.pose='balance';m.mood='worry';G.anx=0.2;}
+function wobbleOff(){var m=G.morko;m.wobble=null;m.pose=null;if(RM)updHands(1);}
 function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).concat([
   set({cowB:1,bx:880}),
   set({sweat:0.45}),
@@ -271,7 +271,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   {choice:[
     {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.'],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.']]},
     {t:'Hold the verdict. Count to two.',then:[['S','One.'],['S','Two.'],['S','It’s been two seconds and nothing has happened to us.'],['H','Nothing was going to.'],['S','We didn’t KNOW that. We know it now.']]},
-    {t:'Stay. Wobble visibly.',then:[['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.']]}
+    {t:'Stay. Wobble visibly.',then:[wobbleOn,['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.'],wobbleOff]}
   ]},
   calm,set({aFace:-1,near:1}),
   ['H','Hi, Sanna. Can I say something odd?'],
@@ -284,11 +284,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   set({aSweat:0.55,sweat:0}),
   ['A','I do that with “fine”. Someone says “fine” and I’m up till three.'],
   function(){G.zT=1;},{wait:1.6},
-  set({mood:'surprised'}),
-  ['S','…She HAS one.'],
-  ['S','Hello.'],
-  ['Z','…excuse me.'],
-  ['S','That’s MY name.'],
+  fridayShadow,
   archive('good',[['2026','She has one too.']]),
   ['S','…Filed. Under the other pile.'],
   ['H','There’s another pile?'],

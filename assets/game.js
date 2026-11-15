@@ -91,13 +91,13 @@ function reset(day){
   lastDay=r;
   G={time:0,day:r,clock:9*3600+41*60+12,rate:1,started:false,ended:false,
      human:{x:HOME,xT:HOME,flinch:0,gone:false,face:'neutral',back:false,sweat:0,sweatT:0,blush:0,grin:0,puddle:0},aSweat:0,cards:[],rep:null,zoom:null,fight:null,fightRes:null,fightLog:null,boss:null,ninja:false,rBrow:0,lab:null,labEnd:false,tics:[],carsSeen:[],dish:null,kitchen:false,smileT:0,lens:null,lensView:false,glassN:0,skippable:false,moment:null,qte:null,qteWon:false,day0:null,mult:1,prevClock:0,livedShown:0,rolling:false,run:[],jolt:null,awayAt:null,awayNote:null,receiptText:'',bar:null,rec:null,draft:null,lib:null,replySent:null,noCup:false,mugFixed:true,fadeRate:1.6,
-     morko:{s:1,sT:1,off:-70,mood:'calm',st:'free',pose:null,h:[{x:340,y:380},{x:420,y:380}]},
+     morko:{s:1,sT:1,off:-70,mood:'calm',st:'free',pose:null,coat:null,wobble:null,h:[{x:340,y:380},{x:420,y:380}]},
      gaze:0,gazeT:0,gazeFrom:'A',dark:0,darkT:0,flash:0,anx:0,
      ax:1010,axT:1010,bx2:1090,bxT:1090,aFace:-1,bFace:-1,aWave:false,cowA:false,cowB:false,cupLeft:false,
      cz:1.025,cx:W/2,cy:H/2,
      lines:[],band:null,out:null,w:null,card:0,
      hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0};
-  G.handout=false;G.afterparty=false;
+  G.handout=false;G.afterparty=false;G.metSannaShadow=false;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
   document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
   C.z=1.025;C.fx=W/2;C.fy=H/2;
@@ -354,7 +354,7 @@ function checkpoint(g){
     fb:['sorry','explain','quiet','ask'].indexOf(g.fb)>=0?g.fb:null,
     txt:['worries','cancel','freezer','bite'].indexOf(g.txt)>=0?g.txt:null,
     yes:Number.isFinite(g.yes)?clamp(Math.floor(g.yes),0,20):0,
-    handout:!!g.handout,afterparty:!!g.afterparty,reflected:!!g.reflected,peeked:!!g.peeked};
+    handout:!!g.handout,afterparty:!!g.afterparty,reflected:!!g.reflected,peeked:!!g.peeked,metSannaShadow:!!g.metSannaShadow};
 }
 function loadProgress(){
   try{
@@ -425,6 +425,11 @@ function scPrelude(){return [
 
 /* ---------- Lab: Colleagues. Ekskyysmi gets an “oh. hi.” of its own. ---------- */
 function selfHit(){var g=G;sfx('hit');g.pulse=0.55;g.shake=RM?0:0.45;g.lines=[];g.cur=null;g.flash=0.5;g.morko.sT=0.8;g.morko.mood='scared';g.morko.pose=null;g.anx=0.7;}
+// A disguise in three beats: hang perfectly still, relocate the evidence, accidentally blink.
+function coatOn(){var m=G.morko;m.st='free';m.pose='coat';m.coat={p:0,buttons:false,blink:-1};m.sT=1.25;if(RM)m.s=m.sT;G.anx=0;}
+function coatButtons(){G.morko.coat.buttons=true;}
+function coatBlink(){G.morko.coat.blink=0;}
+function coatOff(){var m=G.morko;m.coat=null;m.pose=null;m.mood='worry';m.sT=1;if(RM){m.s=m.sT;updHands(1);}}
 function labColleagues(){return labScene({set:'room',title:'Colleagues.',plan:'Let the humans talk.',clock:13*3600+10*60}).concat([
   function(){var g=G;g.cowA=true;g.ax=g.axT=780;g.aFace=-1;},
   ['N','After lunch. Your human and Sanna are talking about a printer. It is going fine.'],
@@ -439,7 +444,7 @@ function labColleagues(){return labScene({set:'room',title:'Colleagues.',plan:'L
   ['S','With a FULL STOP. Nobody puts a full stop after “oh” unless they mean it.'],
   {choice:[
     {t:'Greet it back. Formally.',then:[['S','Good afternoon. Ekskyysmi. Rejection prevention, third floor.'],['Z','…I know. We share a wall.'],['S','It KNOWS. It’s been watching.'],['H','You share a wall.']]},
-    {t:'Pretend to be a coat.',then:[pokka,{wait:1.3},['Z','…I can see your eyes.'],['S','Coats have buttons.'],free,set({mood:'worry'})]},
+    {t:'Pretend to be a coat.',then:[coatOn,{wait:1.3},['Z','…I can see your eyes.'],coatButtons,['S','Coats have buttons.'],coatBlink,{wait:0.5},['Z','Your buttons blink.'],['S','Please don’t review the coat.'],coatOff]},
     {t:'Review the “oh”. Frame by frame.',then:[['S','Exhibit A. “Oh.” Flat. Like a door closing.'],['H','You do realise what you’re doing.'],['S','Thorough work.'],['H','Monday. You’re doing Monday. To yourself.']]}
   ]}
  ],outside({title:'WHAT THE HUMANS NOTICED',dur:'duration: 40 seconds',cap:'Nothing. They were talking about a printer.',anim:'text'}),[
@@ -459,7 +464,7 @@ function labColleagues(){return labScene({set:'room',title:'Colleagues.',plan:'L
   set({mood:'care'}),
   ['S','…Tuesday. By the radiator. We could be busy near each other.'],
   ['Z','I’ll check my archive.'],
-  function(){G.zT=0;}
+  function(){G.zT=0;G.metSannaShadow=true;}
  ]);}
 
 /* ---------- Lab: Not now. The one that is real. ---------- */
@@ -728,7 +733,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;
   g.cowA=g.cowB=g.cowR=false;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=false;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -740,9 +745,7 @@ function shadowHit(){var g=G;trigger();addLived('the one that landed',LIVED.shad
 function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);}
 
 function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60}).concat([
-  ['S','Tuesday. Nearly five. No incidents. I’d like it noted that I did nothing all day and it worked.'],
-  ['H','You reviewed a comma for an hour.'],
-  ['S','Quietly.'],
+  tuesdayOpening,
   {wait:0.6},
   ['P','Riitta: “Quick chat tomorrow at 9?”'],
   hit(0.9,'P'),set({sweat:0.7}),{wait:1.2},
@@ -963,6 +966,8 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   {wait:0.8}
  ]);}
 
+function wobbleOn(){var m=G.morko;m.wobble={t:0};m.pose='balance';m.mood='worry';G.anx=0.2;}
+function wobbleOff(){var m=G.morko;m.wobble=null;m.pose=null;if(RM)updHands(1);}
 function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).concat([
   set({cowB:1,bx:880}),
   set({sweat:0.45}),
@@ -990,7 +995,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   {choice:[
     {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.'],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.']]},
     {t:'Hold the verdict. Count to two.',then:[['S','One.'],['S','Two.'],['S','It’s been two seconds and nothing has happened to us.'],['H','Nothing was going to.'],['S','We didn’t KNOW that. We know it now.']]},
-    {t:'Stay. Wobble visibly.',then:[['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.']]}
+    {t:'Stay. Wobble visibly.',then:[wobbleOn,['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.'],wobbleOff]}
   ]},
   calm,set({aFace:-1,near:1}),
   ['H','Hi, Sanna. Can I say something odd?'],
@@ -1003,11 +1008,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   set({aSweat:0.55,sweat:0}),
   ['A','I do that with “fine”. Someone says “fine” and I’m up till three.'],
   function(){G.zT=1;},{wait:1.6},
-  set({mood:'surprised'}),
-  ['S','…She HAS one.'],
-  ['S','Hello.'],
-  ['Z','…excuse me.'],
-  ['S','That’s MY name.'],
+  fridayShadow,
   archive('good',[['2026','She has one too.']]),
   ['S','…Filed. Under the other pile.'],
   ['H','There’s another pile?'],
@@ -1045,12 +1046,36 @@ function startChapter(n){
 }
 // ---- src/32-callbacks.js ----
 /* Small consequences: remember what this player actually did or heard. */
+function tuesdayOpening(){
+  if(G.lunch===1)return [
+    ['S','Tuesday. Monday’s lunch report: we had lunch. No incident. Nothing to file.'],
+    ['H','You could leave it blank.'],
+    ['S','I’ve filed the blank. For completeness.']
+  ];
+  return [
+    ['S','Tuesday. Nearly five. No incidents. I’d like it noted that I did nothing all day and it worked.'],
+    ['H','You reviewed a comma for an hour.'],
+    ['S','Quietly.']
+  ];
+}
+function fridayShadow(){
+  var known=G.metSannaShadow;G.metSannaShadow=true;
+  if(known)return [set({mood:'care'}),
+    ['S','…Oh. You again.'],
+    ['Z','I checked. Tuesday works.'],
+    ['S','By the radiator.'],
+    ['Z','I moved a worry.']
+  ];
+  // A chapter opened from an older save may still be their first meeting.
+  return [set({mood:'surprised'}),['S','…She HAS one.'],['S','Hello.'],['Z','…excuse me.'],['S','That’s MY name.']];
+}
 function mondayCallback(){
   var g=G;
   if(g.bit)return [['H','The joke I made at Eero?'],['S','We have motive. Witnesses. A cardigan.'],['H','Riitta wasn’t there.'],['S','Cardigans travel.']];
   if(g.real&&g.leak!=='exit')return [['H','They left me out of lunch.'],['S','And now there’s a meeting. The plot has acquired a calendar.']];
   if(g.leak==='exit')return [['H','I left the room.'],['S','An exit. Followed by an interview.'],['H','Don’t put those together.']];
-  if(g.lunch)return [['H','We had lunch.'],['S','With witnesses.'],['H','They’re called colleagues.'],['S','Dual roles. Very efficient.']];
+  if(g.lunch===1)return [['H','We had lunch.'],['S','With witnesses.'],['H','They’re called colleagues.'],['S','Dual roles. Very efficient.']];
+  if(g.lunch===2)return [['H','We arranged lunch for Tuesday.'],['S','In writing. A paper trail.']];
   return [['H','We barely spoke.'],['S','Exactly. A suspicious lack of evidence.']];
 }
 function extraWorkCallback(){
@@ -2022,10 +2047,12 @@ function labGlass(){
 // People stand on the far side of the bar; the counter covers their legs. The bartender is the dark shape nearest to us.
 var BARY=398;
 function barSetup(){
-  var g=G,Hm=g.human;g.bar={tx:820,tT:820,sx:1040,sT:1040,sFace:-1,polish:true,glass:false,lagers:false,sdrink:false,peanuts:9};
+  var g=G,Hm=g.human;g.bar={tx:820,tT:820,sx:1040,sT:1040,sFace:-1,polish:true,glass:false,lagers:false,sdrink:false,peanuts:9,umbrella:0,shelter:false};
   g.noCup=true;Hm.x=-40;Hm.xT=430;
 }
-function stepBar(dt){var b=G.bar;if(!b)return;b.tx=approach(b.tx,b.tT,190*dt);b.sx=approach(b.sx,b.sT,150*dt);}
+function stepBar(dt){var b=G.bar;if(!b)return;b.tx=approach(b.tx,b.tT,190*dt);b.sx=approach(b.sx,b.sT,150*dt);b.umbrella=RM?(b.shelter?1:0):approach(b.umbrella,b.shelter?1:0,dt*2);}
+function shelterOn(){var m=G.morko;G.bar.shelter=true;m.pose='shelter';m.sT=0.85;if(RM)m.s=m.sT;}
+function shelterOff(){var m=G.morko;G.bar.shelter=false;m.pose='drink';m.sT=1.15;if(RM)m.s=m.sT;}
 function wallClock(cx,cy,r){
   var s=G.clock,ma=((s/60)%60)/60*Math.PI*2,ha=((s/3600)%12)/12*Math.PI*2;
   ctx.fillStyle='#f3ead6';ctx.strokeStyle='#1c1418';ctx.lineWidth=3;circ(cx,cy,r);ctx.fill();ctx.stroke();
@@ -2103,9 +2130,13 @@ function shadowDrink(q){
   ctx.fillStyle=mcol();ctx.beginPath();ctx.moveTo(-11,-30);ctx.lineTo(11,-30);ctx.lineTo(8,4);ctx.lineTo(-8,4);ctx.closePath();ctx.fill();
   ctx.strokeStyle='rgba(233,226,207,.55)';ctx.lineWidth=1.3;ctx.stroke();
   ctx.strokeStyle=mcol();ctx.lineWidth=2.5;ctx.lineCap='round';line(2,-26,10,-46);
-  ctx.strokeStyle='#e9e2cf';ctx.lineWidth=1.5;line(-4,-28,-10,-50);
-  ctx.fillStyle='#e0563e';ctx.beginPath();ctx.moveTo(-24,-48);ctx.quadraticCurveTo(-10,-66,4,-48);ctx.closePath();ctx.fill();
-  ctx.strokeStyle='#fbf8ef';ctx.lineWidth=1.5;line(-10,-57,-17,-48);line(-10,-57,-3,-48);
+  ctx.restore();
+  // Borrow the existing cocktail umbrella. The glass stays in the other hand.
+  var u=g.bar.umbrella,other=g.morko.h[1],ux=(x-10*k)*(1-u)+(other.x-28*k)*u,uy=(y-50*k)*(1-u)+(other.y-22*k)*u;
+  ctx.save();ctx.translate(ux,uy);ctx.scale(k,k);
+  ctx.strokeStyle='#e9e2cf';ctx.lineWidth=1.5;line(6*(1-u)+28*u,22,0,0);
+  ctx.fillStyle='#e0563e';ctx.beginPath();ctx.moveTo(-14,2);ctx.quadraticCurveTo(0,-16,14,2);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#fbf8ef';ctx.lineWidth=1.5;line(0,-7,-7,2);line(0,-7,7,2);
   ctx.restore();
 }
 
@@ -2161,7 +2192,9 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ['S','Then I’ll have the shadow of one.'],
   function(){var g=G;g.bar.sdrink=true;g.morko.pose='drink';sfx('card');},{wait:1.2},
   ['H','Yours has an umbrella.'],
+  shelterOn,{wait:0.8},
   ['S','For cover.'],
+  shelterOff,{wait:0.5},
   function(){G.morko.pose='sip';},{wait:0.9},function(){sfx('drip');},{wait:0.7},function(){G.morko.pose='drink';G.morko.mood='care';},
   ['S','…Oh. That’s quite nice.'],
   ['S','Is this it? Standing here. With a drink.'],
@@ -2408,7 +2441,7 @@ function lampBase(){
   return{s:s/sw,off:off/sw};
 }
 function updHands(dt){
-  var q=geom(),ht=handTargets(q),M=G.morko,k=Math.min(1,10*dt);
+  var q=geom(),ht=handTargets(q),M=G.morko,k=RM&&(M.coat||M.wobble||(G.bar&&G.bar.sdrink))?1:Math.min(1,10*dt);
   M.h[0].x+=(ht.a.x-M.h[0].x)*k;M.h[0].y+=(ht.a.y-M.h[0].y)*k;
   M.h[1].x+=(ht.b.x-M.h[1].x)*k;M.h[1].y+=(ht.b.y-M.h[1].y)*k;
 }
@@ -2416,6 +2449,8 @@ function update(dt,elapsed){
   // Reading/input delays follow elapsed time even when the browser draws fewer frames.
   elapsed=elapsed==null?dt:elapsed;
   var g=G,M=g.morko,Hm=g.human;g.time+=dt;LOCK=Math.max(0,LOCK-elapsed);
+  if(M.coat){var coat=M.coat;coat.p=RM?(coat.buttons?1:0):approach(coat.p,coat.buttons?1:0,dt*1.7);if(coat.blink>=0)coat.blink+=dt;}
+  if(M.wobble)M.wobble.t=Math.min(3.2,M.wobble.t+dt);
   if(WAIT==='time'){TIMER-=elapsed;if(TIMER<=0)run();}
   else if(WAIT==='view'&&TIMER>0){TIMER-=elapsed;if(TIMER<=0)render();}
   g.clock+=dt*g.rate;
@@ -2603,12 +2638,13 @@ function drawCoworkers(alpha){
 
 /* ================= drawing: the shadow ================= */
 function geom(){
-  var M=G.morko,s=M.s,j=(RM?0.3:1)*clamp(((G.anx||0)-0.3)/0.6,0,1);
+  var M=G.morko,s=M.s,j=M.coat?0:(RM?0.3:1)*clamp(((G.anx||0)-0.3)/0.6,0,1);
   var bx=G.human.x+M.off+Math.sin(G.time*47)*1.7*j,by=WALLY;
-  var hgt=190*s*(RM?1:1+0.012*Math.sin(G.time*1.7)),shW=58*s,hdR=20*Math.pow(s,0.45);
+  var baseX=bx,lean=M.wobble?(RM?8:Math.sin(M.wobble.t*4.2)*16*(1-M.wobble.t/3.2)):0;bx+=lean;
+  var hgt=190*s*(RM||M.coat?1:1+0.012*Math.sin(G.time*1.7)),shW=58*s,hdR=20*Math.pow(s,0.45);
   var shY=by-hgt*0.7+Math.sin(G.time*31)*1.3*j,hdY=shY-11*s-hdR*0.8;
   if(hdY<hdR+34)hdY=hdR+34;if(shY<hdY+hdR*0.7)shY=hdY+hdR*0.7;
-  return{bx:bx,by:by,shY:shY,shW:shW,hdY:hdY,hdR:hdR,s:s};
+  return{bx:bx,baseX:baseX,lean:lean,by:by,shY:shY,shW:shW,hdY:hdY,hdR:hdR,s:s};
 }
 function handTargets(q){
   var M=G.morko,Hm=G.human,hy=FEETY-150;
@@ -2625,6 +2661,9 @@ function handTargets(q){
     case 'drink':a={x:L.x-q.shW*0.45,y:q.shY+62*q.s};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};break;
     case 'sip':a={x:q.bx-q.hdR*0.75,y:q.hdY+q.hdR*1.5};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};break;
     case 'toast':a={x:L.x-q.shW*0.8,y:q.shY-34*q.s};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};break;
+    case 'shelter':var uk=Math.max(0.8,Math.sqrt(q.s));a={x:L.x-q.shW*0.45,y:q.shY+62*q.s};b={x:q.bx+28*uk,y:q.hdY-q.hdR-4*uk};break;
+    case 'coat':a={x:q.bx-32*q.s,y:q.by-28*q.s};b={x:q.bx+32*q.s,y:q.by-28*q.s};break;
+    case 'balance':a={x:L.x-q.shW*0.45,y:q.shY+22*q.s+q.lean};b={x:R.x+q.shW*0.45,y:q.shY+22*q.s-q.lean};break;
     case 'selfmouth':a={x:q.bx-q.hdR*0.3,y:q.hdY+q.hdR*0.45};b={x:q.bx+q.hdR*0.3,y:q.hdY+q.hdR*0.5};break;
     case 'selfeyes':a={x:q.bx-q.hdR*0.42,y:q.hdY-q.hdR*0.05};b={x:q.bx+q.hdR*0.42,y:q.hdY-q.hdR*0.05};break;
     default:a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};
@@ -2637,8 +2676,8 @@ function morkoBody(q){
   if(wk<0.98){ctx.fillStyle='rgba(20,16,30,'+(0.26*(1-wk))+')';ctx.beginPath();ctx.ellipse(Hm.x-12,FEETY+3,44,9,0,0,Math.PI*2);ctx.fill();}
   if(wk<0.02)return;
   ctx.fillStyle=mcol();
-  ctx.globalAlpha=0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.bx+26*q.s,q.by);ctx.lineTo(q.bx-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
-  ctx.beginPath();ctx.moveTo(q.bx-26*q.s,q.by);ctx.lineTo(q.bx+26*q.s,q.by);ctx.lineTo(q.bx+q.shW*0.8,q.shY+6);ctx.lineTo(q.bx-q.shW*0.8,q.shY+6);ctx.closePath();ctx.fill();
+  ctx.globalAlpha=0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.baseX-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
+  ctx.beginPath();ctx.moveTo(q.baseX-26*q.s,q.by);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.bx+q.shW*0.8,q.shY+6);ctx.lineTo(q.bx-q.shW*0.8,q.shY+6);ctx.closePath();ctx.fill();
   ctx.beginPath();ctx.ellipse(q.bx,q.shY+4,q.shW,Math.max(14,26*q.s),0,0,Math.PI*2);ctx.fill();
   circ(q.bx,q.hdY,q.hdR);ctx.fill();ctx.globalAlpha=1;
   if(wk>0.4)morkoFace(q);
@@ -2652,6 +2691,7 @@ function morkoArms(q,ht){
     circ(h.x,h.y,lw*0.78);ctx.fill();}
 }
 function morkoFace(q){
+  if(G.morko.coat){drawCoatFace(q);return;}
   var M=G.morko,r=q.hdR,cx=q.bx,cy=q.hdY,ex=r*0.42;
   var m=M.st==='frozen'||M.st==='hide'?'scared':M.st==='pokka'?'pokka':M.mood,look=m==='pokka'?-1:1;
   var er=r*0.2,pr=0.45,brow=null,i;
@@ -2677,6 +2717,20 @@ function morkoFace(q){
     else if(brow==='out')line(x-i*er*1.0,y-er-r*0.22,x+i*er*1.0,y-er-r*0.08);
   }
   if(m==='pokka'){ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(1.5,r*0.07);circ(cx-r*0.1,cy+r*0.5,r*0.09);ctx.stroke();}
+}
+function drawCoatFace(q){
+  var c=G.morko.coat,p=c.p*c.p*(3-2*c.p),r=q.hdR,blink=c.blink;
+  // The head is now a hood. The same two eyes slide down into a completely unconvincing button row.
+  ctx.save();ctx.lineCap='round';ctx.strokeStyle='rgba(246,241,228,.22)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(q.bx-19*q.s,q.shY+10*q.s);ctx.lineTo(q.bx,q.shY+33*q.s);ctx.lineTo(q.bx+19*q.s,q.shY+10*q.s);ctx.stroke();
+  for(var i=0;i<2;i++){
+    var x=q.bx+(i?1:-1)*r*0.42*(1-p),y=(q.hdY-r*0.05)*(1-p)+(q.shY+(48+i*27)*q.s)*p;
+    var er=r*(0.21+0.06*p),closed=blink>=0&&blink<0.24;
+    ctx.fillStyle='#f6f1e4';ctx.strokeStyle='#f6f1e4';ctx.lineWidth=2;
+    if(closed){line(x-er,y,x+er,y);}
+    else{circ(x,y,er);ctx.fill();ctx.fillStyle='#14111d';circ(x+er*0.35,y,er*0.42);ctx.fill();}
+  }
+  ctx.restore();
 }
 function drawPair(humanOpts){
   var q=geom(),ht=handTargets(q);

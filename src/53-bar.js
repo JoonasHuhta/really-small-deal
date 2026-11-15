@@ -2,10 +2,12 @@
 // People stand on the far side of the bar; the counter covers their legs. The bartender is the dark shape nearest to us.
 var BARY=398;
 function barSetup(){
-  var g=G,Hm=g.human;g.bar={tx:820,tT:820,sx:1040,sT:1040,sFace:-1,polish:true,glass:false,lagers:false,sdrink:false,peanuts:9};
+  var g=G,Hm=g.human;g.bar={tx:820,tT:820,sx:1040,sT:1040,sFace:-1,polish:true,glass:false,lagers:false,sdrink:false,peanuts:9,umbrella:0,shelter:false};
   g.noCup=true;Hm.x=-40;Hm.xT=430;
 }
-function stepBar(dt){var b=G.bar;if(!b)return;b.tx=approach(b.tx,b.tT,190*dt);b.sx=approach(b.sx,b.sT,150*dt);}
+function stepBar(dt){var b=G.bar;if(!b)return;b.tx=approach(b.tx,b.tT,190*dt);b.sx=approach(b.sx,b.sT,150*dt);b.umbrella=RM?(b.shelter?1:0):approach(b.umbrella,b.shelter?1:0,dt*2);}
+function shelterOn(){var m=G.morko;G.bar.shelter=true;m.pose='shelter';m.sT=0.85;if(RM)m.s=m.sT;}
+function shelterOff(){var m=G.morko;G.bar.shelter=false;m.pose='drink';m.sT=1.15;if(RM)m.s=m.sT;}
 function wallClock(cx,cy,r){
   var s=G.clock,ma=((s/60)%60)/60*Math.PI*2,ha=((s/3600)%12)/12*Math.PI*2;
   ctx.fillStyle='#f3ead6';ctx.strokeStyle='#1c1418';ctx.lineWidth=3;circ(cx,cy,r);ctx.fill();ctx.stroke();
@@ -83,9 +85,13 @@ function shadowDrink(q){
   ctx.fillStyle=mcol();ctx.beginPath();ctx.moveTo(-11,-30);ctx.lineTo(11,-30);ctx.lineTo(8,4);ctx.lineTo(-8,4);ctx.closePath();ctx.fill();
   ctx.strokeStyle='rgba(233,226,207,.55)';ctx.lineWidth=1.3;ctx.stroke();
   ctx.strokeStyle=mcol();ctx.lineWidth=2.5;ctx.lineCap='round';line(2,-26,10,-46);
-  ctx.strokeStyle='#e9e2cf';ctx.lineWidth=1.5;line(-4,-28,-10,-50);
-  ctx.fillStyle='#e0563e';ctx.beginPath();ctx.moveTo(-24,-48);ctx.quadraticCurveTo(-10,-66,4,-48);ctx.closePath();ctx.fill();
-  ctx.strokeStyle='#fbf8ef';ctx.lineWidth=1.5;line(-10,-57,-17,-48);line(-10,-57,-3,-48);
+  ctx.restore();
+  // Borrow the existing cocktail umbrella. The glass stays in the other hand.
+  var u=g.bar.umbrella,other=g.morko.h[1],ux=(x-10*k)*(1-u)+(other.x-28*k)*u,uy=(y-50*k)*(1-u)+(other.y-22*k)*u;
+  ctx.save();ctx.translate(ux,uy);ctx.scale(k,k);
+  ctx.strokeStyle='#e9e2cf';ctx.lineWidth=1.5;line(6*(1-u)+28*u,22,0,0);
+  ctx.fillStyle='#e0563e';ctx.beginPath();ctx.moveTo(-14,2);ctx.quadraticCurveTo(0,-16,14,2);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#fbf8ef';ctx.lineWidth=1.5;line(0,-7,-7,2);line(0,-7,7,2);
   ctx.restore();
 }
 
@@ -141,7 +147,9 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ['S','Then I’ll have the shadow of one.'],
   function(){var g=G;g.bar.sdrink=true;g.morko.pose='drink';sfx('card');},{wait:1.2},
   ['H','Yours has an umbrella.'],
+  shelterOn,{wait:0.8},
   ['S','For cover.'],
+  shelterOff,{wait:0.5},
   function(){G.morko.pose='sip';},{wait:0.9},function(){sfx('drip');},{wait:0.7},function(){G.morko.pose='drink';G.morko.mood='care';},
   ['S','…Oh. That’s quite nice.'],
   ['S','Is this it? Standing here. With a drink.'],

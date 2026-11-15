@@ -1,10 +1,34 @@
 /* Small consequences: remember what this player actually did or heard. */
+function tuesdayOpening(){
+  if(G.lunch===1)return [
+    ['S','Tuesday. Monday’s lunch report: we had lunch. No incident. Nothing to file.'],
+    ['H','You could leave it blank.'],
+    ['S','I’ve filed the blank. For completeness.']
+  ];
+  return [
+    ['S','Tuesday. Nearly five. No incidents. I’d like it noted that I did nothing all day and it worked.'],
+    ['H','You reviewed a comma for an hour.'],
+    ['S','Quietly.']
+  ];
+}
+function fridayShadow(){
+  var known=G.metSannaShadow;G.metSannaShadow=true;
+  if(known)return [set({mood:'care'}),
+    ['S','…Oh. You again.'],
+    ['Z','I checked. Tuesday works.'],
+    ['S','By the radiator.'],
+    ['Z','I moved a worry.']
+  ];
+  // A chapter opened from an older save may still be their first meeting.
+  return [set({mood:'surprised'}),['S','…She HAS one.'],['S','Hello.'],['Z','…excuse me.'],['S','That’s MY name.']];
+}
 function mondayCallback(){
   var g=G;
   if(g.bit)return [['H','The joke I made at Eero?'],['S','We have motive. Witnesses. A cardigan.'],['H','Riitta wasn’t there.'],['S','Cardigans travel.']];
   if(g.real&&g.leak!=='exit')return [['H','They left me out of lunch.'],['S','And now there’s a meeting. The plot has acquired a calendar.']];
   if(g.leak==='exit')return [['H','I left the room.'],['S','An exit. Followed by an interview.'],['H','Don’t put those together.']];
-  if(g.lunch)return [['H','We had lunch.'],['S','With witnesses.'],['H','They’re called colleagues.'],['S','Dual roles. Very efficient.']];
+  if(g.lunch===1)return [['H','We had lunch.'],['S','With witnesses.'],['H','They’re called colleagues.'],['S','Dual roles. Very efficient.']];
+  if(g.lunch===2)return [['H','We arranged lunch for Tuesday.'],['S','In writing. A paper trail.']];
   return [['H','We barely spoke.'],['S','Exactly. A suspicious lack of evidence.']];
 }
 function extraWorkCallback(){

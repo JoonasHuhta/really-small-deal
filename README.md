@@ -8,11 +8,23 @@ Ei asennusta, ei kirjautumista. Toimii puhelimella vaakasuunnassa ja tietokoneel
 
 ## Pelaa paikallisesti
 
-Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.21 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
+Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.23 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
 
 **Pelin ydin (14.11.):** varjo ei opeta eikä anna vinkkejä, se vain yrittää suojella, kuten AwA:n susi. Huumori syntyy mittakaavasta: sisällä katastrofi, ulkona kaksi sekuntia. Vitsit kohdistuvat varjon byrokratiaan, arkistoon, välimerkkeihin, ylisuojeluun ja omaan arvokkuuteen, eivät ihmisen kipuun eikä toisten aitoon julmuuteen. Päämäärä on, että pelaaja nauraa, tunnistaa itsensä ja näkee lopussa suhteen muuttuvan: korjaamisesta pysymiseen.
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
+
+Versio 0.23 (15.11.2026): **varjot muistavat toisensa.**
+
+- **Perjantain jälleennäkeminen:** jos *Colleagues.* on pelattu tarinassa, Ekskyysmi tunnistaa Sannan varjon ja ne palaavat radiatorin luona sovittuun tapaamiseen. ”I checked. Tuesday works.” – ”By the radiator.” – ”I moved a worry.” Kohtaaminen muistetaan myös luvun tallennuksessa. Vanhan tallennuksen ensimmäinen tapaaminen toimii edelleen.
+- **Onnistunut maanantai näkyy tiistaina:** salaisen lounaspolun jälkeen Ekskyysmi arkistoi tyhjän raportin: ”I’ve filed the blank. For completeness.” Sovittu tuleva lounas erotetaan jo toteutuneesta.
+- **Stay. Wobble visibly.** Varjo hakee tasapainoa kädet levällään ja asettuu muutaman huojahduksen jälkeen. Vähennetyllä liikkeellä näkyy vakaa tasapainoasento. Tauko ja kohtauksen vaihtaminen on tarkistettu.
+
+Versio 0.22 (15.11.2026): **kaksi pientä elettä nykyisiin kohtauksiin.**
+
+- **Colleagues. → Pretend to be a coat.** Ekskyysmi jähmettyy takiksi. Kun Sannan varjo huomaa silmät, ne siirtyvät napeiksi — ja räpäyttävät. ”Your buttons blink.” – ”Please don’t review the coat.” Naamio päättyy ennen kohtauksen hiljaista keskustelua.
+- **A quiet drink. → For cover.** Ekskyysmi nostaa jo olemassa olevan juomasateenvarjon päänsä päälle ja kutistuu sen alle. Sitten varjo palauttaa sen juomaan ja ottaa kulauksen. Ei uusia repliikkejä tähän hetkeen.
+- Eleet toimivat sekä tarinassa että laboratoriossa, pysähtyvät tauolla ja käyttävät vähennetyn liikkeen asetuksella suoria asennonvaihtoja. Testit tarkistavat myös, ettei naamio tai sateenvarjo kulkeudu seuraavaan kohtaukseen.
 
 Versio 0.21 (Claude, 15.11.2026): **kaksi kelloa.**
 
@@ -186,7 +198,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.21, viisi päivää ja kahdeksan välihetkeä, läpipeluu noin 30 minuuttia.
+6. [Peli](index.html): versio 0.23, viisi päivää ja kahdeksan välihetkeä, läpipeluu noin 30 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

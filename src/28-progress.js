@@ -7,7 +7,7 @@ function checkpoint(g){
     fb:['sorry','explain','quiet','ask'].indexOf(g.fb)>=0?g.fb:null,
     txt:['worries','cancel','freezer','bite'].indexOf(g.txt)>=0?g.txt:null,
     yes:Number.isFinite(g.yes)?clamp(Math.floor(g.yes),0,20):0,
-    handout:!!g.handout,afterparty:!!g.afterparty,reflected:!!g.reflected,peeked:!!g.peeked};
+    handout:!!g.handout,afterparty:!!g.afterparty,reflected:!!g.reflected,peeked:!!g.peeked,metSannaShadow:!!g.metSannaShadow};
 }
 function loadProgress(){
   try{
