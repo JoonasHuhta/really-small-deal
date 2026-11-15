@@ -1,0 +1,28 @@
+{
+ "name": "Really Small Deal",
+ "short_name": "Small Deal",
+ "description": "A small moment. A very long shadow.",
+ "start_url": "index.html",
+ "display": "fullscreen",
+ "orientation": "landscape",
+ "background_color": "#151b20",
+ "theme_color": "#202830",
+ "icons": [
+  {
+   "src": "assets/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "assets/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "assets/icon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml"
+  }
+ ]
+}

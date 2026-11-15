@@ -1,0 +1,9 @@
+{
+  "appId": "com.moshbitsurfers.reallysmalldeal",
+  "appName": "Really Small Deal",
+  "webDir": "www",
+  "backgroundColor": "#12171b",
+  "android": {
+    "backgroundColor": "#12171b"
+  }
+}

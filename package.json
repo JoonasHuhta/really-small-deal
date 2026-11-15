@@ -1,0 +1,24 @@
+{
+  "name": "really-small-deal",
+  "version": "0.18.0",
+  "private": true,
+  "description": "Really Small Deal. A small moment. A very long shadow.",
+  "scripts": {
+    "build": "node tools/build.cjs",
+    "test": "node tools/build.cjs --check && node tests/story.test.cjs",
+    "www": "node tools/build.cjs && node tools/www.cjs",
+    "android:init": "npm run www && npx cap add android && node tools/android-patch.cjs && npx cap sync android",
+    "android:sync": "npm run www && npx cap sync android && node tools/android-patch.cjs",
+    "android:open": "npx cap open android",
+    "android:run": "npm run android:sync && npx cap run android",
+    "android:icons": "npx @capacitor/assets generate --android --assetPath resources --iconBackgroundColor \"#202830\" --splashBackgroundColor \"#12171b\""
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  }
+}

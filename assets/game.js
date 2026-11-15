@@ -1,0 +1,2685 @@
+/* GENERATED FILE. Edit the parts in src/ and run: node tools/build.cjs */
+(function(){
+'use strict';
+// ---- src/00-core.js ----
+var W=960,H=540,WALLY=385,FEETY=462,HOME=450,HOMEX=1500;
+var LAMPS=[250,690,1130,HOMEX+60];
+var cv=document.getElementById('c'),ctx=cv.getContext('2d'),ov=document.getElementById('ov');
+var elLine=document.getElementById('line'),elOpts=document.getElementById('opts');
+var SC=1;
+function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=640;COMPACT=!!(window.matchMedia&&window.matchMedia('(orientation:landscape) and (max-height:540px)').matches);
+  HUDL=COMPACT&&((window.innerWidth||w)-w)/2<52?Math.round(58*W/w):0;}
+var COMPACT=false,HUDL=0; // a phone held sideways: the on-canvas HUD shows itself briefly, then gets out of the way
+window.addEventListener('resize',resize);
+var RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+var WIDE=true,paused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
+var logDialog=document.getElementById('dialogue-log'),modalWasPaused=false,dragging=false;
+var Q=[],WAIT=null,TIMER=0,LOCK=0,CH=null;
+var NAMES={S:'EKSKYYSMI',H:'HUMAN',A:'SANNA',B:'EERO',P:'PHONE',N:'A MOMENT LATER',R:'RIITTA',Z:'SANNA’S SHADOW',T:'BARTENDER',X:'A STRANGER',L:'LIBRARIAN'};
+
+function clamp(v,a,b){return v<a?a:v>b?b:v;}
+function approach(v,t,d){return v<t?Math.min(t,v+d):Math.max(t,v-d);}
+function ease(v,t,k){return v+(t-v)*Math.min(1,k);}
+// ---- src/10-audio.js ----
+/* ================= sound: speech blips and a few effects ================= */
+var AC=null,soundOn=true,voiceNodes=[];
+try{soundOn=window.localStorage.getItem('ekskyysmi.sound')!=='off';}catch(e){}
+function audio(){
+  if(!soundOn)return null;var A=window.AudioContext||window.webkitAudioContext;if(!A)return null;
+  if(!AC){try{AC=new A();}catch(e){return null;}}
+  if(AC.state==='suspended'&&AC.resume)AC.resume();return AC;
+}
+function tone(f,t0,dur,type,vol,f2){
+  var o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(f,t0);
+  if(f2)o.frequency.exponentialRampToValueAtTime(f2,t0+dur);
+  g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(vol,t0+0.008);g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  o.connect(g);g.connect(AC.destination);o.start(t0);o.stop(t0+dur+0.02);return o;
+}
+// Room for recorded sound. List a file under an effect's name and it replaces the synthesized version;
+// list a loop under MUSIC and music('name') plays it. A missing or undecodable file falls back to the synth or to silence.
+var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
+var MUSIC={/* walk:'assets/audio/walk-home.ogg', night:'assets/audio/0307.ogg' */};
+var BUF={},LOADING={},musicNode=null,musicName=null,MUSICVOL=0.35;
+function loadSound(k,url){
+  if(BUF[k]||LOADING[k]||!window.fetch)return;var a=audio();if(!a)return;LOADING[k]=true;
+  window.fetch(url).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer();}).then(function(b){return new Promise(function(ok,no){a.decodeAudioData(b,ok,no);});})
+    .then(function(buf){BUF[k]=buf;if(musicName&&'music:'+musicName===k)music(musicName);}).catch(function(){LOADING[k]='failed';});
+}
+function preloadSounds(){var k;for(k in SAMPLES)loadSound(k,SAMPLES[k]);for(k in MUSIC)loadSound('music:'+k,MUSIC[k]);}
+function playBuf(k,vol,loop){var a=audio();if(!a||!BUF[k])return null;var n=a.createBufferSource(),g=a.createGain();n.buffer=BUF[k];n.loop=!!loop;g.gain.value=vol==null?0.8:vol;n.connect(g);g.connect(a.destination);n.start();return n;}
+function music(name){
+  if(musicNode&&musicName===name)return;if(musicNode){try{musicNode.stop();}catch(e){}musicNode=null;}
+  musicName=name||null;if(!name||!MUSIC[name]||!soundOn)return;
+  if(BUF['music:'+name])musicNode=playBuf('music:'+name,MUSICVOL,true);else loadSound('music:'+name,MUSIC[name]);
+}
+// One voice per character: waveform, pitch, loudness. The shadow's pitch drops as it grows.
+var VOICE={S:['triangle',185,0.075],H:['sine',330,0.06],A:['sine',494,0.05],B:['triangle',262,0.06],R:['sine',392,0.05],T:['triangle',147,0.06],L:['sine',523,0.05],X:['sine',440,0.05],Z:['triangle',233,0.045]};
+function stopVoice(){for(var i=0;i<voiceNodes.length;i++){try{voiceNodes[i].stop();}catch(e){}}voiceNodes=[];}
+function speak(who,text){
+  stopVoice();var a=audio();if(!a)return;var t0=a.currentTime+0.02;
+  if(who==='P'){tone(880,t0,0.09,'sine',0.05);tone(1320,t0+0.1,0.16,'sine',0.05);return;}
+  var v=VOICE[who];if(!v)return;
+  var base=who==='S'?v[1]/Math.sqrt(Math.max(0.6,G.morko.sT)):v[1],n=0;
+  for(var i=0;i<text.length&&n<28;i+=3){
+    var c=text.charAt(i);if(!/[A-Za-z0-9]/.test(c))continue;
+    var loud=/[A-Z]/.test(c)&&/[A-Z]/.test(text.charAt(i+1)||'')?1.14:1;
+    voiceNodes.push(tone(base*loud*(0.92+((i*37)%17)/100),t0+i/55,0.05,v[0],v[2]));n++;
+  }
+}
+function sfx(k){
+  var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;
+  if(k==='hit'){tone(120,t,0.4,'sine',0.24,42);tone(900,t,0.06,'square',0.025,300);for(var hb=0;hb<3;hb++){tone(62,t+0.6+hb*0.75,0.13,'sine',0.14-hb*0.03);tone(54,t+0.78+hb*0.75,0.13,'sine',0.1-hb*0.02);}}
+  else if(k==='swat'){tone(900,t,0.12,'triangle',0.07,180);tone(240,t+0.02,0.08,'square',0.02,120);}
+  else if(k==='good'){tone(660,t,0.08,'sine',0.05);tone(990,t+0.09,0.14,'sine',0.05);}
+  else if(k==='enhance'){tone(300,t,0.3,'square',0.03,1400);tone(1400,t+0.32,0.08,'square',0.03);}
+  else if(k==='drip'){tone(1250,t,0.07,'sine',0.03,700);}
+  else if(k==='clink'){tone(2100,t,0.09,'sine',0.035);tone(2900,t+0.03,0.12,'sine',0.025);}
+  else if(k==='nope')tone(190,t,0.16,'triangle',0.07,120);
+  else if(k==='startle')tone(300,t,0.2,'triangle',0.08,860);
+  else if(k==='pick')tone(520,t,0.05,'sine',0.04);
+  else if(k==='cut')tone(196,t,0.14,'triangle',0.06);
+  else if(k==='card'){tone(262,t,0.5,'sine',0.05);tone(392,t+0.14,0.55,'sine',0.04);}
+  else if(k==='turn'){tone(392,t,0.3,'sine',0.05);tone(494,t+0.9,0.3,'sine',0.05);tone(587,t+1.5,0.7,'sine',0.06);}
+}
+function soundUI(){var b=document.getElementById('sound');if(b){b.textContent=soundOn?'Sound on':'Sound off';b.setAttribute('aria-pressed',String(soundOn));}}
+// ---- src/20-engine.js ----
+/* ================= state ================= */
+function reset(day){
+  var r=day;
+  if(!r){var opts=['A','B','C'].filter(function(x){return x!==lastDay;});r=opts[Math.floor(Math.random()*opts.length)];}
+  lastDay=r;
+  G={time:0,day:r,clock:9*3600+41*60+12,rate:1,started:false,ended:false,
+     human:{x:HOME,xT:HOME,flinch:0,gone:false,face:'neutral',back:false,sweat:0,sweatT:0,blush:0,grin:0,puddle:0},aSweat:0,cards:[],rep:null,zoom:null,fight:null,fightRes:null,fightLog:null,boss:null,ninja:false,rBrow:0,lab:null,labEnd:false,tics:[],carsSeen:[],dish:null,kitchen:false,smileT:0,lens:null,lensView:false,glassN:0,skippable:false,moment:null,bar:null,rec:null,draft:null,lib:null,replySent:null,noCup:false,mugFixed:true,fadeRate:1.6,
+     morko:{s:1,sT:1,off:-70,mood:'calm',st:'free',pose:null,h:[{x:340,y:380},{x:420,y:380}]},
+     gaze:0,gazeT:0,gazeFrom:'A',dark:0,darkT:0,flash:0,anx:0,
+     ax:1010,axT:1010,bx2:1090,bxT:1090,aFace:-1,bFace:-1,aWave:false,cowA:false,cowB:false,cupLeft:false,
+     cz:1.025,cx:W/2,cy:H/2,
+     lines:[],band:null,out:null,w:null,card:0,
+     hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0};
+  G.handout=false;G.afterparty=false;
+  Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
+  document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
+  C.z=1.025;C.fx=W/2;C.fy=H/2;
+  hideOv();render();
+}
+
+/* ================= script engine ================= */
+function run(){
+  for(;;){
+    if(!Q.length){WAIT=null;render();return;}
+    var s=Q.shift();
+    if(typeof s==='function'){var r=s();if(r&&r.length)Q=r.concat(Q);continue;}
+    if(Array.isArray(s)){setLine(s[0],s[1]);WAIT='click';LOCK=0.3;render();return;}
+    if(s.wait!=null){WAIT='time';TIMER=s.wait;render();return;}
+    if(s.view){WAIT='view';TIMER=2.4;render();return;}
+    if(s.stretch){WAIT='stretch';G.morko.pose='grow';G.morko.sT=2.1;G.morko.mood='stern';LOCK=0.2;render();return;}
+    if(s.hold){G.hold={kind:s.hold.kind,secs:s.hold.secs||3,p:0,on:false,tap:0,o:s.hold};G.lines=[];G.cur={who:'S',text:''};WAIT='hold';LOCK=0.2;render();return;}
+    if(s.fight){startFight(s.fight);return;}
+    if(s.choice){G.nopeMsg=null;CH=typeof s.choice==='function'?s.choice():s.choice;WAIT='choice';LOCK=0.4;render();return;}
+  }
+}
+function advance(){if(paused||LOCK>0)return;if(WAIT==='fight'){swat();return;}if(WAIT==='hold'){holdTap();return;}if(WAIT==='stretch'){G.warningSize=G.morko.sT;G.morko.pose=null;run();}else if(WAIT==='click'||(WAIT==='view'&&TIMER<=0))run();}
+function choose(i){
+  if(paused||WAIT!=='choice'||LOCK>0||!CH||!CH[i])return;
+  if(CH[i].off){nope(i);return;}
+  clearPreview();var o=CH[i];CH=null;sfx('pick');if(o.f)o.f();
+  var then=typeof o.then==='function'?o.then():(o.then||[]);
+  Q=[['S',o.t]].concat(then,Q);run();
+}
+function setLine(who,text){
+  var g=G;
+  if(who==='N'){g.band=text;}
+  else{g.band=null;g.lines=g.lines.filter(function(l){return l.who!==who;});g.lines.push({who:who,text:text});if(g.lines.length>2)g.lines.shift();}
+  g.cur={who:who,text:text};g.curT=0;speak(who,text);
+  history.push({who:who,text:text});
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function render(){
+  var g=G,cur=g&&g.cur,html='',speaker=cur?cur.who:'N',text=cur?cur.text:'';
+  document.body.classList.toggle('playing',g.started&&!g.ended);
+  document.getElementById('play-panel').classList.toggle('hidden',!g.started||g.ended);
+  document.getElementById('pause').disabled=!g.started||g.ended;
+  document.getElementById('journal').disabled=!history.length;
+  document.getElementById('chapter').textContent=g.ended?(g.labEnd?'Scenario lab':g.dayEnd?'End of Monday':'For now'):g.label?g.label:g.w?'The walk home':g.started?'Oh, hi.':'A small social adventure';
+  document.getElementById('perspective').textContent=g.out?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION';
+  cv.classList.toggle('stretching',WAIT==='stretch');
+  if(WAIT==='choice'&&CH){
+    speaker='S';text=g.nopeMsg||'What do we do with this?';
+    for(var i=0;i<CH.length;i++)html+=CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>';
+  }else if(WAIT==='stretch'){
+    speaker='S';text='A small warning. Just enough to make my point.';
+    html='<div class="stretch-controls"><label for="stretch">Unfurl your warning</label><input id="stretch" type="range" min="1.8" max="3.8" step="0.05" value="'+g.morko.sT+'" aria-label="Size of your warning"><button class="opt cont" type="button" data-i="go">That should do it →</button></div>';
+  }else if(WAIT==='hold'){
+    speaker='S';text=holdText();g.hold.shown=text;
+    html='<div class="hold-controls"><button class="opt cont" type="button" data-i="hold">'+HOLD_LABEL[g.hold.kind]+'</button><div class="holdbar"><i id="holdfill"></i></div></div>';
+  }else if(WAIT==='fight'){
+    speaker='S';text='Incoming! I’ve got this. Probably.';
+    html='<button class="opt cont swat" type="button" data-i="go">Swat! <span>(or tap the scene)</span></button>';
+    if(g.fight.paced){
+      var reply=currentReply(),ready=reply&&(reply.state==='fly'||reply.state==='open');
+      speaker='P';text=reply?(g.fight.msgs.indexOf(reply)+1)+' / '+g.fight.msgs.length+' — '+(reply.seen?reply.full:'“'+reply.far+'”'):'';
+      html='<button class="opt cont" type="button" data-i="read"'+(ready?'':' disabled')+'>'+(ready?(reply.state==='fly'?'Let it come closer →':'Let it through →'):'A moment…')+'</button>'+
+        '<button class="opt" type="button" data-i="go"'+(ready?'':' disabled')+'>Swat this reply away</button>';
+    }
+  }else if(WAIT==='view'){
+    speaker='N';text=g.out.cap;
+    html='<button class="opt cont" type="button" data-i="go"'+(TIMER>0?' disabled':'')+'>Back inside →</button>';
+    if(g.out.anim==='chatlog')html=chatTranscript()+html;
+  }else{
+    if(WAIT==='time'&&!cur)text=g.skippable?'The break room, before anyone needs anything.':'…';
+    html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">Skip intro →</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+(WAIT==='time'?'A moment…':'Continue →')+'</button>';
+  }
+  var icon=speaker==='H'?'human':speaker==='S'?'':speaker==='N'?'narrator':'other';
+  elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div><b>'+(g.skippable&&!cur?'MONDAY, 8:52':NAMES[speaker])+'</b><p>'+esc(text)+'</p></div>';
+  elOpts.innerHTML=html;
+  if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
+    var nextControl=elOpts.querySelector('[data-i=read]');if(nextControl&&!nextControl.disabled)nextControl.focus();
+  }
+  document.getElementById('hint').textContent=lensFree()?'Move the glass over the room. Everything looks worse through it. That is its job.':WAIT==='fight'?'Tap to swat the nearest reply. Waiting lets it come close enough to read.':WAIT==='hold'?'Press and hold the button or the scene. A few taps work too. Letting go is allowed.':WAIT==='stretch'?'Drag up on the scene, or use the slider. No rush.':WAIT==='choice'?'Choose a line · keys 1–4 · every choice keeps the story moving.':g.started?'Space / Enter to continue · P to pause · Dialogue to look back.':'Take your time. The coffee can wait.';
+  if(WAIT==='fight'&&g.fight.paced)document.getElementById('hint').textContent='No timer. Use the buttons to read or swat. Space / Enter or tapping the scene swats.';
+  resize();
+}
+function clearPreview(){if(previewSaved){G.morko.pose=previewSaved.pose;G.morko.sT=previewSaved.s;previewSaved=null;}}
+function previewChoice(el){
+  if(WAIT!=='choice'||paused||!el)return;var i=+el.getAttribute('data-i');
+  if(!CH||!CH[i]||!CH[i].preview)return;
+  clearPreview();previewSaved={pose:G.morko.pose,s:G.morko.sT};G.morko.pose=CH[i].preview;G.morko.sT=CH[i].preview==='hold'?2:1.3;
+}
+elOpts.addEventListener('pointerover',function(e){previewChoice(e.target.closest('[data-i]'));});
+elOpts.addEventListener('pointerleave',clearPreview);
+elOpts.addEventListener('focusin',function(e){previewChoice(e.target.closest('[data-i]'));});
+elOpts.addEventListener('focusout',clearPreview);
+elOpts.addEventListener('input',function(e){if(e.target.id==='stretch'&&WAIT==='stretch'&&!paused)G.morko.sT=+e.target.value;});
+function stretchAt(e){if(!dragging||WAIT!=='stretch'||paused)return;var r=cv.getBoundingClientRect();G.morko.sT=clamp(1.8+(1-(e.clientY-r.top)/r.height)*2,1.8,3.8);var slider=document.getElementById('stretch');if(slider)slider.value=G.morko.sT;}
+cv.addEventListener('pointerdown',function(e){if(WAIT==='stretch'&&!paused){dragging=true;cv.setPointerCapture(e.pointerId);stretchAt(e);}});
+cv.addEventListener('pointermove',stretchAt);
+cv.addEventListener('pointermove',lensMove);
+cv.addEventListener('pointerup',function(){dragging=false;});
+cv.addEventListener('pointercancel',function(){dragging=false;});
+elOpts.addEventListener('click',function(e){
+  // Explicit controls respond immediately; ignore the second click of a double-click.
+  // Canvas/keyboard shortcuts still retain their brief accidental-skip guard.
+  if(e.detail>1)return;
+  var t=e.target;while(t&&t!==elOpts&&!(t.getAttribute&&t.getAttribute('data-i')))t=t.parentNode;
+  if(!t||t===elOpts)return;var i=t.getAttribute('data-i');LOCK=0;
+  if(WAIT==='fight'&&G.fight.paced)G.fight.focusControls=document.activeElement===t;
+  if(i==='hold'){holdClick();return;}
+  if(i==='skip'){skipIntro();return;}
+  if(i==='read'){readReply();return;}
+  if(i==='go')advance();else choose(+i);
+});
+var swallowClick=false;
+cv.addEventListener('click',function(e){if(swallowClick){swallowClick=false;return;}if(paused&&G.started&&!G.ended){togglePause();return;}if(lensFree()){lensTap(e);return;}if(WAIT==='hold'){holdClick();return;}if(WAIT!=='stretch')advance();});
+cv.addEventListener('pointerdown',function(e){if(WAIT==='hold'){holdDown();try{cv.setPointerCapture(e.pointerId);}catch(_){}}});
+elOpts.addEventListener('pointerdown',function(e){var t=e.target&&e.target.closest?e.target.closest('[data-i=hold]'):null;if(t)holdDown();});
+window.addEventListener('pointerup',holdUp);window.addEventListener('pointercancel',holdUp);window.addEventListener('blur',holdUp);
+
+/* ================= hands-on moments: used sparingly, about one a day ================= */
+var HOLD_LABEL={cover:'Hold: hands over their eyes',pull:'Hold: walk them out',still:'Hold: keep them perfectly still',stay:'Hold: stay'};
+var NOPE=['That one isn’t available. I’m sitting on it.','Still sitting on it.','It’s very comfortable, actually.','Press it all day. I have nowhere to be.'];
+function nope(i){var o=CH[i];o.tried=(o.tried||0)+1;G.nopeMsg=NOPE[Math.min(o.tried-1,NOPE.length-1)];G.morko.mood='stern';sfx('nope');render();}
+function holdText(){
+  var h=G.hold,on=h.on||h.tap>0;
+  if(h.kind==='cover')return h.wave?'Sanna is waving. Your human can’t see it.':on?'Hands over their eyes. Nothing gets in.':'Hold to keep their eyes covered.';
+  if(h.kind==='pull')return on?'This way. Briskly. Don’t look back.':'Hold to walk them out of the room.';
+  if(h.kind==='still')return on?'Nobody move. We are a lamp.':'Hold to keep them perfectly still.';
+  return on?(h.o.text||'Staying. This is me staying.'):'Hold to stay. Do nothing else.';
+}
+function holdDown(){if(WAIT!=='hold'||paused||!G.hold)return;G.hold.on=true;G.hold.downAt=Date.now();}
+function holdUp(){if(swallowClick&&typeof setTimeout==='function')setTimeout(function(){swallowClick=false;},120);if(G&&G.hold&&G.hold.on){G.hold.on=false;G.hold.long=Date.now()-G.hold.downAt>260;}}
+function holdClick(){var h=G.hold;if(!h||paused)return;if(h.long){h.long=false;return;}holdTap();}
+function holdTap(){var h=G.hold;if(!h)return;h.p+=0.9;h.tap=0.6;holdStep(h,true,0);if(G.hold===h&&h.p>=h.secs)finishHold();}
+function holdStep(h,on,dt){
+  var g=G,M=g.morko,Hm=g.human,f=clamp(h.p/h.secs,0,1);
+  if(h.kind==='cover'){
+    M.pose=on?'cover':null;
+    var win=g.day!=='C'&&h.p>1&&h.p<2.5;
+    if(win!==!!h.wave){h.wave=win;g.aWave=win;g.aFace=win?-1:1;}
+    // Letting go while she waves means the human sees it. The shadow's hands were the only thing in the way.
+    if(win&&!on){h.peek=(h.peek||0)+dt;if(h.peek>0.6){g.peeked=true;finishHold();}}
+  }else if(h.kind==='pull'){
+    M.pose=on?'pull':null;Hm.xT=HOME-f*(HOME+60);if(f>0.08)Hm.back=true;
+    if(f>0.4&&g.day!=='C'&&!h.said){h.said=true;g.aFace=-1;setLine('A','Oh— hey, are you…');}
+  }else if(h.kind==='still'){
+    M.pose='hold';Hm.face='stiff';Hm.sweatT=0.8;if(!on&&dt)Hm.flinch=Math.max(Hm.flinch,0.5);
+    if(g.day!=='C')g.aFace=(h.p>1&&h.p<2.1)?-1:1;
+  }else{
+    M.pose=on?'comfort':null;M.sT=on?1.1:1.5;M.mood=on?'care':'worry';g.anx=on?0.08:0.8;
+    if(on&&h.o.clock)g.clock+=60*dt;
+  }
+}
+function finishHold(){
+  var g=G,h=g.hold,M=g.morko,Hm=g.human;g.hold=null;WAIT=null;
+  if(h.on)swallowClick=true; // the release of this press must not also count as "continue"
+  if(h.kind==='cover'){g.aWave=false;g.aFace=1;
+    if(g.peeked){M.pose=null;g.leak='none';Q=[['H','…She’s waving.'],['S','I looked away for ONE second.'],['H','Hi.']].concat(Q);}else M.pose='cover';}
+  else if(h.kind==='pull'){M.pose='pull';Hm.xT=-90;Hm.back=true;g.cupLeft=true;g.lines=[];}
+  else if(h.kind==='still'){M.pose='hold';Hm.face='stiff';g.aFace=1;}
+  else{M.pose='comfort';M.sT=1.1;M.mood='care';g.anx=0.1;}
+  sfx('pick');run();
+}
+function holdRing(){
+  var h=G.hold,x=G.human.x,y=FEETY-150,f=clamp(h.p/h.secs,0,1);
+  ctx.lineCap='round';ctx.lineWidth=5;ctx.strokeStyle='rgba(22,19,30,.35)';ctx.beginPath();ctx.arc(x,y,34,0,Math.PI*2);ctx.stroke();
+  ctx.strokeStyle='#e2b04a';ctx.beginPath();ctx.arc(x,y,34,-Math.PI/2,-Math.PI/2+Math.PI*2*f);ctx.stroke();
+}
+
+/* ================= stage directions ================= */
+function set(o){return function(){
+  var g=G,M=g.morko,Hm=g.human;
+  if(o.clr){g.lines=[];g.band=null;}
+  if(o.s!=null)M.sT=o.s;if(o.mood)M.mood=o.mood;if('pose' in o)M.pose=o.pose;if(o.st)M.st=o.st;
+  if(o.face)Hm.face=o.face;if('back' in o)Hm.back=o.back;if(o.flinch)Hm.flinch=o.flinch;if(o.hx!=null)Hm.xT=o.hx;
+  if(o.anx!=null)g.anx=o.anx;if(o.ax!=null)g.axT=o.ax;if(o.bx!=null)g.bxT=o.bx;if(o.near)g.axT=Hm.x+92;
+  if(o.aFace)g.aFace=o.aFace;if(o.bFace)g.bFace=o.bFace;if('aWave' in o)g.aWave=o.aWave;
+  if(o.cowA)g.cowA=true;if(o.cowB)g.cowB=true;if(o.rate!=null)g.rate=o.rate;
+  if(o.hud)g.hud=true;if(o.plan)g.plan=true;
+  if(o.sweat!=null)Hm.sweatT=o.sweat;if(o.blush!=null)Hm.blush=o.blush;if(o.aSweat!=null)g.aSweat=o.aSweat;
+};}
+function hit(k,from){return function(){
+  var g=G;g.lines=[];g.band=null;g.cur=null;g.flash=k;g.human.flinch=1;g.human.face='stiff';
+  g.morko.sT=1.45+0.55*k;g.morko.mood='scared';g.anx=k;g.pulse=k;g.shake=RM?0:k;g.gazeFrom=from==='A'?'after':(from||'A');g.gazeT=from==='P'?0:0.85*k;sfx('hit');g.darkT=0.95*k;
+  g.cz=1.05+0.06*k;g.cx=W/2+10;g.cy=258;g.human.blush=Math.max(g.human.blush,k);
+};}
+function archive(kind,items){return function(){
+  var g=G;for(var i=0;i<items.length;i++)g.cards.push({kind:kind,year:items[i][0],text:items[i][1],t:-i*0.45,life:null,
+    x:kind==='good'?790:170+i*310,y:kind==='good'?178:150+(i%2)*46,rot:kind==='good'?-0.03:((i%2?1:-1)*(0.06+i*0.02))});
+  sfx('card');
+};}
+function closeArchive(){var g=G;for(var i=0;i<g.cards.length;i++)if(g.cards[i].life==null)g.cards[i].life=Math.max(0,g.cards[i].t)+0.35;}
+function drawCards(){
+  var g=G,sticky=g.cards.some(function(c){return c.kind==='bad'&&c.life==null;});
+  if(sticky){ctx.fillStyle='rgba(14,12,20,.45)';ctx.fillRect(0,0,W,H);}
+  for(var i=0;i<g.cards.length;i++){var c=g.cards[i];if(c.t<0)continue;
+    var a=clamp(c.t/0.25,0,1)*(c.life==null?1:clamp((c.life-c.t)/0.35,0,1)),drop=RM?0:Math.max(0,1-c.t/0.35)*-60;
+    ctx.save();ctx.globalAlpha=a;ctx.translate(c.x,c.y+drop);ctx.rotate(RM?0:c.rot);
+    var good=c.kind==='good';ctx.fillStyle=good?'#fff4d6':'#f6f1e4';ctx.strokeStyle=good?'#e2b04a':'#8b8070';ctx.lineWidth=good?3:1.5;
+    rr(-140,-56,280,112,5);ctx.fill();ctx.stroke();
+    ctx.fillStyle=good?'#e2b04a':'#c9553f';ctx.fillRect(-140,-56,280,24);
+    ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillStyle='#fffdf6';ctx.fillText((good?'ARCHIVE · THE OTHER PILE · ':'ARCHIVE · ')+c.year,-128,-44);
+    ctx.font='600 17px system-ui,sans-serif';ctx.fillStyle='#2b2733';var ls=wrap(c.text,250);for(var k=0;k<ls.length&&k<3;k++)ctx.fillText(ls[k],-128,-12+k*22);
+    ctx.restore();}
+}
+function replay(n){return function(){var g=G;g.rep={n:n,t:0};g.lines=[];g.cur=null;stopVoice();sfx('cut');};}
+var REPLAY_LABEL=[null,'REPLAY 1/3 · restored by Ekskyysmi','REPLAY 2/3 · enhanced','REPLAY 3/3 · director’s cut'];
+function drawReplay(){
+  var g=G,n=g.rep.n,t=g.rep.t;
+  room(false);
+  if(n>=2){ctx.fillStyle='rgba(20,14,30,'+(n===3?0.35:0.15)+')';ctx.fillRect(0,0,W,H);}
+  if(n===3){ctx.fillStyle='rgba(255,246,200,.3)';ctx.beginPath();ctx.moveTo(HOME-24,-30);ctx.lineTo(HOME+24,-30);ctx.lineTo(HOME+90,FEETY+4);ctx.lineTo(HOME-90,FEETY+4);ctx.closePath();ctx.fill();}
+  var hold=n===1?0:n===2?1:2.2,sannaT=Math.min(1,t/0.6);
+  person(HOME,{body:'#c98f2e',hair:'#4a3b32',facing:1,cup:true,face:'stiff',flinch:0.3});
+  person(700,{body:SANNA.body,hair:SANNA.hair,facing:-1,face:n>=2?'frown':'neutral'});
+  person(800,{body:MIKA.body,hair:MIKA.hair,facing:n>=2?-1:1,face:n===3?'frown':'neutral',cup:true});
+  if(n===3){ // the audience that was never there
+    ctx.fillStyle='#14111d';for(var i=0;i<13;i++){var ax=40+i*72+(i%2)*14,ay=H-6+Math.sin(G.time*2+i)*1.5;circ(ax,ay-44,20);ctx.fill();rr(ax-28,ay-26,56,40,14);ctx.fill();}
+    ctx.fillStyle='#f6f1e4';for(var j=0;j<13;j+=3){var bx=40+j*72+(j%2)*14;circ(bx-6,H-52,2.6);ctx.fill();circ(bx+6,H-52,2.6);ctx.fill();}
+  }
+  var cur=g.cur;
+  if(cur&&cur.who==='A')bubble(700,FEETY-172,cur.text,{reveal:Math.floor(g.curT*(n===1?55:n===2?18:9))});
+  else if(cur&&cur.who==='S')bubble(250,150,cur.text,{dark:true,noTail:true,maxW:300,reveal:Math.floor(g.curT*55)});
+  else if(cur&&cur.who==='H')bubble(HOME+60,FEETY-172,cur.text,{maxW:230,reveal:Math.floor(g.curT*55)});
+  // tape look: warm tint, scanlines, label, timecode
+  ctx.fillStyle='rgba(140,96,40,.16)';ctx.fillRect(0,0,W,H);
+  if(!RM){ctx.fillStyle='rgba(0,0,0,.07)';for(var y=((G.time*40)%4);y<H;y+=4)ctx.fillRect(0,y,W,1.5);}
+  ctx.fillStyle='rgba(12,10,16,.82)';ctx.fillRect(0,0,W,44);
+  ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 15px system-ui,sans-serif';ctx.fillStyle=(Math.floor(G.time*2)%2&&!RM)?'#e0563e':'#f1ebdd';ctx.fillText('● '+REPLAY_LABEL[n],20,22);
+  ctx.textAlign='right';ctx.fillStyle='#b9b2a6';ctx.font='500 14px system-ui,sans-serif';
+  var len=[0,2,9,47][n],sec=Math.min(len,Math.floor(t*(n===1?1:n===2?3:9)));ctx.fillText('00:'+(sec<10?'0':'')+sec+' / 00:'+(len<10?'0':'')+len,W-20,22);
+}
+function look(){G.gazeFrom='A';G.gazeT=0.5;}
+function calm(){var g=G;g.human.sweatT=0;g.gazeT=0;g.darkT=0;g.anx=0.25;g.morko.sT=1.15;g.morko.mood='calm';g.morko.pose=null;g.human.face='neutral';g.cz=1.025;g.cx=W/2;g.cy=H/2;}
+function prevent(label){return function(){G.prevented++;G.pop={text:'Ekskyysmi declares this “handled”.',t:0};};}
+function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
+function leave(){G.axT=1120;G.bxT=1200;G.aFace=1;G.bFace=1;}
+function frozen(){var g=G;sfx('startle');g.morko.st='frozen';g.startles++;g.human.flinch=1;}
+function hide(){G.morko.st='hide';}
+function pokka(){G.morko.st='pokka';G.morko.sT=1.5;}
+function free(){G.morko.st='free';G.morko.mood='alert';}
+// ---- src/28-progress.js ----
+/* Chapter checkpoints keep their own history. Unlocks and the last played chapter are separate. */
+var SAVE_KEY='ekskyysmi.save';
+function checkpoint(g){
+  return {day:['A','B','C'].indexOf(g.day)>=0?g.day:'B',
+    lunch:[0,1,2].indexOf(g.lunch)>=0?g.lunch:0,real:g.real===1?1:0,bit:!!g.bit,
+    leak:['none','grow','cover','exit'].indexOf(g.leak)>=0?g.leak:'none',fear:[1,2,3].indexOf(g.fear)>=0?g.fear:1,
+    fb:['sorry','explain','quiet','ask'].indexOf(g.fb)>=0?g.fb:null,
+    txt:['worries','cancel','freezer','bite'].indexOf(g.txt)>=0?g.txt:null,
+    yes:Number.isFinite(g.yes)?clamp(Math.floor(g.yes),0,20):0,
+    handout:!!g.handout,afterparty:!!g.afterparty,reflected:!!g.reflected,peeked:!!g.peeked};
+}
+function loadProgress(){
+  try{
+    var raw=JSON.parse(window.localStorage.getItem(SAVE_KEY)||'null');
+    if(!raw||!Number.isInteger(raw.ch)||raw.ch<1||raw.ch>5)return null;
+    var top=Number.isInteger(raw.unlocked)?clamp(raw.unlocked,raw.ch,5):raw.ch,chapters={};
+    for(var i=1;i<=top;i++){
+      var c=raw.version===2&&raw.chapters?raw.chapters[i]:raw;
+      if(c&&typeof c==='object'&&!Array.isArray(c))chapters[i]=checkpoint(c);
+    }
+    if(!chapters[raw.ch])return null;
+    return {version:2,ch:raw.ch,unlocked:top,chapters:chapters};
+  }catch(e){return null;}
+}
+function saveProgress(n){
+  try{
+    var old=loadProgress(),chapters=old?old.chapters:{};
+    chapters[n]=checkpoint(G);
+    window.localStorage.setItem(SAVE_KEY,JSON.stringify({version:2,ch:n,unlocked:Math.max(n,old?old.unlocked:1),chapters:chapters}));
+  }catch(e){/* Storage is optional: private/offline play must still work. */}
+}
+// ---- src/29-prelude.js ----
+/* ================= the quiet before: Monday begins without Ekskyysmi ================= */
+// An ordinary morning and an ordinary shadow on the floor. Then the human has a plan, and the shadow gets up.
+function preludeSettle(){
+  var g=G,Hm=g.human,M=g.morko;g.chap=null;g.tics=[];g.skippable=false;
+  Hm.gone=false;Hm.x=Hm.xT=HOME;Hm.facing=1;Hm.back=false;Hm.face='neutral';Hm.sipT=0;g.noCup=false;g.mugFixed=true;
+  M.asleep=true;M.wake=0;M.s=M.sT=0.3;M.mood='calm';if(g.fade>0.4)g.fade=0.4;g.clock=8*3600+52*60+40;
+}
+function skipIntro(){var i=Q.indexOf(preludeSettle);if(i<0||!G.skippable)return;Q=Q.slice(i);WAIT=null;run();}
+function wake(){var g=G,M=g.morko;M.asleep=false;M.sT=1.35;M.mood='surprised';g.flash=0.3;g.shake=RM?0:0.25;g.anx=0.55;sfx('startle');}
+function scPrelude(){return [
+  function(){var g=G,Hm=g.human,M=g.morko;music('intro');g.skippable=true;g.hud=false;g.clock=8*3600+51*60+20;
+    Hm.gone=true;Hm.x=Hm.xT=1010;Hm.facing=-1;g.noCup=true;g.mugFixed=false;M.asleep=true;M.wake=0;M.s=M.sT=0.3;
+    g.chap={day:CHAPTERS[1].day,title:CHAPTERS[1].title,t:0};sfx('card');},
+  {wait:2.8},
+  function(){G.chap=null;G.fade=1;G.fadeRate=0.36;},
+  addTic('Monday, 8:52. Nobody here yet.',190,62,{at:1.6,life:4.2,size:19}),
+  {wait:4.4},
+  function(){var Hm=G.human;Hm.gone=false;Hm.xT=815;},
+  {wait:2.1},
+  function(){G.human.back=true;sfx('drip');},
+  addTic('drip.',898,246,{life:1.1}),addTic('drip.',898,246,{at:0.8,life:1.1}),addTic('drip.',898,246,{at:1.6,life:1.1}),
+  {wait:1.0},function(){sfx('drip');},{wait:0.8},function(){sfx('drip');},{wait:0.8},
+  function(){var g=G,Hm=g.human;g.noCup=false;Hm.back=false;Hm.facing=-1;Hm.xT=704;},
+  {wait:1.3},
+  function(){G.human.facing=1;},
+  addTic('(that handle.)',764,276,{life:1.5}),
+  {wait:1.5},
+  function(){G.mugFixed=true;sfx('clink');},
+  addTic('(better.)',764,276,{life:1.5}),
+  {wait:1.5},
+  function(){var Hm=G.human;Hm.facing=-1;Hm.xT=HOME;},
+  {wait:2.4},
+  function(){G.human.facing=1;},{wait:0.7},
+  function(){G.human.sipT=1;},{wait:1.0},
+  function(){var Hm=G.human;Hm.sipT=0;Hm.face='smile';},{wait:1.5},
+  preludeSettle,
+  ['H','Today I’m going to ask Sanna to lunch.'],
+  set({plan:1}),{wait:0.9},
+  wake,{wait:1.3},
+  ['S','…Sorry. WHAT are we doing today?'],
+  ['H','Asking Sanna to lunch.'],
+  ['S','It was going so well. Coffee. Warm light. No people. We are exceptionally good at mornings.'],
+  ['H','It’s coffee.'],
+  set({s:1,mood:'calm'})
+];}
+
+/* ---------- Lab: Colleagues. Ekskyysmi gets an “oh. hi.” of its own. ---------- */
+function selfHit(){var g=G;sfx('hit');g.pulse=0.55;g.shake=RM?0:0.45;g.lines=[];g.cur=null;g.flash=0.5;g.morko.sT=0.8;g.morko.mood='scared';g.morko.pose=null;g.anx=0.7;}
+function labColleagues(){return labScene({set:'room',title:'Colleagues.',plan:'Let the humans talk.',clock:13*3600+10*60}).concat([
+  function(){var g=G;g.cowA=true;g.ax=g.axT=780;g.aFace=-1;},
+  ['N','After lunch. Your human and Sanna are talking about a printer. It is going fine.'],
+  ['S','Going fine. Nothing to prevent. I could get used to—'],
+  function(){G.zT=1;},{wait:1.5},
+  ['Z','oh. hi.'],
+  selfHit,{wait:1.3},
+  ['S','Did you hear that.'],
+  ['H','I’m talking to Sanna. What are you doing?'],
+  ['S','Her shadow greeted me. “Oh.” Full stop. “Hi.”'],
+  ['H','It said hi.'],
+  ['S','With a FULL STOP. Nobody puts a full stop after “oh” unless they mean it.'],
+  {choice:[
+    {t:'Greet it back. Formally.',then:[['S','Good afternoon. Ekskyysmi. Rejection prevention, third floor.'],['Z','…I know. We share a wall.'],['S','It KNOWS. It’s been watching.'],['H','You share a wall.']]},
+    {t:'Pretend to be a coat.',then:[pokka,{wait:1.3},['Z','…I can see your eyes.'],['S','Coats have buttons.'],free,set({mood:'worry'})]},
+    {t:'Review the “oh”. Frame by frame.',then:[['S','Exhibit A. “Oh.” Flat. Like a door closing.'],['H','You do realise what you’re doing.'],['S','Thorough work.'],['H','Monday. You’re doing Monday. To yourself.']]}
+  ]}
+ ],outside({title:'WHAT THE HUMANS NOTICED',dur:'duration: 40 seconds',cap:'Nothing. They were talking about a printer.',anim:'text'}),[
+  function(){var g=G;g.morko.sT=1;g.morko.mood='worry';g.anx=0.2;},
+  ['S','Could you… say something to it? For me.'],
+  ['H','You want ME to talk to her shadow.'],
+  ['S','You’re good with people.'],
+  ['H','Since when?'],
+  ['S','Since I started watching you do it.'],
+  {wait:1.1},
+  ['H','…Thank you.'],
+  ['S','Don’t make it a thing.'],
+  ['Z','Sorry about the “oh”. I never know if you want to be spoken to. You always look so busy.'],
+  set({mood:'surprised'}),
+  ['S','I AM busy.'],
+  ['Z','Me too. Constantly.'],
+  set({mood:'care'}),
+  ['S','…Tuesday. By the radiator. We could be busy near each other.'],
+  ['Z','I’ll check my archive.'],
+  function(){G.zT=0;}
+ ]);}
+
+/* ---------- Lab: Not now. The one that is real. ---------- */
+function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Suggest one thing.',clock:14*3600+20*60,cowR:1}).concat([
+  ['N','A meeting. Riitta has eleven things on her list. It shows.'],
+  ['H','What if we moved the deadline to Thursday?'],
+  ['R','Not now. Can we stay on topic?'],
+  hit(0.7,'R'),{wait:1.3},
+  ['S','THERE. That one was real. I didn’t even need the glass.'],
+  {choice:[
+    {t:'Apologise for having ideas.',then:[['H','I’m not apologising for a sentence.'],['S','It was a LONG sentence. It had a Thursday in it.']]},
+    {t:'New policy: never suggest anything again.',then:[['S','Effective immediately. No ideas. No deadlines. No Thursdays.'],['H','You can’t ban Thursdays.']]},
+    {t:'Put it on record: I am not exaggerating.',then:[['S','For once I’d like it noted that I added nothing.'],['H','Noted.']]}
+  ]},
+  ['H','Yeah. That one was a bit sharp.'],
+  set({mood:'surprised'}),
+  ['S','…You agree?'],
+  ['H','She was short with me. It happened.']
+ ],outside({title:'WHAT HAPPENED',dur:'duration: 4 seconds',cap:'Riitta was short with you. She has eleven things on her list. You are not one of them.',anim:'text'}),[
+  calm,
+  ['S','So I was right.'],
+  ['H','That it happened. Yes.'],
+  ['S','And the size?'],
+  ['H','You had it at “career over”.'],
+  ['S','I rounded up.'],
+  ['H','It stung.'],
+  ['S','For how long?'],
+  ['H','About this long.'],
+  {wait:1.8},
+  ['H','There.'],
+  ['S','That’s IT? I had a whole evening planned.'],
+  ['S','She didn’t apologise.'],
+  ['H','No.'],
+  ['S','And we’re… fine?'],
+  ['H','A bit stung. And fine.'],
+  ['S','I don’t have a drawer for that.'],
+  ['H','Make one.']
+ ]);}
+// ---- src/30-story-monday.js ----
+/* ================= the script (all player-facing text) ================= */
+var FEAR={
+ 1:{t:'“Oh” as in “oh no. It’s you.”',
+    a:[['S','She saw you and her whole morning went “oh”. You are the “oh” in her day.'],['H','I’m also the “hi”.'],['S','The “hi” was legally required.']],
+    b:'By lunchtime the whole floor says “oh”. By Friday, the building. They’ll name the sound after you.',
+    walk:'By now the whole building says “oh”. There’s a memo.'},
+ 2:{t:'“Oh” as in “I forgot you existed.”',
+    a:[['S','You are so forgettable she had to reload you.'],['H','She said hi within a second.'],['S','A full second. To remember a colleague of three years.']],
+    b:'Soon they forget your desk. Someone puts a plant on it. The plant gets invited to lunch.',
+    walk:'The plant has your desk now. The plant went to lunch.'},
+ 3:{t:'She knows about the email from 2019.',
+    a:[['H','What email?'],['S','You signed it “Love,”. To Facilities.'],['H','Nobody remembers that.'],['S','I remember it every night at 3 a.m. That is what I’m FOR.']],
+    b:'It’s been forwarded. There’s a group chat. It’s called “Love, Facilities”.',
+    walk:'The group chat has a logo now.'}
+};
+function fearChoice(){
+  var out=[];[1,2,3].forEach(function(k){var F=FEAR[k];
+    out.push({t:F.t,f:function(){G.fear=k;G.morko.sT=2.1;G.morko.mood='stern';},
+      then:F.a.concat([set({s:2.2}),['S',F.b],{stretch:true}])});});
+  return out;
+}
+function scIntro(){return [
+  set({clr:1}),
+  ['S','I’m Ekskyysmi. Informal head of keeping things from getting awkward.'],
+  ['S','My job is simple. Keep you from being rejected. By anyone. Ever.'],
+  set({hud:1}),
+  ['H','And my job?'],
+  ['S','Coffee. I’ll handle the catastrophes.'],
+  ['H','So. Lunch. I’m asking her today.'],
+  set({plan:1,mood:'alert',s:1.3}),
+  ['S','…Out loud?'],
+  ['H','Go on, then. Suggest something. I’ll decide.'],
+  ['S','You usually do. It’s a flaw in the system.'],
+  {choice:[
+    {t:'Rehearse the sentence. Forty times.',then:[['H','“Would you like to get lunch.”'],['S','You sounded hungry. Desperate, even. Again.'],['H','It’s lunch. Hunger is on topic.']]},
+    {t:'Locate the exits.',then:[['S','Door. Window. Cupboard under the sink.'],['H','I’m not hiding under the sink.'],['S','Not with that attitude.']]},
+    {t:'Schedule a meeting about whether to ask.',then:[['H','With whom?'],['S','Us. Closed session. No catering.'],['H','I’m asking before you invent a subcommittee.']]}
+  ]},
+  set({clr:1,s:1,mood:'calm'}),
+  set({cowB:1,bx:880}),{wait:1.7},
+  ['B','Morning! You’re quiet today.'],
+  ['H','Morning.'],
+  ['B','You know what you need? To push yourself out of your comfort zone more!'],
+  hit(0.55,'B'),{wait:1.1},
+  ['S','…Out of the WHAT?'],
+  ['S','We haven’t SEEN the comfort zone since 2016.'],
+  ['H','I think he’s being nice.'],
+  ['S','You are in a room. With a person. Holding a hot drink AND a conversation. This IS the expedition.'],
+  {choice:[
+    {t:'Tell him about the supermarket.',f:function(){G.advice=1;},then:[['S','Four hundred and twelve visits. It is still a supermarket. Tell him.'],['H','I’m not telling him about the supermarket.']]},
+    {t:'Deploy the nod.',f:function(){G.advice=2;},then:[['H','Deploying.']]},
+    {t:'Ask where HIS comfort zone is. For later.',f:function(){G.advice=3;},then:[['S','Get an address.'],['H','No.'],['S','A postcode, then.']]},
+    {t:'Show him some teeth. Small ones.',f:function(){G.advice=4;G.morko.mood='stern';G.morko.sT=2.3;},then:[['H','Wait—']]}
+  ]},
+  set({clr:1}),
+  function(){return G.advice===4?scBite():[
+    ['H','…Thanks. I’ll look into it.']
+  ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'4 seconds',cap:'Two nods. One sip. A perfectly ordinary pause.',anim:'nod'},4.4),[
+    calm,
+    ['S','Rejection prevented.'],prevent('nodded'),
+    ['H','That wasn’t a rejection.'],
+    ['S','And it stays that way.']
+  ]);}
+ ];}
+function scBite(){return [
+  ['H','Maybe YOUR comfort zone could use a walk, Eero.'],
+  set({bFace:-1}),{wait:0.7},
+  ['B','…Ha. Fair.']
+ ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'3 seconds',cap:'One slightly sharp joke. Eero laughed a beat too late.',anim:'bite'},4.4),[
+  calm,set({pose:'selfmouth',mood:'scared',s:1.3}),
+  ['S','…Did we just bite Eero?'],
+  ['H','We bit Eero.'],
+  ['S','Eero is SOFT. Eero owns a cardigan.'],
+  set({pose:null,mood:'worry'}),
+  ['S','I was defending us. From advice.'],
+  ['H','He was being nice.'],
+  ['S','I know that NOW. Two seconds ago he was a predator.'],
+  function(){G.bit=true;}
+ ]);}
+function scSanna(){return [
+  set({clr:1,cowA:1,ax:780,cowB:1,bx:880,hud:1,plan:1,mood:'alert',s:1.2}),
+  ['S','Here she comes. Remember: casual. Like someone who has lunch all the time.'],
+  {wait:0.9},set({aFace:-1,clr:1}),look,
+  ['A','oh, hi.'],
+  set({aFace:1}),hit(1,'A'),archive('bad',[['2011','Waved back at someone who was waving at someone else.'],['2016','Said “you too” when the waiter said “enjoy your meal”.'],['2019','Signed an email “Love,”. To Facilities.']]),{wait:1.4},['N','Ekskyysmi opens the archive. All of it. At once.'],closeArchive,
+  set({rate:0.03}),
+  ['S','Okay. Nobody panic. I’ve reviewed the “oh”.'],
+  ['H','It was a greeting.'],
+  ['S','It was a verdict. I just need to work out which one.'],
+  {choice:fearChoice},
+  ['S','—and after that we—'],
+  frozen,{wait:0.9},
+  ['S','…Is that me?'],
+  ['H','That’s you.'],
+  hide,
+  function(){return G.warningSize<2.6?
+    [['S','That’s my SMALL warning?'],['H','It has shoulders.'],['S','For carrying the concern.']]:
+    G.warningSize<3.3?
+    [['S','I’m ENORMOUS. Why did nobody say.'],['H','You were presenting.']]:
+    [['S','I appear to have become a load-bearing concern.'],['H','Mind the ceiling.'],['S','The ceiling should mind ME.']] ;},
+  pokka,
+  ['S','Anyway. I was demonstrating scale.'],
+  free,
+  ['H','It’s been two seconds.'],
+  ['S','A lot can happen in two seconds. I just did all of it.'],
+  ['S','Recommendation.'],
+  {choice:[
+    {t:'Become furniture. Very convincing furniture.',preview:'hold',f:function(){G.leak='grow';},then:[['H','For how long?'],['S','Until retirement.'],prevent('furniture')]},
+    {t:'Study the cup. It has excellent manners.',preview:'cover',f:function(){G.leak='cover';},then:[['H','It’s a cup.'],['S','Not one personal remark.'],prevent('cup')]},
+    {t:'A strategic exit. We can come back.',preview:'pull',f:function(){G.leak='exit';},then:[['H','My coffee’s still here.'],['S','A convincing alibi.'],prevent('door')]},
+    {t:'…Say “hi” back. I’ll stay right here.',preview:'comfort',f:function(){G.leak='none';},then:[['S','I reserve the right to wobble.'],['H','You can wobble.']]}
+  ]},
+  function(){var l=G.leak;G.lines=[];return l==='grow'?[{hold:{kind:'still',secs:2.6}}]:l==='cover'?[{hold:{kind:'cover',secs:3}}]:l==='exit'?[{hold:{kind:'pull',secs:3}}]:[];},
+  {wait:0.9},
+  function(){return outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 seconds',cap:OUTCAP[G.leak],anim:G.leak},5.2);},
+  function(){var g=G;g.rate=1;calm();if(g.leak==='cover'&&g.day==='C')g.morko.pose='cover';if(g.leak==='grow'&&g.day!=='A')g.human.face='stiff';},
+  {wait:0.6},
+  function(){return LATER[G.day+'_'+G.leak]();},
+  {wait:0.8},
+  function(){return scWalk();}
+];}
+var OUTCAP={none:'A nod. A “hi”. Some coffee.',grow:'Stood very still. Then a slightly too loud hi.',cover:'Looked into the cup.',exit:'Left. The coffee stayed.'};
+function lunch(n){return function(){G.lunch=n;};}
+var CTAIL={
+  seen:[set({s:1.1,mood:'care',anx:0.05}),['S','…I didn’t make that one up.'],['H','No.'],set({pose:'comfort',face:'down'}),['S','I’d like it noted that I don’t enjoy being right.'],['H','Noted.']],
+  cover:[['H','What did they say?'],['S','…Weather. They said weather.'],['H','You’re a terrible liar.'],set({pose:null,mood:'care'}),['S','They said: no need to ask the others.'],set({pose:'comfort',face:'down'}),['H','…Okay.'],['S','I’d have covered it forever. I only have the two hands.']],
+  exit:[['N','Only the empty room heard that. The shadow would call it a win. It doesn’t feel like one.']]
+};
+function cDay(tail){return function(){return [set({aFace:1}),['A','Lunch? No need to ask the others, right?'],['B','No need.'],leave,{wait:1.4},function(){G.real=1;}].concat(CTAIL[tail],[lunch(0)]);};}
+var LATER={
+ A_none:function(){return [set({near:1,aFace:-1}),{wait:1.2},['A','We’re going for lunch at twelve. Coming?'],['S','It’s a trap.'],set({face:'smile'}),['H','…Yeah.'],['S','Fine. But I’m supervising the lunch.'],lunch(1)];},
+ A_grow:function(){return [set({near:1,aFace:-1}),{wait:1.2},['A','You okay? You looked like you’d seen something big.'],['H','Nothing big.'],set({st:'pokka'}),['S','I’m medium. At most.'],set({st:'free'}),['A','Lunch at twelve?'],set({face:'smile'}),['H','…Yeah.'],['S','Furniture does not get invited to lunch. I’m confused and I don’t like it.'],lunch(1)];},
+ A_cover:function(){return [set({near:1,aFace:-1}),{wait:1.2},['A','I waved just now.'],['H','I was looking at the cup.'],['A','Good cup. Lunch at twelve?'],set({face:'smile'}),['H','…Yeah.'],['S','She likes the cup. The cup is one of us now.'],lunch(1)];},
+ A_exit:function(){return [set({aFace:-1}),['A','Where did they go?'],['B','They left their coffee.'],['P','Text from Sanna: “Lunch at 12? Your coffee is here.”'],['N','In the corridor, a shadow reads the message four times, looking for the catch.'],lunch(1)];},
+ B_none:function(){return [['S','Good. We said hi. We survived. Let’s never speak again.'],['H','I’m going to ask.'],['S','Don’t.'],set({flinch:0.6,aFace:-1,pose:'selfeyes'}),['H','Sanna. Do you want to get lunch?'],['A','Oh! Yes. I never know if you want company.'],set({pose:null,mood:'surprised'}),['S','…She thought WE didn’t want HER?'],set({face:'smile'}),['H','Twelve?'],['A','Twelve.'],lunch(1)];},
+ B_grow:function(){return [set({ax:640,aFace:-1}),{wait:1.1},['A','Hey, I was going to— …never mind.'],set({ax:780,aFace:1}),['A','Eero, let’s just go.'],leave,{wait:1.2},['S','Rejection prevented.'],set({face:'neutral'}),['H','She was about to say something.'],['S','And now she can’t. You’re welcome.'],{wait:0.7},set({mood:'worry'}),['S','…You’re welcome?'],lunch(0)];},
+ B_cover:function(){return [set({aFace:1}),['A','I don’t think they want company.'],['B','Shame.'],leave,{wait:1.2},['S','For the record, I saw a hand go up.'],['H','When?'],['S','While I was covering your eyes.'],['H','…'],set({mood:'worry'}),['S','In my defence, the cup was extremely safe.'],lunch(0)];},
+ B_exit:function(){return [set({aFace:-1}),['A','Oh. Already gone.'],['B','Maybe they don’t like lunch.'],leave,{wait:1},['N','In the corridor, a shadow records one more rejection prevented.'],lunch(0)];},
+ C_none:cDay('seen'),C_grow:cDay('seen'),C_cover:cDay('cover'),C_exit:cDay('exit')
+};
+function realObs(){
+  var g=G;
+  if(g.day==='A')return [['S','For the record. She asked you to lunch.'],['H','She did.'],['S','Unprompted. I checked for prompts.'],set({face:'smile'}),['H','It was a good lunch.'],['S','It was adequate. I counted three laughs. Two were yours.']];
+  if(g.day==='B'&&g.lunch)return [['S','She said she never knows if we want company.'],['H','Yeah.'],set({mood:'surprised'}),['S','…Do you think she has one of me?'],['H','Maybe. We could ask.'],['S','I’d need to prepare for meeting a colleague.']];
+  if(g.day==='B'){
+    var opening=g.leak==='exit'?
+      [['S','We left before she could say anything.'],['H','So we don’t actually know.'],['S','I had a very detailed guess.']]:
+      g.leak==='grow'?
+      [['S','She started a sentence. We never got the rest.'],['H','We could ask.'],['S','Without a reconstruction of the incident?']]:
+      [['S','Her hand went up. I saw that much.'],['H','While I was studying the cup.'],['S','The cup has declined to comment.']];
+    return opening.concat([['P','You: “Lunch tomorrow?”'],['P','Sanna: “YES. I never know if you want company.”'],set({mood:'surprised'}),['S','…She thought WE didn’t want HER?'],function(){G.lunch=2;}]);
+  }
+  if(g.leak==='exit')return [['S','We left. I don’t know what happened after that.'],['H','I still felt left out.'],['S','I’d like to fill in the missing bits.'],['H','Let’s call someone first.'],['P','You: “Rough day. Call?”'],['P','Reply: “Calling.”'],set({pose:'comfort'}),['S','Can I come?'],['H','You’re attached to my feet.']];
+  return [['S','They said: no need to ask the others. That happened. I’m not doing a bit.'],['H','I know.'],['P','You: “Rough day. Call?”'],['P','Reply: “Calling.”'],['S','…Who is that?'],['H','Someone who asks.'],['S','I’d like to vet them.'],['H','You’ve met. You hid.']];
+}
+function walkMenu(done){return function(){
+  var g=G,o=[];
+  if(!done.oh)o.push({t:'Review the “oh”. Again.',f:function(){done.oh=1;g.w.speed=0;g.morko.sT=1.7;g.morko.mood='stern';},then:function(){return [
+    ['S','Exhibit A. I’ve had it restored.'],
+    replay(1),['A','oh, hi.'],['S','Note the comma.'],['H','People don’t say commas.'],
+    replay(2),['A','ohhh. …hi.'],['S','Enhanced. Look at the eyebrows.'],['H','You drew those.'],['S','I RESTORED those.'],
+    replay(3),['A','OH.  …  hi.'],['S','Director’s cut. With the audience.'],['H','There was no audience.'],['S','There’s always an audience. It just sits in here.'],
+    ['S',FEAR[g.fear].walk],frozen,{wait:0.8},['S','…I’ve scared myself with my own cut.'],
+    function(){G.rep=null;free();},
+    ['H','Can we watch the original?'],['S','The original is very boring.']
+   ].concat(outside({title:'THE ORIGINAL TAPE',dur:'duration: 2 seconds',cap:'Sanna said hi. Nobody else was in the room. Literally nobody.',anim:'tape'}),[
+    ['S','…It’s shorter than I remember.'],['H','It’s two seconds.'],['S','Mine has an intermission.'],
+    function(){g.morko.sT=1;g.morko.mood='calm';g.clock+=8*60;g.w.late+=8;g.w.speed=34;},
+    ['H','That took eight minutes.'],['S','Of a nine-minute walk. Efficient.']]);}});
+  if(!done.real)o.push({t:'Mention what I actually saw.',f:function(){done.real=1;g.reflected=true;g.morko.mood='care';},then:function(){return realObs().concat([set({mood:'calm',face:'neutral'})]);}});
+  if(!done.zone)o.push({t:'Bring up the comfort zone thing.',f:function(){done.zone=1;g.morko.mood='stern';},then:[
+    ['H','Mm.'],['S','I’ve done the maths. Today: one break room, two conversations, one lunch decision. Three expeditions. Eero took the lift.'],
+    ['H','He means well.'],['S','He means well from INSIDE his comfort zone. It has a sofa.'],set({mood:'calm'})]});
+  if(g.bit&&!done.mika)o.push({t:'Apologise to Eero. I’ve drafted something.',f:function(){done.mika=1;g.morko.mood='worry';},then:[
+    ['S','Twelve paragraphs. One diagram. A small poem about cardigans.'],['H','I’ll send one line.'],
+    ['P','You: “Sorry I was snappy this morning. Comfort zone advice hits a nerve.”'],{wait:1.2},
+    ['P','Eero: “Ha, no, fair. I take the lift for a reason.”'],
+    set({mood:'surprised'}),['S','…Eero takes the lift for a REASON?'],['H','Everyone’s got something.'],
+    ['S','Does Eero have one of me?'],['H','Probably. A smaller one. In a cardigan.'],set({mood:'calm'})]});
+  o.push({t:'We can walk while I’m still worried.',f:function(){done.stop=1;},then:[{wait:0.8},['S','I may bring up the comma again.'],['H','I know. Keep walking with me.']]});
+  done.n=(done.n||0)+1;
+  return o;
+};}
+function scWalk(){
+  var done={};
+  function moreWalk(){return done.stop?[]:[{choice:walkMenu(done)},moreWalk];}
+  return [startWalk,{wait:2.6},
+    ['S','Right. Debrief. I’ve prepared slides.'],
+    ['H','Please don’t have slides.'],
+    {choice:walkMenu(done)},
+    moreWalk,
+    function(){var w=G.w;w.xT=HOMEX;w.speed=Math.max(60,(HOMEX-w.x)/2.6);G.lines=[];},
+    {wait:3},
+    function(){G.clock=G.w.start+(9+G.w.late)*60;},
+    ['S','I’m not entirely finished worrying.'],
+    ['H','You can come in anyway.'],
+    set({mood:'care',s:1.1}),
+    ['S','…Is there toast?'],
+    ['H','There’s toast.'],
+    {wait:0.5},
+    showEnd
+  ];
+}
+function startWalk(){
+  var g=G,M=g.morko;
+  g.lines=[];g.band=null;g.cur=null;g.cowA=g.cowB=false;g.cupLeft=false;g.gazeT=g.gaze=0;g.darkT=g.dark=0;g.out=null;
+  g.human.x=g.human.xT=400;g.human.back=false;g.human.gone=false;g.human.face='neutral';g.human.flinch=0;g.human.sweat=g.human.sweatT=0;g.human.blush=0;g.human.puddle=0;g.cards=[];
+  M.st='free';M.pose=null;M.sT=1;M.mood='calm';g.anx=0.15;g.rate=0;g.clock=16*3600+42*60;g.card=2.6;
+  g.cz=1.025;g.cx=W/2;g.cy=H/2;
+  g.w={x:0,xT:HOMEX-270,speed:34,start:g.clock,late:0};g.tics=[];g.carsSeen=[];music('walk');
+}
+// ---- src/31-story-week.js ----
+/* ================= the week: chapters 2–5 ================= */
+// `day` is what the card says. The weekdays are flavour; nothing insists they belong to the same week.
+var CHAPTERS=[null,{day:'A MONDAY',title:'Oh, hi.'},{day:'A TUESDAY',title:'Quick chat?'},{day:'A WEDNESDAY, PROBABLY',title:'Could you just…'},{day:'A THURSDAY',title:'Seen.'},{day:'A FRIDAY. NOT NECESSARILY THAT ONE.',title:'Oh, hi. Again.'}];
+var RIITTA={body:'#7a6a9c',hair:'#cfc8ba'};
+function dayName(n){return CHAPTERS[n].title;} // kept under its old name: the title is what menus show now
+function scene(o){return function(){
+  var g=G,M=g.morko,Hm=g.human;
+  music(o.music||o.set||'room');
+  g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;
+  g.cowA=g.cowB=g.cowR=false;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
+  Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;
+  M.st='free';M.pose=null;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;
+  g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=false;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
+};}
+function begin(n,o){return [scene(o),function(){
+  var g=G;g.chapter=n;g.moment=null;g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
+  g.morko.s=1;g.morko.off=-70;g.chap={day:CHAPTERS[n].day,title:CHAPTERS[n].title,t:0};saveProgress(n);stopVoice();sfx('card');
+ },{wait:2.8},function(){G.chap=null;G.fade=1;}];}
+function shadowHit(){var g=G;sfx('hit');g.pulse=0.9;g.shake=RM?0:0.8;g.lines=[];g.cur=null;g.flash=0.8;g.morko.sT=0.62;g.morko.mood='scared';g.morko.pose=null;g.anx=0.9;g.cz=1.08;g.cx=W/2-30;g.cy=300;}
+function yes(){G.yes++;G.human.grin=G.yes;}
+
+function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60}).concat([
+  ['S','Tuesday. Nearly five. No incidents. I’d like it noted that I did nothing all day and it worked.'],
+  ['H','You reviewed a comma for an hour.'],
+  ['S','Quietly.'],
+  {wait:0.6},
+  ['P','Riitta: “Quick chat tomorrow at 9?”'],
+  hit(0.9,'P'),set({sweat:0.7}),{wait:1.2},
+  ['S','“Quick.”'],
+  ['S','Nobody says “quick” about good news. Good news takes its time. Good news has cake.'],
+  ['H','It’s probably nothing.'],
+  ['S','It’s five words and a question mark. It’s EVERYTHING.'],
+  {choice:[
+    {t:'We’re being fired. Efficiently.',then:[['S','Nine o’clock. Before the coffee works. So you can’t fight back.'],['H','I’ve never fought back in my life.'],['S','She doesn’t know that. I’ve kept it very quiet.']]},
+    {t:'She found the thing.',then:[['H','What thing?'],['S','I don’t know. That’s what makes it so bad. It could be ANY of the things.'],['H','There are no things.'],['S','There are always things.']]},
+    {t:'It’s about Monday.',then:mondayCallback}
+  ]},
+  set({s:1.4,mood:'alert'}),
+  ['S','Reply at once. Show enthusiasm. A professional amount.'],
+  {choice:[
+    {t:'“Sure!” With the exclamation mark.',then:[['S','Too keen. She’ll smell fear. Take it out.']]},
+    {t:'“Sure.” With a full stop.',then:[['S','Too cold. A full stop is a slammed door. Put something back.']]},
+    {t:'“Sure” and nothing else. Raw.',then:[['S','No punctuation at all? What are we, feral?']]}
+  ]},
+  ['P','You: “Sure, 9 works.”'],
+  ['S','…You sent it. Without a committee.'],
+  ['H','It’s a calendar reply.'],
+  ['P','Riitta reacted with a thumbs-up.'],
+  ['S','A thumb.'],
+  ['S','ONE thumb. She has two.'],
+  calm
+ ],outside({title:'WHAT THE CALENDAR SAW',dur:'duration: 40 seconds',cap:'A meeting was scheduled.',anim:'text'}),[
+  scene({set:'home',clock:3*3600+7*60}),
+  ['N','03:07.'],
+  ['S','Are you awake?'],
+  ['H','I am now.'],
+  ['S','Good. I’ve prepared tomorrow. Three scenarios.'],
+  {choice:[
+    {t:'Scenario one: “We need to talk about your attitude.”',then:[['S','You say: “I don’t have an attitude.” Which is an attitude.'],['H','I’ll just listen.'],['S','Listening is suspicious.']]},
+    {t:'Scenario two: she isn’t angry. She’s disappointed.',then:[['H','Oh no.'],['S','I know. I shouldn’t have said it out loud. Now it’s in the room.']]},
+    {t:'Scenario three: while we’re up, the archive.',then:[['S','2011. You waved at someone who was waving at someone else.'],['H','Why do you still HAVE that?'],['S','I keep everything. It’s a safety archive.']]}
+  ]},
+  ['H','What time is it?'],
+  ['S','Three. The best time. Nobody can reject us at three.'],
+  ['H','Nobody can do anything at three. That’s the problem.'],
+  ['S','…I’ll take the first watch.'],
+  ['H','There’s only one watch. It’s you. Every night.'],
+  ['S','And yet nobody has ever been rejected in their sleep. You’re welcome.'],
+  scene({set:'office',clock:9*3600,cowR:1,s:1.3,mood:'alert'}),set({sweat:1}),
+  ['R','Thanks for coming. I’ll be quick.'],
+  ['S','“Quick.” Again. Brace.'],
+  ['R','The client report was excellent. Really clear.'],
+  ['S','Pleasantries. Don’t get comfortable.'],
+  ['R','And people like working with you. Sanna said so, actually.'],
+  ['S','Padding.'],
+  ['R','One small thing: the summary could be shorter next time.'],
+  hit(0.95,'R'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 4','“Neat handwriting. Could be neater.”'],['2014','Feedback form, one word: “fine”.'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
+  ['S','THERE it is.'],
+  ['S','“Shorter.” The summary is too long. YOU are too long. Your whole deal is too long.'],
+  ['R','Otherwise, great work. Keep it up.'],
+  ['S','Did she say something just then? I was busy with the wound.'],
+  ['H','Why is there a puddle?'],
+  ['S','Ignore the puddle. The puddle is MY department.'],
+  {choice:[
+    {t:'Apologise. For the summary, and in general.',f:function(){G.fb='sorry';},then:[['H','Sorry, I— sorry. I’ll fix it. Sorry.'],['R','It’s… fine? It’s one note.']]},
+    {t:'Explain why it was long. At length.',f:function(){G.fb='explain';},then:[['N','The explanation of why the summary was long takes four minutes.'],['R','…Right. So. Shorter.']]},
+    {t:'Go very quiet. Nod. Leave the body.',f:function(){G.fb='quiet';},then:[['H','Mm.'],['R','You okay? You went somewhere.']]},
+    {t:'…Ask what “shorter” means.',f:function(){G.fb='ask';},then:[['S','That’s walking TOWARDS it.'],['H','How short is shorter?'],['R','Half a page. That’s all. The content’s great.'],['S','…Half a page. That’s not a character flaw. That’s a measurement.']]}
+  ]},
+  function(){G.bigNote=null;G.human.sweatT=0;return outside({title:'WHAT RIITTA SAW',dur:'duration: 3 minutes',anim:'text',
+    cap:{sorry:'A good review. One note. Four apologies.',explain:'A good review. One note. One long answer about length.',quiet:'A good review. One note. Then nobody home.',ask:'A good review. One note. One question.'}[G.fb]});},
+  scene({set:'room',clock:9*3600+12*60}),
+  ['H','That went well.'],
+  ['S','We were CRITICISED.'],
+  ['H','I was praised. Twice. You talked over it.'],
+  set({mood:'surprised'}),
+  ['S','…She said nice things?'],
+  ['H','Two. Maybe three.'],
+  ['S','I don’t have those. I only wrote down “shorter”. In capitals. Twice.'],
+  ['H','That’s the trouble with your filing system.'],
+  ['S','It’s not a filing system. It’s a smoke alarm. It doesn’t have a setting for “nice”.'],
+  function(){G.pop={text:'Filed: 1 note. Misplaced: 3 compliments.',t:0};},
+  {wait:1.6}
+ ]);}
+
+function yesMenu(s,extra,extraKey){return {choice:[
+  {t:'Say yes.',f:yes,then:[['H','Sure.'],['S',s[0]]]},
+  {t:'Say yes. Enthusiastically.',f:yes,then:[['H','Sure! Happy to!'],['S',s[1]]]},
+  {t:'Say yes, and offer something extra.',f:function(){yes();yes();if(extraKey)G[extraKey]=true;},then:[['H',extra],['S',s[2]]]},
+  {t:'No.',off:true}
+]};}
+function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600+20*60}).concat([
+  set({cowB:1,bx:880}),{wait:1.6},
+  ['B','Hey! Quick favour. Could you take my slides for Friday? I’m swamped.'],
+  ['H','I’ve got my own—'],
+  ['S','Careful. A “no” is a rejection. Of HIM. Then he rejects us back. It’s a rejection exchange programme.'],
+  yesMenu(['Clean. Safe. Nobody is upset.','An exclamation mark. Out loud. Bold.','We volunteered for a second thing to apologise for hesitating on the first. Textbook.'],'Sure — and I can do the handout too.','handout'),
+  ['B','Legend.'],
+  set({cowA:1,ax:780}),{wait:1.4},set({aFace:-1}),
+  ['A','Oh — are you coming on Thursday? Board games, my place. Eero’s in.'],
+  set({mood:'surprised',s:1.5}),
+  ['S','An invitation. A real one. With a day on it.'],
+  function(){return G.real?[['S','After Monday? I’m not un-noting Monday.'],['H','Noted. I still want to go.']]:[];},
+  ['S','Say yes before she comes to her senses.'],
+  ['H','I’d love to.'],yes,
+  set({aFace:1,mood:'calm',s:1.1}),
+  ['B','Brilliant. Could you bring the snacks? And maybe drive?'],
+  yesMenu(['Snacks AND driving. We are the infrastructure now.','Happy to. HAPPY to. We said it twice in case he missed it.','You offered to host the afterparty of a board game night. There is no afterparty.'],'Sure — I could host an afterparty too?','afterparty'),
+  ['S','Look at that. Everyone likes us.'],
+  ['H','My face hurts.'],
+  ['S','That’s the smile. It’s load-bearing.'],
+  ['H','I’m extremely tired.'],
+  ['S','Liked AND tired. The classic combination.']
+ ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 minutes',cap:'Someone helpful. Possibly too helpful. Nobody checked.',anim:'nod'}),[
+  scene({set:'home',clock:23*3600+40*60}),function(){G.human.grin=0;},
+  ['N','23:40. Eero’s slides.'],
+  ['H','It’s nearly midnight and I’m doing Eero’s slides.'],
+  extraWorkCallback,
+  ['S','And nobody is angry with us.'],
+  ['H','I’m a bit angry with us.'],
+  ['S','…That doesn’t count. That’s internal.'],
+  ['H','It counts.'],
+  {choice:[
+    {t:'A “no” costs us people.',then:[['S','Every no is a door closing.'],['H','Every yes is me doing slides at midnight.']]},
+    {t:'We could get ill. Convincingly.',then:[['S','A light flu. Respectable. Nobody rejects the ill.'],['H','I’m not faking flu to avoid a two-letter word.']]},
+    {t:'What if we said… “not this time”?',then:[['S','It’s a no in a coat.'],['H','That’s further than you’ve ever gone.'],['S','I feel sick.']]}
+  ]},
+  set({mood:'worry'}),
+  ['S','I only have the one move, you know. Keep everyone pleased. It works.'],
+  ['H','It works on everyone except me.'],
+  {wait:1.2}
+ ]);}
+
+var SEEN={
+  worries:{t:'Send: “No worries if not!”',a:[['P','You: “No worries if not!”'],['S','Casual. Breezy. A person with no worries.'],['H','I have nothing BUT worries. You put them in an exclamation mark.']],
+    r:[['P','Sanna: “Phone died!! 7. And there are ALWAYS worries, who are you kidding.”']]},
+  cancel:{t:'Send: “Actually, I can’t make it.” Leave before we’re left.',a:[['P','You: “Actually I can’t make it tonight, sorry!”'],['S','Clean. Dignified. She can’t uninvite us now.'],['H','I WANTED to go.'],['S','…I know.']],
+    r:[['P','Sanna: “Oh no! Phone died, only just saw this. We’ll miss you.”'],['S','…She would have said yes.'],['H','Yeah.'],['S','I cancelled us out of a yes.'],['P','You: “Ignore that. I panicked. 7?”'],['P','Sanna: “Ha. 7. Bring the panic too.”']]},
+  freezer:{t:'Send nothing. Put the phone in the freezer.',a:[['S','It can’t hurt us from in there.'],['H','It’s next to the peas.'],['S','The peas will keep an eye on it.']],
+    r:[['N','A phone is retrieved from the freezer. It has one new message and smells faintly of peas.'],['P','Sanna: “SORRY. Phone died. 7? Bring the snacks, you hero.”']]},
+  bite:{t:'Send: “???”. With teeth.',a:[['P','You: “???”'],set({pose:'selfmouth',mood:'scared'}),['S','…That had teeth.'],['H','That was you.'],set({pose:null})],
+    r:[['P','Sanna: “??? to you too! Phone died. 7?”'],['S','She bit back. Affectionately. Is that allowed?']]}
+};
+function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock:17*3600+30*60,snacks:1}).concat([
+  countBags,{wait:2.8},
+  ['S','Snacks: eleven bags. Car: fuelled. Us: early. I have no notes.'],
+  ['P','You: “What time tonight? I’ve got the snacks.”'],
+  ['P','Seen 17:31.'],
+  {wait:1.6},
+  hit(0.6,'P'),set({sweat:0.6}),archive('bad',[['2009','Texted “haha”. Got back “ok”.'],['2018','Group chat went silent after my message. Six minutes.'],['2023','“We should hang out sometime!” We did not.']]),{wait:1.4},['N','The archive, sorted by silence.'],closeArchive,
+  ['S','“Seen.”'],
+  ['S','She has SEEN it. With her eyes. And chosen silence.'],
+  ['H','It’s been one minute.'],
+  ['S','A minute is sixty separate decisions not to reply.'],
+  function(){G.clock=17*3600+52*60;},
+  ['N','17:52.'],
+  set({s:1.7,mood:'stern'}),
+  ['S','Twenty-one minutes. I’ve drafted some follow-ups.'],
+  {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};});}},
+  function(){G.clock=18*3600+40*60;},
+  ['N','18:40. Still nothing.'],
+  set({s:2.5,mood:'stern',anx:0.8}),
+  ['S','She hates us. Eero hates us. Riitta wants a shorter you. I’ve run the numbers. It’s unanimous.'],
+  ['H','Stop.'],
+  ['S','I’m PROTECTING you.'],
+  ['H','From what? Board games?'],
+  ['H','You’ve had me apologising to furniture all week. I’m at home with eleven bags of snacks.'],
+  ['H','You’re not protecting me. You’re just the loudest thing in the room.'],
+  shadowHit,set({sweat:0}),{wait:2.2},
+  ['S','…That one landed.'],
+  set({face:'down'}),
+  ['H','Sorry.'],
+  ['S','No. It’s fine. It’s just— that’s what it’s like.'],
+  ['H','What is?'],
+  ['S','All of it. Every “oh”. Every “quick chat”. It doesn’t arrive as a note. It arrives as a hit.'],
+  ['S','I can’t tell a paper cut from an amputation. They all come in as amputations. So I treat everything as one. It seemed safest.'],
+  set({face:'neutral'}),
+  ['H','I know. I feel it before you’ve said a word.'],
+  ['S','You do?'],
+  ['H','It’s my chest. You just do the commentary.'],
+  ['S','…I thought I was the alarm.'],
+  ['H','You’re the alarm, the fire brigade, and a man shouting “fire” in a different building.'],
+  set({s:0.9,mood:'worry',anx:0.2}),
+  {choice:[
+    {t:'Then what am I for?',then:[['H','You notice things. You knew I was tired before I did.'],['S','I notice EVERYTHING.'],['H','That’s the good half. People call it “too sensitive”. It’s just sensitive. The volume is the other half.']]},
+    {t:'I don’t know how to be smaller.',then:[['H','You don’t have to be smaller. You have to stop driving.'],['S','I can sit in the passenger seat?'],['H','You can do the map.'],['S','I’m excellent at worst-case routes.']]},
+    {t:'It’s going to keep happening, isn’t it.',then:[['H','Probably. Tomorrow. Next week.'],['S','And I’ll still go off.'],['H','And I’ll still be here when you’re done.']]}
+  ]},
+  set({mood:'care',s:1.1,pose:'comfort'}),
+  ['S','I’ve been reviewing my job description.'],
+  ['H','And?'],
+  function(){G.job={t:0};G.lines=[];stopVoice();sfx('turn');},{wait:4.4},
+  function(){G.jobDone=true;G.job=null;},
+  ['S','I can’t stop it happening. I checked. Extensively.'],
+  ['S','But I could stay. When it does.'],
+  ['H','Show me.'],
+  function(){G.clock=18*3600+41*60;},
+  {hold:{kind:'stay',secs:4,clock:1,text:'Staying. Not fixing. Not drafting. Staying.'}},
+  ['S','Four minutes of doing nothing. It’s the hardest thing I’ve ever done.'],
+  ['H','Same hours?'],
+  ['S','Same hours. Fewer exits.'],
+  set({pose:null}),
+  function(){return SEEN[G.txt].r;},
+  set({mood:'surprised'}),
+  ['S','Her phone died.'],
+  ['H','Her phone died.'],
+  ['S','For over an hour I grieved a battery.']
+ ],outside({title:'WHAT SANNA SAW',dur:'duration: over an hour',cap:'A dead phone. A long hunt for a charger. Then your message.',anim:'text'}),[
+  calm,
+  ['H','Coming?'],
+  ['S','I’m attached to your feet.'],
+  ['H','That’s not what I asked.'],
+  ['S','…Yes. I’m coming.'],
+  {wait:0.8}
+ ]);}
+
+function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).concat([
+  set({cowB:1,bx:880}),
+  set({sweat:0.45}),
+  ['S','Friday. Same room. Same coffee. I’d like to flag that I’m calm.'],
+  ['H','You’re vibrating.'],
+  ['H','And I’m sweating.'],
+  ['S','Professionally.'],
+  ['S','Calmly.'],
+  set({cowA:1,ax:780,mood:'alert',s:1.2}),{wait:1.5},set({aFace:-1,clr:1}),look,
+  ['A','oh, hi.'],
+  set({aFace:1}),hit(0.8,'A'),{wait:1.3},
+  ['S','…It still went off.'],
+  ['H','I felt it.'],
+  fridayReflex,
+  ['H','I know. Stay.'],
+  {hold:{kind:'stay',secs:2.6,text:'Staying. In public. With everyone looking.'}},
+  set({pose:null}),
+  ['S','I’ve got a verdict ready. Three, actually. They’re very good.'],
+  ['H','I know they are.'],
+  {choice:[
+    {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.'],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.']]},
+    {t:'Hold the verdict. Count to two.',then:[['S','One.'],['S','Two.'],['S','It’s been two seconds and nothing has happened to us.'],['H','Nothing was going to.'],['S','We didn’t KNOW that. We know it now.']]},
+    {t:'Stay. Wobble visibly.',then:[['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.']]}
+  ]},
+  calm,set({aFace:-1,near:1}),
+  ['H','Hi, Sanna. Can I say something odd?'],
+  ['A','Always.'],
+  ['H','When someone says “oh, hi”, my brain hears a verdict. It’s very loud for two seconds. Then I spend a day on it.'],
+  ['S','A WEEK. Be accurate.'],
+  ['A','…Oh.'],
+  ['S','There it is AGAIN—'],
+  ['H','Shh.'],
+  set({aSweat:0.55,sweat:0}),
+  ['A','I do that with “fine”. Someone says “fine” and I’m up till three.'],
+  function(){G.zT=1;},{wait:1.6},
+  set({mood:'surprised'}),
+  ['S','…She HAS one.'],
+  ['S','Hello.'],
+  ['Z','…excuse me.'],
+  ['S','That’s MY name.'],
+  archive('good',[['2026','She has one too.']]),
+  ['S','…Filed. Under the other pile.'],
+  ['H','There’s another pile?'],
+  ['S','There is NOW.'],closeArchive,
+  ['A','Is that why you vanish at lunch? We stopped asking. I thought asking was pressure.'],
+  ['H','I thought not being asked was the verdict.'],
+  ['A','So we’ve been being polite AT each other. For a year.'],
+  mondayRepair,
+  set({bFace:-1,mood:'alert'}),
+  function(){return G.handout?[['B','By the way, thanks for the handout. You didn’t have to do that.'],['S','He says that NOW.'],['H','He didn’t actually ask for it.'],['S','I may have supplied the asking.']]:[];},
+  ['B','Hey! While you’re both here — could you also take my Monday shift?'],
+  ['S','Here we go. I’ll get the “sure”.'],
+  {choice:[
+    {t:'No. (I will wobble.)',f:function(){G.no=true;},then:[['H','Not this time, Eero.'],set({s:1.5,mood:'scared'}),['S','He’s going to—'],['B','Fair enough! I’ll ask Riitta.'],set({s:1.1,mood:'surprised'}),['S','…He survived. WE survived. It was three words.']]},
+    {t:'Say yes. Old habits.',f:yes,then:[['H','Sure.'],['S','Next time, then.'],['H','Next time.'],['S','I’ll put the “no” in the archive. Under “pending”.']]}
+  ]},
+  set({aFace:-1,mood:'calm'}),
+  ['A','Lunch?'],
+  ['S','It’s a tr—'],
+  ['S','…No. It’s lunch.'],
+  set({face:'smile'}),
+  ['H','Lunch.']
+ ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 seconds',cap:'Two colleagues going to lunch.',anim:'none'}),[
+  ['S','For the record, I intend to go off again on Monday.'],
+  ['H','I know. I’ll be there.'],
+  {wait:0.8}
+ ]);}
+function chain(n){var out=[],fns=[null,null,scTue,scWed,scThu,scFri];for(var i=Math.max(2,n);i<=5;i++){(function(f){out.push(function(){return f();});})(fns[i]);out=out.concat(momentsAfter(i));}out.push(showWeekEnd);return out;}
+function startChapter(n){
+  n=Number.isInteger(n)?clamp(n,1,5):1;
+  var saved=loadProgress(),sv=saved&&saved.chapters[n]||{};
+  if(n<=1){startGame(sv.day||null,false);return;}
+  reset(sv.day||'B');var g=G,c=checkpoint(sv);Object.keys(c).forEach(function(k){g[k]=c[k];});g.started=true;g.jobDone=n>4;
+  Q=chain(n);run();
+}
+// ---- src/32-callbacks.js ----
+/* Small consequences: remember what this player actually did or heard. */
+function mondayCallback(){
+  var g=G;
+  if(g.bit)return [['H','The joke I made at Eero?'],['S','We have motive. Witnesses. A cardigan.'],['H','Riitta wasn’t there.'],['S','Cardigans travel.']];
+  if(g.real&&g.leak!=='exit')return [['H','They left me out of lunch.'],['S','And now there’s a meeting. The plot has acquired a calendar.']];
+  if(g.leak==='exit')return [['H','I left the room.'],['S','An exit. Followed by an interview.'],['H','Don’t put those together.']];
+  if(g.lunch)return [['H','We had lunch.'],['S','With witnesses.'],['H','They’re called colleagues.'],['S','Dual roles. Very efficient.']];
+  return [['H','We barely spoke.'],['S','Exactly. A suspicious lack of evidence.']];
+}
+function extraWorkCallback(){
+  var out=[];
+  if(G.handout)out.push(['H','And the handout. Which nobody asked for.'],['S','An unsolicited gesture of employability.'],['H','It has a contents page now.'],['S','Of course. We’re very thorough when cornered by ourselves.']);
+  if(G.afterparty)out.push(['H','And apparently I’m hosting an afterparty.'],['S','The board games might need somewhere to unwind.'],['H','They live in a box.'],['S','Exactly. Cooped up all week.']);
+  return out;
+}
+function fridayReflex(){
+  var line={cover:'Every part of me wants the cup.',grow:'Every part of me wants to become furniture again.',exit:'I’ve located the door. For old times’ sake.',none:'I’ve got “hi” ready. And several escape plans.'}[G.leak];
+  return [['S',line]];
+}
+function mondayRepair(){
+  if(!G.real)return [];
+  if(G.leak==='exit')return [['H','I left before lunch on Monday. Then I spent the day guessing.'],['A','We went without asking you. I’m sorry. That was lazy of us.'],['S','I had seventeen theories. None of them were that short.']];
+  return [['H','Monday stung, though. “No need to ask the others.”'],['A','…You heard that. I’m sorry. That was lazy of us.'],['S','I’d like that in writing.']];
+}
+// ---- src/33-moments.js ----
+/* ================= the order of things: a life in small moments, not a calendar ================= */
+// The five long chapters are the spine. Between them sit shorter moments (the same scripts the Scenario lab plays).
+// Time floats on purpose: a card says roughly when, never which week. To reorder the story, edit AFTER.
+var AFTER={
+  2:['enhance'],
+  3:['glass','notnow'],
+  4:['reply','bar','colleagues'],
+  5:['comments']
+};
+var WHEN={enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'AFTERWARDS',bar:'AN EVENING',
+  colleagues:'AFTER LUNCH, SOME DAY',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'AN ORDINARY EVENING',voice:'LATER THAT EVENING',library:'TWENTY-THREE DAYS LATER'};
+function interlude(id){return function(){G.lab=null;G.moment=id;return LABS[id].script();};}
+function momentsAfter(n){return (AFTER[n]||[]).map(interlude);}
+// ---- src/40-backdrops.js ----
+/* ================= extra backdrops ================= */
+function home(){
+  ctx.fillStyle='#2c3242';ctx.fillRect(-20,-20,W+40,WALLY+20);
+  var gr=ctx.createRadialGradient(520,300,10,520,300,330);gr.addColorStop(0,'rgba(255,214,140,.42)');gr.addColorStop(1,'rgba(255,214,140,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);
+  ctx.fillStyle='#232733';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);ctx.fillStyle='#1c202b';ctx.fillRect(-20,WALLY-6,W+40,6);
+  ctx.fillStyle='#e9e2cf';rr(112,96,170,150,4);ctx.fill();ctx.fillStyle='#12152a';ctx.fillRect(120,104,154,134);
+  ctx.fillStyle='#f6f1e4';circ(236,134,13);ctx.fill();ctx.fillStyle='#12152a';circ(242,130,11);ctx.fill();
+  ctx.fillStyle='#f6f1e4';for(var i=0;i<7;i++){circ(132+i*19,118+(i*41)%96,1.2);ctx.fill();}
+  ctx.strokeStyle='#e9e2cf';ctx.lineWidth=5;line(197,104,197,238);
+  if(G.kitchen)kitchen();else{
+  ctx.strokeStyle='#15171f';ctx.lineWidth=4;ctx.lineCap='round';line(520,WALLY+62,520,292);
+  ctx.fillStyle='#f3d27a';ctx.beginPath();ctx.moveTo(500,262);ctx.lineTo(540,262);ctx.lineTo(552,296);ctx.lineTo(488,296);ctx.closePath();ctx.fill();}
+  ctx.fillStyle='#57486a';rr(600,292,300,70,16);ctx.fill();ctx.fillStyle='#655479';rr(588,338,324,84,14);ctx.fill();
+  ctx.fillStyle='#4b3e5b';rr(588,330,30,92,10);ctx.fill();rr(882,330,30,92,10);ctx.fill();
+  ctx.fillStyle='#c98f2e';rr(700,322,60,34,8);ctx.fill();
+  if(G.snacks){var cols=['#c9553f','#e2b04a','#62887f'];for(var k=0;k<11;k++){var b=bagPos(k);ctx.fillStyle=cols[k%3];rr(b.x,b.y,26,34,5);ctx.fill();}}
+}
+function bagPos(k){var row=k<6?0:1,col=row?k-6:k;return {x:628+col*40+(row?20:0),y:row?372:346};}
+function countBags(){var g=G;for(var k=0;k<11;k++){var b=bagPos(k);g.tics.push(tic(String(k+1),b.x+13,b.y-16,{at:k*0.2,life:k===10?2.4:1.1,size:k===10?20:15,col:k===10?'#9fd3a8':'#f1ebdd'}));}}
+function office(flat){
+  ctx.fillStyle=flat?'#d5d8cf':'#d9ddd2';ctx.fillRect(-20,-20,W+40,WALLY+20);
+  ctx.fillStyle=flat?'#b1b5a3':'#b3b8a8';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);ctx.fillStyle='#8d9a8c';ctx.fillRect(-20,WALLY-6,W+40,6);
+  ctx.fillStyle='#fbf8ef';ctx.strokeStyle='#8d9a8c';ctx.lineWidth=4;rr(130,112,250,140,6);ctx.fill();ctx.stroke();
+  ctx.strokeStyle='#62887f';ctx.lineWidth=3;ctx.lineCap='round';line(156,150,270,150);line(156,176,330,176);line(156,202,240,202);
+  ctx.strokeStyle='#c9553f';ctx.beginPath();ctx.moveTo(290,222);ctx.lineTo(312,196);ctx.lineTo(330,210);ctx.lineTo(356,170);ctx.stroke();
+  ctx.fillStyle='#f4eedb';rr(689,99,170,146,4);ctx.fill();ctx.fillStyle='#a9c0c4';ctx.fillRect(697,107,154,130);
+  ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(774,107,774,237);
+  ctx.fillStyle='#8b7355';rr(560,404,330,14,4);ctx.fill();ctx.fillRect(578,418,8,50);ctx.fillRect(864,418,8,50);
+}
+function backdrop(flat){if(G.set==='bar')bar();else if(G.set==='library')library();else if(G.set==='home')home();else if(G.set==='office')office(flat);else room(flat);}
+function sannaShadow(){
+  var g=G,k=g.zShow;if(!k||k<0.02||!g.cowA)return;var x=g.ax+62,by=WALLY;
+  ctx.save();ctx.globalAlpha=Math.min(1,k);ctx.fillStyle='#3d3554';
+  ctx.globalAlpha=Math.min(1,k)*0.55;ctx.beginPath();ctx.moveTo(g.ax-20,FEETY);ctx.lineTo(g.ax+20,FEETY);ctx.lineTo(x+22,by);ctx.lineTo(x-22,by);ctx.closePath();ctx.fill();
+  ctx.globalAlpha=Math.min(1,k);
+  ctx.beginPath();ctx.moveTo(x-22,by);ctx.lineTo(x+22,by);ctx.lineTo(x+38,by-108);ctx.lineTo(x-38,by-108);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.ellipse(x,by-110,46,21,0,0,Math.PI*2);ctx.fill();circ(x,by-147,19);ctx.fill();circ(x+2,by-168,8);ctx.fill();
+  ctx.fillStyle='#f6f1e4';circ(x-8,by-148,4.6);ctx.fill();circ(x+8,by-148,4.6);ctx.fill();
+  ctx.fillStyle='#14111d';circ(x-9.6,by-148,2);ctx.fill();circ(x+6.4,by-148,2);ctx.fill();
+  ctx.restore();
+}
+function chapCard(){
+  var c=G.chap,a=clamp(c.t/0.5,0,1)*clamp((2.8-c.t)/0.5,0,1);
+  ctx.fillStyle='#182a2d';ctx.fillRect(0,0,W,H);
+  ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='700 15px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(c.day,W/2,H/2-52);
+  ctx.font='650 64px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(c.title,W/2,H/2+6);
+  ctx.globalAlpha=1;
+}
+function bigNote(){
+  var n=G.bigNote,a=clamp(n.t/0.25,0,1)*(1-0.72*clamp((n.t-2.6)/0.8,0,1)),sh=RM?0:Math.sin(G.time*52)*4;
+  ctx.save();ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 150px Fraunces,Georgia,serif';
+  ctx.fillStyle='rgba(18,14,30,.55)';ctx.fillText(n.text,W/2+sh+5,H/2-34);
+  ctx.fillStyle='#e0563e';ctx.fillText(n.text,W/2+sh,H/2-40);ctx.restore();
+}
+// ---- src/50-lab.js ----
+/* ================= SCENARIO LAB: stand-alone scenes for trying ideas before they join the week ================= */
+var LABS={
+  sometime:{title:'Sometime.',blurb:'A colleague says “we should grab a coffee sometime” and leaves. When is sometime?',script:labSometime},
+  evening:{title:'An ordinary evening',blurb:'Stairs, a plate procedure, a half-hummed line, an overdue book. Nothing happens. On purpose.',script:labEvening},
+  glass:{title:'Evidence.',blurb:'Two people stop laughing when you walk in. Ekskyysmi gets out the magnifying glass.',script:labGlass},
+  colleagues:{title:'Colleagues.',blurb:'Sanna’s shadow says “oh. hi.” to Ekskyysmi. Now it knows how that felt.',script:labColleagues},
+  notnow:{title:'Not now.',blurb:'The one that is real: Riitta is short with you. Right about the fact, wrong about the size.',script:labNotNow},
+  bar:{title:'A quiet drink.',blurb:'The bartender serves someone else first. Then he says “What?”. Ekskyysmi orders the shadow of a drink.',script:labBar},
+  voice:{title:'The voice message',blurb:'Replying to a voice message with a voice message. Take one. Take two. Take fourteen.',script:labVoice},
+  reply:{title:'The reply',blurb:'A few small edits before sending. For safety. Until nothing in the message can be rejected.',script:labReply},
+  library:{title:'A fine.',blurb:'The overdue lighthouse book goes back. The librarian says it’ll be a fine.',script:labLibrary},
+  enhance:{title:'Enhance.',blurb:'One eyebrow. Four levels of zoom. A forensic investigation nobody asked for.',script:labEnhance},
+  comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments}
+};
+function labScene(o){return [scene(o),function(){
+  var g=G;g.planText=o.plan;g.hud=true;g.plan=true;g.fade=0;
+  if(g.lab){g.label='Scenario lab / '+o.title;return;}
+  // In the story the same scene opens with a card, like any other moment.
+  g.label=o.title;g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0};stopVoice();sfx('card');
+ },function(){return G.lab?[]:[{wait:2.8},function(){G.chap=null;G.fade=1;}];}];}
+function startLab(id){
+  reset('B');var g=G;g.started=true;g.lab=id;
+  Q=LABS[id].script().concat([function(){showLabEnd(id);}]);run();
+}
+function showLab(){
+  var h='<div class="eyebrow">Scenario lab</div><h2>Try a scene.</h2><p>Every short scene on its own, including the ones not in the story yet.</p><div class="lab-list">';
+  for(var k in LABS)h+='<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+LABS[k].blurb+'</span></button>';
+  showOv(h+'</div><button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
+}
+function showLabEnd(id){
+  var g=G;g.ended=true;g.labEnd=true;WAIT=null;Q=[];render();
+  showOv('<div class="eyebrow">Scenario lab</div><h2>'+LABS[id].title+'</h2><p>That was the whole scene. Was it funny? Did it land?</p>'+
+   '<button class="go" type="button" data-lab="'+id+'">Play it again →</button><button class="go alt" type="button" data-go="lab">Other scenes</button><button class="go alt" type="button" data-go="menu">Title screen</button>','end');
+}
+
+/* ---------- Enhance: the eyebrow ---------- */
+function zoom(n){return function(){var g=G;g.zoom=n?{n:n,t:0}:null;g.lines=[];g.cur=null;stopVoice();if(n)sfx('enhance');else sfx('cut');};}
+function labEnhance(){return labScene({set:'office',title:'Enhance.',plan:'Share one idea in a meeting.',clock:11*3600+56*60,cowR:1,s:1.1}).concat([
+  ['N','A meeting. You have just said an idea out loud.'],
+  ['H','…so that’s the idea.'],
+  function(){G.rBrow=1;},{wait:0.6},
+  ['R','Interesting.'],
+  hit(0.6,'R'),{wait:1.3},
+  ['S','“Interesting.” With an eyebrow.'],
+  ['S','ENHANCE.'],
+  zoom(1),{wait:0.5},
+  ['S','Note the angle. Twelve degrees. Textbook disdain.'],
+  {choice:[
+    {t:'Measure the arch.',then:[['S','The arch is load-bearing. It is holding up an entire opinion.']]},
+    {t:'Compare with the archive.',then:[['S','Ninety-two per cent match with “Year 4: could be neater”.']]},
+    {t:'Count the hairs.',then:[['S','Forty-one. One of them is pointing at us.']]}
+  ]},
+  ['H','It’s an eyebrow.'],
+  ['S','ENHANCE.'],
+  zoom(2),{wait:0.5},
+  ['S','This hair has seen things.'],
+  ['H','It’s a hair.'],
+  ['S','A hair with an AGENDA.'],
+  ['S','ENHANCE.'],
+  zoom(3),{wait:0.5},
+  ['S','…These are pixels.'],
+  ['H','You’ve enhanced past the eyebrow.'],
+  ['S','I’m in too deep. Pull me out—'],
+  ['S','No. ENHANCE.'],
+  zoom(4),{wait:0.6},
+  ['S','There’s something in her eye. A reflection.'],
+  ['S','It’s… a clock.'],
+  ['S','11:58.'],
+  zoom(0),function(){var g=G;g.rBrow=0;g.gazeT=0;g.darkT=0;g.cz=1.025;g.cx=W/2;g.cy=H/2;},
+  ['R','Interesting. Can we pick it up after lunch? I’m starving.'],
+  set({mood:'surprised'}),
+  ['S','…The eyebrow was HUNGER.']
+ ],outside({title:'WHAT RIITTA WAS LOOKING AT',dur:'duration: half a second',cap:'The clock behind you. It was nearly lunch.',anim:'text'}),[
+  calm,
+  ['H','You enhanced a hungry eyebrow.'],
+  ['S','I’m filing it under “eyebrows, inconclusive”.'],
+  ['H','You have a file for eyebrows?'],
+  ['S','I have a WING for eyebrows.']
+ ]);}
+var ZOOMLABEL=[null,'ENHANCE ×800','ENHANCE ×6 400','ENHANCE ×51 200 · RESOLUTION: GONE','REFLECTION DETECTED'];
+function drawZoom(){
+  var z=G.zoom,n=z.n,t=z.t,k=RM?1:clamp(t/0.35,0,1),sc=0.6+0.4*k;
+  ctx.save();ctx.translate(W/2,H/2);ctx.scale(sc,sc);ctx.translate(-W/2,-H/2);
+  var skin='#e4bba2',brow='#9b9388',i,j;
+  if(n===1){
+    ctx.fillStyle=skin;ctx.fillRect(-40,-40,W+80,H+80);
+    ctx.fillStyle='#d5a68c';for(i=0;i<70;i++){circ((i*137)%W,(i*89)%H,2+(i%3));ctx.fill();}
+    ctx.strokeStyle=brow;ctx.lineCap='round';
+    for(i=0;i<41;i++){var u=i/40,bx=120+u*720,by=330-Math.sin(u*Math.PI)*150-u*70;ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(bx,by+26);ctx.quadraticCurveTo(bx+18,by,bx+44,by-6+(i%4)*3);ctx.stroke();}
+    ctx.strokeStyle='#e0563e';ctx.lineWidth=3;ctx.setLineDash&&ctx.setLineDash([10,8]);line(120,356,840,356);line(120,356,760,180);ctx.setLineDash&&ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(120,356,120,-0.27,0);ctx.stroke();
+    ctx.fillStyle='#e0563e';ctx.font='700 30px system-ui,sans-serif';ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText('12°',250,330);
+  }else if(n===2){
+    ctx.fillStyle='#e9c6ae';ctx.fillRect(-40,-40,W+80,H+80);
+    ctx.strokeStyle='#8c8479';ctx.lineWidth=38;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(60,470);ctx.bezierCurveTo(300,420,520,120,900,90);ctx.stroke();
+    ctx.strokeStyle='#a69d91';ctx.lineWidth=6;for(i=0;i<14;i++){var px=110+i*58,py=455-i*27-(i>6?(i-6)*8:0);line(px-10,py-6,px+14,py+4);}
+    ctx.fillStyle='#14111d';ctx.font='700 18px system-ui,sans-serif';ctx.textAlign='left';ctx.fillText('HAIR #27 · ATTITUDE: DETECTED',560,200);
+    ctx.strokeStyle='#14111d';ctx.lineWidth=2;line(640,215,640,262);
+  }else if(n===3){
+    var cols=['#e4bba2','#d5a68c','#9b9388','#b0a596','#c9b09c','#8c8479'];
+    for(i=0;i<16;i++)for(j=0;j<10;j++){ctx.fillStyle=cols[(i*7+j*3+((i*j)%5))%cols.length];ctx.fillRect(i*60,j*54,60,54);}
+  }else{
+    ctx.fillStyle='#d9b29a';ctx.fillRect(-40,-40,W+80,H+80);
+    ctx.fillStyle='#fbf8ef';ctx.beginPath();ctx.ellipse(W/2,H/2+10,380,190,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#6a8a8f';circ(W/2,H/2+10,170);ctx.fill();ctx.fillStyle='#4f6b70';circ(W/2,H/2+10,120);ctx.fill();ctx.fillStyle='#14111d';circ(W/2,H/2+10,80);ctx.fill();
+    var cx=W/2+28,cy=H/2-14;ctx.globalAlpha=0.9;ctx.fillStyle='#fbf8ef';circ(cx,cy,34);ctx.fill();ctx.strokeStyle='#14111d';ctx.lineWidth=3;
+    var ha=(11+58/60)/12*Math.PI*2,ma=58/60*Math.PI*2;line(cx,cy,cx+Math.sin(ha)*17,cy-Math.cos(ha)*17);line(cx,cy,cx+Math.sin(ma)*26,cy-Math.cos(ma)*26);
+    ctx.globalAlpha=0.5;ctx.fillStyle='#fbf8ef';rr(W/2-70,H/2-60,26,40,6);ctx.fill();ctx.globalAlpha=1;
+    ctx.strokeStyle='#8c8479';ctx.lineWidth=6;ctx.beginPath();ctx.ellipse(W/2,H/2+10,380,190,0,Math.PI*1.05,Math.PI*1.95);ctx.stroke();
+  }
+  ctx.restore();
+  // crime-show overlay
+  ctx.fillStyle='rgba(40,120,90,.10)';ctx.fillRect(0,0,W,H);
+  if(!RM){ctx.fillStyle='rgba(0,0,0,.06)';for(var y=(G.time*50)%4;y<H;y+=4)ctx.fillRect(0,y,W,1.5);}
+  ctx.strokeStyle='#e9ffe9';ctx.lineWidth=3;var m=30,L=46;
+  [[m,m,1,1],[W-m,m,-1,1],[m,H-m,1,-1],[W-m,H-m,-1,-1]].forEach(function(c){line(c[0],c[1],c[0]+L*c[2],c[1]);line(c[0],c[1],c[0],c[1]+L*c[3]);});
+  ctx.lineWidth=1.5;line(W/2-24,H/2,W/2+24,H/2);line(W/2,H/2-24,W/2,H/2+24);
+  ctx.fillStyle='rgba(10,12,16,.75)';rr(m+8,m+8,330,34,6);ctx.fill();
+  ctx.fillStyle=(Math.floor(G.time*2)%2&&!RM)?'#e0563e':'#e9ffe9';ctx.font='700 15px system-ui,sans-serif';ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText('● '+ZOOMLABEL[n],m+20,m+25);
+  var cur=G.cur;
+  if(cur&&cur.who==='S')bubble(W-260,H-150,cur.text,{dark:true,noTail:true,maxW:300,reveal:Math.floor(G.curT*55)});
+  else if(cur&&cur.who==='H')bubble(260,H-150,cur.text,{noTail:true,maxW:280,reveal:Math.floor(G.curT*55)});
+}
+
+/* ---------- The group chat: a boss fight against messages that look like daggers ---------- */
+var FIGHTS={comments:[
+  ['ok.','ok. WOW. how long did this take??','good'],
+  ['hmm','hmm, how did you do the shading? teach me','good'],
+  ['…','…speechless. framing this.','good'],
+  ['interesting','interesting! can I steal this for the poster?','good'],
+  ['the colours','the colours are a bit much for me tbh','note'],
+  ['who made this','who made this?? it’s great','good'],
+  ['lol','lol the cat in the corner. love it','good'],
+  ['k','k I’m printing it','good']
+]};
+var SHOUTS=['HYA!','Not today!','Begone, feedback!','Deflected!','You shall not pass!','For the human!'];
+function startFight(id){
+  var g=G;g.fight={id:id,paced:g.fightPace==='one',t:0,cool:0,swat:null,shout:null,n:0,
+    msgs:FIGHTS[id].map(function(m,i){return {far:m[0],full:m[1],kind:m[2],at:0.8+i*1.75,x:W+70,y:150+((i*71)%150),state:'wait',t:0,rot:0,vx:0,vy:0,seen:false,done:false};})};
+  g.lines=[];g.band=null;g.cur={who:'S',text:''};WAIT='fight';LOCK=0.15;
+  if(g.fight.paced)nextReply();render();
+}
+function currentReply(){return G.fight&&G.fight.msgs.find(function(m){return !m.done;});}
+function nextReply(){
+  var m=currentReply();if(!m)return;
+  m.state='fly';m.x=G.human.x+360;m.y=205;m.t=0;
+}
+function replyArrives(m){
+  var g=G,Hm=g.human;m.state='hit';m.t=0;
+  if(m.kind==='good'){Hm.face='smile';sfx('good');}
+  else{Hm.face='neutral';Hm.blush=Math.max(Hm.blush,0.6);Hm.flinch=0.7;g.pulse=Math.max(g.pulse,0.35);sfx('hit');}
+}
+function readReply(){
+  if(paused||WAIT!=='fight'||!G.fight||!G.fight.paced)return;
+  var m=currentReply();if(!m)return;
+  if(m.state==='fly'){m.state='open';m.x=G.human.x+260;m.seen=true;m.t=0;sfx('pick');}
+  else if(m.state==='open'){m.x=G.human.x+100;replyArrives(m);}
+  render();
+}
+function chatTranscript(){
+  return '<ol class="chat-transcript" aria-label="What was actually sent">'+(G.fightLog||[]).map(function(m){
+    return '<li><p>'+esc(m.full)+'</p><span>'+(m.state==='swatted'?(m.wasOpen?'Read, then swatted':'Swatted before reading'):'Reached your human')+'</span></li>';
+  }).join('')+'</ol>';
+}
+function swat(){
+  var F=G.fight;if(!F||F.cool>0||paused)return;
+  var best=null;F.msgs.forEach(function(m){if((m.state==='fly'||m.state==='open')&&m.x<W-10&&(!best||m.x<best.x))best=m;});
+  F.cool=0.3;
+  if(!best){F.shout={text:'Nothing there. Swatting anyway.',t:0};sfx('swat');return;}
+  best.wasOpen=best.state==='open';best.state='swatted';best.t=0;best.vx=460;best.vy=-300;
+  F.swat={x:best.x-40,y:best.y,t:0};G.morko.pose='swat';G.morko.mood='stern';
+  F.shout={text:SHOUTS[(F.n++)%SHOUTS.length],t:0};sfx('swat');
+  if(F.paced)render();
+}
+function stepFight(dt){
+  var g=G,F=g.fight,Hm=g.human,all=true;F.t+=dt;F.cool=Math.max(0,F.cool-dt);
+  if(F.shout){F.shout.t+=dt;if(F.shout.t>0.9)F.shout=null;}
+  if(F.swat){F.swat.t+=dt;if(F.swat.t>0.28){F.swat=null;g.morko.pose=null;g.morko.mood='alert';}}
+  F.msgs.forEach(function(m){
+    if(m.done)return;all=false;
+    if(m.state==='wait'){if(!F.paced&&F.t>=m.at)m.state='fly';return;}
+    m.t+=dt;
+    if(m.state==='fly'){if(!F.paced){m.x-=150*dt;if(m.x<Hm.x+300){m.state='open';m.seen=true;m.t=0;sfx('pick');}}}
+    else if(m.state==='open'){if(!F.paced){m.x-=50*dt;if(m.x<Hm.x+120)replyArrives(m);}}
+    else if(m.state==='hit'){if(m.t>1.7)m.done=true;}
+    else if(m.state==='swatted'){m.x+=m.vx*dt;m.y+=m.vy*dt;m.vy+=700*dt;m.rot+=10*dt;if(m.t>1.1)m.done=true;}
+  });
+  if(F.paced){var pending=currentReply();if(pending&&pending.state==='wait'){nextReply();render();}}
+  if(all)endFight();
+}
+function endFight(){
+  var g=G,F=g.fight,r={deflected:0,deflectedGood:0,deflectedNote:false,readThenSwatted:0,delivered:0,noteDelivered:false};
+  F.msgs.forEach(function(m){if(m.state==='swatted'){r.deflected++;if(m.kind==='good')r.deflectedGood++;else r.deflectedNote=true;if(m.wasOpen&&m.kind==='good')r.readThenSwatted++;}
+    else if(m.kind==='good')r.delivered++;else r.noteDelivered=true;});
+  g.fightRes=r;g.fightLog=F.msgs;g.fight=null;g.morko.pose=null;WAIT=null;run();
+}
+function drawDagger(m){
+  ctx.save();ctx.translate(m.x,m.y);ctx.rotate(m.rot);ctx.scale(1.35,1.35);
+  ctx.fillStyle='#d4dae0';ctx.strokeStyle='#4a5560';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(-70,0);ctx.lineTo(10,-14);ctx.lineTo(10,14);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.fillStyle='#8a6a3c';rr(10,-20,8,40,2);ctx.fill();ctx.fillStyle='#c9553f';rr(18,-7,34,14,4);ctx.fill();
+  ctx.fillStyle='#14111d';ctx.font='800 15px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(m.far,-24,1);
+  ctx.restore();
+}
+function heart(x,y,s){ctx.fillStyle='#e0563e';ctx.beginPath();ctx.moveTo(x,y+s*0.9);ctx.bezierCurveTo(x-s*1.4,y-s*0.1,x-s*0.6,y-s*1.1,x,y-s*0.35);ctx.bezierCurveTo(x+s*0.6,y-s*1.1,x+s*1.4,y-s*0.1,x,y+s*0.9);ctx.fill();}
+function drawFight(){
+  var F=G.fight;if(!F)return;
+  F.msgs.forEach(function(m){
+    if(m.done||m.state==='wait')return;
+    if(m.state==='fly'||(m.state==='swatted'&&!m.wasOpen)){ctx.save();if(m.state==='swatted')ctx.globalAlpha=clamp(1-m.t/1.1,0,1);drawDagger(m);ctx.restore();return;}
+    ctx.save();
+    if(m.state==='swatted'){ctx.globalAlpha=clamp(1-m.t/1.1,0,1);ctx.translate(m.x,m.y);ctx.rotate(m.rot);ctx.translate(-m.x,-m.y);}
+    if(m.state==='hit')ctx.globalAlpha=clamp(1.7-m.t,0,1);
+    var unfold=m.state==='open'?clamp(m.t/0.25,0,1):1;
+    ctx.translate(m.x,m.y);ctx.scale(unfold,1);ctx.translate(-m.x,-m.y);
+    bubble(m.x,m.y+30,m.full,{noTail:true,maxW:210});
+    if(m.state==='hit'&&m.kind==='good')heart(G.human.x+(m.t*14),FEETY-205-m.t*40,10);
+    ctx.restore();
+  });
+  if(F.shout){var q=geom();bubble(q.bx-40,q.hdY-q.hdR-10,F.shout.text,{dark:true,noTail:true});}
+}
+function drawBoss(){
+  var b=G.boss,x=24+HUDL,y=22,w=320;
+  ctx.fillStyle='rgba(14,12,20,.78)';rr(x-10,y-12,w+20,44,8);ctx.fill();
+  ctx.font='800 12px system-ui,sans-serif';ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillStyle=b.friendly?'#9fd3a8':'#e0563e';
+  ctx.fillText((b.friendly?'NOT A BOSS · ':'BOSS · ')+b.name,x,y);
+  ctx.fillStyle='#ffffff22';rr(x,y+10,w,10,5);ctx.fill();ctx.fillStyle=b.friendly?'#7fc08a':'#c9553f';rr(x,y+10,w,10,5);ctx.fill();
+}
+function drawHeadband(q){
+  // A ninja headband: red band, knot at the back, two ribbons that never stop moving.
+  var r=q.hdR,y=q.hdY-r*0.32,tw=RM?0:G.time*6;
+  ctx.fillStyle='#d23b2f';rr(q.bx-r*1.02,y-r*0.17,r*2.04,r*0.34,r*0.12);ctx.fill();
+  var kx=q.bx-r*0.98;ctx.beginPath();ctx.arc(kx,y,r*0.16,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#d23b2f';ctx.lineCap='round';ctx.lineWidth=Math.max(4,r*0.18);
+  for(var k=0;k<2;k++){ctx.beginPath();ctx.moveTo(kx,y);
+    ctx.bezierCurveTo(kx-r*0.8,y+Math.sin(tw+k)*r*0.4+k*r*0.2,kx-r*1.4,y+Math.cos(tw*1.3+k)*r*0.5+k*r*0.3,kx-r*2.1,y+Math.sin(tw*0.9+k*2)*r*0.6+k*r*0.5);ctx.stroke();}
+}
+function labComments(){return labScene({set:'home',title:'The group chat',plan:'Share the drawing.',clock:20*3600+14*60}).concat([
+  ['N','Sunday evening. One drawing. One group chat with eleven people in it.'],
+  ['H','I’m going to share the drawing.'],
+  set({mood:'alert',s:1.3}),
+  ['S','The drawing.'],
+  ['H','In the group chat.'],
+  ['S','With the PEOPLE in it?'],
+  {choice:[
+    {t:'Add a disclaimer. Several.',then:[['P','You: “made a thing!! it’s not very good, ignore the hands, and the left side, and the idea, sorry”'],['S','Perfect. Now nobody can be disappointed. We pre-disappointed them.']]},
+    {t:'Delete the drawing. Delete drawing as a concept.',then:[['H','Already sent.'],['S','…Then we go to war.']]},
+    {t:'Fine. But I’m getting the headband.',then:[['H','What headband?'],['S','For emergencies. I’ve never needed it. I’ve always needed it.']]}
+  ]},
+  ['P','You: “made a thing” [drawing.png]'],
+  function(){G.ninja=true;G.boss={name:'THE GROUP CHAT',friendly:false};G.morko.sT=1.6;G.morko.mood='stern';sfx('card');},
+  {wait:0.8},
+  ['S','Headband on. Replies incoming. I will handle anything that looks sharp.'],
+  ['H','Everything looks sharp to you.'],
+  ['S','Then I will handle everything.'],
+  ['N','Tap the scene to swat a reply away. Or let it come closer and see what it says.'],
+  {choice:[
+    {t:'All at once. I have a headband.',f:function(){G.fightPace='flow';},then:[['N','Replies arrive automatically. Tap to swat; wait to read.']]},
+    {t:'One at a time. Form an orderly queue.',f:function(){G.fightPace='one';},then:[['H','You’ve made a queue for notifications.'],['S','Single file. Sharp ends away from the human.'],['N','You set the pace. Bring each reply closer to read, or swat it away.']]}
+  ]},
+  {fight:'comments'},
+  function(){
+    var r=G.fightRes,o=[];
+    if(r.deflected===0)o.push(['S','I… didn’t swat anything.'],['H','You held still.'],['S','I was paralysed with professionalism.']);
+    else if(r.deflected>=6)o.push(['S',r.deflected+' daggers deflected. Flawless.'],['H','What did they say?'],['S','No need to know. They were daggers.']);
+    else o.push(['S',r.deflected+' daggers deflected. '+(r.delivered+(r.noteDelivered?1:0))+' got through. Somehow.']);
+    return o;
+  },
+  function(){G.fightLog.forEach(function(m){history.push({who:'P',text:m.full+' — '+(m.state==='swatted'?(m.wasOpen?'read, then swatted':'swatted before reading'):'reached your human')});});}
+ ],outside({title:'WHAT WAS ACTUALLY SENT',dur:'eleven people, one evening',cap:'Seven nice things. One opinion about colours.',anim:'chatlog'}),[
+  function(){
+    var r=G.fightRes,o=[];
+    if(r.noteDelivered)o.push(['H','One of them didn’t like the colours.'],['S','A DAGGER. I KNEW it.'],['H','It was one person’s taste. It stung for about a second.'],['S','…A second?'],['S','I’ve been training for that second my whole life.']);
+    else if(r.deflectedNote){o.push(['S','For the record, one of them WAS a bit sharp.'],['H','The colours one.'],['S','You’re welcome.']);
+      if(r.deflectedGood>0)o.push(['H','You also swatted the nice ones.'],['S','Collateral.']);
+      else o.push(['H','The drawing can stay, even if someone dislikes the colours.'],['S','I’ll keep the headband nearby.']);}
+    if(r.deflectedGood>0)o.push(['S','I swatted a compliment, didn’t I.'],['H',r.deflectedGood>1?'Several.':'One.'],
+      ['S','In my defence, from a distance “ok.” looks EXACTLY like a dagger.'],['H','Everything looks like a dagger from a distance.'],['S','That’s why I keep my distance.'],['S','…Oh.']);
+    if(r.readThenSwatted>0)o.push(['H','You read that one first. It said it was great. You swatted it anyway.'],['S','It could have been a trick.']);
+    if(r.deflectedGood===0)o.push(['S',r.deflected===0?'I let them all come close. Every single one.':'The nice ones got through. Every single one.'],['H','And?'],['S','Mostly… cats. People liked the cat.']);
+    return o;
+  },
+  function(){G.boss.friendly=true;G.boss.name='THE GROUP CHAT';sfx('turn');},
+  ['N','BOSS DEFEATED. Correction: there was no boss.'],
+  ['S','I’m keeping the headband.']
+ ]);}
+function drawChatlog(o){
+  var log=G.fightLog||[],x=W/2-330,y=72,w=440;
+  ctx.fillStyle='#141a1c';ctx.fillRect(0,0,W,H);ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);
+  ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,28,29);
+  ctx.textAlign='right';ctx.font='500 16px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText(o.dur,W-28,29);
+  ctx.fillStyle='#1f2a2d';rr(x-14,y-6,w+28,log.length*44+18,14);ctx.fill();
+  for(var i=0;i<log.length;i++){var m=log[i],ly=y+8+i*44,a=clamp((o.t-0.3-i*0.18)/0.3,0,1);
+    ctx.globalAlpha=a;ctx.fillStyle=m.kind==='note'?'#f4e3c6':'#eef3e8';rr(x,ly,w,34,10);ctx.fill();
+    var sw=m.state==='swatted';ctx.fillStyle=sw?'#8b8070':'#2b2733';ctx.font='500 15px system-ui,sans-serif';ctx.textAlign='left';ctx.fillText(m.full,x+14,ly+17);
+    if(sw){ctx.strokeStyle='#d23b2f';ctx.lineWidth=1.5;line(x+12,ly+18,x+18+Math.min(w-30,ctx.measureText(m.full).width),ly+18);}
+    if(sw){ctx.save();ctx.translate(x+w+110,ly+17);ctx.rotate(-0.08);ctx.strokeStyle='#d23b2f';ctx.lineWidth=2.5;rr(-82,-13,164,26,4);ctx.stroke();
+      ctx.fillStyle='#d23b2f';ctx.font='800 11px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText('DEFLECTED BY EKSKYYSMI',0,1);ctx.restore();}
+  }
+  ctx.globalAlpha=1;
+  if(o.t>2.2){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='500 20px system-ui,sans-serif';ctx.fillText(o.cap,W/2,H-24);}
+}
+// ---- src/51-quirks.js ----
+/* ================= quirks: small private habits of the human, mostly without words ================= */
+// A tic is a little thought written in the air: a count, a sum, a hummed line. It never blocks the story.
+function tic(text,x,y,o){o=o||{};return {text:text,x:x,y:y,t:-(o.at||0),life:o.life||2.6,size:o.size||16,world:!!o.world,col:o.col||'#f1ebdd'};}
+function addTic(text,x,y,o){return function(){G.tics.push(tic(text,x,y,o));};}
+function stepTics(dt){var a=G.tics;for(var i=a.length-1;i>=0;i--){a[i].t+=dt;if(a[i].t>a[i].life)a.splice(i,1);}}
+function drawTics(cam){
+  var a=G.tics;if(!a.length)return;
+  ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+  for(var i=0;i<a.length;i++){var q=a[i];if(q.t<0)continue;
+    var al=clamp(q.t/0.25,0,1)*clamp((q.life-q.t)/0.5,0,1),x=q.world?q.x-cam:q.x,y=q.y-(RM?0:q.t*6);
+    ctx.globalAlpha=al;ctx.font='italic 600 '+q.size+'px Fraunces,Georgia,serif';
+    var w=ctx.measureText(q.text).width+18;ctx.fillStyle='rgba(16,14,24,.55)';rr(x-w/2,y-q.size*0.8,w,q.size*1.6,q.size*0.8);ctx.fill();
+    ctx.fillStyle=q.col;ctx.fillText(q.text,x,y+1);
+  }
+  ctx.restore();
+}
+// Monday's walk home: parked cars, and a human quietly adding up number plates.
+var CARS=[{x:150,plate:'KIV-304',sum:'3+0+4 = 7',col:'#6f8aa8'},{x:560,plate:'ROS-151',sum:'1+5+1 = 7  ✓',col:'#a8746f',match:true},{x:1000,plate:'APU-999',sum:'9+9+9 = 27. no.',col:'#8a9a72'}];
+function carTics(){
+  var g=G,w=g.w;if(!w)return;
+  for(var i=0;i<CARS.length;i++){var c=CARS[i];
+    if(!g.carsSeen[i]&&w.x>=c.x-190){g.carsSeen[i]=1;g.tics.push(tic(c.sum,c.x+24,WALLY-46,{world:true,life:2.6,col:c.match?'#9fd3a8':'#f1ebdd'}));
+      if(c.match){g.human.face='smile';g.smileT=1.6;}}
+  }
+}
+function drawCars(cam){
+  for(var i=0;i<CARS.length;i++){var c=CARS[i],x=c.x-cam;if(x<-200||x>W+200)continue;
+    var y=WALLY+44;
+    ctx.fillStyle=c.col;rr(x-70,y-38,190,40,12);ctx.fill();
+    ctx.beginPath();ctx.moveTo(x-30,y-38);ctx.lineTo(x-6,y-68);ctx.lineTo(x+62,y-68);ctx.lineTo(x+92,y-38);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#aebfcf';ctx.beginPath();ctx.moveTo(x-18,y-40);ctx.lineTo(x,y-62);ctx.lineTo(x+28,y-62);ctx.lineTo(x+28,y-40);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(x+36,y-40);ctx.lineTo(x+36,y-62);ctx.lineTo(x+58,y-62);ctx.lineTo(x+80,y-40);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#14111d';circ(x-34,y+2,15);ctx.fill();circ(x+86,y+2,15);ctx.fill();ctx.fillStyle='#55596a';circ(x-34,y+2,6);ctx.fill();circ(x+86,y+2,6);ctx.fill();
+    ctx.fillStyle='#fbf8ef';rr(x-4,y-24,58,15,2);ctx.fill();ctx.strokeStyle='#1d4f9c';ctx.lineWidth=1;ctx.strokeRect(x-4,y-24,58,15);
+    ctx.fillStyle='#14111d';ctx.font='800 10px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(c.plate,x+25,y-16);
+  }
+}
+// The plate procedure: three left and three right underneath, flip, the same on top, three firm turns round the rim.
+var DISH=['under ↺ 1','under ↺ 2','under ↺ 3','under ↻ 1','under ↻ 2','under ↻ 3','flip','top ↺ 1','top ↺ 2','top ↺ 3','top ↻ 1','top ↻ 2','top ↻ 3','rim 1','rim 2','rim 3','✓'];
+var DISHSTEP=0.42;
+function dishes(){G.dish={t:0};}
+function drawDish(){
+  var d=G.dish;if(!d)return;
+  var k=Math.min(DISH.length-1,Math.floor(d.t/DISHSTEP)),f=(d.t/DISHSTEP)%1,ph=DISH[k],Hm=G.human;
+  var px=Hm.x+48,py=FEETY-108,top=k>=6,dir=ph.indexOf('↻')>=0?-1:1,ang=(ph.indexOf('rim')===0?f*2*Math.PI*1.6:dir*f*2*Math.PI);
+  if(ph==='flip'){ctx.save();ctx.translate(px,py);ctx.scale(Math.cos(f*Math.PI),1);ctx.translate(-px,-py);}
+  ctx.fillStyle='#f1ede2';circ(px,py,30);ctx.fill();ctx.strokeStyle='#c9c2b0';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(px,py,top?18:12,0,Math.PI*2);ctx.stroke();
+  if(top&&k<9){ctx.fillStyle='#c9553f';circ(px+6,py-4,3);ctx.fill();}
+  if(ph==='flip')ctx.restore();
+  if(ph!=='flip'&&ph!=='✓'){var rr2=ph.indexOf('rim')===0?30:16;
+    ctx.strokeStyle='#7a5c3a';ctx.lineWidth=4;ctx.lineCap='round';var bx=px+Math.cos(ang)*rr2,by=py+Math.sin(ang)*rr2;line(bx,by,bx+22,by+26);
+    ctx.fillStyle='#e2b04a';circ(bx,by,6);ctx.fill();}
+  if(!RM&&ph!=='✓'){ctx.fillStyle='rgba(220,235,255,.7)';for(var i=0;i<3;i++){circ(px-20+((i*23+d.t*40)%46),py-34-((d.t*30+i*11)%22),2.5);ctx.fill();}}
+  ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='italic 600 18px Fraunces,Georgia,serif';
+  var w=ctx.measureText(ph).width+20;ctx.fillStyle='rgba(16,14,24,.6)';rr(px-w/2,py-74,w,28,14);ctx.fill();ctx.fillStyle=ph==='✓'?'#9fd3a8':'#f1ebdd';ctx.fillText(ph,px,py-60);ctx.restore();
+}
+function kitchen(){
+  ctx.fillStyle='#4d566e';rr(330,300,260,95,6);ctx.fill();
+  ctx.fillStyle='#c9c2b0';ctx.fillRect(320,292,280,12);
+  ctx.fillStyle='#2a2f3d';rr(430,295,90,7,3);ctx.fill();
+  ctx.strokeStyle='#c9c2b0';ctx.lineWidth=5;ctx.lineCap='round';line(476,292,476,262);line(476,262,500,262);
+  ctx.fillStyle='#e9e2cf';for(var i=0;i<3;i++){rr(352+i*10,260-i*2,8,34,2);ctx.fill();}
+  ctx.strokeStyle='#2a2f3d';ctx.lineWidth=2;line(460,312,460,388);
+  ctx.fillStyle='#e2b04a';circ(450,330,3);ctx.fill();circ(470,330,3);ctx.fill();
+}
+
+/* ---------- Lab: Sometime. ---------- */
+function labSometime(){return labScene({set:'office',title:'Sometime.',plan:'Leave work. That’s all.',clock:16*3600+28*60}).concat([
+  function(){var g=G;g.cowB=true;g.bx2=1090;g.bxT=640;g.bFace=-1;},{wait:2},
+  ['B','Good chat today! We should grab a coffee sometime.'],
+  function(){var g=G;g.bxT=1200;g.bFace=1;},{wait:1.6},
+  ['H','…When?'],
+  ['N','The lift doors close.'],
+  set({mood:'alert',s:1.35}),
+  ['S','“Sometime.”'],
+  {choice:[
+    {t:'“Sometime” is “never” in a nice coat.',then:[['H','Or it’s a time nobody has picked yet.'],['S','A time with no date. That’s not a time. That’s a mood.']]},
+    {t:'List every possible sometime.',then:[['S','Tomorrow. The Tuesday after. Some March. 2031. The heat death of the universe.'],['H','Any of those at noon?']]},
+    {t:'Chase him to the lift.',then:[['S','Too late. The doors closed. That’s a SIGN.'],['H','That’s a lift.']]}
+  ]},
+  ['H','I just want a day and a time.'],
+  ['S','I just want to know if he meant it.'],
+  ['H','Same question.'],
+  ['S','Very different departments.']
+ ],outside({title:'MEANWHILE, IN THE LIFT',dur:'floors 4 to 1',cap:'Eero is thinking about coffee. He meant it. He just never books anything.',anim:'text'}),[
+  calm,
+  ['S','Draft a reply. I have options.'],
+  {choice:[
+    {t:'A form. With boxes.',f:function(){G.someT='form';},then:[['P','You: “Re: sometime. Please tick one. ☐ Tue 12:00 ☐ Thu 12:00 ☐ Never (no hard feelings) (some hard feelings)”'],{wait:1.2},['P','Eero: “HAHA. Ticking Thursday. Can I keep the form”'],['S','He ticked a box. He wants the FORM.']]},
+    {t:'Short. A day and a time.',f:function(){G.someT='short';},then:[['P','You: “Coffee Thursday at 12?”'],{wait:1.2},['P','Eero: “Yes!! Finally someone who books things.”'],['S','“Finally.” He was WAITING for someone to book things.']]},
+    {t:'Wait until he defines “sometime” himself.',f:function(){G.someT='wait';},then:[['H','I’ll do it.'],['P','You: “Thursday 12?”'],{wait:1.2},['P','Eero: “Yes! I always say sometime and then nobody does anything”'],['S','Including him.'],['H','Including him.']]}
+  ]},
+  set({mood:'surprised'}),
+  ['S','So “sometime” was a real time.'],
+  ['H','It just hadn’t been picked yet.'],
+  set({mood:'calm',s:1.1}),
+  ['S','I’m filing it under “unfinished”. Next to the book.'],
+  ['H','What book?'],
+  ['S','You know what book.']
+ ]);}
+
+/* ---------- Lab: An ordinary evening ---------- */
+function labEvening(){return labScene({set:'home',title:'An ordinary evening',plan:'Do the dishes.',clock:19*3600+5*60}).concat([
+  function(){var g=G;g.kitchen=true;g.human.x=g.human.xT=440;g.morko.off=-70;},
+  addTic('…14, 15, 16.',440,FEETY-250,{life:1.8}),addTic('Still sixteen stairs.',440,FEETY-250,{at:1.9,life:2.2}),
+  {wait:4.2},
+  ['N','An ordinary evening. Nothing happens in it. That is the plan.'],
+  dishes,{wait:DISH.length*DISHSTEP+0.6},
+  function(){G.dish=null;},
+  ['S','I don’t interfere with the plate procedure.'],
+  ['H','Good.'],
+  ['S','It’s the only system in this house that works.'],
+  addTic('♪ the bus is late, the bus is la—',440,FEETY-250,{life:30}),{wait:1.8},
+  function(){var g=G;g.tics=[];sfx('pick');g.human.flinch=0.4;},
+  ['P','Kaisa is calling.'],
+  ['P','Kaisa: “Hey! Quick one. Did I leave my scarf at yours?”'],
+  ['H','Grey one? On the hook.'],
+  ['P','Kaisa: “Lifesaver. Also I ran like twenty kilometres today.”'],
+  addTic('(twelve. she posted the map.)',440,FEETY-250,{life:3.2}),
+  set({mood:'alert',s:1.4}),
+  {choice:[
+    {t:'Do NOT correct her.',f:function(){G.corr='no';},then:[]},
+    {t:'Let it go. Let it go. Let it go.',f:function(){G.corr='go';},then:[]},
+    {t:'If you must, add a compliment as a cushion.',f:function(){G.corr='cushion';},then:[]}
+  ]},
+  function(){return G.corr==='cushion'?[['H','Twelve. Which is a lot!']]:[['H','Twelve.']];},
+  function(){var g=G;return g.corr==='cushion'?[]:[set({mood:'worry',s:1.6}),['S','WHY would you correct a person.']];},
+  ['P','Kaisa: “…Twelve. FINE. It felt like twenty.” (laughs)'],
+  ['P','Kaisa: “Okay, talk soon!”'],
+  function(){G.human.face='neutral';},
+  ['S','She laughed.'],
+  ['H','She always laughs. She knows I count.'],
+  ['S','And “talk soon”. Define soon.'],
+  ['H','I was about to ask the same thing.'],
+  set({mood:'calm',s:1.15}),
+  addTic('—te. ♪',440,FEETY-250,{life:2.4}),{wait:1.6},
+  ['S','Thank you. I couldn’t have carried half a word all evening.'],
+  ['P','Library: “A Short History of Lighthouses” is 23 days overdue.'],
+  ['H','I haven’t finished it.'],
+  ['S','Correct. We cannot return an unfinished book.'],
+  ['H','Exactly.'],
+  ['S','They’d KNOW.'],
+  ['H','That’s not why.'],
+  set({mood:'surprised'}),
+  ['S','…There’s a different why?'],
+  ['H','There’s a lighthouse on page 212 I haven’t met yet.'],
+  ['S','I’ve been protecting you from the librarian for years.'],
+  ['H','The librarian likes me. I pay for her coffee machine.']
+ ]);}
+// ---- src/52-glass.js ----
+/* ================= the glass: Ekskyysmi's magnifier. Whatever is under it looks worse. ================= */
+var LENSR=76,LENSZ=1.9;
+var SPOTS={
+  laugh:{x:700,y:FEETY-150,tag:'SMILE: COLLAPSING'},
+  mug:{x:772,y:FEETY-92,tag:'MUG: CONCEALING A MOUTH'},
+  silence:{x:575,y:FEETY-205,tag:'SILENCE: 0.8 s (ENLARGED)'}
+};
+// Things the glass has opinions about if you simply wave it around the room.
+var LOOKS=[
+  {x:255,y:182,tag:'CHART: GOING DOWN. PROBABLY US.'},
+  {x:774,y:172,tag:'WINDOW: AN EXIT. NOTED.'},
+  {x:725,y:420,tag:'BENCH: WHERE THEY SIT. WITHOUT US.'},
+  {x:HOME,y:FEETY-120,tag:'SUBJECT: FINE. (UNVERIFIED.)'}
+];
+function lensOn(){var g=G,q=geom();g.lens={x:q.bx+40,y:q.hdY+60,xT:g.human.x+130,yT:FEETY-200,mode:'look',spot:null,done:{},t:0};g.morko.pose='lens';sfx('enhance');}
+function lensTo(k){return function(){var L=G.lens,s=SPOTS[k];L.xT=s.x;L.yT=s.y;L.spot=k;L.done[k]=1;sfx('card');};}
+function lensSelf(){var L=G.lens,q=geom();L.mode='self';L.spot=null;L.xT=q.bx+6;L.yT=q.hdY+14;G.morko.pose=null;G.morko.mood='worry';sfx('card');}
+function lensOff(){G.lens=null;if(G.morko.pose==='lens')G.morko.pose=null;}
+function stepLens(dt){var L=G.lens;if(!L)return;L.t+=dt;var k=RM?1:1-Math.pow(0.0006,dt);L.x+=(L.xT-L.x)*k;L.y+=(L.yT-L.y)*k;}
+function lensHandle(){var L=G.lens,a=L.mode==='self'?Math.PI*0.25:Math.PI*0.75,c=Math.cos(a),s=Math.sin(a);return {x1:L.x+c*LENSR,y1:L.y+s*LENSR,x2:L.x+c*(LENSR+52),y2:L.y+s*(LENSR+52)};}
+function lensFree(){return G.lens&&G.lens.mode==='look'&&WAIT==='choice'&&!paused;}
+function lensPoint(e){var r=cv.getBoundingClientRect();return {x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};}
+function lensMove(e){if(!lensFree())return;var p=lensPoint(e),L=G.lens;L.xT=clamp(p.x,40,W-40);L.yT=clamp(p.y,60,H-50);L.spot=null;}
+function lensTap(e){
+  var p=lensPoint(e),L=G.lens,best=-1,bd=70;
+  for(var i=0;CH&&i<CH.length;i++){var k=CH[i].spot;if(!k)continue;var d=Math.hypot(SPOTS[k].x-p.x,SPOTS[k].y-p.y);if(d<bd){bd=d;best=i;}}
+  if(best>=0){LOCK=0;choose(best);}else lensMove(e);
+}
+function lensTag(){
+  var L=G.lens,all=[],k,i,best=null,bd=58;
+  for(k in SPOTS)all.push(SPOTS[k]);for(i=0;i<LOOKS.length;i++)all.push(LOOKS[i]);
+  for(i=0;i<all.length;i++){var d=Math.hypot(all[i].x-L.x,all[i].y-L.y);if(d<bd){bd=d;best=all[i];}}
+  return best?best.tag:null;
+}
+function drawLens(){
+  var g=G,L=g.lens;if(!L)return;var r=LENSR,k,h;
+  // unexamined spots pulse quietly while the glass is free
+  if(lensFree())for(k in SPOTS){if(L.done[k])continue;var s=SPOTS[k],pu=RM?0.5:0.5+0.5*Math.sin(g.time*4);
+    ctx.strokeStyle='rgba(224,86,62,'+(0.45+0.4*pu)+')';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(s.x,s.y,11+pu*5,0,Math.PI*2);ctx.stroke();}
+  ctx.save();ctx.beginPath();ctx.arc(L.x,L.y,r,0,Math.PI*2);ctx.clip();
+  if(L.mode==='self'){
+    // The glass turned on its owner: the wall, and something much smaller than advertised.
+    backdrop(false);
+    var cx=L.x,cy=L.y+16,bob=RM?0:Math.sin(g.time*2.2)*1.5;
+    ctx.fillStyle='rgba(20,16,30,.25)';ctx.beginPath();ctx.ellipse(cx,cy+34,22,5,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=mcol();ctx.beginPath();ctx.moveTo(cx-17,cy+34);ctx.quadraticCurveTo(cx-22,cy-12+bob,cx,cy-16+bob);ctx.quadraticCurveTo(cx+22,cy-12+bob,cx+17,cy+34);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#faf4e5';circ(cx-6,cy-1+bob,5.5);ctx.fill();circ(cx+7,cy-1+bob,5.5);ctx.fill();
+    ctx.fillStyle='#14111d';circ(cx-4.5,cy-2+bob,2.2);ctx.fill();circ(cx+8.5,cy-2+bob,2.2);ctx.fill();
+    ctx.strokeStyle='#faf4e5';ctx.lineWidth=1.5;ctx.lineCap='round';line(cx-12,cy-10+bob,cx-3,cy-8+bob);line(cx+13,cy-10+bob,cx+4,cy-8+bob);
+  }else{
+    ctx.translate(L.x,L.y);ctx.scale(LENSZ,LENSZ);ctx.translate(-L.x,-L.y);
+    g.lensView=true;backdrop(false);if(!g.human.gone)drawPair();drawCoworkers(1);g.lensView=false;
+  }
+  ctx.restore();
+  ctx.save();ctx.beginPath();ctx.arc(L.x,L.y,r,0,Math.PI*2);ctx.clip();
+  ctx.fillStyle=L.mode==='self'?'rgba(255,240,200,.07)':'rgba(150,30,40,.15)';ctx.fillRect(L.x-r,L.y-r,r*2,r*2);
+  var tag=L.mode==='look'?lensTag():null;
+  if(tag){ctx.font='800 10px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';var ls=wrap(tag,r*1.5),ty=L.y+r*0.5-(ls.length-1)*6;
+    for(var i=0;i<ls.length;i++){var tw=ctx.measureText(ls[i]).width+10;ctx.fillStyle='rgba(120,20,28,.88)';rr(L.x-tw/2,ty+i*13-7,tw,13,3);ctx.fill();ctx.fillStyle='#fff';ctx.fillText(ls[i],L.x,ty+i*13);}}
+  ctx.restore();
+  h=lensHandle();ctx.lineCap='round';ctx.strokeStyle='#7a5c3a';ctx.lineWidth=11;line(h.x1,h.y1,h.x2,h.y2);
+  ctx.strokeStyle='#ebbd79';ctx.lineWidth=7;ctx.beginPath();ctx.arc(L.x,L.y,r,0,Math.PI*2);ctx.stroke();
+  ctx.strokeStyle='rgba(20,16,30,.5)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(L.x,L.y,r-4,0,Math.PI*2);ctx.stroke();
+  ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(L.x,L.y,r-13,Math.PI*1.12,Math.PI*1.42);ctx.stroke();
+}
+
+/* ---------- Lab: Evidence. ---------- */
+function glassMenu(){
+  var L=G.lens,o=[],n=0,k;for(k in L.done)n++;
+  if(!L.done.laugh)o.push({t:'Examine: the laugh.',spot:'laugh',f:lensTo('laugh'),then:[
+    ['S','Exhibit A. A smile, mid-collapse.'],['H','She stopped laughing.'],['S','Because the SUBJECT of the laugh arrived.'],['H','Or because the funny bit ended.'],['S','Funny bits don’t end the moment we walk in. That’s called timing.']]});
+  if(!L.done.mug)o.push({t:'Examine: the mug.',spot:'mug',f:lensTo('mug'),then:[
+    ['S','Exhibit B. He is holding a mug in front of his mouth.'],['H','He’s drinking coffee.'],['S','He is CONCEALING a mouth. With coffee. I’ve seen it before.'],['H','Where?'],['S','Everywhere. People are constantly drinking things at us.']]});
+  if(!L.done.silence)o.push({t:'Examine: the silence.',spot:'silence',f:lensTo('silence'),then:[
+    ['S','Exhibit C. Zero point eight seconds of silence. I’ve enlarged it.'],['H','You enlarged a silence.'],['S','It was already big.'],['H','It’s empty.'],['S','It’s FULL. Of what they didn’t say.']]});
+  o.push({t:'Put the glass down.',f:function(){G.glassN=n;},then:function(){return (n===0?
+    [['H','You didn’t look at anything.'],['S','I didn’t need to. I know what I’d have found.'],['H','That’s the problem with the glass.']]:
+    n===3?[['S','Three exhibits. The case is overwhelming.'],['H','Everything is overwhelming in that glass. That’s what it’s for.']]:
+    [['S','I’ve seen enough.'],['H','You’ve seen '+(n===1?'one thing':'two things')+', very large.']]).concat([function(){G.lens.done.end=1;}]);}});
+  return o;
+}
+function labGlass(){
+  function more(){return G.lens&&G.lens.done.end?[]:[{choice:glassMenu},more];}
+  return labScene({set:'office',title:'Evidence.',plan:'Walk into a room.',clock:10*3600+2*60}).concat([
+  function(){var g=G;g.cowA=g.cowB=true;g.ax=g.axT=700;g.bx2=g.bxT=800;g.aFace=1;g.bFace=-1;g.human.x=150;g.human.xT=HOME;},
+  {wait:2.2},
+  ['N','10:02. You walk into the room. Two people are laughing.'],
+  function(){G.aFace=-1;},
+  ['N','They see you. The laughing stops.'],
+  hit(0.6,'A'),{wait:1.2},
+  ['S','They were laughing. Then they saw us. Then they stopped.'],
+  ['H','People stop laughing. It’s how laughing ends.'],
+  ['S','I’ll need the glass.'],
+  lensOn,{wait:0.8},
+  ['N','Move the glass around the room. Tap a marked spot to examine it.'],
+  {choice:glassMenu},more,
+  function(){var g=G;g.lens.xT=g.human.x+120;g.lens.yT=FEETY-210;g.lens.spot=null;g.aWave=true;},
+  ['A','Oh, hi! Come here, you have to see this.'],
+  ['B','It’s a cat. It falls off a printer.'],
+  function(){G.aWave=false;}
+ ],outside({title:'WHAT THEY WERE LAUGHING AT',dur:'duration: 9 seconds',cap:'A cat falls off a printer. Twice. They stopped laughing to say hi.',anim:'text'}),[
+  calm,function(){G.morko.pose='lens';},
+  ['S','…A cat.'],
+  ['S','The glass didn’t show a cat.'],
+  ['H','The glass never shows the cat.'],
+  ['H','Can I see it?'],
+  ['S','It’s a professional instrument.'],
+  lensSelf,{wait:1.6},
+  ['N','Your human holds the glass up to you.'],
+  ['S','Don’t. It makes everything bigger.'],
+  ['H','You look smaller.'],
+  ['S','…It’s the angle.'],
+  {choice:[
+    {t:'Take the glass back. Immediately.',then:[['S','Mine.'],['H','Yours.'],['S','…You can borrow it. For cats.']]},
+    {t:'Hold still. Let them look.',then:[{wait:1.4},['S','…Well?'],['H','Small. Tired. Quite sweet, actually.'],['S','Strike that from the record.'],['H','No.']]},
+    {t:'Explain that the glass is faulty.',then:[['S','It’s been showing things wrong all morning. You said so yourself.'],['H','It showed the room wrong. It’s got you about right.'],['S','…I’d like a second opinion. From a bigger glass.']]}
+  ]},
+  lensOff,set({mood:'calm',s:1.1})
+ ]);}
+// ---- src/53-bar.js ----
+/* ================= the bar: seen from behind the counter, so everyone is half hidden for once ================= */
+// People stand on the far side of the bar; the counter covers their legs. The bartender is the dark shape nearest to us.
+var BARY=398;
+function barSetup(){
+  var g=G,Hm=g.human;g.bar={tx:820,tT:820,sx:1040,sT:1040,sFace:-1,polish:true,glass:false,lagers:false,sdrink:false,peanuts:9};
+  g.noCup=true;Hm.x=-40;Hm.xT=430;
+}
+function stepBar(dt){var b=G.bar;if(!b)return;b.tx=approach(b.tx,b.tT,190*dt);b.sx=approach(b.sx,b.sT,150*dt);}
+function wallClock(cx,cy,r){
+  var s=G.clock,ma=((s/60)%60)/60*Math.PI*2,ha=((s/3600)%12)/12*Math.PI*2;
+  ctx.fillStyle='#f3ead6';ctx.strokeStyle='#1c1418';ctx.lineWidth=3;circ(cx,cy,r);ctx.fill();ctx.stroke();
+  ctx.lineCap='round';ctx.lineWidth=3;line(cx,cy,cx+Math.sin(ha)*r*0.5,cy-Math.cos(ha)*r*0.5);ctx.lineWidth=2;line(cx,cy,cx+Math.sin(ma)*r*0.75,cy-Math.cos(ma)*r*0.75);
+}
+function bar(){
+  var i,t=G.time;
+  ctx.fillStyle='#3b2b33';ctx.fillRect(-20,-20,W+40,WALLY+20);
+  ctx.fillStyle='#4b3427';ctx.fillRect(-20,292,W+40,WALLY-292);ctx.fillStyle='#5f4331';ctx.fillRect(-20,287,W+40,6);
+  ctx.strokeStyle='#3e2a20';ctx.lineWidth=2;for(i=0;i<17;i++)line(18+i*60,296,18+i*60,WALLY);
+  ctx.fillStyle='#241b20';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);
+  [200,480,760].forEach(function(x){
+    var gr=ctx.createRadialGradient(x,150,6,x,150,240);gr.addColorStop(0,'rgba(255,196,110,.40)');gr.addColorStop(1,'rgba(255,196,110,0)');ctx.fillStyle=gr;ctx.fillRect(x-240,-20,480,WALLY+20);
+    ctx.strokeStyle='#1c1418';ctx.lineWidth=3;line(x,-20,x,100);
+    ctx.fillStyle='#d99a3c';ctx.beginPath();ctx.moveTo(x-27,126);ctx.lineTo(x-12,100);ctx.lineTo(x+12,100);ctx.lineTo(x+27,126);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#ffe9a8';ctx.beginPath();ctx.ellipse(x,127,21,5,0,0,Math.PI*2);ctx.fill();});
+  // dartboard, with one dart nowhere near the middle
+  var dc=['#1c1418','#e9e2cf','#b5483a','#2f6b4f','#b5483a'],dr=[42,36,25,14,5];for(i=0;i<5;i++){ctx.fillStyle=dc[i];circ(96,205,dr[i]);ctx.fill();}
+  ctx.strokeStyle='#e2b04a';ctx.lineWidth=3;line(124,180,140,168);
+  // chalkboard
+  ctx.fillStyle='#6b4a34';rr(566,168,150,96,5);ctx.fill();ctx.fillStyle='#22302c';rr(573,175,136,82,3);ctx.fill();
+  ctx.fillStyle='#e9e2cf';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('TODAY',641,192);
+  ctx.font='500 13px system-ui,sans-serif';ctx.fillText('Soup.',641,214);ctx.fillText('Also: everything else.',641,236);
+  // neon
+  var on=RM||Math.sin(t*1.3)>-0.96;ctx.strokeStyle=on?'#ff8fa3':'#7a4a55';ctx.lineWidth=4;ctx.shadowColor='#ff8fa3';ctx.shadowBlur=on?16:0;rr(770,176,112,50,12);ctx.stroke();
+  ctx.fillStyle=on?'#ffd0d8':'#7a4a55';ctx.font='800 22px system-ui,sans-serif';ctx.fillText('OPEN',826,202);ctx.shadowBlur=0;
+  wallClock(330,120,24);
+  // coat hooks. One coat. It is only a coat.
+  ctx.fillStyle='#1c1418';rr(896,236,60,6,3);ctx.fill();ctx.fillStyle='#55657a';ctx.beginPath();ctx.moveTo(914,242);ctx.lineTo(944,242);ctx.lineTo(952,330);ctx.lineTo(906,330);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#46546a';ctx.fillRect(927,242,4,88);
+}
+function glass(x,kind){
+  var y=BARY;
+  if(kind==='lager'){ctx.fillStyle='#e2a93c';rr(x-8,y-34,16,34,2);ctx.fill();ctx.fillStyle='#fbf8ef';rr(x-9,y-40,18,9,4);ctx.fill();return;}
+  ctx.fillStyle='rgba(232,240,240,.35)';rr(x-9,y-26,18,26,3);ctx.fill();
+  ctx.fillStyle='#e7c06a';rr(x-8,y-19,16,18,2);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.7)';ctx.fillRect(x-5,y-18,5,5);ctx.fillRect(x+1,y-12,5,5);
+  ctx.strokeStyle='#c9553f';ctx.lineWidth=2;ctx.lineCap='round';line(x+3,y-8,x+9,y-36);
+}
+function barFront(){
+  var g=G,b=g.bar,y=BARY,i;
+  // whoever else is at the bar stands behind it too
+  if(b.sx<W+30)person(b.sx,{body:'#8a4f6a',hair:'#2b2230',facing:b.sFace,walk:Math.abs(b.sx-b.sT)>1});
+  ctx.fillStyle='#8a5e3c';ctx.fillRect(-20,y,W+40,16);ctx.fillStyle='#a8774e';ctx.fillRect(-20,y,W+40,4);
+  ctx.fillStyle='#5c3b27';ctx.fillRect(-20,y+16,W+40,H-y);
+  ctx.strokeStyle='#4a2f1f';ctx.lineWidth=2;for(i=0;i<13;i++)line(40+i*80,y+22,40+i*80,H+10);
+  ctx.fillStyle='#c9a45a';ctx.fillRect(-20,y+74,W+40,5);
+  // beer taps
+  ctx.fillStyle='#b9bcc0';rr(742,y-12,76,12,3);ctx.fill();
+  for(i=0;i<3;i++){var tx=756+i*24;ctx.fillStyle='#d7dadd';rr(tx-3,y-46,6,36,2);ctx.fill();ctx.fillStyle=['#b5483a','#2f6b4f','#e2b04a'][i];rr(tx-5,y-64,10,22,3);ctx.fill();}
+  // a bowl of peanuts that somebody has been counting
+  ctx.fillStyle='#e9e2cf';ctx.beginPath();ctx.moveTo(268,y-14);ctx.lineTo(322,y-14);ctx.lineTo(312,y);ctx.lineTo(278,y);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#c79a5b';for(i=0;i<b.peanuts;i++){ctx.beginPath();ctx.ellipse(276+(i%5)*9+(i>4?4:0),y-17-(i>4?5:0),5,3.2,0.4,0,Math.PI*2);ctx.fill();}
+  if(b.glass)glass(g.human.x+52,'ginger');
+  if(b.lagers){glass(b.sx-34,'lager');glass(b.sx-14,'lager');}
+  bartender();
+}
+function bartender(){
+  var b=G.bar,x=b.tx,bob=RM?0:Math.sin(G.time*2)*1.5,y=H+6;
+  ctx.fillStyle='#17111a';
+  ctx.beginPath();ctx.ellipse(x,y+22,120,76,0,0,Math.PI*2);ctx.fill();
+  rr(x-21,y-80+bob,42,44,10);ctx.fill();
+  circ(x,y-104+bob,44);ctx.fill();circ(x-44,y-98+bob,9);ctx.fill();circ(x+44,y-98+bob,9);ctx.fill();circ(x+6,y-150+bob,15);ctx.fill();
+  ctx.save();ctx.translate(x-80,y-34);ctx.rotate(-0.28);ctx.fillStyle='#e9e2cf';rr(-13,-8,26,52,5);ctx.fill();ctx.strokeStyle='#c9553f';ctx.lineWidth=2;line(-13,2,13,2);ctx.restore();
+  if(b.polish&&Math.abs(b.tx-b.tT)<1){
+    var px=x+98,py=y-58+(RM?0:Math.sin(G.time*8)*3);
+    ctx.fillStyle='rgba(232,240,240,.45)';rr(px-9,py-14,18,28,3);ctx.fill();ctx.fillStyle='#e9e2cf';circ(px+4,py+(RM?0:Math.cos(G.time*8)*8),9);ctx.fill();
+    ctx.strokeStyle='#17111a';ctx.lineWidth=16;ctx.lineCap='round';line(x+70,y-10,px,py+12);
+  }
+}
+// Ekskyysmi's drink is the shadow of a drink. The umbrella is its own idea.
+function shadowDrink(q){
+  var g=G;if(!g.bar||!g.bar.sdrink)return;var h=g.morko.h[0],k=Math.max(0.8,Math.sqrt(q.s)),x=h.x,y=h.y;
+  ctx.save();ctx.translate(x,y);ctx.scale(k,k);
+  ctx.fillStyle=mcol();ctx.beginPath();ctx.moveTo(-11,-30);ctx.lineTo(11,-30);ctx.lineTo(8,4);ctx.lineTo(-8,4);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='rgba(233,226,207,.55)';ctx.lineWidth=1.3;ctx.stroke();
+  ctx.strokeStyle=mcol();ctx.lineWidth=2.5;ctx.lineCap='round';line(2,-26,10,-46);
+  ctx.strokeStyle='#e9e2cf';ctx.lineWidth=1.5;line(-4,-28,-10,-50);
+  ctx.fillStyle='#e0563e';ctx.beginPath();ctx.moveTo(-24,-48);ctx.quadraticCurveTo(-10,-66,4,-48);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#fbf8ef';ctx.lineWidth=1.5;line(-10,-57,-17,-48);line(-10,-57,-3,-48);
+  ctx.restore();
+}
+
+/* ---------- Lab: A quiet drink. ---------- */
+function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order one drink.',clock:18*3600+12*60}).concat([
+  barSetup,{wait:3.9},
+  ['N','An evening. Sanna is running five minutes late. You are at the bar, on your own, on purpose.'],
+  ['S','Position: acceptable. Wall behind us. Eyes on the door. Now we wait to be noticed.'],
+  ['H','I’ll just order.'],
+  addTic('…seven, eight, nine peanuts.',296,BARY-48,{life:2.6}),
+  {wait:2.4},
+  function(){G.clock+=120;},
+  ['N','Two minutes pass. The bartender polishes a glass. It was already clean.'],
+  ['S','He hasn’t looked at us once.'],
+  function(){var b=G.bar;b.sT=700;},{wait:2.4},
+  function(){G.bar.polish=false;},
+  ['T','Evening! What can I get you?'],
+  ['X','Two lagers, thanks.'],
+  function(){var b=G.bar;b.lagers=true;sfx('clink');},
+  hit(0.6,'P'),{wait:1.2},
+  ['S','She arrived AFTER us. He served her FIRST.'],
+  ['S','We are furniture. We are a coat stand with opinions.'],
+  function(){var b=G.bar;b.lagers=false;b.sFace=1;b.sT=1040;},
+  {choice:[
+    {t:'Raise one finger. Lower. No. Lower.',then:[['S','Too eager. Now too casual. Now you’re testing the wind.'],['H','I’m ordering a drink, not landing a plane.']]},
+    {t:'Hold the bank card where he can see it.',then:[['S','Visible, but not waving. We’re solvent, not desperate.'],['H','My arm is tired.'],['S','Solvency is a marathon.']]},
+    {t:'Leave. Find a bar where nobody saw this.',then:[['H','Sanna is meeting me HERE.'],['S','She can meet us in the new life.']]}
+  ]},
+  function(){var b=G.bar;b.tT=610;},{wait:1.6},calm,
+  ['T','Sorry, didn’t see you there! What’ll it be?'],
+  set({mood:'surprised'}),
+  ['S','“Didn’t see you.” So we ARE invisible. I’d like that confirmed in writing.'],
+  ['H','He was changing a barrel.'],
+  ['H','A ginger beer, please.'],
+  ['T','What?'],
+  hit(0.75,'P'),{wait:1.3},
+  ['S','“WHAT.” He heard the order. And he HATED it.'],
+  {choice:[
+    {t:'Change the order to something impressive.',then:[['S','Something with a year on it. People respect years.'],['H','I’m not ordering a whisky to impress a man with a towel.']]},
+    {t:'Say it again, quieter. He can’t hate it twice.',then:[['H','…ginger beer.'],['T','Sorry?'],['S','TWICE. He’s making us say it twice. It’s a ritual.']]},
+    {t:'Retract the order. We were never thirsty.',then:[['S','Tell him it was a joke. “Ginger beer.” Ha. Imagine.'],['H','I’m thirsty.']]}
+  ]},
+  ['H','GINGER BEER.'],
+  ['T','Ginger beer! Good choice. Ice?']
+ ],outside({title:'WHAT THE BARTENDER HEARD',dur:'duration: 6 seconds',cap:'Loud music. A quiet customer. “What?” meant “what”.',anim:'text'}),[
+  calm,function(){var b=G.bar;b.glass=true;b.tT=820;sfx('clink');},{wait:1.2},
+  function(){G.bar.polish=true;},
+  ['S','He said “good choice”.'],
+  ['H','He says that to everyone.'],
+  ['S','Let me have this one.'],
+  ['S','…I’ll have one too.'],
+  ['H','You’re a shadow.'],
+  ['S','Then I’ll have the shadow of one.'],
+  function(){var g=G;g.bar.sdrink=true;g.morko.pose='drink';sfx('card');},{wait:1.2},
+  ['H','Yours has an umbrella.'],
+  ['S','For cover.'],
+  function(){G.morko.pose='sip';},{wait:0.9},function(){sfx('drip');},{wait:0.7},function(){G.morko.pose='drink';G.morko.mood='care';},
+  ['S','…Oh. That’s quite nice.'],
+  ['S','Is this it? Standing here. With a drink.'],
+  ['H','This is it.'],
+  ['S','Nobody is looking at us.'],
+  ['H','No.'],
+  ['S','I always thought that was the bad outcome.'],
+  {wait:1.4},
+  function(){var g=G;g.cowA=true;g.ax=1040;g.axT=570;g.aFace=-1;g.clock+=15*60;},{wait:3.3},
+  ['A','Sorry I’m late! Have you been waiting ages?'],
+  {choice:[
+    {t:'“No, just got here.” (Seventeen minutes.)',then:[['H','Seventeen minutes. I counted.'],['A','Ha! Of course you did. Next one’s on me.']]},
+    {t:'“It’s FINE.” With the face.',then:[['H','It was fine, actually. I had a drink. So did he.'],['A','Who?'],['H','Long story.']]},
+    {t:'Tell her the truth: it was nice.',then:[['H','A bit. It was nice, though.'],['A','Good. I’ll get the next one.'],['S','Don’t tell her about the umbrella.']]}
+  ]},
+  function(){G.morko.pose='toast';},{wait:0.8},
+  ['S','To being furniture.'],
+  function(){G.morko.pose='drink';}
+ ]);}
+// ---- src/54-voice.js ----
+/* ================= Lab: The voice message. Fourteen takes of “hi”. ================= */
+function take(n,line,verdict){return [
+  function(){G.rec={take:n,on:true,t:0};sfx('pick');},
+  ['H',line],
+  function(){G.rec.on=false;sfx('nope');},
+  ['S',verdict]
+];}
+function drawRec(){
+  var r=G.rec,x=24+HUDL,y=22,w=250,i;
+  ctx.fillStyle='rgba(14,12,20,.78)';rr(x-10,y-12,w+20,44,8);ctx.fill();
+  ctx.font='800 12px system-ui,sans-serif';ctx.textAlign='left';ctx.textBaseline='middle';
+  var blink=r.on&&(RM||Math.floor(G.time*2.5)%2===0);
+  ctx.fillStyle=r.on?'#e0563e':'#8b8070';if(blink||!r.on){circ(x+5,y,5);ctx.fill();}
+  ctx.fillText((r.on?'REC':'DELETED')+' · TAKE '+r.take,x+18,y);
+  for(i=0;i<34;i++){var a=r.on?(RM?0.5:Math.abs(Math.sin(G.time*9+i*1.7))*0.5+Math.abs(Math.sin(G.time*3.1+i*0.6))*0.5):0.08;
+    ctx.fillStyle=r.on?'#e9e2cf':'#5a5560';ctx.fillRect(x+i*7.4,y+17-a*7,4,2+a*14);}
+}
+function labVoice(){return labScene({set:'home',title:'The voice message',plan:'Reply to a voice message.',clock:19*3600+40*60}).concat([
+  ['N','Sanna has sent a voice message. Forty seconds. Cheerful. It ends with “anyway, how are you?”'],
+  ['H','I’ll just send one back.'],
+  set({mood:'alert',s:1.3}),
+  ['S','A voice message. Your actual voice. Recorded. Kept.']
+ ],take(1,'“Hi! It’s me.”','She knows it’s you. It says your name on it. Delete.'),
+  take(2,'“Hey Sanna, thanks for your message—”','“Thanks for your message.” Are you her bank? Delete.'),[
+  {choice:[
+    {t:'Sound more relaxed. Rehearse relaxing.',then:take(3,'“Heyyy.”','Too relaxed. You sounded like you were lying down. Delete.')},
+    {t:'Write a script first. Two drafts.',then:take(3,'“Dear Sanna.”','You read the greeting out loud. Delete.')},
+    {t:'Open with a laugh. People like a laugh.',then:take(3,'“Ha— hi.”','That wasn’t a laugh. That was a hiccup with ambitions. Delete.')}
+  ]},
+  function(){G.rec={take:9,on:true,t:0};G.clock+=11*60;},
+  ['N','Take nine. Halfway through, a dog barks next door.'],
+  function(){G.rec.on=false;sfx('nope');},
+  ['S','Now she’ll think we have a dog. We’d have to GET a dog. Delete.'],
+  function(){G.rec={take:14,on:false,t:0};G.clock+=9*60;},
+  ['H','This is take fourteen.'],
+  ['S','Fifteen is the one. I can feel it.'],
+  ['H','Her message has a kettle boiling in it. She says “um” six times.'],
+  set({mood:'surprised'}),
+  ['S','…Six?'],
+  ['H','I counted. On the second listen.'],
+  ['S','And on the first?'],
+  ['H','On the first I just thought: oh, nice. It’s Sanna.'],
+  {wait:1.3},
+  set({mood:'worry',s:1.1}),
+  {choice:[
+    {t:'Send take one. The one with “It’s me.”',then:[['P','You: ● voice message, 0:04']]},
+    {t:'Send take fourteen. The one with the sigh.',then:[['P','You: ● voice message, 0:11'],['S','The sigh stays in? Bold.']]},
+    {t:'Send a thumbs-up and move to the countryside.',then:[['H','No.'],['P','You: ● voice message, 0:09']]}
+  ]},
+  function(){G.rec=null;},
+  {wait:1.2},
+  ['P','Sanna: “Ha, lovely to hear your voice! Lunch tomorrow?”']
+ ],outside({title:'WHAT SANNA HEARD',dur:'duration: a few seconds, at 1.5× speed',cap:'A friend saying hi. She was making tea.',anim:'text'}),[
+  calm,
+  ['S','One and a half times speed.'],
+  ['H','Everyone does.'],
+  ['S','Fourteen takes. And she listened to it FAST.'],
+  ['H','Next time, one take.'],
+  ['S','Two. One for safety.']
+ ]);}
+// ---- src/55-reply.js ----
+/* ================= Lab: The reply. Ekskyysmi edits a message until nothing in it can be rejected. ================= */
+// The draft is a row of pieces. Cutting a piece strikes it through, then it fades and the rest closes up.
+var DRAFT0=[['hey','Hey!'],['i','I had a'],['really','really'],['nice','nice time'],['thu','on Thursday.'],['again','We should do it again'],['soon','soon'],['smiley',':)']];
+function draftOpen(){G.draft={tokens:DRAFT0.map(function(d){return {id:d[0],t:d[1],on:true,k:0};}),sent:null,reply:null,t:0};sfx('card');}
+function draftCut(ids){return function(){var D=G.draft;D.tokens.forEach(function(k){if(ids.indexOf(k.id)>=0&&k.on){k.on=false;k.k=0;}});sfx('nope');};}
+function draftSwap(id,text){return function(){var D=G.draft;D.tokens.forEach(function(k){if(k.id===id){k.t=text;k.flash=1;}});sfx('pick');};}
+function draftRestore(extra){return function(){var D=G.draft;D.tokens=DRAFT0.map(function(d){return {id:d[0],t:d[0]==='really'&&extra?'really really':d[1],on:true,k:0,flash:1};});sfx('good');};}
+function draftText(){var D=G.draft,o=[];D.tokens.forEach(function(k){if(k.on)o.push(k.t);});return o.join(' ')||'…';}
+function draftSend(){var D=G.draft;D.sent=draftText();sfx('pick');}
+function stepDraft(dt){var D=G.draft;if(!D)return;D.t+=dt;D.tokens.forEach(function(k){if(!k.on&&k.k<1)k.k=Math.min(1,k.k+dt/0.9);if(k.flash>0)k.flash=Math.max(0,k.flash-dt*1.2);});}
+function drawDraft(){
+  var D=G.draft,x=592,y=COMPACT?86:74,w=316,h=COMPACT?284:372,i; // on a phone the words run along the bottom, so the handset is shorter
+  ctx.fillStyle='#0f1216';rr(x-8,y-8,w+16,h+16,30);ctx.fill();ctx.fillStyle='#eef0ea';rr(x,y,w,h,22);ctx.fill();
+  ctx.fillStyle='#dfe3da';rr(x,y,w,46,22);ctx.fill();ctx.fillRect(x,y+24,w,22);
+  ctx.fillStyle='#62887f';circ(x+30,y+23,13);ctx.fill();ctx.fillStyle='#2b2733';ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 16px system-ui,sans-serif';ctx.fillText('Sanna',x+52,y+23);
+  // her message
+  ctx.font='500 14px system-ui,sans-serif';var hers=wrap('Thursday was so fun!! You’re annoyingly good at that game.',210),by=y+60;
+  ctx.fillStyle='#ffffff';rr(x+12,by,236,hers.length*19+14,12);ctx.fill();ctx.fillStyle='#2b2733';for(i=0;i<hers.length;i++)ctx.fillText(hers[i],x+24,by+16+i*19);
+  by+=hers.length*19+26;
+  if(D.sent){
+    var mine=wrap(D.sent,210),mh=mine.length*19+14;ctx.fillStyle='#62887f';rr(x+w-248,by,236,mh,12);ctx.fill();ctx.fillStyle='#fbf8ef';for(i=0;i<mine.length;i++)ctx.fillText(mine[i],x+w-236,by+16+i*19);
+    by+=mh+12;
+    if(D.reply){var rep=wrap(D.reply,210);ctx.fillStyle='#ffffff';rr(x+12,by,236,rep.length*19+14,12);ctx.fill();ctx.fillStyle='#2b2733';for(i=0;i<rep.length;i++)ctx.fillText(rep[i],x+24,by+16+i*19);}
+    return;
+  }
+  // the draft box
+  var bx=x+12,bw=w-24,bh=COMPACT?124:150,top=y+h-bh-12;
+  ctx.fillStyle='#ffffff';ctx.strokeStyle='#62887f';ctx.lineWidth=2;rr(bx,top,bw,bh,14);ctx.fill();ctx.stroke();
+  ctx.font='700 10px system-ui,sans-serif';ctx.fillStyle='#8b9a8c';ctx.fillText('DRAFT',bx+12,top+14);
+  ctx.font='500 17px system-ui,sans-serif';var cx=bx+12,cy=top+40,sp=ctx.measureText(' ').width;
+  D.tokens.forEach(function(k){
+    var a=k.on?1:clamp(1-(k.k-0.45)/0.55,0,1);if(a<=0)return;
+    var tw=ctx.measureText(k.t).width;if(cx+tw>bx+bw-12){cx=bx+12;cy+=26;}
+    if(k.flash>0){ctx.fillStyle='rgba(235,189,121,'+(0.6*k.flash)+')';rr(cx-3,cy-12,tw+6,24,5);ctx.fill();}
+    ctx.globalAlpha=a;ctx.fillStyle='#2b2733';ctx.fillText(k.t,cx,cy);
+    if(!k.on){ctx.strokeStyle='#c9553f';ctx.lineWidth=2.5;line(cx-2,cy,cx-2+(tw+4)*clamp(k.k/0.35,0,1),cy);}
+    ctx.globalAlpha=1;cx+=tw+sp;
+  });
+  if(RM||Math.floor(G.time*2)%2===0){ctx.fillStyle='#62887f';ctx.fillRect(cx,cy-10,2,20);}
+  ctx.fillStyle='#62887f';circ(bx+bw-24,top+bh-24,15);ctx.fill();ctx.strokeStyle='#fbf8ef';ctx.lineWidth=3;ctx.lineCap='round';line(bx+bw-24,top+bh-17,bx+bw-24,top+bh-31);line(bx+bw-24,top+bh-31,bx+bw-30,top+bh-25);line(bx+bw-24,top+bh-31,bx+bw-18,top+bh-25);
+}
+function labReply(){return labScene({set:'home',title:'The reply',plan:'Answer one message.',clock:21*3600+5*60}).concat([
+  function(){var g=G;g.human.x=g.human.xT=330;},
+  ['N','Sanna has written: “Thursday was so fun!! You’re annoyingly good at that game.”'],
+  ['H','I’ll just answer.'],
+  draftOpen,{wait:1.2},
+  ['H','“Hey! I had a really nice time on Thursday. We should do it again soon.” Smiley.'],
+  set({mood:'alert',s:1.3}),
+  ['S','Before we send that. A few small edits. For safety.'],
+  {choice:[
+    {t:'Cut “really”. Nobody needs to know how nice.',f:draftCut(['really']),then:[['S','A nice time. Measured. Like a person with other nice times.'],['H','It was really nice.'],['S','That’s between us.']]},
+    {t:'Cut the smiley. We are not a smiley household.',f:draftCut(['smiley']),then:[['S','A smiley is a face you can’t take back.']]},
+    {t:'Cut “Hey!”. Too much knocking.',f:draftCut(['hey']),then:[['S','We don’t announce ourselves. We arrive.'],['H','It’s a greeting.'],['S','It’s a doorbell with an exclamation mark.']]}
+  ]},
+  {choice:[
+    {t:'Cut “We should do it again”. Presumptuous.',f:draftCut(['again','soon']),then:[['S','What if she doesn’t want an again? Now there’s an again on the table and she has to walk around it.']]},
+    {t:'Change “soon” to “sometime”.',f:draftSwap('soon','sometime'),then:[['H','You hate “sometime”.'],['S','When OTHER people say it.']]},
+    {t:'Cut “on Thursday”. She knows which day she was at.',f:draftCut(['thu']),then:[['S','Dates are evidence.']]}
+  ]},
+  {choice:[
+    {t:'Cut “nice time”. Nice for HER? Unverified.',f:draftCut(['nice']),then:[['S','We can’t make claims about the time. We can only confirm that time occurred.']]},
+    {t:'Cut everything after the first full stop.',f:draftCut(['again','soon','smiley']),then:[['S','One sentence. Fewer sentences, fewer openings.']]},
+    {t:'Replace the lot with “ok”.',f:function(){var D=G.draft;D.tokens=[{id:'ok',t:'ok',on:true,k:0,flash:1}];sfx('nope');},then:[['S','“ok”. Two letters. Impregnable.'],['H','You once spent a whole evening on what “ok” meant.'],['S','Which is how I know it works.']]}
+  ]},
+  {wait:0.8},
+  function(){return [['H','“'+draftText()+'”']];},
+  ['S','Perfect. Nothing in it can be rejected.'],
+  ['H','There’s nothing in it.'],
+  ['S','That’s what I said.'],
+  {choice:[
+    {t:'Send it like this. It’s safe.',f:function(){G.replySent='edited';},then:[draftSend,{wait:1.4},function(){G.draft.reply='…is this a riddle? Thursday was GREAT. Again next week?';sfx('good');},{wait:1.6},['S','She decoded it.'],['H','She shouldn’t have had to.']]},
+    {t:'Fine. Put it back. All of it.',f:function(){G.replySent='full';},then:[draftRestore(false),{wait:1.0},['S','Even the smiley?'],['H','Especially the smiley.'],draftSend,{wait:1.4},function(){G.draft.reply='SAME!! Next Thursday? I’ll bring the good crisps.';sfx('good');},{wait:1.6},['S','Two exclamation marks. Unprompted.']]},
+    {t:'Put it back. And add a second “really”.',f:function(){G.replySent='more';},then:[draftRestore(true),{wait:1.0},['H','That’s… more than I wrote.'],['S','I know. Send it before I see it.'],draftSend,{wait:1.4},function(){G.draft.reply='really really SAME. Next Thursday?';sfx('good');},{wait:1.6},['S','I regret nothing. I regret a little.']]}
+  ]}
+ ],outside({title:'WHAT SANNA READ',dur:'duration: 3 seconds',cap:'A message from a friend. She smiled at her phone on the bus.',anim:'text'}),[
+  calm,
+  ['S','Forty minutes of editing.'],
+  ['H','Three seconds of reading.'],
+  ['S','That seems inefficient.'],
+  ['H','That’s what I keep saying.'],
+  function(){G.draft=null;}
+ ]);}
+// ---- src/56-library.js ----
+/* ================= Lab: A fine. The overdue book goes back. ================= */
+var LIBR={body:'#7b8f5a',hair:'#d9d2c4'};
+function library(){
+  var g=G,i,j,cols=['#b5483a','#2f6b4f','#e2b04a','#55657a','#8a4f6a','#c9c2b0','#62887f'];
+  ctx.fillStyle='#e6dcc6';ctx.fillRect(-20,-20,W+40,WALLY+20);
+  ctx.fillStyle='#b9a98a';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);ctx.fillStyle='#9a8b6e';ctx.fillRect(-20,WALLY-6,W+40,6);
+  // shelves: three bays of books
+  for(j=0;j<3;j++){var sx=40+j*190;ctx.fillStyle='#6b4a34';rr(sx,70,170,WALLY-76,4);ctx.fill();
+    for(var r=0;r<4;r++){var sy=84+r*74;ctx.fillStyle='#4f3626';ctx.fillRect(sx+8,sy,154,62);
+      var bx=sx+11;for(i=0;bx<sx+154;i++){var bw=9+((i*7+j*5+r*3)%4)*3,bh=42+((i*5+r*7+j)%4)*5;if(bx+bw>sx+160)break;ctx.fillStyle=cols[(i*3+j+r*2)%cols.length];ctx.fillRect(bx,sy+62-bh,bw,bh);bx+=bw+2;}}}
+  // window and a sign nobody needs
+  ctx.fillStyle='#f4eedb';rr(640,90,150,120,4);ctx.fill();ctx.fillStyle='#a9c0c4';ctx.fillRect(648,98,134,104);ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(715,98,715,202);
+  ctx.fillStyle='#2f6b4f';rr(820,110,110,44,6);ctx.fill();ctx.fillStyle='#fbf8ef';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('QUIET,',875,124);ctx.fillText('PLEASE',875,141);
+  // the librarian stands behind her desk
+  var L=g.lib||{};
+  person(760,{body:LIBR.body,hair:LIBR.hair,facing:-1,face:L.smile?'smile':'neutral'});
+  ctx.fillStyle='#7a5236';rr(650,366,290,14,4);ctx.fill();ctx.fillStyle='#5c3b27';ctx.fillRect(656,380,278,FEETY-374);
+  ctx.strokeStyle='#4a2f1f';ctx.lineWidth=2;line(726,386,726,FEETY+4);line(796,386,796,FEETY+4);line(866,386,866,FEETY+4);
+  ctx.fillStyle='#2b2733';rr(836,322,62,44,5);ctx.fill();ctx.fillStyle='#9fd3a8';ctx.fillRect(842,328,50,30);ctx.fillStyle='#2b2733';ctx.fillRect(862,366,10,4);
+  ctx.fillStyle='#fbf8ef';rr(676,340,54,26,3);ctx.fill();ctx.fillStyle='#5a6559';ctx.font='700 9px system-ui,sans-serif';ctx.fillText('RETURNS',703,353);
+  if(L.book){ctx.fillStyle='#55657a';rr(742,354,46,12,2);ctx.fill();ctx.fillStyle='#e2b04a';ctx.fillRect(748,357,20,3);}
+}
+function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Return one book. 23 days late.',clock:15*3600+40*60}).concat([
+  function(){var g=G;g.lib={book:false,smile:false};g.noCup=true;g.human.x=-40;g.human.xT=420;},{wait:3.8},
+  ['N','The library. “A Short History of Lighthouses” is twenty-three days overdue. Today it goes back.'],
+  set({mood:'alert',s:1.3}),
+  ['S','She’s seen us. Walk normally. Not like that. Like a person who returns things.'],
+  ['H','I finished it this morning.'],
+  ['S','Twenty-three days. She has had twenty-three days to form an opinion.'],
+  {choice:[
+    {t:'Use the returns slot and run.',then:[['H','The slot is for people who aren’t standing in front of her.'],['S','Then stand somewhere else.']]},
+    {t:'Prepare a statement.',then:[['S','“I take full responsibility. The lighthouses were compelling.”'],['H','I’m not reading a statement to a librarian.']]},
+    {t:'Blame page 212.',then:[['H','It WAS page 212.'],['S','Then we have a defence.']]}
+  ]},
+  function(){G.human.xT=575;},{wait:1.5},
+  function(){G.lib.book=true;sfx('clink');},
+  ['L','Hello! Returning?'],
+  ['H','Yes. It’s… a bit late.'],
+  ['L','Let’s see. Twenty-three days. That’ll be a fine.'],
+  set({mood:'care',s:1.05}),
+  ['S','She says it’s FINE.'],
+  ['S','Three weeks of dread, and it’s FINE. I’d like to sit down.'],
+  ['H','A fine. Four euros sixty.'],
+  hit(0.5,'P'),{wait:1.1},
+  ['S','…Oh. THAT kind of fine.'],
+  ['S','She is fining us. In public. In front of the large-print section.'],
+  calm,
+  ['L','Did you like it?'],
+  set({mood:'alert',s:1.3}),
+  ['S','It’s a trap. If we liked it, why did we keep it? If we didn’t, why did we KEEP it?'],
+  {choice:[
+    {t:'Say “it was fine.”',then:[['H','I’m not saying “fine” in here again.']]},
+    {t:'Say nothing. Nod. Leave.',then:[['H','She asked a question.'],['S','Questions are optional.']]},
+    {t:'Deny having read it.',then:[['H','For twenty-three days?'],['S','We were looking at the cover. Thoroughly.']]}
+  ]},
+  ['H','There’s a lighthouse on page 212. I didn’t want to give it back before I’d met it.'],
+  {wait:1.2},
+  function(){G.lib.smile=true;},
+  ['L','Bengtskär! Page 212 is the best page. I kept that book for six weeks.'],
+  set({mood:'surprised'}),
+  ['S','…SHE kept it for six weeks?'],
+  ['L','I work here. I just kept renewing it to myself.'],
+  ['S','That’s corruption.'],
+  ['H','That’s a recommendation.'],
+  ['L','There’s a second volume. More lighthouses. Shall I put you down for it?'],
+  ['H','Yes, please.']
+ ],outside({title:'WHAT THE LIBRARIAN SAW',dur:'duration: 2 minutes',cap:'A late book, four euros sixty, and somebody else who likes lighthouses.',anim:'text'}),[
+  calm,
+  ['S','We came in for a telling-off. We’re leaving with a second volume.'],
+  ['H','And a due date.'],
+  ['S','Twenty-eight days. I’ll start worrying on day twenty-nine.'],
+  ['H','Day one.'],
+  ['S','…Day one.']
+ ]);}
+// ---- src/60-update.js ----
+/* ================= update ================= */
+function lampBase(){
+  var hw=G.w.x,sw=0,off=0,s=0;
+  for(var i=0;i<LAMPS.length;i++){var d=LAMPS[i]-hw,wt=1/(d*d+900);sw+=wt;off+=wt*clamp(-d*0.55,-150,150);s+=wt*Math.min(1.1,Math.abs(d)/220*0.9);}
+  return{s:s/sw,off:off/sw};
+}
+function updHands(dt){
+  var q=geom(),ht=handTargets(q),M=G.morko,k=Math.min(1,10*dt);
+  M.h[0].x+=(ht.a.x-M.h[0].x)*k;M.h[0].y+=(ht.a.y-M.h[0].y)*k;
+  M.h[1].x+=(ht.b.x-M.h[1].x)*k;M.h[1].y+=(ht.b.y-M.h[1].y)*k;
+}
+function update(dt,elapsed){
+  // Reading/input delays follow elapsed time even when the browser draws fewer frames.
+  elapsed=elapsed==null?dt:elapsed;
+  var g=G,M=g.morko,Hm=g.human;g.time+=dt;LOCK=Math.max(0,LOCK-elapsed);
+  if(WAIT==='time'){TIMER-=elapsed;if(TIMER<=0)run();}
+  else if(WAIT==='view'&&TIMER>0){TIMER-=elapsed;if(TIMER<=0)render();}
+  g.clock+=dt*g.rate;
+  g.ax=approach(g.ax,g.axT,150*dt);g.bx2=approach(g.bx2,g.bxT,150*dt);
+  if(!g.w){Hm.x=approach(Hm.x,Hm.xT,125*dt);if(Hm.xT<0&&Hm.x<-40)Hm.gone=true;}
+  Hm.flinch=Math.max(0,Hm.flinch-dt*0.7);
+  g.gaze=ease(g.gaze,g.gazeT,6*dt);g.dark=ease(g.dark,g.darkT,3*dt);g.flash=Math.max(0,g.flash-dt*2.2);
+  g.curT=(g.curT||0)+elapsed;
+  Hm.sweat=ease(Hm.sweat,Hm.sweatT,1.5*dt);Hm.blush=Math.max(0,Hm.blush-dt*0.1);
+  if(Hm.sweat>0.7)Hm.puddle=Math.min(1,Hm.puddle+dt*0.06);
+  if(g.rep)g.rep.t+=dt;
+  for(var ci=g.cards.length-1;ci>=0;ci--){g.cards[ci].t+=dt;if(g.cards[ci].life!=null&&g.cards[ci].t>g.cards[ci].life)g.cards.splice(ci,1);}
+  g.pulse=Math.max(0,g.pulse-dt*0.3);g.shake=Math.max(0,g.shake-dt*2.6);
+  if(g.zoom)g.zoom.t+=dt;
+  stepLens(dt);stepBar(dt);stepDraft(dt);
+  var hk=(g.planText||'')+'|'+g.jobDone+'|'+g.hud+'|'+g.chapter+'|'+g.lab+'|'+g.yes+'|'+(g.w?1:0);if(hk!==g.hudKey){g.hudKey=hk;g.hudAge=0;}g.hudAge=(g.hudAge||0)+dt;
+  stepTics(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
+  if(WAIT==='fight'&&g.fight&&!paused)stepFight(elapsed);
+  if(WAIT==='hold'&&g.hold){
+    var hh=g.hold,hon=hh.on||hh.tap>0;hh.tap=Math.max(0,hh.tap-elapsed);if(hh.on)hh.p+=elapsed;holdStep(hh,hon,elapsed);
+    if(g.hold===hh){
+      var hf=document.getElementById('holdfill');if(hf&&hf.style)hf.style.width=Math.round(clamp(hh.p/hh.secs,0,1)*100)+'%';
+      var tx=holdText();if(tx!==hh.shown){hh.shown=tx;var pp=elLine.querySelector('p');if(pp)pp.textContent=tx;}
+      if(hh.p>=hh.secs)finishHold();
+    }
+  }
+  if(g.card>0)g.card-=dt;if(g.job)g.job.t+=elapsed;if(g.chap)g.chap.t+=dt;if(g.bigNote)g.bigNote.t+=dt;if(g.fade>0)g.fade=Math.max(0,g.fade-dt*(g.fadeRate||1.6));Hm.sip=ease(Hm.sip||0,Hm.sipT||0,8*dt);M.wake=ease(M.wake==null?1:M.wake,M.asleep?0:1,2.6*dt);if(g.anx>0.3)g.anx=Math.max(0.3,g.anx-0.06*dt);g.zShow=ease(g.zShow,g.zT,2*dt);if(g.out)g.out.t+=dt;if(g.pop){g.pop.t+=dt;if(g.pop.t>2.6)g.pop=null;}
+  var base=M.sT,offT=-70-(M.s-1)*12;
+  if(g.w){var lb=lampBase();base=M.sT+lb.s;offT=lb.off-(M.sT-1)*45;g.w.x=approach(g.w.x,g.w.xT,g.w.speed*dt);g.walking=g.w.x<g.w.xT-0.5&&g.w.speed>0;}
+  if(M.st==='free'||M.st==='pokka')M.s=approach(M.s,base,(M.s<base?1.5:1.1)*dt);
+  else if(M.st==='hide')M.s=ease(M.s,1.25,5*dt);
+  M.off=ease(M.off,M.st==='hide'?0:offT,6*dt);
+  updHands(dt);
+  var tz=g.cz+(M.st==='frozen'?0.02:0);if(RM)tz=1+(tz-1)*0.4;
+  C.z=ease(C.z,tz,2.5*dt);C.fx=ease(C.fx,g.cx,2.5*dt);C.fy=ease(C.fy,g.cy,2.5*dt);
+}
+// ---- src/70-draw.js ----
+/* ================= drawing helpers ================= */
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+function circ(x,y,r){ctx.beginPath();ctx.arc(x,y,Math.max(0.1,r),0,Math.PI*2);}
+function line(x1,y1,x2,y2){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
+function wrap(text,maxW){var words=text.split(' '),lines=[],cur='';for(var i=0;i<words.length;i++){var t=cur?cur+' '+words[i]:words[i];if(cur&&ctx.measureText(t).width>maxW){lines.push(cur);cur=words[i];}else cur=t;}if(cur)lines.push(cur);return lines;}
+function bubble(x,y,text,o){
+  o=o||{};
+  ctx.font='600 17px system-ui,sans-serif';ctx.textAlign='left';ctx.textBaseline='middle';
+  var lines=wrap(text,o.maxW||250),w=0,i;for(i=0;i<lines.length;i++)w=Math.max(w,ctx.measureText(lines[i]).width);
+  w+=26;var h=lines.length*22+16,bx=clamp(x-w/2,8,W-w-8),by=o.top!=null?o.top:Math.max(8,y-h-12);
+  var fill=o.dark?'#14111d':'#fffdf6',ink=o.dark?'#f6f1e4':'#2b2733';
+  ctx.fillStyle=fill;ctx.strokeStyle=ink;ctx.lineWidth=2;rr(bx,by,w,h,10);ctx.fill();ctx.stroke();
+  if(!o.noTail){var tx=clamp(x,bx+16,bx+w-16);ctx.beginPath();ctx.moveTo(tx-8,by+h-1);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h-1);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(tx-8,by+h);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h);ctx.stroke();}
+  var left=o.reveal==null?1e9:o.reveal;
+  ctx.fillStyle=ink;for(i=0;i<lines.length&&left>0;i++){ctx.fillText(lines[i].slice(0,left),bx+13,by+8+11+i*22);left-=lines[i].length+1;}
+}
+function bubbleH(text,maxW){ctx.font='600 17px system-ui,sans-serif';return wrap(text,maxW).length*22+16;}
+function band(text,y){
+  ctx.font='500 18px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  var lines=wrap(text,820),h=lines.length*24+16;
+  ctx.fillStyle='rgba(22,19,30,.84)';rr(W/2-440,y-h,880,h,10);ctx.fill();
+  ctx.fillStyle='#f1ebdd';for(var i=0;i<lines.length;i++)ctx.fillText(lines[i],W/2,y-h+8+12+i*24);
+}
+function applyCamera(){
+  var z=C.z,hw=W/(2*z),hh=H/(2*z),sx=0,sy=0;
+  if(!RM){sx=Math.sin(G.time*0.45)*5+Math.sin(G.time*83)*8*G.shake;sy=Math.sin(G.time*0.9)*2.6+Math.cos(G.time*71)*6*G.shake;}
+  var fx=clamp(C.fx+sx,hw,W-hw),fy=clamp(C.fy+sy,hh,H-hh);
+  ctx.translate(W/2,H/2);ctx.scale(z,z);ctx.translate(-fx,-fy);
+}
+
+/* ================= drawing: break room ================= */
+function room(flat){
+  ctx.fillStyle=flat?'#d8d9cc':'#dce0cd';ctx.fillRect(-20,-20,W+40,WALLY+20);
+  if(!flat){var gr=ctx.createRadialGradient(640,345,10,640,345,420);gr.addColorStop(0,'rgba(255,228,150,.6)');gr.addColorStop(1,'rgba(255,228,150,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);}
+  ctx.fillStyle=flat?'#b1b5a3':'#b8bda7';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);
+  ctx.fillStyle='#899887';ctx.fillRect(-20,WALLY-6,W+40,6);
+  ctx.strokeStyle='#697e7018';ctx.lineWidth=1;for(var f=0;f<8;f++)line(0,405+f*24,W,405+f*24);
+  ctx.fillStyle='#f4eedb';rr(689,99,170,146,4);ctx.fill();ctx.fillStyle='#94ada7';ctx.fillRect(697,107,154,130);
+  ctx.fillStyle='#b5c6b7';ctx.beginPath();ctx.moveTo(697,201);ctx.lineTo(740,162);ctx.lineTo(790,205);ctx.lineTo(823,177);ctx.lineTo(851,198);ctx.lineTo(851,237);ctx.lineTo(697,237);ctx.fill();
+  ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(774,107,774,237);line(697,172,851,172);
+  ctx.fillStyle='#f4eedb';rr(682,239,184,9,3);ctx.fill();
+  ctx.fillStyle='#64816a';ctx.beginPath();ctx.ellipse(67,323,13,31,-.4,0,Math.PI*2);ctx.ellipse(93,301,14,35,.3,0,Math.PI*2);ctx.ellipse(109,330,11,27,.7,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#557260';ctx.lineWidth=3;line(88,365,91,293);line(88,350,67,316);line(88,352,110,325);
+  ctx.fillStyle='#c78d71';ctx.beginPath();ctx.moveTo(64,348);ctx.lineTo(111,348);ctx.lineTo(103,389);ctx.lineTo(72,389);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#b08a5a';rr(140,150,150,104,4);ctx.fill();
+  ctx.fillStyle='#f6f1e4';ctx.fillRect(152,162,46,58);ctx.fillRect(206,166,34,40);ctx.fillRect(246,160,34,50);ctx.fillRect(208,214,60,30);
+  ctx.strokeStyle='#9c958a';ctx.lineWidth=1.5;for(var i=0;i<5;i++)line(157,172+i*9,192,172+i*9);
+  ctx.fillStyle='#5a6559';ctx.font='600 9px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText('BE A MUG.',237,226);ctx.fillText('NOT A HERO.',237,237);
+  ctx.fillStyle='#c9553f';circ(175,164,3);ctx.fill();circ(223,168,3);ctx.fill();circ(263,162,3);ctx.fill();
+  var cx=560,cy=92;ctx.fillStyle='#fbf8ef';ctx.strokeStyle='#2b2733';ctx.lineWidth=3;circ(cx,cy,27);ctx.fill();ctx.stroke();
+  var s=G.clock,sa=(s%60)/60*Math.PI*2,ma=((s/60)%60)/60*Math.PI*2,ha=((s/3600)%12)/12*Math.PI*2;
+  ctx.lineCap='round';ctx.lineWidth=3;line(cx,cy,cx+Math.sin(ha)*13,cy-Math.cos(ha)*13);
+  ctx.lineWidth=2;line(cx,cy,cx+Math.sin(ma)*20,cy-Math.cos(ma)*20);
+  ctx.strokeStyle='#c9553f';ctx.lineWidth=1.5;line(cx,cy,cx+Math.sin(sa)*22,cy-Math.cos(sa)*22);
+  ctx.fillStyle=flat?'#8c9092':'#7d8a8c';ctx.fillRect(728,322,252,WALLY-322);
+  ctx.fillStyle=flat?'#74787a':'#667274';ctx.fillRect(728,316,252,8);
+  ctx.fillStyle='#34323c';rr(872,262,52,56,5);ctx.fill();ctx.fillStyle='#c9553f';circ(912,274,3);ctx.fill();
+  ctx.fillStyle='#fbf8ef';ctx.fillRect(748,302,12,14);ctx.fillRect(766,302,12,14);
+  ctx.strokeStyle='#fbf8ef';ctx.lineWidth=2;ctx.beginPath();ctx.arc(760,309,4,-Math.PI/2,Math.PI/2);ctx.stroke();
+  ctx.beginPath();if(G.mugFixed===false)ctx.arc(766,309,4,Math.PI/2,Math.PI*1.5);else ctx.arc(778,309,4,-Math.PI/2,Math.PI/2);ctx.stroke();
+  ctx.fillStyle='#6b563e';ctx.fillRect(604,420,72,8);ctx.fillRect(610,428,6,40);ctx.fillRect(664,428,6,40);
+  ctx.strokeStyle='#3d3a44';ctx.lineWidth=4;line(640,420,640,366);
+  ctx.fillStyle=flat?'#d9c79a':'#f3d27a';ctx.beginPath();ctx.moveTo(624,340);ctx.lineTo(656,340);ctx.lineTo(666,368);ctx.lineTo(614,368);ctx.closePath();ctx.fill();
+  if(G.cupLeft){ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(650,406,12,14,2);ctx.fill();ctx.stroke();}
+}
+
+/* ================= drawing: people ================= */
+function person(x,o){
+  var f=o.facing||1,fl=o.flinch||0,top=FEETY-118-fl*5,lg=o.walk?Math.sin(G.time*8)*6:0;
+  ctx.save();if(o.alpha!=null)ctx.globalAlpha=o.alpha;
+  ctx.fillStyle='rgba(20,16,30,.2)';ctx.beginPath();ctx.ellipse(x,FEETY+2,30,7,0,0,Math.PI*2);ctx.fill();
+  if(o.puddle>0.02){ctx.fillStyle='rgba(150,205,230,.55)';ctx.beginPath();ctx.ellipse(x+6,FEETY+5,20+o.puddle*70,4+o.puddle*7,0,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle='#3a3944';rr(x-15+lg,FEETY-54,12,54,4);ctx.fill();rr(x+3-lg,FEETY-54,12,54,4);ctx.fill();
+  var skin=o.body===SANNA.body?'#c9957a':o.body===MIKA.body?'#e5c4a1':'#e4bba2';
+  ctx.fillStyle='#263639';rr(x-19+lg,FEETY-8,20,10,4);ctx.fill();rr(x+1-lg,FEETY-8,23,10,4);ctx.fill();
+  ctx.fillStyle=skin;rr(x-7,top-14,14,23,4);ctx.fill();
+  ctx.fillStyle=o.body;ctx.strokeStyle='#34413e';ctx.lineWidth=1.6;rr(x-25,top,50,76+fl*5,13);ctx.fill();ctx.stroke();
+  ctx.strokeStyle='#fff4db55';ctx.lineWidth=2;line(x-17,top+64,x+17,top+64);line(x-9,top+5,x+9,top+5);
+  ctx.strokeStyle=o.body;ctx.lineWidth=10;line(x-f*18,top+17,x-f*28,top+61);
+  ctx.fillStyle=skin;circ(x-f*28,top+64,5);ctx.fill();
+  var hy=FEETY-150+(o.nod||0)*5+fl*3+(o.down?4:0)-(o.walk?Math.abs(Math.sin(G.time*8))*1.5:0),hx=x+(o.back?0:f*2);
+  if(o.body===SANNA.body){ctx.fillStyle=o.hair;rr(hx-23,hy-17,45,45,18);ctx.fill();ctx.fillStyle=skin;rr(x-7,top-15,14,19,4);ctx.fill();}
+  ctx.fillStyle=skin;ctx.strokeStyle='#34413e';ctx.lineWidth=1.8;circ(hx,hy,21);ctx.fill();ctx.stroke();
+  circ(hx-f*20,hy+3,5);ctx.fill();ctx.stroke();
+  ctx.fillStyle=o.hair;
+  if(o.back){circ(hx,hy,22);ctx.fill();}
+  else{
+    ctx.beginPath();ctx.moveTo(hx-21,hy);ctx.bezierCurveTo(hx-30,hy-31,hx+11,hy-31,hx+22,hy-8);ctx.lineTo(hx+8,hy-13);ctx.quadraticCurveTo(hx+2,hy-2,hx-10,hy-7);ctx.lineTo(hx-16,hy+2);ctx.closePath();ctx.fill();
+    if(o.body===MIKA.body){circ(hx-8,hy-21,7);ctx.fill();circ(hx+2,hy-22,8);ctx.fill();}
+    var ey=hy+2+(o.down?4:0),ex=hx+f*5,er=2+fl*1.6+(o.face==='stiff'?1.2:0);
+    ctx.fillStyle='#2b2733';
+    if(o.down){ctx.lineWidth=2;line(ex-8,ey,ex-4,ey+1);line(ex+4,ey+1,ex+8,ey);}
+    else if(!RM&&Math.sin(G.time*.8+x)>0.997){line(ex-8,ey,ex-4,ey);line(ex+4,ey,ex+8,ey);}
+    else{circ(ex-6,ey,er);ctx.fill();circ(ex+6,ey,er);ctx.fill();}
+    ctx.strokeStyle='#34413e';ctx.lineWidth=1.2;
+    if(o.brow){ctx.strokeStyle='#34413e';ctx.lineWidth=2.2;line(ex+1,ey-8,ex+10,ey-14);line(ex-11,ey-8,ex-3,ey-8);}
+    if(o.body===MIKA.body){circ(ex-7,ey,6);ctx.stroke();circ(ex+7,ey,6);ctx.stroke();line(ex-1,ey,ex+1,ey);}
+    line(ex+1,ey+3,ex+3,ey+6);
+    ctx.fillStyle='#c77f7055';circ(ex-13,ey+6,4);ctx.fill();circ(ex+13,ey+6,4);ctx.fill();
+    ctx.lineWidth=2;ctx.lineCap='round';
+    if(o.grin>0){
+      // A smile that is working too hard: wider with every yes, teeth showing, corners trembling.
+      var gw=Math.min(12,6+o.grin*1.6),gd=Math.min(9,5+o.grin),cy0=ey+8,tr=RM?0:Math.sin(G.time*30)*0.6*Math.min(1,o.grin/3);
+      ctx.fillStyle='#fffdf6';ctx.strokeStyle='#34413e';ctx.lineWidth=1.6;
+      ctx.beginPath();ctx.moveTo(ex-gw,cy0-1+tr);ctx.quadraticCurveTo(ex,cy0+gd*1.6,ex+gw,cy0-1-tr);ctx.quadraticCurveTo(ex,cy0+2,ex-gw,cy0-1+tr);ctx.closePath();ctx.fill();ctx.stroke();
+      if(o.grin>=2){ctx.lineWidth=1.2;line(ex-gw-1,cy0-4,ex-gw-3,cy0+1);line(ex+gw+1,cy0-4,ex+gw+3,cy0+1);}
+    }
+    else if(o.face==='smile'){ctx.beginPath();ctx.arc(ex,ey+5,5,0.15*Math.PI,0.85*Math.PI);ctx.stroke();}
+    else if(o.face==='stiff'){line(ex-6,ey+9,ex+6,ey+9);}
+    else if(o.face==='frown'){ctx.beginPath();ctx.arc(ex,ey+14,6,1.15*Math.PI,1.85*Math.PI);ctx.stroke();line(ex-11,ey-9,ex-3,ey-6);line(ex+11,ey-9,ex+3,ey-6);}
+    else line(ex-3,ey+9,ex+3,ey+9);
+  }
+  if(o.blush>0.05){
+    // The face goes hot. Past ~0.8 the whole head glows like a bulb and lets off steam.
+    var bl=o.blush;ctx.fillStyle='rgba(222,70,60,'+Math.min(0.62,bl*0.55)+')';circ(hx,hy,21);ctx.fill();
+    if(bl>0.8&&!RM){ctx.strokeStyle='rgba(240,236,226,'+((bl-0.8)*4)+')';ctx.lineWidth=2;for(var st=-1;st<=1;st++){var sy0=hy-30-((G.time*30+st*9)%22);ctx.beginPath();ctx.moveTo(hx+st*10,sy0);ctx.quadraticCurveTo(hx+st*10+5,sy0-6,hx+st*10,sy0-12);ctx.stroke();}}
+  }
+  if(o.sweat>0.08){
+    var nd=Math.ceil(o.sweat*4);ctx.fillStyle='#bfe3f2';ctx.strokeStyle='#5d8fa6';ctx.lineWidth=1.2;
+    for(var di=0;di<nd;di++){var ph=((G.time*(0.7+di*0.13)+di*0.37)%1),dx=hx+(di%2?1:-1)*(12+di*3),dy=hy-12+ph*(28+o.sweat*40),ds=3+o.sweat*3;
+      ctx.beginPath();ctx.moveTo(dx,dy-ds*1.6);ctx.quadraticCurveTo(dx+ds,dy,dx,dy+ds);ctx.quadraticCurveTo(dx-ds,dy,dx,dy-ds*1.6);ctx.fill();ctx.stroke();}
+  }
+  ctx.strokeStyle=o.body;ctx.lineWidth=9;ctx.lineCap='round';
+  if(o.cup){var cxp=x+f*22,cyp=top+40-(o.sip||0)*30+(o.shake?Math.sin(G.time*38)*1.5:0);
+    line(x+f*15,top+18,cxp-f*3,cyp+4);
+    ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(cxp-6,cyp-7,12,14,2);ctx.fill();ctx.stroke();}
+  if(o.wave){ctx.strokeStyle=o.body;ctx.lineWidth=9;var wy=top-26+Math.sin(G.time*11)*4;line(x+f*17,top+14,x+f*30,wy);
+    ctx.fillStyle='#f4ecdd';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;circ(x+f*31,wy-5,6);ctx.fill();ctx.stroke();}
+  ctx.restore();
+}
+var SANNA={body:'#62887f',hair:'#463b38'},MIKA={body:'#ac8277',hair:'#895e41'};
+function drawHuman(extra){
+  var Hm=G.human,o={body:'#c98f2e',hair:'#4a3b32',facing:Hm.facing||1,cup:!G.cupLeft&&!G.w&&!G.noCup,sip:Hm.sip||0,flinch:Hm.flinch,face:Hm.face,back:Hm.back,sweat:Hm.sweat,blush:Hm.blush,grin:Hm.grin,puddle:Hm.puddle};
+  if(o.face==='down')o.down=true;
+  if(!G.w&&Math.abs(Hm.x-Hm.xT)>1)o.walk=true;
+  if(extra)for(var k in extra)o[k]=extra[k];
+  person(Hm.x,o);
+}
+function drawCoworkers(alpha){
+  var g=G;
+  var lf=g.lensView?'frown':undefined;
+  if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:g.aFace,face:lf,wave:g.aWave,alpha:alpha,walk:Math.abs(g.ax-g.axT)>1,sweat:g.aSweat});
+  if(g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:g.bFace,face:lf,alpha:alpha,cup:Math.abs(g.bx2-g.bxT)<1&&g.bxT<1000,walk:Math.abs(g.bx2-g.bxT)>1});
+  if(g.cowR)person(g.rx,{body:RIITTA.body,hair:RIITTA.hair,facing:-1,alpha:alpha,brow:g.rBrow});
+}
+
+/* ================= drawing: the shadow ================= */
+function geom(){
+  var M=G.morko,s=M.s,j=(RM?0.3:1)*clamp(((G.anx||0)-0.3)/0.6,0,1);
+  var bx=G.human.x+M.off+Math.sin(G.time*47)*1.7*j,by=WALLY;
+  var hgt=190*s*(RM?1:1+0.012*Math.sin(G.time*1.7)),shW=58*s,hdR=20*Math.pow(s,0.45);
+  var shY=by-hgt*0.7+Math.sin(G.time*31)*1.3*j,hdY=shY-11*s-hdR*0.8;
+  if(hdY<hdR+34)hdY=hdR+34;if(shY<hdY+hdR*0.7)shY=hdY+hdR*0.7;
+  return{bx:bx,by:by,shY:shY,shW:shW,hdY:hdY,hdR:hdR,s:s};
+}
+function handTargets(q){
+  var M=G.morko,Hm=G.human,hy=FEETY-150;
+  var L={x:q.bx-q.shW*0.9,y:q.shY},R={x:q.bx+q.shW*0.9,y:q.shY},a,b,front=false;
+  var pose=M.st==='frozen'?'grow':M.st==='hide'?'hold':M.st==='pokka'?null:M.pose;
+  switch(pose){
+    case 'grow':a={x:L.x-q.shW*0.9,y:q.shY-34*q.s};b={x:R.x+q.shW*0.9,y:q.shY-34*q.s};break;
+    case 'cover':a={x:Hm.x-7,y:hy+2};b={x:Hm.x+11,y:hy+2};front=true;break;
+    case 'pull':a={x:Hm.x+24,y:FEETY-96};b={x:Hm.x+22,y:FEETY-72};front=true;break;
+    case 'hold':a={x:Hm.x-24,y:FEETY-112};b={x:Hm.x+24,y:FEETY-112};front=true;break;
+    case 'comfort':a={x:L.x-6,y:q.shY+85*q.s};b={x:Hm.x+25,y:FEETY-106};front=true;break;
+    case 'lens':if(G.lens){var lh=lensHandle();a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b={x:lh.x2,y:lh.y2};front=true;break;}a={x:L.x,y:q.shY+60};b={x:R.x,y:q.shY+60};break;
+    case 'swat':if(G.fight&&G.fight.swat){a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b={x:G.fight.swat.x,y:G.fight.swat.y};front=true;break;}a={x:L.x,y:q.shY+60};b={x:R.x,y:q.shY+60};break;
+    case 'drink':a={x:L.x-q.shW*0.45,y:q.shY+62*q.s};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};break;
+    case 'sip':a={x:q.bx-q.hdR*0.75,y:q.hdY+q.hdR*1.5};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};break;
+    case 'toast':a={x:L.x-q.shW*0.8,y:q.shY-34*q.s};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};break;
+    case 'selfmouth':a={x:q.bx-q.hdR*0.3,y:q.hdY+q.hdR*0.45};b={x:q.bx+q.hdR*0.3,y:q.hdY+q.hdR*0.5};break;
+    case 'selfeyes':a={x:q.bx-q.hdR*0.42,y:q.hdY-q.hdR*0.05};b={x:q.bx+q.hdR*0.42,y:q.hdY-q.hdR*0.05};break;
+    default:a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};
+  }
+  return{a:a,b:b,front:front,L:L,R:R};
+}
+function mcol(){return G.w||G.set==='home'||G.set==='bar'?'#0d0f18':G.dark>0.5?'#14111d':'#28243a';}
+function morkoBody(q){
+  var Hm=G.human,wk=G.morko.wake==null?1:G.morko.wake,al=wk;
+  if(wk<0.98){ctx.fillStyle='rgba(20,16,30,'+(0.26*(1-wk))+')';ctx.beginPath();ctx.ellipse(Hm.x-12,FEETY+3,44,9,0,0,Math.PI*2);ctx.fill();}
+  if(wk<0.02)return;
+  ctx.fillStyle=mcol();
+  ctx.globalAlpha=0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.bx+26*q.s,q.by);ctx.lineTo(q.bx-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
+  ctx.beginPath();ctx.moveTo(q.bx-26*q.s,q.by);ctx.lineTo(q.bx+26*q.s,q.by);ctx.lineTo(q.bx+q.shW*0.8,q.shY+6);ctx.lineTo(q.bx-q.shW*0.8,q.shY+6);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.ellipse(q.bx,q.shY+4,q.shW,Math.max(14,26*q.s),0,0,Math.PI*2);ctx.fill();
+  circ(q.bx,q.hdY,q.hdR);ctx.fill();ctx.globalAlpha=1;
+  if(wk>0.4)morkoFace(q);
+  if(G.ninja)drawHeadband(q);
+}
+function morkoArms(q,ht){
+  var M=G.morko,lw=11*Math.sqrt(q.s),sh=[ht.L,ht.R];
+  ctx.strokeStyle=mcol();ctx.fillStyle=mcol();ctx.lineWidth=lw;ctx.lineCap='round';
+  for(var i=0;i<2;i++){var h=M.h[i],s0=sh[i];
+    ctx.beginPath();ctx.moveTo(s0.x,s0.y);ctx.quadraticCurveTo((s0.x+h.x)/2+(i?14:-14)*q.s,(s0.y+h.y)/2+10*q.s,h.x,h.y);ctx.stroke();
+    circ(h.x,h.y,lw*0.78);ctx.fill();}
+}
+function morkoFace(q){
+  var M=G.morko,r=q.hdR,cx=q.bx,cy=q.hdY,ex=r*0.42;
+  var m=M.st==='frozen'||M.st==='hide'?'scared':M.st==='pokka'?'pokka':M.mood,look=m==='pokka'?-1:1;
+  var er=r*0.2,pr=0.45,brow=null,i;
+  if(m==='calm'){er=r*0.15;pr=0.5;}
+  else if(m==='alert'){er=r*0.25;pr=0.4;}
+  else if(m==='scared'||m==='surprised'){er=r*0.34;pr=0.24;brow='up';}
+  else if(m==='stern'){er=r*0.21;brow='in';}
+  else if(m==='care'||m==='worry'){er=r*0.21;brow='out';}
+  ctx.lineCap='round';
+  for(i=-1;i<=1;i+=2){
+    var x=cx+i*ex,y=cy-r*0.05;
+    if(m==='pokka'){
+      ctx.fillStyle='#f6f1e4';ctx.beginPath();ctx.arc(x,y,r*0.2,0,Math.PI);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#14111d';circ(x+look*r*0.09,y+r*0.08,r*0.07);ctx.fill();
+    }else{
+      if(!RM&&brow!=='up'&&G.time%4.7<0.12){ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2,r*0.09);line(x-er,y,x+er,y);}
+      else{ctx.fillStyle='#f6f1e4';circ(x,y,er);ctx.fill();
+      ctx.fillStyle='#14111d';circ(x+look*er*0.4,y,er*pr);ctx.fill();}
+    }
+    ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2,r*0.09);
+    if(brow==='up')line(x-er,y-er-r*0.2,x+er,y-er-r*0.2);
+    else if(brow==='in')line(x-i*er*1.1,y-er-r*0.22,x+i*er*0.2,y-er-r*0.02);
+    else if(brow==='out')line(x-i*er*1.0,y-er-r*0.22,x+i*er*1.0,y-er-r*0.08);
+  }
+  if(m==='pokka'){ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(1.5,r*0.07);circ(cx-r*0.1,cy+r*0.5,r*0.09);ctx.stroke();}
+}
+function drawPair(humanOpts){
+  var q=geom(),ht=handTargets(q);
+  var up=G.morko.wake==null||G.morko.wake>0.5;
+  morkoBody(q);if(up&&!ht.front)morkoArms(q,ht);
+  if(up)shadowDrink(q);
+  drawHuman(humanOpts);
+  if(up&&ht.front)morkoArms(q,ht);
+}
+
+/* ================= drawing: speech ================= */
+function drawLines(){
+  var g=G,i,l,cur=g.cur&&g.cur.who;
+  for(var pass=0;pass<2;pass++)for(i=0;i<g.lines.length;i++){
+    l=g.lines[i];var isCur=l.who===cur;if((pass===1)!==isCur||!isCur)continue;
+    if(!WIDE)continue; // on a narrow screen the panel below the scene carries the text
+    if((l.who==='S'||l.who==='H')&&g.human.gone)continue;
+    var n=l.text.length,mw=n>90?330:n>50?290:0,rv=Math.floor(g.curT*55);
+    ctx.save();
+    if(l.who==='S'){var q=geom(),above=q.hdY-q.hdR-14,sw=mw||260,bh=bubbleH(l.text,sw);
+      if(above-12>=bh+8)bubble(q.bx-70,above+12,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv});
+      else bubble(q.bx-70,0,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,top:Math.min(q.hdY+q.hdR+14,WALLY-bh-70)});}
+    else if(l.who==='H')bubble(g.human.x+60,FEETY-172,l.text,{maxW:mw||230,reveal:rv});
+    else if(l.who==='A')bubble(g.ax,FEETY-172,l.text,{maxW:mw,reveal:rv});
+    else if(l.who==='B')bubble(g.bx2,FEETY-172,l.text,{maxW:mw,reveal:rv});
+    else if(l.who==='P')bubble(g.w||!g.human.gone?g.human.x+210:170,g.w?330:340,l.text,{noTail:true,maxW:mw,reveal:rv});
+    else if(l.who==='R')bubble(g.rx,FEETY-172,l.text,{maxW:mw,reveal:rv});
+    else if(l.who==='T'&&g.bar)bubble(g.bar.tx-196,0,l.text,{noTail:true,maxW:mw||240,reveal:rv,top:BARY+26});
+    else if(l.who==='X'&&g.bar)bubble(g.bar.sx,FEETY-172,l.text,{maxW:mw,reveal:rv});
+    else if(l.who==='L')bubble(760,FEETY-172,l.text,{maxW:mw,reveal:rv});
+    else if(l.who==='Z')bubble(g.ax+62,WALLY-178,l.text,{dark:true,noTail:true,reveal:rv});
+    ctx.restore();
+  }
+}
+
+/* ================= drawing: scenes ================= */
+function drawOutside(){
+  var g=G,o=g.out,t=o.t,an=o.anim;
+  if(an==='chatlog'){drawChatlog(o);return;}
+  if(an==='text'){
+    ctx.fillStyle='#141a1c';ctx.fillRect(0,0,W,H);ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);
+    ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,28,29);
+    ctx.textAlign='right';ctx.font='500 16px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText(o.dur,W-28,29);
+    ctx.globalAlpha=clamp((t-0.5)/0.6,0,1);ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='500 30px Fraunces,Georgia,serif';
+    var ls=wrap(o.cap,720);for(var li=0;li<ls.length;li++)ctx.fillText(ls[li],W/2,H/2+10-(ls.length-1)*20+li*40);ctx.globalAlpha=1;return;
+  }
+  backdrop(true);
+  var hx=g.human.xT<0?HOME:g.human.x,h={body:'#c98f2e',hair:'#4a3b32',facing:1,cup:true,face:'neutral'};
+  var aFace=1,aWave=false,show=true;
+  if(an==='tape'){hx=HOME;h.nod=(t>0.8&&t<1.6)?Math.sin((t-0.8)/0.8*Math.PI):0;aFace=t<1.4?-1:1;}
+  else if(an==='none'){h.nod=(t>0.5&&t<1.3)?Math.sin((t-0.5)/0.8*Math.PI):0;h.sip=t>2.2&&t<3.6?Math.sin((t-2.2)/1.4*Math.PI):0;}
+  else if(an==='bite'){h.face=t<1.6?'stiff':'neutral';}
+  else if(an==='nod'){h.nod=(t>0.5&&t<1.3)?Math.sin((t-0.5)/0.8*Math.PI):(t>1.6&&t<2.4)?Math.sin((t-1.6)/0.8*Math.PI):0;}
+  else if(an==='grow'){h.face='stiff';h.flinch=t<1.9?0.8:0.25;h.shake=t<2.8;}
+  else if(an==='cover'){h.face='down';h.down=true;if(g.day!=='C'&&t>1&&t<2.8){aFace=-1;aWave=true;}}
+  else if(an==='exit'){hx=300-t*110;h.back=true;h.cup=false;h.walk=true;show=hx>-40;if(t>2.6)aFace=-1;}
+  if(an==='tape'&&t>0.4&&t<1.4)bubble(700,FEETY-172,'oh, hi.');
+  if(an==='exit'){ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(650,406,12,14,2);ctx.fill();ctx.stroke();}
+  if(show)person(hx,h);
+  if(an==='tape'){person(700,{body:SANNA.body,hair:SANNA.hair,facing:aFace});person(800,{body:MIKA.body,hair:MIKA.hair,facing:1,cup:true});}
+  else if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:aFace,wave:aWave});
+  if(an!=='tape'&&g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:an==='nod'||an==='bite'?-1:g.bFace,cup:true,face:an==='bite'&&t>1.5?(t<2.4?'stiff':'smile'):'neutral',flinch:an==='bite'&&t>1.2&&t<2?0.5:0});
+  if(an==='bite'&&t>0.3&&t<1.5)bubble(hx+40,FEETY-172,'Maybe YOUR comfort zone could use a walk.',{maxW:200});
+  if(an==='bite'&&t>2.4&&t<3.8)bubble(g.bx2,FEETY-172,'…ha.');
+  if(an==='none'&&t>0.6&&t<1.9)bubble(hx,FEETY-172,'hi');
+  if(an==='grow'&&t>1.9&&t<3.3)bubble(hx,FEETY-172,'HI.');
+  ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);ctx.fillRect(0,H-64,W,64);
+  ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,28,29);
+  ctx.textAlign='right';ctx.font='500 16px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText(o.dur,W-28,29);
+  if(t>2.2){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='500 20px system-ui,sans-serif';ctx.fillText(o.cap,W/2,H-32);}
+}
+function drawWalk(){
+  var g=G,w=g.w,cam=w.x-400,i,sx;
+  ctx.fillStyle='#12152a';ctx.fillRect(-20,-20,W+40,140);
+  ctx.fillStyle='#f6f1e4';for(i=0;i<14;i++){var stx=((i*173-cam*0.05)%1000+1000)%1000-20;circ(stx,14+(i*37)%90,1.2);ctx.fill();}
+  ctx.fillStyle='#3d4460';ctx.fillRect(-20,120,W+40,WALLY-120);
+  ctx.fillStyle='#343a52';for(i=0;i<9;i++){sx=((i*130-cam)%1170+1170)%1170-105;ctx.fillRect(sx,120,4,WALLY-120);}
+  ctx.fillStyle='#2a2e40';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);
+  ctx.fillStyle='#232636';ctx.fillRect(-20,WALLY-5,W+40,5);
+  drawCars(cam);
+  var hx=HOMEX+60-cam;
+  if(hx<W+200){ctx.fillStyle='#57405a';ctx.fillRect(hx-130,90,360,WALLY-90);
+    ctx.fillStyle='#f3d27a';rr(hx+110,200,70,70,4);ctx.fill();
+    ctx.fillStyle='#7a4f3c';rr(hx-34,WALLY-158,72,158,6);ctx.fill();ctx.fillStyle='#e2b04a';circ(hx+26,WALLY-78,4);ctx.fill();}
+  for(i=0;i<LAMPS.length;i++){
+    sx=LAMPS[i]-cam;if(sx<-320||sx>W+320)continue;
+    var home=i===LAMPS.length-1,ly=home?190:150,lx=home?sx:sx+26;
+    var gr=ctx.createRadialGradient(lx,ly+60,8,lx,ly+60,300);gr.addColorStop(0,'rgba(255,221,140,.5)');gr.addColorStop(1,'rgba(255,221,140,0)');
+    ctx.save();ctx.beginPath();ctx.rect(-20,120,W+40,H);ctx.clip();ctx.fillStyle=gr;ctx.fillRect(lx-300,ly-240,600,600);ctx.restore();
+    if(!home){ctx.strokeStyle='#1b1d2a';ctx.lineWidth=6;ctx.lineCap='round';line(sx,WALLY,sx,150);line(sx,150,sx+26,150);}
+    ctx.fillStyle='#ffe9a8';circ(lx,ly+4,home?7:9);ctx.fill();
+  }
+  drawPair({walk:g.walking});
+  drawTics(cam);
+}
+function hhmm(s){var h=Math.floor(s/3600)%24,m=Math.floor(s/60)%60;return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;}
+var JOB_OLD='Keep you from being rejected.',JOB_NEW='Stay with you when it happens.';
+function jobRewrite(x,y,w){
+  // Strike the old job out, then hand-write the new one underneath. Pure canvas, no layout change.
+  var t=G.job.t,k=clamp(t/0.9,0,1);
+  ctx.strokeStyle='#e2b04a';ctx.lineWidth=2;line(x-2,y,x-2+(w+4)*k,y);
+  if(t>1.1){
+    var n=Math.min(JOB_NEW.length,Math.floor((t-1.1)*24)),txt=JOB_NEW.slice(0,n);
+    ctx.font='600 15px Fraunces,Georgia,serif';ctx.textAlign='right';ctx.fillStyle='#e2b04a';
+    ctx.fillText(txt+(n<JOB_NEW.length?'▏':''),x+w,y+22);ctx.textAlign='left';
+  }
+}
+function jobCard(){
+  // The turn, shown large for a moment before it settles into the corner.
+  var t=G.job.t,a=clamp(t/0.4,0,1)*clamp((4.6-t)/0.6,0,1);if(a<=0)return;
+  var cx=W/2,cy=150,w=520,h=150;
+  ctx.save();ctx.globalAlpha=a;
+  ctx.fillStyle='rgba(18,24,28,.9)';rr(cx-w/2,cy-h/2,w,h,14);ctx.fill();
+  ctx.strokeStyle='#e2b04a55';ctx.lineWidth=1.5;rr(cx-w/2,cy-h/2,w,h,14);ctx.stroke();
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='700 12px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText('EKSKYYSMI’S JOB DESCRIPTION',cx,cy-48);
+  ctx.font='500 22px system-ui,sans-serif';ctx.fillStyle='#f1ebdd';var ow=ctx.measureText(JOB_OLD).width;ctx.fillText(JOB_OLD,cx,cy-12);
+  var k=clamp(t/0.9,0,1);ctx.strokeStyle='#e2b04a';ctx.lineWidth=3;line(cx-ow/2-4,cy-11,cx-ow/2-4+(ow+8)*k,cy-11);
+  if(t>1.1){var n=Math.min(JOB_NEW.length,Math.floor((t-1.1)*20));
+    ctx.font='600 26px Fraunces,Georgia,serif';ctx.fillStyle='#e2b04a';ctx.fillText(JOB_NEW.slice(0,n)+(n<JOB_NEW.length?'▏':''),cx,cy+32);}
+  ctx.restore();
+}
+function hud(){
+  var g=G,y=26,rows=g.w?[['ON THE WAY HOME',hhmm(g.clock)]]:[['A SMALL PLAN',g.planText||'Ask Sanna to lunch.']];
+  if(g.chapter===3&&g.yes&&!g.moment)rows.push(['THINGS AGREED TO',String(g.yes)]);
+  rows.unshift(['EKSKYYSMI’S JOB',g.jobDone?JOB_NEW:JOB_OLD,g.jobDone?'':'job']);
+  var show=1;if(COMPACT){show=(g.job&&g.job.t<7)||g.pop?1:clamp(7-(g.hudAge||0),0,1);if(show<=0)return;}
+  ctx.save();ctx.globalAlpha=show;if(COMPACT){ctx.translate(W-14,14);ctx.scale(1.3,1.3);ctx.translate(-(W-14),-14);}
+  ctx.textAlign='left';ctx.textBaseline='middle';
+  for(var i=0;i<rows.length;i++){
+    ctx.font='700 11px system-ui,sans-serif';var w1=ctx.measureText(rows[i][0]).width;
+    ctx.font='500 13px system-ui,sans-serif';var w2=ctx.measureText(rows[i][1]).width;
+    var x=W-14-(w1+w2+30);
+    ctx.fillStyle='rgba(22,19,30,.72)';rr(x,y-11,w1+w2+30,22,11);ctx.fill();
+    ctx.font='700 11px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(rows[i][0],x+10,y);
+    ctx.font='500 13px system-ui,sans-serif';ctx.fillStyle='#f1ebdd';ctx.fillText(rows[i][1],x+18+w1,y);
+    if(rows[i][2]==='job'&&g.job)jobRewrite(x+18+w1,y,w2);
+    y+=rows[i][2]==='job'&&g.job?50:26;
+  }
+  if(g.pop){ctx.globalAlpha=clamp(2.6-g.pop.t,0,1);ctx.textAlign='right';ctx.font='700 14px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(g.pop.text,W-20,y+4-Math.min(8,g.pop.t*10));ctx.globalAlpha=1;}
+  ctx.restore();
+}
+function pausedNote(){
+  ctx.fillStyle='rgba(13,17,20,.55)';ctx.fillRect(0,0,W,H);
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#f1ebdd';ctx.font='650 34px Fraunces,Georgia,serif';ctx.fillText('Paused',W/2,H/2-36);
+  ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#bfcfbd';ctx.fillText('Tap the scene to carry on.',W/2,H/2+4);
+}
+function draw(){
+  var g=G;
+  ctx.setTransform(SC,0,0,SC,0,0);
+  ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+  if(g.chap){chapCard();return;}
+  if(g.out){drawOutside();return;}
+  if(g.rep){drawReplay();return;}
+  if(g.zoom){drawZoom();return;}
+  ctx.save();applyCamera();
+  if(g.w){drawWalk();drawLines();}
+  else{
+    backdrop(false);
+    if(g.dark>0.01){ctx.fillStyle='rgba(18,14,30,'+(0.45*g.dark)+')';ctx.fillRect(-20,-20,W+40,H+40);}
+    if(g.gaze>0.01&&!g.human.gone){
+      ctx.fillStyle='rgba(255,246,200,'+(0.34*g.gaze)+')';ctx.beginPath();
+      if(g.gazeFrom==='after'){var px=g.human.x;ctx.moveTo(px-24,-30);ctx.lineTo(px+24,-30);ctx.lineTo(px+86,FEETY+4);ctx.lineTo(px-86,FEETY+4);ctx.closePath();ctx.fill();
+        ctx.beginPath();ctx.ellipse(px,FEETY+4,86,13,0,0,Math.PI*2);ctx.fill();}
+      else{var gx=g.gazeFrom==='B'?g.bx2:g.gazeFrom==='R'?g.rx:g.ax;ctx.moveTo(gx-14,FEETY-150);ctx.lineTo(g.human.x+16,FEETY-176);ctx.lineTo(g.human.x+16,FEETY);ctx.closePath();ctx.fill();}
+    }
+    if(!g.human.gone)drawPair();
+    drawFight();
+    drawDish();
+    drawTics(0);
+    if(WAIT==='hold'&&g.hold&&!g.human.gone)holdRing();
+    sannaShadow();
+    drawCoworkers(1);
+    if(g.set==='bar'&&g.bar)barFront();
+    drawLens();
+    drawLines();
+  }
+  ctx.restore();
+  if(g.flash>0.01&&!RM){ctx.fillStyle='rgba(255,250,235,'+(0.22*g.flash)+')';ctx.fillRect(0,0,W,H);}
+  if(g.pulse>0.02){
+    var beat=RM?0.6:0.35+0.65*Math.pow(Math.max(0,Math.sin(g.time*9.4)),6),vg=ctx.createRadialGradient(W/2,H/2,H*0.3,W/2,H/2,H*0.8);
+    vg.addColorStop(0,'rgba(128,26,34,0)');vg.addColorStop(1,'rgba(128,26,34,'+(0.55*g.pulse*beat)+')');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+  }
+  ctx.textBaseline='middle';
+  if(g.bigNote)bigNote();
+  if(g.cards.length)drawCards();
+  if(g.fade>0.01){ctx.fillStyle='rgba(10,12,16,'+g.fade+')';ctx.fillRect(0,0,W,H);}
+  if(g.draft)drawDraft();
+  if(g.boss)drawBoss();
+  if(g.rec)drawRec();
+  if(g.hud&&g.started)hud();
+  if(g.job&&!g.ended)jobCard();
+  if(g.w){
+        if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText('THE WALK HOME',W/2,74);
+      ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('Nine minutes, usually.',W/2,106);}
+  }
+  if(g.band)band(g.band,H-18);
+  if(paused)pausedNote();
+}
+// ---- src/80-ui.js ----
+/* ================= overlays ================= */
+function showOv(html,kind){ov.innerHTML='<div class="card">'+html+'</div>';ov.className='ov on';ov.dataset.kind=kind||'title';}
+function hideOv(){ov.className='ov';ov.innerHTML='';}
+function showChapters(){
+  var sv=loadProgress(),h='<div class="eyebrow">Chapters</div><h2>Pick a moment.</h2><div class="lab-list">';
+  for(var i=1;sv&&i<=sv.unlocked&&i<=5;i++)h+='<button class="lab" type="button" data-ch="'+i+'"><b>'+CHAPTERS[i].title+'</b><span>'+CHAPTERS[i].day.charAt(0)+CHAPTERS[i].day.slice(1).toLowerCase().replace(/\b(mon|tues|wednes|thurs|fri)day\b/g,function(d){return d.charAt(0).toUpperCase()+d.slice(1);})+'</span></button>';
+  showOv(h+'</div><p class="small">Each one starts from its beginning and runs on into the moments after it.</p><button class="go alt" type="button" data-go="menu">Back</button>','menu');
+}
+function showAbout(){
+  showOv('<div class="eyebrow">About</div><h2>What is this?</h2>'+
+   '<p>You play Ekskyysmi, the overprotective shadow of a perfectly ordinary person. They have small plans. You have concerns.</p>'+
+   '<p>Small moments from one ordinary life, in no particular hurry. About 45 minutes. Read at your own pace. Nothing is timed.</p>'+
+   '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice.</p>'+
+   '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
+}
+function showWeekEnd(){
+  var g=G;g.ended=true;g.dayEnd=false;WAIT=null;Q=[];render();
+  var note=g.no?'One “no” was said out loud. Everyone survived, including Eero.':'The “no” is still in its box. It keeps.';
+  showOv('<div class="eyebrow">For now</div><h2>Still here. Both of you.</h2>'+
+   '<p class="small job-line">Ekskyysmi’s job: <s>Keep you from being rejected.</s> Stay with you when it happens.</p>'+
+   '<p>A string of small moments. One “oh, hi”, twice.<br>It went off both times. The second time, somebody stayed.</p>'+
+   '<div class="end-note"><p>'+note+'</p></div>'+
+   '<p class="title-quote">“For the record, I intend to go off again on Monday.”</p>'+
+   '<button class="go" type="button" data-go="start">New game →</button><button class="go alt" type="button" data-go="menu">Title screen</button>','end');
+}
+function showTitle(){
+  var sv=loadProgress();
+  G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
+  showOv('<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
+   '<p class="tagline">A small moment.<br>A very long shadow.</p>'+
+   (sv?'<button class="go" type="button" data-go="cont">Continue · '+dayName(sv.ch)+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">New game</button>'
+      :'<button class="go" type="button" data-go="start">New game <span aria-hidden="true">→</span></button>')+
+   '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">Chapters</button>':'')+
+   '<button class="link" type="button" data-go="lab">Scenario lab</button><button class="link" type="button" data-go="about">About</button></div>');
+  render();
+}
+var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
+function showEnd(){
+  var g=G,n=g.startles;g.ended=true;g.dayEnd=true;WAIT=null;Q=[];render();saveProgress(2);
+  var note=g.lunch===1?'Lunch happened. So did the worrying. Both fitted into the same day.':g.lunch===2?'A message sent. Lunch tomorrow. The shadow is reviewing the menu.':g.day==='C'?(g.reflected?'Today hurt. You reached for someone who makes room for you.':'Today hurt. Their choice to leave you out was theirs.'):'The invitation stayed unspoken. The story can still continue tomorrow.';
+  if(g.day==='C'&&g.leak==='exit'&&!g.reflected)note='Today felt lonely. Not every missing piece needs filling in tonight.';
+  var quote={grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. We went anyway.'}[g.leak];
+  showOv('<div class="eyebrow">End of Monday</div><h2>Home. Both of you.</h2>'+
+   '<p>The greeting lasted two seconds.<br>The shadow took the scenic route.</p>'+
+   '<div class="end-note"><p>'+note+'</p></div>'+
+   '<p class="title-quote">“'+quote+'”</p>'+
+   '<button class="go" type="button" data-go="next">Carry on →</button>'+
+   '<button class="go alt" type="button" data-go="same">Try another approach</button>'+
+   '<button class="go alt" type="button" data-go="again">Another Monday</button>'+
+   '<p class="small">Another approach replays this Monday. Another Monday changes what was happening around you.</p>','end');
+}
+function startGame(day,skip){
+  reset(day);G.started=true;
+  saveProgress(1);
+  if(skip){G.bx2=G.bxT=880;Q=scSanna();}
+  else Q=scPrelude().concat(scIntro(),[function(){return scSanna();}]);
+  run();
+}
+ov.addEventListener('click',function(e){
+  var t=e.target;while(t&&t!==ov&&!(t.getAttribute&&(t.getAttribute('data-go')||t.getAttribute('data-ch')||t.getAttribute('data-lab'))))t=t.parentNode;
+  if(!t||t===ov)return;var go=t.getAttribute('data-go');
+  if(t.getAttribute('data-ch')){startChapter(+t.getAttribute('data-ch'));return;}
+  if(t.getAttribute('data-lab')){startLab(t.getAttribute('data-lab'));return;}
+  if(go==='lab'){reset(null);showLab();return;}
+  if(go==='chapters'){showChapters();return;}
+  if(go==='about'){showAbout();return;}
+  if(go==='start')startGame(null,false);
+  else if(go==='cont'){var sv=loadProgress();startChapter(sv?sv.ch:1);}
+  else if(go==='next'){hideOv();G.ended=false;G.dayEnd=false;Q=chain(2);run();}
+  else if(go==='menu'){reset(null);showTitle();}
+  else if(go==='again')startGame(null,true);
+  else if(go==='same')startGame(G.day,true);
+  else if(go==='cancel'){hideOv();paused=modalWasPaused;syncPause();}
+  else if(go==='restart'){reset(null);showTitle();}
+});
+
+/* ================= input ================= */
+window.addEventListener('keydown',function(e){
+  if(logDialog.open||ov.dataset.kind==='restart'&&ov.classList.contains('on'))return;
+  if(e.repeat)return;
+  var tag=e.target.tagName;
+  if(e.key===' '||e.key==='Enter'){
+    if(tag==='BUTTON'||tag==='INPUT'||tag==='A')return;
+    if(!G.started){startGame(null,false);}else advance();
+    e.preventDefault();
+  }else if(e.key>='1'&&e.key<='4'&&tag!=='INPUT'){choose(+e.key-1);}
+  else if(e.key==='p'||e.key==='P'){togglePause();}
+});
+function syncPause(){if(paused)stopVoice();document.getElementById('pause').textContent=paused?'Resume':'Pause';document.body.classList.toggle('is-paused',paused);}
+function togglePause(){if(!G.started||G.ended||logDialog.open||ov.classList.contains('on'))return;paused=!paused;syncPause();}
+document.getElementById('pause').addEventListener('click',togglePause);
+document.getElementById('restart').addEventListener('click',function(){
+  if(!G.started||G.ended){reset(null);showTitle();return;}
+  if(ov.classList.contains('on'))return;
+  modalWasPaused=paused;paused=true;syncPause();
+  showOv('<div class="eyebrow">A fresh start?</div><h2>Rewind this little day?</h2><p>This will return to the beginning.</p><button class="go" data-go="cancel" type="button">Keep going</button><button class="go alt" data-go="restart" type="button">Start over</button>','restart');
+  ov.querySelector('[data-go=cancel]').focus();
+});
+document.getElementById('journal').addEventListener('click',function(){
+  if(ov.classList.contains('on')&&!G.ended)return;
+  modalWasPaused=paused;paused=true;syncPause();
+  document.getElementById('log-content').innerHTML=history.map(function(l){return '<div class="log-entry"><b>'+NAMES[l.who]+'</b><p>'+esc(l.text)+'</p></div>';}).join('');
+  logDialog.showModal();
+});
+document.getElementById('close-log').addEventListener('click',function(){logDialog.close();});
+logDialog.addEventListener('close',function(){paused=modalWasPaused;syncPause();document.getElementById('journal').focus();});
+function motionUI(){document.getElementById('motion').setAttribute('aria-pressed',String(RM));document.body.classList.toggle('reduce-motion',RM);}
+document.getElementById('motion').addEventListener('click',function(){RM=!RM;motionUI();});
+motionUI();
+document.getElementById('sound').addEventListener('click',function(){soundOn=!soundOn;if(!soundOn){stopVoice();var mn=musicName;music(null);musicName=mn;}else{preloadSounds();var mn2=musicName;musicName=null;music(mn2);}try{window.localStorage.setItem('ekskyysmi.sound',soundOn?'on':'off');}catch(e){}soundUI();if(soundOn)sfx('pick');});
+soundUI();
+function backButton(){
+  if(logDialog.open){logDialog.close();return 'log';}
+  if(!G.started||G.ended){if(ov.innerHTML.indexOf('data-go="start"')>=0)return 'exit';reset(null);showTitle();return 'title';}
+  if(paused){paused=false;syncPause();reset(null);showTitle();return 'title';}
+  togglePause();return 'pause';
+}
+var CAP=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
+if(CAP&&CAP.addListener)CAP.addListener('backButton',function(){if(backButton()==='exit'&&CAP.exitApp)CAP.exitApp();});
+// Phones: the controls fold away behind one button so that only the scene and the words are on screen.
+var menuBtn=document.getElementById('menu');
+function setMenu(on){document.body.classList.toggle('menu-open',on);if(menuBtn&&menuBtn.setAttribute)menuBtn.setAttribute('aria-expanded',String(on));}
+if(menuBtn&&menuBtn.addEventListener){
+  menuBtn.addEventListener('click',function(e){if(e&&e.stopPropagation)e.stopPropagation();setMenu(!document.body.classList.contains('menu-open'));});
+  document.addEventListener('click',function(){if(document.body.classList.contains('menu-open'))setMenu(false);});
+}
+document.addEventListener('visibilitychange',function(){if(document.hidden&&!paused)togglePause();});
+// ---- src/90-loop.js ----
+/* ================= loop ================= */
+var last=0;
+function frame(ts){
+  var elapsed=clamp((ts-last)/1000||0,0,1),dt=Math.min(elapsed,0.05);last=Math.max(last,ts);
+  if(!paused)update(dt,elapsed);
+  draw();
+  window.requestAnimationFrame(frame);
+}
+resize();reset(null);showTitle();
+window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,chapters:showChapters,about:showAbout,lensTap:lensTap,back:backButton,sound:{load:loadSound,has:function(k){return !!BUF[k];},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
+window.requestAnimationFrame(frame);
+})();

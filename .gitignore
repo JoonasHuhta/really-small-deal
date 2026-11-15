@@ -1,0 +1,19 @@
+# Build output and dependencies
+node_modules/
+www/
+android/app/build/
+android/.gradle/
+android/build/
+*.apk
+*.aab
+
+# Third-party material: research notes that quote another game's script.
+# Keep these on your own machine; they are not yours to republish.
+research/awa-source/
+
+# Editor and OS clutter
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
