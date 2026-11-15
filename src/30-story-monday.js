@@ -26,10 +26,10 @@ function scIntro(){return [
   set({hud:1}),
   ['H','And my job?'],
   ['S','Coffee. I’ll handle the catastrophes.'],
-  ['H','So. Lunch. I’m asking her today.'],
+  ['H','Then handle lunch. I’m asking her out loud.'],
   set({plan:1,mood:'alert',s:1.3}),
-  ['S','…Out loud?'],
-  ['H','Go on, then. Suggest something. I’ll decide.'],
+  ['S','…Out LOUD?'],
+  ['H','Suggest something. I’ll decide.'],
   ['S','You usually do. It’s a flaw in the system.'],
   {choice:[
     {t:'Rehearse the sentence. Forty times.',then:[['H','“Would you like to get lunch.”'],['S','You sounded hungry. Desperate, even. Again.'],['H','It’s lunch. Hunger is on topic.']]},

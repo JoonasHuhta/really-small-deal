@@ -17,14 +17,14 @@ function showWeekEnd(){
   var g=G;g.ended=true;g.dayEnd=false;WAIT=null;Q=[];render();
   var note=g.no?'One “no” was said out loud. Everyone survived, including Eero.':'The “no” is still in its box. It keeps.';
   closeDay();var rows=runRows(g.run),rt='RECEIPT · THE WHOLE THING';
-  g.receiptText=receiptText(rt,rows,RC_FOOT_RUN);
+  g.receiptText=receiptText(rt,rows,RC_FOOT_RUN);g.receipt={title:rt,rows:rows,foot:RC_FOOT_RUN};
   showOv('<div class="end-grid"><div><div class="eyebrow">For now</div><h2>Still here. Both of you.</h2>'+
    '<p class="small job-line">Ekskyysmi’s job: <s>Keep you from being rejected.</s> Stay with you when it happens.</p>'+
    '<p>A string of small moments. One “oh, hi”, twice.<br>It went off both times. The second time, somebody stayed.</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
    '<p class="title-quote">“For the record, I intend to go off again on Monday.”</p>'+
    '<div class="end-go"><button class="go" type="button" data-go="start">New game →</button><button class="go alt" type="button" data-go="menu">Title screen</button></div></div>'+
-   receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="copyrcpt">Copy receipt</button>')+'</div>','end');
+   receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function showTitle(){
   var sv=loadProgress();
@@ -44,7 +44,7 @@ function showEnd(){
   if(g.day==='C'&&g.leak==='exit'&&!g.reflected)note='Today felt lonely. Not every missing piece needs filling in tonight.';
   var quote=g.lunch===1?'I would like to lodge a complaint about the speed of that hi.':{grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. We went anyway. Slightly after everyone else.'}[g.leak];
   var d=closeDay()||{label:'A MONDAY',outside:AWAKE,extra:0,ledger:[],ratio:1},rows=receiptRows(d),rt='DAILY RECEIPT · '+d.label;
-  g.receiptText=receiptText(rt,rows,RC_FOOT_DAY);
+  g.receiptText=receiptText(rt,rows,RC_FOOT_DAY);g.receipt={title:rt,rows:rows,foot:RC_FOOT_DAY};
   showOv('<div class="end-grid"><div><div class="eyebrow">End of Monday</div><h2>Home. Both of you.</h2>'+
    '<p>The greeting lasted two seconds.<br>The shadow took the scenic route.</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
@@ -53,7 +53,7 @@ function showEnd(){
    '<button class="go alt" type="button" data-go="same">Try another approach</button>'+
    '<button class="go alt" type="button" data-go="again">Another Monday</button></div>'+
    '<p class="small">Another approach replays this Monday. Another Monday changes what was happening around you.</p></div>'+
-   receiptHTML(rt,rows,RC_FOOT_DAY+'<br><button class="rc-copy" type="button" data-go="copyrcpt">Copy receipt</button>')+'</div>','end');
+   receiptHTML(rt,rows,RC_FOOT_DAY+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function startGame(day,skip){
   reset(day);G.started=true;G.chapter=1;newDay();
@@ -68,6 +68,7 @@ ov.addEventListener('click',function(e){
   if(t.getAttribute('data-ch')){startChapter(+t.getAttribute('data-ch'));return;}
   if(t.getAttribute('data-lab')){startLab(t.getAttribute('data-lab'));return;}
   if(go==='copyrcpt'){copyReceipt(t);return;}
+  if(go==='sharercpt'){shareReceipt(t);return;}
   if(go==='lab'){reset(null);showLab();return;}
   if(go==='chapters'){showChapters();return;}
   if(go==='about'){showAbout();return;}

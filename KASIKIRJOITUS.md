@@ -213,7 +213,7 @@ Muut piirteet tulevat **muiden ihmisten varjoina**, jokaisella oma osastonsa. Si
 |---|---|---|
 | Sanna | ”Fine”. Valvoo kolmeen, kun joku sanoo ”fine”. | Pelissä (*Colleagues.*, perjantai) |
 | Eero | Myöhemmin. Aikasokeus: kello ilman viisareita, kadonnut kalenteri, aina vähän jäljessä. | Pelissä 0.25 (*Sometime.*) |
-| Riitta | Kuormitus. Varjo jongleeraa yhtätoista asiaa eikä ehdi katsoa ketään. ”Not now” ei ollut tuomio vaan pudonnut pallo. | Ehdotus: *Not now.* |
+| Riitta | Kuormitus. Varjo jongleeraa yhtätoista asiaa eikä ehdi katsoa ketään. ”Not now” ei ollut tuomio vaan pudonnut pallo. | Pelissä 0.30 (*Not now.* |
 | Kirjastonhoitaja | Ei varjoa näkyvissä. Kaikilla ei ole. | Vitsi: Ekskyysmi etsii sitä suurennuslasilla. |
 
 Säännöt: muiden varjot ovat ystävällisiä ja omassa työssään yhtä huonoja kuin Ekskyysmi omassaan. Niiden piirrettä ei nimetä diagnoosina. Jokainen kohtaaminen pienentää Ekskyysmin maailmaa vähän: tuomio olikin toisen osaston asia.

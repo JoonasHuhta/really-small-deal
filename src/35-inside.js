@@ -92,6 +92,54 @@ function receiptText(title,rows,foot){
 }
 var RC_FOOT_DAY='Thank you for your vigilance.<br>No refunds. No returns.';
 var RC_FOOT_RUN='Outside, a day is a day.<br>Inside, some days come twice.';
+// The receipt as a picture, for sending to someone who will understand. Drawn from the same rows as the paper one.
+function receiptCanvas(title,rows,foot){
+  var S=2,PW=560,PAD=34,CW=PW-PAD*2,LH=30,F='500 21px ui-monospace,"SF Mono",Menlo,Consolas,monospace',FB='800 26px ui-monospace,"SF Mono",Menlo,Consolas,monospace';
+  var c=document.createElement('canvas'),x=c.getContext('2d'),items=[],y=0,feet=foot.replace(/<br>/g,'\n').replace(/<[^>]+>/g,'').split('\n').filter(function(s){return s;});
+  function wrap(t,max){var out=[],cur='';t.split(' ').forEach(function(w){var n=cur?cur+' '+w:w;if(cur&&x.measureText(n).width>max){out.push(cur);cur=w;}else cur=n;});out.push(cur);return out;}
+  x.font=F;
+  rows.forEach(function(r){
+    if(r==='-'){items.push({k:'hr',h:22});return;}
+    var big=r[2]==='big';x.font=big?FB:F;var vw=x.measureText(r[1]).width,ls=wrap(r[0],CW-vw-18);
+    ls.forEach(function(l,i){items.push({k:'row',a:l,b:i===ls.length-1?r[1]:'',big:big,h:big?LH+8:LH});});
+  });
+  var headH=84,footH=feet.length*26+58,bodyH=0;items.forEach(function(it){bodyH+=it.h;});
+  var PH=PAD+headH+bodyH+footH+PAD,M=44,Wc=PW+M*2,Hc=PH+M*2;
+  c.width=Wc*S;c.height=Hc*S;x.scale(S,S);
+  x.fillStyle='#12171b';x.fillRect(0,0,Wc,Hc);
+  x.save();x.translate(Wc/2,Hc/2);x.rotate(0.012);x.translate(-PW/2,-PH/2);
+  x.fillStyle='rgba(0,0,0,.45)';x.fillRect(8,12,PW,PH);x.fillStyle='#f6f1e4';x.fillRect(0,0,PW,PH);
+  x.fillStyle='#2b2733';x.textBaseline='middle';x.textAlign='center';
+  x.font='800 22px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillText('REALLY SMALL DEAL',PW/2,PAD+16);x.fillText(title,PW/2,PAD+46);
+  y=PAD+headH;
+  items.forEach(function(it){
+    if(it.k==='hr'){x.strokeStyle='#8b8070';x.lineWidth=2;x.setLineDash([8,6]);x.beginPath();x.moveTo(PAD,y+11);x.lineTo(PW-PAD,y+11);x.stroke();x.setLineDash([]);}
+    else{x.font=it.big?FB:F;x.fillStyle='#2b2733';x.textAlign='left';x.fillText(it.a,PAD,y+it.h/2+(it.big?4:0));x.textAlign='right';x.fillText(it.b,PW-PAD,y+it.h/2+(it.big?4:0));}
+    y+=it.h;
+  });
+  x.textAlign='center';x.font='500 18px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillStyle='#5a5560';y+=26;
+  feet.forEach(function(l){x.fillText(l,PW/2,y);y+=26;});
+  x.fillStyle='#8b8070';x.font='500 15px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillText('joonashuhta.github.io/really-small-deal',PW/2,y+12);
+  x.restore();
+  return c;
+}
+function shareReceipt(btn){
+  var r=G.receipt;if(!r)return;
+  function say(t){if(btn)btn.textContent=t;}
+  function fallback(){copyReceipt(btn);}
+  var c;try{c=receiptCanvas(r.title,r.rows,r.foot);}catch(e){fallback();return;}
+  if(!c.toBlob){fallback();return;}
+  c.toBlob(function(blob){
+    if(!blob){fallback();return;}
+    var file=null;try{file=new File([blob],'really-small-deal-receipt.png',{type:'image/png'});}catch(e){}
+    try{if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
+      navigator.share({files:[file],title:'Really Small Deal',text:'My receipt.'}).then(function(){say('Sent. Probably fine.');},function(){say('Save as picture');});return;}}catch(e){}
+    // No share sheet: a plain download in a browser. Inside the app there is nowhere to download to, so the text goes to the clipboard instead.
+    if(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform()){fallback();return;}
+    try{var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='really-small-deal-receipt.png';document.body.appendChild(a);a.click();a.remove();
+      setTimeout(function(){URL.revokeObjectURL(u);},4000);say('Saved. Check your downloads.');}catch(e){fallback();}
+  },'image/png');
+}
 function copyReceipt(btn){
   var t=G.receiptText||'';
   function done(ok){if(btn)btn.textContent=ok?'Copied. Paste it anywhere.':'Could not copy, sorry.';}

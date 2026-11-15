@@ -2,7 +2,7 @@
 
 15.11.2026 · Claude. Tämä tiedosto korvaa [TOTEUTUKSEN_SUUNNITTELU.md](TOTEUTUKSEN_SUUNNITTELU.md):n työlistana. Lista on järjestetty sen mukaan, mikä vaikuttaa eniten siihen, että peli toimii ja että siitä kerrotaan eteenpäin.
 
-## Missä ollaan (0.29)
+## Missä ollaan (0.30)
 
 - **Peli:** viisi päivää (Oh, hi · Quick chat? · Could you just… · Seen. · For now) ja niiden välissä yksitoista lyhyttä hetkeä. Yksi läpipeluu kestää lukutahdissa noin 38 minuuttia. Selainpeli toimii myös puhelimella vaakasuunnassa. Android-kuori on valmiina, mutta sitä ei ole julkaistu.
 - **Rakenne on mitattu ja järjestetty** (Weilandin käännekohdat, Trubyn perusaskeleet): ks. [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Rakenne.
@@ -23,7 +23,7 @@ Lopuksi kysy kaksi kysymystä: ”Kenelle näyttäisit tämän?” ja ”Mikä k
 
 ## 2. Ensimmäiset 90 sekuntia
 
-Täysi intro kestää lukutahdissa mitattuna noin 2 min 20 s ennen oikean vastauksen ikkunaa. Jaettu linkki avataan usein puhelimella kesken muun tekemisen, joten tavoite on noin 75 sekuntia. Lyhennettävää on hiljaisen alun sekunneissa ja aamubriiffin repliikeissä. Itse ideaan ei tarvitse koskea.
+**0.30:** hiljainen alku lyheni 22 sekunnista 16,5:een ja ennen ensimmäistä valintaa on kaksi repliikkiä vähemmän. Ensimmäinen valinta tulee nyt noin 45 sekunnin kohdalla. Loppu on yhä tekemättä: täysi intro kesti ennen tätä lukutahdissa noin 2 min 20 s ennen oikean vastauksen ikkunaa, ja nyt arviolta 2 min 5 s (ei mitattu uudelleen). Isoin jäljellä oleva pala on Eeron mukavuusalue-kohtaus, jota ei voi siirtää rikkomatta kotimatkan viittauksia. Jaettu linkki avataan usein puhelimella kesken muun tekemisen, joten tavoite on noin 75 sekuntia. Lyhennettävää on hiljaisen alun sekunneissa ja aamubriiffin repliikeissä. Itse ideaan ei tarvitse koskea.
 
 ## 3. Käsikirjoitus: mitä tutkimus antaa (lähteet alla)
 
@@ -54,7 +54,7 @@ Uusin laadullinen tutkimus (Rowney-Smith ym., PLOS ONE 2026) nimeää ADHD:n hyl
 
 ## 4b. Laajennus muiden varjoina
 
-Seuraava: **Riitan varjo** *Not now.* -hetkeen (jongleeraa yhtätoista asiaa, ”Not now” oli pudonnut pallo). Perustelut ja säännöt: [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Laajennus: muiden varjot.
+~~**Riitan varjo** *Not now.* -hetkeen~~ Tehty 0.30. Seuraava: kirjastonhoitaja, jolla ei ole varjoa (Ekskyysmi etsii sitä suurennuslasilla). Perustelut ja säännöt: [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Laajennus: muiden varjot.
 
 ## 5. Ennen julkaisua
 
@@ -76,7 +76,7 @@ Tekemättä, tärkeysjärjestyksessä:
 4. **Offline selaimessa.** Android-sovellus toimii ilman verkkoa, selainversio ei. Pieni service worker korjaisi sen, mutta se kannattaa lisätä vasta, kun versiot eivät enää vaihdu päivittäin (vanha versio jää helposti välimuistiin).
 5. **Emme tiedä, missä pelaajat lopettavat.** Analytiikkaa ei ole. Yksityisyyden kannalta se on hyvä, kehityksen kannalta sokea piste. Pelaajatesti (kohta 1) korvaa tämän toistaiseksi.
 6. **Google Play.** Sisältöluokitus, tietoturvalomake (peli ei kerää mitään) ja tietosuojasivu. Jos kehittäjätili on henkilötili, joka on luotu 13.11.2023 jälkeen, ennen julkaisua vaaditaan suljettu testi 12 testaajalla 14 päivän ajan. Vanhemmat tilit ja organisaatiotilit on vapautettu.
-7. **Kuitti kuvana.** Copy receipt kopioi tekstin. Kuva (canvas → PNG, Web Share API) leviäisi paremmin.
+7. ~~**Kuitti kuvana.**~~ Tehty 0.30 selaimessa (jakovalikko puhelimella, lataus tietokoneella). Android-sovelluksessa tarvitaan vielä `@capacitor/share` ja `@capacitor/filesystem`, jotta kuvan voi jakaa sieltäkin.
 
 ## Mitä ei kannata tehdä
 

@@ -16,7 +16,7 @@ try{var ts=parseInt(window.localStorage.getItem('ekskyysmi.text'),10);if(ts>=0&&
 var WIDE=true,paused=false,appHidden=false,nativePaused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
 var logDialog=document.getElementById('dialogue-log'),modalWasPaused=false,dragging=false;
 var Q=[],WAIT=null,TIMER=0,LOCK=0,CH=null;
-var NAMES={S:'EKSKYYSMI',H:'HUMAN',A:'SANNA',B:'EERO',P:'PHONE',N:'A MOMENT LATER',R:'RIITTA',Z:'SANNA’S SHADOW',Y:'EERO’S SHADOW',T:'BARTENDER',X:'A STRANGER',L:'LIBRARIAN'};
+var NAMES={S:'EKSKYYSMI',H:'HUMAN',A:'SANNA',B:'EERO',P:'PHONE',N:'A MOMENT LATER',R:'RIITTA',Z:'SANNA’S SHADOW',Y:'EERO’S SHADOW',W:'RIITTA’S SHADOW',T:'BARTENDER',X:'A STRANGER',L:'LIBRARIAN'};
 
 function clamp(v,a,b){return v<a?a:v>b?b:v;}
 function approach(v,t,d){return v<t?Math.min(t,v+d):Math.max(t,v-d);}

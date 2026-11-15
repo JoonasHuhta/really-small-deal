@@ -20,7 +20,7 @@ try{var ts=parseInt(window.localStorage.getItem('ekskyysmi.text'),10);if(ts>=0&&
 var WIDE=true,paused=false,appHidden=false,nativePaused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
 var logDialog=document.getElementById('dialogue-log'),modalWasPaused=false,dragging=false;
 var Q=[],WAIT=null,TIMER=0,LOCK=0,CH=null;
-var NAMES={S:'EKSKYYSMI',H:'HUMAN',A:'SANNA',B:'EERO',P:'PHONE',N:'A MOMENT LATER',R:'RIITTA',Z:'SANNA’S SHADOW',Y:'EERO’S SHADOW',T:'BARTENDER',X:'A STRANGER',L:'LIBRARIAN'};
+var NAMES={S:'EKSKYYSMI',H:'HUMAN',A:'SANNA',B:'EERO',P:'PHONE',N:'A MOMENT LATER',R:'RIITTA',Z:'SANNA’S SHADOW',Y:'EERO’S SHADOW',W:'RIITTA’S SHADOW',T:'BARTENDER',X:'A STRANGER',L:'LIBRARIAN'};
 
 function clamp(v,a,b){return v<a?a:v>b?b:v;}
 function approach(v,t,d){return v<t?Math.min(t,v+d):Math.max(t,v-d);}
@@ -414,28 +414,28 @@ function scPrelude(){return [
   function(){var g=G,Hm=g.human,M=g.morko;music('intro');g.skippable=true;g.hud=false;g.clock=8*3600+51*60+20;
     Hm.gone=true;Hm.x=Hm.xT=1010;Hm.facing=-1;g.noCup=true;g.mugFixed=false;M.asleep=true;M.wake=0;M.s=M.sT=0.3;
     g.chap={day:CHAPTERS[1].day,title:CHAPTERS[1].title,t:0};g.chapter=1;newDay();sfx('card');},
-  {wait:2.8},
+  {wait:2.2},
   function(){G.chap=null;G.fade=1;G.fadeRate=0.36;},
-  addTic('Monday, 8:52. Nobody here yet.',190,62,{at:1.6,life:4.2,size:19}),
-  {wait:4.4},
+  addTic('Monday, 8:52. Nobody here yet.',190,62,{at:0.9,life:3.4,size:19}),
+  {wait:2.6},
   function(){var Hm=G.human;Hm.gone=false;Hm.xT=815;},
-  {wait:2.1},
+  {wait:1.8},
   function(){G.human.back=true;sfx('drip');},
-  addTic('drip.',898,246,{life:1.1}),addTic('drip.',898,246,{at:0.8,life:1.1}),addTic('drip.',898,246,{at:1.6,life:1.1}),
-  {wait:1.0},function(){sfx('drip');},{wait:0.8},function(){sfx('drip');},{wait:0.8},
+  addTic('drip.',898,246,{life:0.9}),addTic('drip.',898,246,{at:0.7,life:0.9}),
+  {wait:0.8},function(){sfx('drip');},{wait:0.8},
   function(){var g=G,Hm=g.human;g.noCup=false;Hm.back=false;Hm.facing=-1;Hm.xT=704;},
   {wait:1.3},
   function(){G.human.facing=1;},
-  addTic('(mug handle on the wrong side.)',764,276,{life:1.8}),
-  {wait:1.8},
-  function(){G.mugFixed=true;sfx('clink');},
-  addTic('(better.)',764,276,{life:1.5}),
+  addTic('(mug handle on the wrong side.)',764,276,{life:1.5}),
   {wait:1.5},
+  function(){G.mugFixed=true;sfx('clink');},
+  addTic('(better.)',764,276,{life:1.1}),
+  {wait:1.1},
   function(){var Hm=G.human;Hm.facing=-1;Hm.xT=HOME;},
-  {wait:2.4},
-  function(){G.human.facing=1;},{wait:0.7},
-  function(){G.human.sipT=1;},{wait:1.0},
-  function(){var Hm=G.human;Hm.sipT=0;Hm.face='smile';},{wait:1.5},
+  {wait:2.2},
+  function(){G.human.facing=1;},{wait:0.4},
+  function(){G.human.sipT=1;},{wait:0.9},
+  function(){var Hm=G.human;Hm.sipT=0;Hm.face='smile';},{wait:0.9},
   preludeSettle,
   ['H','Today I’m going to ask Sanna to lunch.'],
   set({plan:1}),{wait:0.9},
@@ -527,6 +527,22 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   ['H','A bit stung. And fine.'],
   ['S','I don’t have a drawer for that.'],
   ['H','Make one.'],
+  function(){G.wT=1;},{wait:1.5},
+  set({mood:'surprised'}),
+  ['S','…Her shadow is juggling.'],
+  ['W','Eleven. Can’t look. Eleven.'],
+  ['S','One of them hit us.'],
+  function(){G.wDrop={t:0};sfx('drip');},{wait:0.9},
+  ['W','That was “not now”. It’s the only one I’m allowed to drop.'],
+  ['S','It LANDED.'],
+  ['W','They do. Sorry. Ten.'],
+  ['S','You drop things on PURPOSE? I have never dropped anything. I have all of it. Since 2011.'],
+  ['W','Heavy?'],
+  {wait:1.2},
+  set({mood:'worry'}),
+  ['S','…It’s filed.'],
+  ['W','Mm. Ten.'],
+  function(){G.wT=0;},{wait:1.0},
   function(){G.rehearsal=true;addLived('“not now”, rehearsed',190);},
   ['S','For the record: the actual “no” took four seconds.'],
   ['S','I rehearsed it for three hours and ten minutes.'],
@@ -562,10 +578,10 @@ function scIntro(){return [
   set({hud:1}),
   ['H','And my job?'],
   ['S','Coffee. I’ll handle the catastrophes.'],
-  ['H','So. Lunch. I’m asking her today.'],
+  ['H','Then handle lunch. I’m asking her out loud.'],
   set({plan:1,mood:'alert',s:1.3}),
-  ['S','…Out loud?'],
-  ['H','Go on, then. Suggest something. I’ll decide.'],
+  ['S','…Out LOUD?'],
+  ['H','Suggest something. I’ll decide.'],
   ['S','You usually do. It’s a flaw in the system.'],
   {choice:[
     {t:'Rehearse the sentence. Forty times.',then:[['H','“Would you like to get lunch.”'],['S','You sounded hungry. Desperate, even. Again.'],['H','It’s lunch. Hunger is on topic.']]},
@@ -761,7 +777,7 @@ function scene(o){return function(){
   var g=G,M=g.morko,Hm=g.human;
   music(o.music||o.set||'room');
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;
-  g.cowA=g.cowB=g.cowR=false;g.yT=g.yShow=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
+  g.cowA=g.cowB=g.cowR=false;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;
@@ -1372,6 +1388,54 @@ function receiptText(title,rows,foot){
 }
 var RC_FOOT_DAY='Thank you for your vigilance.<br>No refunds. No returns.';
 var RC_FOOT_RUN='Outside, a day is a day.<br>Inside, some days come twice.';
+// The receipt as a picture, for sending to someone who will understand. Drawn from the same rows as the paper one.
+function receiptCanvas(title,rows,foot){
+  var S=2,PW=560,PAD=34,CW=PW-PAD*2,LH=30,F='500 21px ui-monospace,"SF Mono",Menlo,Consolas,monospace',FB='800 26px ui-monospace,"SF Mono",Menlo,Consolas,monospace';
+  var c=document.createElement('canvas'),x=c.getContext('2d'),items=[],y=0,feet=foot.replace(/<br>/g,'\n').replace(/<[^>]+>/g,'').split('\n').filter(function(s){return s;});
+  function wrap(t,max){var out=[],cur='';t.split(' ').forEach(function(w){var n=cur?cur+' '+w:w;if(cur&&x.measureText(n).width>max){out.push(cur);cur=w;}else cur=n;});out.push(cur);return out;}
+  x.font=F;
+  rows.forEach(function(r){
+    if(r==='-'){items.push({k:'hr',h:22});return;}
+    var big=r[2]==='big';x.font=big?FB:F;var vw=x.measureText(r[1]).width,ls=wrap(r[0],CW-vw-18);
+    ls.forEach(function(l,i){items.push({k:'row',a:l,b:i===ls.length-1?r[1]:'',big:big,h:big?LH+8:LH});});
+  });
+  var headH=84,footH=feet.length*26+58,bodyH=0;items.forEach(function(it){bodyH+=it.h;});
+  var PH=PAD+headH+bodyH+footH+PAD,M=44,Wc=PW+M*2,Hc=PH+M*2;
+  c.width=Wc*S;c.height=Hc*S;x.scale(S,S);
+  x.fillStyle='#12171b';x.fillRect(0,0,Wc,Hc);
+  x.save();x.translate(Wc/2,Hc/2);x.rotate(0.012);x.translate(-PW/2,-PH/2);
+  x.fillStyle='rgba(0,0,0,.45)';x.fillRect(8,12,PW,PH);x.fillStyle='#f6f1e4';x.fillRect(0,0,PW,PH);
+  x.fillStyle='#2b2733';x.textBaseline='middle';x.textAlign='center';
+  x.font='800 22px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillText('REALLY SMALL DEAL',PW/2,PAD+16);x.fillText(title,PW/2,PAD+46);
+  y=PAD+headH;
+  items.forEach(function(it){
+    if(it.k==='hr'){x.strokeStyle='#8b8070';x.lineWidth=2;x.setLineDash([8,6]);x.beginPath();x.moveTo(PAD,y+11);x.lineTo(PW-PAD,y+11);x.stroke();x.setLineDash([]);}
+    else{x.font=it.big?FB:F;x.fillStyle='#2b2733';x.textAlign='left';x.fillText(it.a,PAD,y+it.h/2+(it.big?4:0));x.textAlign='right';x.fillText(it.b,PW-PAD,y+it.h/2+(it.big?4:0));}
+    y+=it.h;
+  });
+  x.textAlign='center';x.font='500 18px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillStyle='#5a5560';y+=26;
+  feet.forEach(function(l){x.fillText(l,PW/2,y);y+=26;});
+  x.fillStyle='#8b8070';x.font='500 15px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillText('joonashuhta.github.io/really-small-deal',PW/2,y+12);
+  x.restore();
+  return c;
+}
+function shareReceipt(btn){
+  var r=G.receipt;if(!r)return;
+  function say(t){if(btn)btn.textContent=t;}
+  function fallback(){copyReceipt(btn);}
+  var c;try{c=receiptCanvas(r.title,r.rows,r.foot);}catch(e){fallback();return;}
+  if(!c.toBlob){fallback();return;}
+  c.toBlob(function(blob){
+    if(!blob){fallback();return;}
+    var file=null;try{file=new File([blob],'really-small-deal-receipt.png',{type:'image/png'});}catch(e){}
+    try{if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
+      navigator.share({files:[file],title:'Really Small Deal',text:'My receipt.'}).then(function(){say('Sent. Probably fine.');},function(){say('Save as picture');});return;}}catch(e){}
+    // No share sheet: a plain download in a browser. Inside the app there is nowhere to download to, so the text goes to the clipboard instead.
+    if(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform()){fallback();return;}
+    try{var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='really-small-deal-receipt.png';document.body.appendChild(a);a.click();a.remove();
+      setTimeout(function(){URL.revokeObjectURL(u);},4000);say('Saved. Check your downloads.');}catch(e){fallback();}
+  },'image/png');
+}
 function copyReceipt(btn){
   var t=G.receiptText||'';
   function done(ok){if(btn)btn.textContent=ok?'Copied. Paste it anywhere.':'Could not copy, sorry.';}
@@ -1540,6 +1604,22 @@ function eeroShadow(){
   ctx.fillStyle='#f6f1e4';circ(x+53,by-156+bob,7.5);ctx.fill();ctx.strokeStyle='#3a3a55';ctx.lineWidth=2;circ(x+53,by-156+bob,7.5);ctx.stroke();
   ctx.fillStyle='#f6f1e4';circ(x-7,by-167+bob,4.4);ctx.fill();circ(x+7,by-167+bob,4.4);ctx.fill();
   ctx.fillStyle='#14111d';var look=g.yxT>g.yx+2?1.6:0;circ(x-7+look,by-166+bob,1.9);ctx.fill();circ(x+7+look,by-166+bob,1.9);ctx.fill();
+  ctx.restore();
+}
+// Riitta's shadow works in load. Eleven things in the air, eyes on all of them, none on you. It can drop exactly one.
+function riittaShadow(){
+  var g=G,k=g.wShow;if(!k||k<0.02)return;var x=g.rx+92,by=WALLY,d=g.wDrop,n=d?10:11,cy=by-196,t=RM?0.6:g.time*2.1,i,a,ex;
+  ctx.save();ctx.globalAlpha=Math.min(1,k);ctx.fillStyle='#35374f';
+  ctx.beginPath();ctx.moveTo(x-16,by);ctx.lineTo(x+16,by);ctx.lineTo(x+25,by-120);ctx.lineTo(x-25,by-120);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.ellipse(x,by-122,34,14,0,0,Math.PI*2);ctx.fill();circ(x,by-152,16);ctx.fill();
+  ctx.strokeStyle='#35374f';ctx.lineWidth=10;ctx.lineCap='round';
+  var up=RM?0:Math.sin(t*2)*5;line(x-27,by-118,x-50,by-150+up);line(x+27,by-118,x+50,by-150-up);
+  ctx.fillStyle='#f6f1e4';ctx.strokeStyle='#35374f';ctx.lineWidth=2;
+  for(i=0;i<n;i++){a=t+i*Math.PI*2/n;circ(x+Math.cos(a)*54,cy-Math.sin(a)*30-(Math.sin(a)>0?Math.sin(a)*14:0),5.2);ctx.fill();ctx.stroke();}
+  if(d){var f=Math.min(1,d.t/0.5),fy=cy+(by-8-cy)*f*f,b=d.t>0.5&&!RM?Math.abs(Math.sin((d.t-0.5)*9))*10*Math.max(0,1-(d.t-0.5)/0.9):0;
+    ctx.fillStyle='#e0563e';circ(x+66,fy-b,5.6);ctx.fill();ctx.stroke();}
+  ctx.fillStyle='#f6f1e4';circ(x-6.5,by-153,4.2);ctx.fill();circ(x+6.5,by-153,4.2);ctx.fill();
+  ex=RM?0:Math.cos(t)*1.7;ctx.fillStyle='#14111d';circ(x-6.5+ex,by-155,1.8);ctx.fill();circ(x+6.5+ex,by-155,1.8);ctx.fill();
   ctx.restore();
 }
 function chapCard(){
@@ -2754,7 +2834,7 @@ function update(dt,elapsed){
       if(hh.p>=hh.secs)finishHold();
     }
   }
-  if(g.card>0)g.card-=dt;if(g.job)g.job.t+=elapsed;if(g.chap)g.chap.t+=dt;if(g.bigNote)g.bigNote.t+=dt;if(g.fade>0)g.fade=Math.max(0,g.fade-dt*(g.fadeRate||1.6));Hm.sip=ease(Hm.sip||0,Hm.sipT||0,8*dt);M.wake=ease(M.wake==null?1:M.wake,M.asleep?0:1,2.6*dt);if(g.anx>0.3)g.anx=Math.max(0.3,g.anx-0.06*dt);g.zShow=ease(g.zShow,g.zT,2*dt);g.yShow=ease(g.yShow||0,g.yT||0,2*dt);g.yx=approach(g.yx||0,g.yxT||0,(RM?400:75)*dt);if(g.out)g.out.t+=dt;if(g.pop){g.pop.t+=dt;if(g.pop.t>2.6)g.pop=null;}
+  if(g.card>0)g.card-=dt;if(g.job)g.job.t+=elapsed;if(g.chap)g.chap.t+=dt;if(g.bigNote)g.bigNote.t+=dt;if(g.fade>0)g.fade=Math.max(0,g.fade-dt*(g.fadeRate||1.6));Hm.sip=ease(Hm.sip||0,Hm.sipT||0,8*dt);M.wake=ease(M.wake==null?1:M.wake,M.asleep?0:1,2.6*dt);if(g.anx>0.3)g.anx=Math.max(0.3,g.anx-0.06*dt);g.zShow=ease(g.zShow,g.zT,2*dt);g.yShow=ease(g.yShow||0,g.yT||0,2*dt);g.wShow=ease(g.wShow||0,g.wT||0,2*dt);if(g.wDrop)g.wDrop.t+=dt;g.yx=approach(g.yx||0,g.yxT||0,(RM?400:75)*dt);if(g.out)g.out.t+=dt;if(g.pop){g.pop.t+=dt;if(g.pop.t>2.6)g.pop=null;}
   var base=M.sT,offT=-70-(M.s-1)*12;
   if(g.w){var lb=lampBase();base=M.sT+lb.s;offT=lb.off-(M.sT-1)*45;g.w.x=approach(g.w.x,g.w.xT,g.w.speed*dt);g.walking=g.w.x<g.w.xT-0.5&&g.w.speed>0;}
   if(M.st==='free'||M.st==='pokka')M.s=approach(M.s,base,(M.s<base?1.5:1.1)*dt);
@@ -3063,6 +3143,7 @@ function drawLines(){
     else if(l.who==='L')bubble(760,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='Z')bubble(g.ax+62,WALLY-178,l.text,{dark:true,noTail:true,reveal:rv});
     else if(l.who==='Y')bubble(g.yx,WALLY-200,l.text,{dark:true,noTail:true,maxW:mw||250,reveal:rv});
+    else if(l.who==='W')bubble(g.rx+92,WALLY-246,l.text,{dark:true,noTail:true,maxW:mw||230,reveal:rv});
     ctx.restore();
   }
 }
@@ -3207,7 +3288,7 @@ function draw(){
     drawDish();
     drawTics(0);
     if(WAIT==='hold'&&g.hold&&!g.human.gone)holdRing();
-    sannaShadow();eeroShadow();
+    sannaShadow();eeroShadow();riittaShadow();
     drawCoworkers(1);
     if(g.set==='bar'&&g.bar)barFront();
     drawLens();
@@ -3256,14 +3337,14 @@ function showWeekEnd(){
   var g=G;g.ended=true;g.dayEnd=false;WAIT=null;Q=[];render();
   var note=g.no?'One “no” was said out loud. Everyone survived, including Eero.':'The “no” is still in its box. It keeps.';
   closeDay();var rows=runRows(g.run),rt='RECEIPT · THE WHOLE THING';
-  g.receiptText=receiptText(rt,rows,RC_FOOT_RUN);
+  g.receiptText=receiptText(rt,rows,RC_FOOT_RUN);g.receipt={title:rt,rows:rows,foot:RC_FOOT_RUN};
   showOv('<div class="end-grid"><div><div class="eyebrow">For now</div><h2>Still here. Both of you.</h2>'+
    '<p class="small job-line">Ekskyysmi’s job: <s>Keep you from being rejected.</s> Stay with you when it happens.</p>'+
    '<p>A string of small moments. One “oh, hi”, twice.<br>It went off both times. The second time, somebody stayed.</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
    '<p class="title-quote">“For the record, I intend to go off again on Monday.”</p>'+
    '<div class="end-go"><button class="go" type="button" data-go="start">New game →</button><button class="go alt" type="button" data-go="menu">Title screen</button></div></div>'+
-   receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="copyrcpt">Copy receipt</button>')+'</div>','end');
+   receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function showTitle(){
   var sv=loadProgress();
@@ -3283,7 +3364,7 @@ function showEnd(){
   if(g.day==='C'&&g.leak==='exit'&&!g.reflected)note='Today felt lonely. Not every missing piece needs filling in tonight.';
   var quote=g.lunch===1?'I would like to lodge a complaint about the speed of that hi.':{grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. We went anyway. Slightly after everyone else.'}[g.leak];
   var d=closeDay()||{label:'A MONDAY',outside:AWAKE,extra:0,ledger:[],ratio:1},rows=receiptRows(d),rt='DAILY RECEIPT · '+d.label;
-  g.receiptText=receiptText(rt,rows,RC_FOOT_DAY);
+  g.receiptText=receiptText(rt,rows,RC_FOOT_DAY);g.receipt={title:rt,rows:rows,foot:RC_FOOT_DAY};
   showOv('<div class="end-grid"><div><div class="eyebrow">End of Monday</div><h2>Home. Both of you.</h2>'+
    '<p>The greeting lasted two seconds.<br>The shadow took the scenic route.</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
@@ -3292,7 +3373,7 @@ function showEnd(){
    '<button class="go alt" type="button" data-go="same">Try another approach</button>'+
    '<button class="go alt" type="button" data-go="again">Another Monday</button></div>'+
    '<p class="small">Another approach replays this Monday. Another Monday changes what was happening around you.</p></div>'+
-   receiptHTML(rt,rows,RC_FOOT_DAY+'<br><button class="rc-copy" type="button" data-go="copyrcpt">Copy receipt</button>')+'</div>','end');
+   receiptHTML(rt,rows,RC_FOOT_DAY+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function startGame(day,skip){
   reset(day);G.started=true;G.chapter=1;newDay();
@@ -3307,6 +3388,7 @@ ov.addEventListener('click',function(e){
   if(t.getAttribute('data-ch')){startChapter(+t.getAttribute('data-ch'));return;}
   if(t.getAttribute('data-lab')){startLab(t.getAttribute('data-lab'));return;}
   if(go==='copyrcpt'){copyReceipt(t);return;}
+  if(go==='sharercpt'){shareReceipt(t);return;}
   if(go==='lab'){reset(null);showLab();return;}
   if(go==='chapters'){showChapters();return;}
   if(go==='about'){showAbout();return;}

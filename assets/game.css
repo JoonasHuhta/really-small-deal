@@ -121,4 +121,4 @@ html.immersive body.playing .opt.qte{flex-direction:column;gap:2px;text-align:ce
 @media (max-width:720px){.end-grid{grid-template-columns:1fr}.receipt{max-width:320px}}
 html.immersive .card:has(.end-grid){max-width:none;width:100%}
 html.immersive .end-grid{grid-template-columns:minmax(0,1fr) 250px;gap:16px}
-html.immersive .receipt{font-size:10.5px;line-height:1.35;padding:10px 11px 18px}html.immersive .receipt .rr.big{font-size:12.5px}html.immersive .receipt hr{margin:4px 0}html.immersive .rc-copy{min-height:44px}
+html.immersive .receipt{font-size:10.5px;line-height:1.35;padding:10px 11px 18px}html.immersive .receipt .rr.big{font-size:12.5px}html.immersive .receipt hr{margin:4px 0}html.immersive .rc-copy{min-height:44px;padding:6px 9px;margin-top:6px}html.immersive .receipt .rc-foot{white-space:nowrap}

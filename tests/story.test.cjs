@@ -342,7 +342,7 @@ tr=playPosting(1);assert.equal(T.G.posting,'rejected');assert.match(tr,/You are 
 tr=playPosting(2);assert.equal(T.G.posting,'open');assert.match(tr,/Just don’t close it/);assert.doesNotMatch(tr,/one hundred percent/);
 assert.ok(!T.inside.day().ledger.some(e=>e.label==='the application, not sent'),'an open tab costs nothing extra');
 // Not now: the rehearsal is longer than the no.
-tr=playLab('notnow');assert.match(tr,/the actual “no” took four seconds/);assert.match(tr,/three hours and ten minutes/);assert.equal(T.G.rehearsal,true);
+tr=playLab('notnow');assert.match(tr,/the actual “no” took four seconds/);assert.match(tr,/only one I’m allowed to drop/);assert.match(tr,/Heavy\?/);assert.ok(tr.indexOf('Heavy?')<tr.indexOf('took four seconds'));assert.equal(T.G.wT,0);assert.match(tr,/three hours and ten minutes/);assert.equal(T.G.rehearsal,true);
 tr=playLab('reply');
 assert.match(tr,/A few small edits\. For safety\./);assert.match(tr,/“Hey! I had a on Thursday\. :\)”/,'three first-option cuts leave a message with nothing in it');
 assert.match(tr,/She decoded it/);assert.equal(T.G.replySent,'edited');assert.equal(T.G.draft,null);

@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.30 (Claude, 15.11.2026): **Riitan varjo, kuitti kuvana ja nopeampi alku.**
+
+- ***Not now.*** sai Riitan varjon. Se jongleeraa yhtätoista asiaa eikä ehdi katsoa ketään. ”Not now” oli se yksi pallo, jonka se saa pudottaa. Isku pysyy totena (”It LANDED.” / ”They do. Sorry. Ten.”), mutta se ei ollut tuomio. Ekskyysmi ei ole pudottanut mitään vuoden 2011 jälkeen, ja varjo kysyy yhden sanan: ”Heavy?”
+- **Kuitti kuvana.** Kuitin alla on nyt *Save as picture* ja *Copy text*. Puhelimen selaimessa kuva avaa jakovalikon, tietokoneella se tallentuu PNG-tiedostona. Android-sovelluksessa nappi kopioi toistaiseksi tekstin, koska WebView ei osaa jakaa tiedostoa ilman lisäosaa.
+- **Alku on noin 12 sekuntia lyhyempi.** Hiljainen aamu kestää 16,5 s (oli 22 s), ja ennen ensimmäistä valintaa on kaksi repliikkiä vähemmän. Uusi vaihto: ”Coffee. I’ll handle the catastrophes.” / ”Then handle lunch. I’m asking her out loud.”
+- Android: `android/gradle.properties` osoittaa nyt Android Studion JDK 21:een, joten `gradlew assembleDebug` toimii suoraan komentoriviltä. Tiedosto on vain omalla koneella, ei gitissä.
+
 Versio 0.29 (Claude, 15.11.2026): **kaksi asetusta, jotka pelaaja saattaa tarvita.**
 
 - **Text: normal / large / largest.** Kaikki luettava teksti (repliikit, valinnat, keskustelupäiväkirja) skaalautuu yhdellä napilla. Peli on lähes pelkkää lukemista, joten tämä oli saavutettavuuden tärkein puute. Valinta muistetaan.
@@ -243,7 +250,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.29, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.30, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 
