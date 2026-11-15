@@ -1,12 +1,49 @@
-# Really Small Deal (varjo: Ekskyysmi) — suunnittelun lähtökohta
+# Really Small Deal (varjo: Ekskyysmi)
 
-## Pelaa nykyistä versiota
+Pieniä hetkiä yhdestä tavallisesta elämästä. Pelaat Ekskyysmiä, ylisuojelevaa varjoa. Komedia torjutuksi tulemisen herkkyydestä (RSD).
 
-Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.14 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
+**Pelaa selaimessa: https://joonashuhta.github.io/really-small-deal/**
+
+Ei asennusta, ei kirjautumista. Toimii puhelimella vaakasuunnassa ja tietokoneella.
+
+## Pelaa paikallisesti
+
+Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.18 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
 
 **Pelin ydin (14.11.):** varjo ei opeta eikä anna vinkkejä, se vain yrittää suojella, kuten AwA:n susi. Huumori syntyy mittakaavasta: sisällä katastrofi, ulkona kaksi sekuntia. Vitsit kohdistuvat varjon byrokratiaan, arkistoon, välimerkkeihin, ylisuojeluun ja omaan arvokkuuteen, eivät ihmisen kipuun eikä toisten aitoon julmuuteen. Päämäärä on, että pelaaja nauraa, tunnistaa itsensä ja näkee lopussa suhteen muuttuvan: korjaamisesta pysymiseen.
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
+
+Versio 0.18 (Claude, 15.11.2026): **aika kelluu.**
+
+- Peli ei ole enää ”viikko”, vaan jono pieniä hetkiä yhdestä elämästä. Viisi pitkää lukua ovat selkäranka, ja niiden väliin on sijoitettu seitsemän lyhyttä hetkeä (samat käsikirjoitukset kuin laboratoriossa).
+- Kortit kertovat suunnilleen milloin, eivät minkä viikon: ”A MONDAY”, ”A WEDNESDAY, PROBABLY”, ”A MEETING, SOME MORNING”, ”AFTERWARDS”, ”A FRIDAY. NOT NECESSARILY THAT ONE.”
+- Ensimmäinen järjestys: Oh, hi. → Quick chat? → *Enhance.* → Could you just… → *Evidence.* → *Not now.* → Seen. → *The reply* → *A quiet drink.* → *Colleagues.* → Oh, hi. Again. → *The group chat* → loppu.
+- **Järjestystä muutetaan yhdestä paikasta:** taulukko `AFTER` tiedostossa `src/33-moments.js`. Hetken siirtäminen, poistaminen tai lisääminen on yhden rivin muutos.
+- Sometime., An ordinary evening, The voice message ja A fine. ovat toistaiseksi vain laboratoriossa.
+- Loppuruutu sanoo ”For now” eikä ”End of a small week”. Valikoissa luvut näkyvät nimillään (”Continue · Could you just…”).
+- Tallennus toimii kuten ennen pitkien lukujen alusta. Jos pelin sulkee kesken lyhyen hetken, jatko alkaa sitä edeltävän pitkän luvun alusta.
+
+Versio 0.17 (Claude, 15.11.2026):
+
+- **Lab: The reply.** Uusi mekaniikka: viestin ylimuokkaus. Ruudulla on puhelin ja luonnos ”Hey! I had a really nice time on Thursday. We should do it again soon :)”. Ekskyysmi ehdottaa kolme kierrosta ”pieniä muokkauksia turvallisuuden vuoksi”, ja valitut sanat yliviivataan ja katoavat. Jäljelle jää esimerkiksi ”Hey! I had a on Thursday. :)” tai pelkkä ”ok”. Lopuksi pelaaja päättää, lähetetäänkö tynkä vai palautetaanko kaikki. Sannan vastaus riippuu siitä.
+- **Lab: A fine.** Myöhässä oleva majakkakirja palautetaan kirjastoon. Kirjastonhoitaja on tiskinsä takana. ”That’ll be a fine.” – ”She says it’s FINE.” – ”A fine. Four euros sixty.” Kirjastonhoitaja on itse pitänyt saman kirjan kuusi viikkoa sivun 212 takia.
+- Uusi puhuja LIBRARIAN.
+
+Versio 0.16 (Claude, 15.11.2026):
+
+- **Intro:** seinällä ei ole varjoa ennen kuin ihminen sanoo suunnitelmansa. Sitä ennen näkyy vain tavallinen varjo lattialla, ja Ekskyysmi nousee siitä.
+- **Varjo ei tärise jatkuvasti.** Se tärisee osuman jälkeen ja rauhoittuu noin kymmenessä sekunnissa.
+- **Aloitusruutu** on riisuttu: logo, yksi rivi ja New game (tai Continue ja New game). Chapters, Scenario lab ja About ovat pieninä linkkeinä. About kertoo, mistä pelissä on kyse.
+- Ekskyysmi ei enää sano ”Your shadow”. Yläpalkissa lukee ”THE INSIDE VERSION”, joka vaihtuu ulkopuolisessa näkymässä muotoon ”THE OUTSIDE VERSION”.
+- **Puhelin vaakasuunnassa (Android):** kohtaus täyttää ruudun, ja repliikki ja valinnat kulkevat kohtauksen alareunassa. Asetukset ovat yhden ☰-painikkeen takana. Kohtauksen omat HUD-kortit näkyvät hetken ja väistyvät. Tauolla kohtauksen napautus jatkaa peliä. Ks. [ANDROID.md](ANDROID.md).
+
+Versio 0.15 (Claude, 15.11.2026):
+
+- **Lab: A quiet drink.** Baari kuvattuna tiskin takaa: ihminen, varjo ja muut asiakkaat ovat tiskin toisella puolella puoliksi piilossa, ja baarimikko on tumma hahmo etualalla. Baarimikko palvelee ensin jonkun muun (”We are a coat stand with opinions”) ja sanoo sitten ”What?”. Ekskyysmi tilaa itselleen juoman varjon, jossa on sateenvarjo (”For cover.”). Loppu: ”Nobody is looking at us.” – ”I always thought that was the bad outcome.”
+- **Lab: The voice message.** Ääniviestiin vastaaminen ääniviestillä. Otto 1, otto 2, otto 14. Ruudun kulmassa nauhoituspalkki (REC / DELETED). Sanna kuunteli viestin puolitoistakertaisella nopeudella teetä keittäessään.
+- Uusi outous baarissa: ihminen laskee kulhon pähkinät.
+- Uudet puhujat BARTENDER ja A STRANGER, uudet varjon asennot (juoma, kulaus, malja).
 
 Versio 0.14 (15.11.2026):
 
@@ -85,10 +122,15 @@ Kotimatkalla voi käsitellä kaikki kolme aihetta tai valita suoraan jatkamisen 
 | `src/29-prelude.js` | Hiljainen alku, Colleagues, Not now |
 | `src/30-story-monday.js` | Maanantai ja kotimatka |
 | `src/31-story-week.js` | Tiistai–perjantai |
+| `src/33-moments.js` | Tarinan järjestys: mitkä lyhyet hetket tulevat minkä luvun jälkeen |
 | `src/40-backdrops.js` | Koti, toimisto, Sannan varjo |
 | `src/50-lab.js` | Skenaariolaboratorio, Enhance, The group chat |
 | `src/51-quirks.js` | Outoudet, Sometime, An ordinary evening |
 | `src/52-glass.js` | Suurennuslasi, Evidence |
+| `src/53-bar.js` | Baari tiskin takaa, A quiet drink |
+| `src/54-voice.js` | The voice message |
+| `src/55-reply.js` | Viestin ylimuokkaus, The reply |
+| `src/56-library.js` | Kirjasto, A fine |
 | `src/60-update.js` … `src/90-loop.js` | Päivitys, piirto, valikot ja syötteet, pääsilmukka |
 
 Uusi kohtaus tai mekaniikka saa oman tiedostonsa (esim. `src/53-uusi.js`). Tiedostot liitetään nimen mukaisessa järjestyksessä.

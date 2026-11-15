@@ -1,45 +1,31 @@
-# Really Small Deal GitHubiin
+# Really Small Deal GitHubissa
 
-15.11.2026 · Claude. Peli on pelkkää HTML:ää, CSS:ää ja JavaScriptiä ilman käännösvaihetta, joten GitHub Pages voi tarjoilla sen sellaisenaan. Kaverisi saa suoran linkin.
+15.11.2026 · Claude.
 
-En voinut luoda repoa puolestasi (istunnollani ei ole siihen oikeutta), mutta kaikki muu on valmiina. Alla olevat komennot vievät noin minuutin.
+## Valmista
 
-## 1. Luo repo ja työnnä koodi
+- **Repo:** https://github.com/JoonasHuhta/really-small-deal (julkinen)
+- **Peli selaimessa:** https://joonashuhta.github.io/really-small-deal/
 
-Avaa pääte kansiossa `C:\RSD`.
+Tämä on linkki, jonka annat kaverillesi. Se toimii puhelimella ja tietokoneella eikä vaadi kirjautumista. Avasin sivun ja aloitin pelin: intro pyörii, fontit latautuvat eikä konsolissa ole virheitä.
+
+Repossa on 60 tiedostoa, noin 4 Mt: peli, lähdeosat, testit, työkalut, Android-pohja ja suunnitteludokumentit.
+
+## Yhdistä oma kansiosi repoon
+
+Tämä on tärkeä askel. Työnsin koodin omasta kopiostani, joten `C:\RSD` ei ole vielä git-repo. Aja siellä kerran:
 
 ```
 git init -b main
-git add .
-git commit -m "Really Small Deal 0.18"
-```
-
-Jos sinulla on GitHub CLI:
-
-```
-gh repo create really-small-deal --public --source=. --remote=origin --push
-```
-
-Jos ei, luo tyhjä repo osoitteessa https://github.com/new nimellä `really-small-deal` (älä lisää README:tä tai .gitignorea, ne ovat jo kansiossa) ja aja sitten:
-
-```
 git remote add origin https://github.com/JoonasHuhta/really-small-deal.git
-git push -u origin main
+git fetch origin
+git reset --mixed origin/main
+git status
 ```
 
-## 2. Kytke GitHub Pages päälle
+`git reset --mixed` ei koske tiedostoihisi: se vain kertoo gitille, että kansiosi vastaa repon tilaa. `git status` näyttää sen jälkeen, jos jokin eroaa. Tämän jälkeen `C:\RSD` on normaali työkopio, ja sekä sinä, Codex että minä muokkaamme samaa repoa.
 
-Repossa: **Settings → Pages → Build and deployment → Source: Deploy from a branch → Branch: `main`, kansio `/ (root)` → Save.**
-
-Noin minuutin kuluttua peli on osoitteessa:
-
-```
-https://joonashuhta.github.io/really-small-deal/
-```
-
-Tämä on linkki, jonka annat kaverillesi. Se toimii puhelimella ja tietokoneella, eikä vaadi kirjautumista. Tarkistin, että peli toimii alikansiosta tarjoiltuna: kaikki polut ovat suhteellisia, fontit latautuvat eikä yksikään pyyntö epäonnistu.
-
-## 3. Myöhemmät päivitykset
+## Päivitykset
 
 ```
 git add -A
@@ -47,14 +33,14 @@ git commit -m "Mitä muuttui"
 git push
 ```
 
-Pages päivittyy itsestään noin minuutissa. Muista ajaa `node tools/build.cjs` ennen committia, jos olet muokannut kansiota `src/`. `npm test` tarkistaa sen puolestasi.
+Pages päivittyy itsestään noin minuutissa. Aja `npm test` ennen committia: se tarkistaa myös, että `assets/game.js` vastaa kansiota `src/`.
 
 ## Mitä repoon ei mene
 
 `.gitignore` jättää pois:
 
 - `node_modules/`, `www/` ja Androidin käännöskansiot (syntyvät komennoista)
-- **`research/awa-source/`** — nämä ovat Adventures with Anxiety -pelin käsikirjoituksesta tehtyjä muistiinpanoja. Ne ovat toisen tekijän tekstiä, joten ne pysyvät koneellasi eivätkä mene julkiseen repoon. Muu `research/`-kansio (omat prototyypit ja kuvakaappaukset) menee mukaan.
+- **`research/awa-source/`** — nämä ovat muistiinpanoja Adventures with Anxiety -pelin käsikirjoituksesta. Ne ovat toisen tekijän tekstiä, joten ne pysyvät koneellasi eivätkä mene julkiseen repoon. Muu `research/`-kansio (omat prototyypit ja kuvakaappaukset) on mukana.
 
 ## Lisenssi
 
@@ -62,6 +48,12 @@ Repossa ei ole lisenssitiedostoa, joten oletuksena kaikki oikeudet jäävät sin
 
 Fontit Fraunces ja DM Sans ovat Open Font Licensen alaisia, ja niiden lisenssitekstit ovat mukana kansiossa `assets/fonts`. Ne saa jakaa näin.
 
-## Jos haluat myöhemmin piilottaa muistiinpanot
+## Jos muistiinpanot alkavat tuntua liian avoimilta
 
-Valitsit yhden julkisen repon, jossa on kaikki. Jos suunnittelumuistiinpanot alkavat tuntua liian avoimilta, sama kuvio kuin aukeama-projektissasi toimii tässäkin: tämä repo yksityiseksi ja erillinen julkinen repo, johon kopioidaan vain `npm run www` -komennon tuottama `www/`-kansio. Se on 880 kt ja sisältää vain pelattavan version.
+Valitsit yhden julkisen repon, jossa on kaikki. Sama kuvio kuin aukeama-projektissasi toimii tässäkin: tämä repo yksityiseksi ja erillinen julkinen repo, johon kopioidaan vain `npm run www` -komennon tuottama `www/`-kansio. Se on 880 kt ja sisältää vain pelattavan version.
+
+## Kaverille
+
+> Pieni peli selaimessa, noin 45 minuuttia: https://joonashuhta.github.io/really-small-deal/
+>
+> Pelaat varjoa, joka yrittää suojella ihmistään torjutuksi tulemiselta. Se on huono siinä. Kerro missä kohtaa naurahdit ja missä kohtaa et.
