@@ -3,9 +3,9 @@ var LAMPS=[250,690,1130,HOMEX+60];
 var cv=document.getElementById('c'),ctx=cv.getContext('2d'),ov=document.getElementById('ov');
 var elLine=document.getElementById('line'),elOpts=document.getElementById('opts');
 var SC=1;
-function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=640;COMPACT=!!(window.matchMedia&&window.matchMedia('(orientation:landscape) and (max-height:540px)').matches);
+function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=640;COMPACT=document.documentElement.classList.contains('immersive');
   HUDL=COMPACT&&((window.innerWidth||w)-w)/2<52?Math.round(58*W/w):0;}
-var COMPACT=false,HUDL=0; // a phone held sideways: the on-canvas HUD shows itself briefly, then gets out of the way
+var COMPACT=false,HUDL=0; // the immersive layout: the on-canvas HUD shows itself briefly, then gets out of the way
 window.addEventListener('resize',resize);
 var RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 var WIDE=true,paused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;

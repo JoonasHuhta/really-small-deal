@@ -7,9 +7,9 @@ var LAMPS=[250,690,1130,HOMEX+60];
 var cv=document.getElementById('c'),ctx=cv.getContext('2d'),ov=document.getElementById('ov');
 var elLine=document.getElementById('line'),elOpts=document.getElementById('opts');
 var SC=1;
-function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=640;COMPACT=!!(window.matchMedia&&window.matchMedia('(orientation:landscape) and (max-height:540px)').matches);
+function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=640;COMPACT=document.documentElement.classList.contains('immersive');
   HUDL=COMPACT&&((window.innerWidth||w)-w)/2<52?Math.round(58*W/w):0;}
-var COMPACT=false,HUDL=0; // a phone held sideways: the on-canvas HUD shows itself briefly, then gets out of the way
+var COMPACT=false,HUDL=0; // the immersive layout: the on-canvas HUD shows itself briefly, then gets out of the way
 window.addEventListener('resize',resize);
 var RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 var WIDE=true,paused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
@@ -2628,7 +2628,7 @@ window.addEventListener('keydown',function(e){
     if(tag==='BUTTON'||tag==='INPUT'||tag==='A')return;
     if(!G.started){startGame(null,false);}else advance();
     e.preventDefault();
-  }else if(e.key>='1'&&e.key<='4'&&tag!=='INPUT'){choose(+e.key-1);}
+  }else if((e.key==='f'||e.key==='F')&&tag!=='INPUT'){toggleFull();}else if(e.key>='1'&&e.key<='4'&&tag!=='INPUT'){choose(+e.key-1);}
   else if(e.key==='p'||e.key==='P'){togglePause();}
 });
 function syncPause(){if(paused)stopVoice();document.getElementById('pause').textContent=paused?'Resume':'Pause';document.body.classList.toggle('is-paused',paused);}
@@ -2662,6 +2662,31 @@ function backButton(){
 }
 var CAP=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App;
 if(CAP&&CAP.addListener)CAP.addListener('backButton',function(){if(backButton()==='exit'&&CAP.exitApp)CAP.exitApp();});
+/* ================= full screen and the immersive layout =================
+   The scene fills the screen on a phone held sideways, and whenever the player asks for full screen.
+   One class on <html> drives it; index.html sets it before first paint so phones never flash the wide layout. */
+var htmlEl=document.documentElement;
+var narrowMQ=window.matchMedia?window.matchMedia('(orientation:landscape) and (max-height:540px)'):null;
+function fullOn(){return !!(document.fullscreenElement||document.webkitFullscreenElement);}
+function fullSupported(){return !!(htmlEl.requestFullscreen||htmlEl.webkitRequestFullscreen);}
+function syncImmersive(){
+  var on=!!((narrowMQ&&narrowMQ.matches)||fullOn());
+  htmlEl.classList.toggle('immersive',on);
+  if(!on)setMenu(false);
+  var b=document.getElementById('full');
+  if(b){b.textContent=fullOn()?'Leave full screen':'Full screen';b.setAttribute('aria-pressed',String(fullOn()));}
+  resize();
+}
+function toggleFull(){
+  try{
+    if(fullOn()){var ex=document.exitFullscreen||document.webkitExitFullscreen;if(ex)ex.call(document);}
+    else{var req=htmlEl.requestFullscreen||htmlEl.webkitRequestFullscreen;if(req){var p=req.call(htmlEl);if(p&&p.catch)p.catch(function(){});}}
+  }catch(e){/* some browsers refuse full screen; the game plays on regardless */}
+}
+if(narrowMQ&&narrowMQ.addEventListener)narrowMQ.addEventListener('change',syncImmersive);
+document.addEventListener('fullscreenchange',syncImmersive);
+document.addEventListener('webkitfullscreenchange',syncImmersive);
+
 // Phones: the controls fold away behind one button so that only the scene and the words are on screen.
 var menuBtn=document.getElementById('menu');
 function setMenu(on){document.body.classList.toggle('menu-open',on);if(menuBtn&&menuBtn.setAttribute)menuBtn.setAttribute('aria-expanded',String(on));}
@@ -2669,6 +2694,8 @@ if(menuBtn&&menuBtn.addEventListener){
   menuBtn.addEventListener('click',function(e){if(e&&e.stopPropagation)e.stopPropagation();setMenu(!document.body.classList.contains('menu-open'));});
   document.addEventListener('click',function(){if(document.body.classList.contains('menu-open'))setMenu(false);});
 }
+var fullBtn=document.getElementById('full');
+if(fullBtn){if(fullSupported())fullBtn.addEventListener('click',toggleFull);else fullBtn.remove();}
 document.addEventListener('visibilitychange',function(){if(document.hidden&&!paused)togglePause();});
 // ---- src/90-loop.js ----
 /* ================= loop ================= */
@@ -2679,7 +2706,7 @@ function frame(ts){
   draw();
   window.requestAnimationFrame(frame);
 }
-resize();reset(null);showTitle();
-window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,chapters:showChapters,about:showAbout,lensTap:lensTap,back:backButton,sound:{load:loadSound,has:function(k){return !!BUF[k];},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
+syncImmersive();reset(null);showTitle();
+window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,full:toggleFull,immersive:function(){return htmlEl.classList.contains('immersive');},chapters:showChapters,about:showAbout,lensTap:lensTap,back:backButton,sound:{load:loadSound,has:function(k){return !!BUF[k];},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
 window.requestAnimationFrame(frame);
 })();

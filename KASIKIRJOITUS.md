@@ -4,6 +4,8 @@
 
 > Päivitys 0.13: luonnokset A (oikea torjunta) ja C (varjot tapaavat) ovat nyt pelattavina lab-kohtauksina *Not now.* ja *Colleagues.* Peli alkaa hiljaisella introlla, jossa varjo on vielä tavallinen varjo.
 
+> Päivitys 0.18: peli ei ole enää sidottu yhteen viikkoon. Luvut ja lyhyet hetket ovat jonossa, ja aika kelluu niiden välissä. Alla oleva ”Viikko nyt” -taulukko kuvaa edelleen viittä pitkää lukua. Nykyinen järjestys on tiedostossa `src/33-moments.js`. Piirros-lanka on jo osittain paikallaan: *The group chat* on nyt pelin viimeinen hetki. Arkistokortti ja varjon alkuperä (luonnos B) puuttuvat vielä.
+
 ## Pelin väite yhdellä lauseella
 
 **Ekskyysmi on yleensä oikeassa siitä, että jotain tapahtui, ja väärässä siitä, kuinka isoa se oli.**

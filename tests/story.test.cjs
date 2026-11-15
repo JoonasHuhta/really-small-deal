@@ -15,7 +15,7 @@ const els = new Map();
 function element(id){
   if(els.has(id))return els.get(id);
   const classes=new Set();
-  const el={id,tagName:'DIV',dataset:{},style:{},events:{},clientWidth:960,innerHTML:'',textContent:'',open:false,
+  const el={id,tagName:'DIV',dataset:{},style:{},events:{},clientWidth:960,innerHTML:'',textContent:'',open:false,remove(){},
     classList:{add(x){classes.add(x)},remove(x){classes.delete(x)},contains(x){return classes.has(x)},toggle(x,v){v??=!classes.has(x);v?classes.add(x):classes.delete(x)}},
     addEventListener(k,f){(this.events[k]??=[]).push(f)},setAttribute(k,v){this[k]=v},getAttribute(k){return this[k]},
     getContext(){return ctx},getBoundingClientRect(){return{top:0,left:0,width:960,height:540}},setPointerCapture(){},
@@ -23,9 +23,9 @@ function element(id){
   els.set(id,el);return el;
 }
 function fire(el,event,payload){for(const fn of el.events[event]??[])fn(payload)}
-const document={getElementById:element,body:element('body'),hidden:false,events:{},addEventListener(k,f){(this.events[k]??=[]).push(f)}};
+const document={getElementById:element,body:element('body'),documentElement:Object.assign(element('html'),{requestFullscreen(){}}),hidden:false,events:{},addEventListener(k,f){(this.events[k]??=[]).push(f)}};
 const savedItems=new Map();
-const window={localStorage:{getItem(k){return savedItems.get(k)??null},setItem(k,v){savedItems.set(k,String(v))}},devicePixelRatio:1,events:{},matchMedia(){return{matches:false}},requestAnimationFrame(){},addEventListener(k,f){(this.events[k]??=[]).push(f)}};
+const window={localStorage:{getItem(k){return savedItems.get(k)??null},setItem(k,v){savedItems.set(k,String(v))}},devicePixelRatio:1,events:{},matchMedia(q){const narrow=/max-height/.test(q);return{get matches(){return narrow?!!window.__narrow:false},addEventListener(){},addListener(){}}},requestAnimationFrame(){},addEventListener(k,f){(this.events[k]??=[]).push(f)}};
 const sandbox={window,document,console,Math};
 vm.runInNewContext(fs.readFileSync(path.join(root,'assets/game.js'),'utf8'),sandbox);
 const T=window.__T;
@@ -283,6 +283,19 @@ T.start();assert.equal(T.back(),'pause');assert.equal(T.back(),'title');assert.e
 T.lab('enhance');assert.equal(T.back(),'pause');assert.equal(T.back(),'title');
 // Recorded sound is optional: nothing is listed yet, and asking for an unknown effect is harmless.
 assert.equal(Object.keys(T.sound.list).length,0);T.sound.play('hit');assert.equal(T.sound.has('hit'),false);
+// Full screen and the immersive layout: one class on <html>, driven by the media query and by the fullscreen state.
+assert.equal(T.immersive(),false);
+assert.equal(element('full').textContent,'Full screen');
+document.fullscreenElement=element('html');fire(document,'fullscreenchange',{});
+assert.equal(T.immersive(),true,'full screen uses the immersive layout');
+assert.equal(element('full').textContent,'Leave full screen');
+document.fullscreenElement=null;fire(document,'fullscreenchange',{});
+assert.equal(T.immersive(),false,'leaving full screen restores the wide layout');
+assert.equal(element('full').textContent,'Full screen');
+window.__narrow=true;fire(document,'fullscreenchange',{});
+assert.equal(T.immersive(),true,'a phone held sideways uses the same layout without full screen');
+window.__narrow=false;fire(document,'fullscreenchange',{});
+assert.equal(T.immersive(),false);
 // Sound toggle works without an audio device, and the scene bubble types out the whole line, never a placeholder.
 fire(element('sound'),'click',{});assert.equal(element('sound').textContent,'Sound off');
 fire(element('sound'),'click',{});assert.equal(element('sound').textContent,'Sound on');
