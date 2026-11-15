@@ -202,3 +202,20 @@ Säännöt, jotta vitsi pysyy reiluna:
 3. **Ääni-identiteetti.** Yksi tunnistettava ääni: kuittikirjoittimen rätinä kun kuitti tulostuu ja matala ”thunk” röntgenissä. Paikat ovat valmiina (`SAMPLES`).
 4. **Toinen läpipeluu kannattaa.** Salainen lounas on nyt palkinto ilman jälkeä viikossa. Jos maanantai onnistuu, tiistaina Ekskyysmi voisi olla hämmentynyt ja vähän työtön (”I have nothing to file.”). Se on se tarina, josta pelaajat kertovat toisilleen: ”Saitko lounaan?”
 5. **Pelaaja omana itsenään kuittiin.** Tehty: jos pelaaja painaa ”Try another approach” tai ”Another Monday”, seuraavassa kuitissa lukee ”Mondays replayed, by you ×2 … noted”. Pelaaja huomaa tekevänsä samaa kuin varjo.
+
+## Laajennus: muiden varjot (15.11.2026)
+
+Kysymys: pitäisikö peliä laajentaa muihin nepsypiirteisiin ja ylianalysointiin? Vastaus: **kyllä, mutta ulospäin, ei sisäänpäin.** Ihmisellä on yksi varjo, ja se pysyy RSD:ssä. Se on pelin selkäranka, eikä sitä kannata laimentaa. Ylianalysointi on jo Ekskyysmin työkalupakissa (suurennuslasi, *Enhance.*, *The reply*).
+
+Muut piirteet tulevat **muiden ihmisten varjoina**, jokaisella oma osastonsa. Silloin pelaaja huomaa saman kuin Ekskyysmi: kaikilla on joku seinällä.
+
+| Kenen varjo | Osasto | Tila |
+|---|---|---|
+| Sanna | ”Fine”. Valvoo kolmeen, kun joku sanoo ”fine”. | Pelissä (*Colleagues.*, perjantai) |
+| Eero | Myöhemmin. Aikasokeus: kello ilman viisareita, kadonnut kalenteri, aina vähän jäljessä. | Pelissä 0.25 (*Sometime.*) |
+| Riitta | Kuormitus. Varjo jongleeraa yhtätoista asiaa eikä ehdi katsoa ketään. ”Not now” ei ollut tuomio vaan pudonnut pallo. | Ehdotus: *Not now.* |
+| Kirjastonhoitaja | Ei varjoa näkyvissä. Kaikilla ei ole. | Vitsi: Ekskyysmi etsii sitä suurennuslasilla. |
+
+Säännöt: muiden varjot ovat ystävällisiä ja omassa työssään yhtä huonoja kuin Ekskyysmi omassaan. Niiden piirrettä ei nimetä diagnoosina. Jokainen kohtaaminen pienentää Ekskyysmin maailmaa vähän: tuomio olikin toisen osaston asia.
+
+Disco Elysium -vertaus (ensimmäinen palaute: ”hauska ja deep samalla”) pitää: siellä äänet ovat taitoja, täällä varjot ovat osastoja. Ero on mittakaava: yksi ihminen, yksi viikko, pienet hetket. Se on casual-yleisön versio, ja sellaisena se kannattaa pitää.

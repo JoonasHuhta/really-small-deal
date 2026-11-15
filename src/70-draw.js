@@ -272,6 +272,7 @@ function drawLines(){
     else if(l.who==='X'&&g.bar)bubble(g.bar.sx,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='L')bubble(760,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='Z')bubble(g.ax+62,WALLY-178,l.text,{dark:true,noTail:true,reveal:rv});
+    else if(l.who==='Y')bubble(g.yx,WALLY-200,l.text,{dark:true,noTail:true,maxW:mw||250,reveal:rv});
     ctx.restore();
   }
 }
@@ -416,7 +417,7 @@ function draw(){
     drawDish();
     drawTics(0);
     if(WAIT==='hold'&&g.hold&&!g.human.gone)holdRing();
-    sannaShadow();
+    sannaShadow();eeroShadow();
     drawCoworkers(1);
     if(g.set==='bar'&&g.bar)barFront();
     drawLens();

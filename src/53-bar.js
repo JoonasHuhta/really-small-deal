@@ -106,6 +106,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   function(){G.clock+=120;},
   ['N','Two minutes pass. The bartender polishes a glass. It was already clean.'],
   ['S','He hasn’t looked at us once.'],
+  lensPeek(function(){return {x:G.bar.tx,y:BARY-46};},'BARTENDER: POLISHING. OR AVOIDING. OR POLISHING.'),
   function(){var b=G.bar;b.sT=700;},{wait:2.4},
   function(){G.bar.polish=false;},
   ['T','Evening! What can I get you?'],

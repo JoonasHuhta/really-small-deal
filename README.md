@@ -8,11 +8,17 @@ Ei asennusta, ei kirjautumista. Toimii puhelimella vaakasuunnassa ja tietokoneel
 
 ## Pelaa paikallisesti
 
-Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.24 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
+Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.25 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
 
 **Pelin ydin (14.11.):** varjo ei opeta eikä anna vinkkejä, se vain yrittää suojella, kuten AwA:n susi. Huumori syntyy mittakaavasta: sisällä katastrofi, ulkona kaksi sekuntia. Vitsit kohdistuvat varjon byrokratiaan, arkistoon, välimerkkeihin, ylisuojeluun ja omaan arvokkuuteen, eivät ihmisen kipuun eikä toisten aitoon julmuuteen. Päämäärä on, että pelaaja nauraa, tunnistaa itsensä ja näkee lopussa suhteen muuttuvan: korjaamisesta pysymiseen.
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
+
+Versio 0.25 (Claude, 15.11.2026): **suurennuslasi kulkee mukana, ja Eerolla on varjo.**
+
+- **Suurennuslasi on nyt Ekskyysmin tunnusväline koko tarinassa,** ei vain *Evidence.*-hetkessä. Nopea vilkaisu lasin läpi (`lensPeek`) tarkkaan valittuihin kohtiin: työpaikkailmoitus (”REQUIREMENT: ‘EXCELLENT’. WE ARE ‘FINE’.”), baarimikko (”POLISHING. OR AVOIDING. OR POLISHING.”), kirjastonhoitaja (”FACE: CURIOUS. SUSPICIOUSLY CURIOUS.”) ja perjantaina Sanna (”SANNA: ALSO UP TILL THREE.”), juuri ennen kuin hänen varjonsa paljastuu.
+- **Eeron varjo** (*Sometime.*, nyt tarinassa keskiviikon jälkeen): Eero lähtee hissiin, hänen varjonsa jää. Sen kellossa ei ole viisareita. ”Half past four WHEN?” – ”Today. Gosh. Today is so soon.” ”Sometime” ei ole kohtelias ”ei koskaan” vaan toinen osasto: ”Booking it is MY department. I’m on it.” Varjo lähtee perään myöhässä: ”He’ll need me by Thursday. Roughly.”
+- Tämä on pelin laajennussuunta: muut nepsypiirteet tulevat muiden ihmisten varjoina, ei uusina mekaniikkoina. Ks. KASIKIRJOITUS.md.
 
 Versio 0.24 (Claude, 15.11.2026): **naamio, vetäytyminen ja harjoittelu.**
 
@@ -207,7 +213,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.24, viisi päivää ja kahdeksan välihetkeä, läpipeluu noin 30 minuuttia.
+6. [Peli](index.html): versio 0.25, viisi päivää ja kymmenen välihetkeä, läpipeluu noin 30 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

@@ -254,6 +254,8 @@ let tr=playLab('enhance');
 assert.match(tr,/ENHANCE/);assert.match(tr,/The eyebrow was HUNGER/);assert.match(tr,/WING for eyebrows/);assert.equal(T.G.zoom,null);
 tr=playLab('sometime');
 assert.match(tr,/grab a coffee sometime/);assert.match(tr,/hadn’t been picked yet/);assert.equal(T.G.someT,'form');
+assert.match(tr,/Half past four WHEN/);assert.match(tr,/Booking it is MY department/);assert.match(tr,/His watch had no hands/);assert.equal(T.G.yT,0,'Eero’s shadow leaves to catch him up');
+for(const id of ['posting','bar','library']){playLab(id);assert.equal(T.G.lens,null,'the glass goes back in the pocket: '+id);}
 tr=playLab('evening');
 assert.match(tr,/plate procedure/);assert.match(tr,/She knows I count/);assert.match(tr,/page 212/);assert.match(tr,/WHY would you correct/);assert.equal(T.G.dish,null);
 tr=playLab('glass');

@@ -2,7 +2,7 @@
 
 15.11.2026 · Claude. Tämä tiedosto korvaa [TOTEUTUKSEN_SUUNNITTELU.md](TOTEUTUKSEN_SUUNNITTELU.md):n työlistana. Lista on järjestetty sen mukaan, mikä vaikuttaa eniten siihen, että peli toimii ja että siitä kerrotaan eteenpäin.
 
-## Missä ollaan (0.24)
+## Missä ollaan (0.25)
 
 - **Peli:** viisi päivää (Oh, hi · Quick chat? · Could you just… · Seen. · For now) ja niiden välissä kahdeksan lyhyttä hetkeä. Yksi läpipeluu kestää lukutahdissa noin 30 minuuttia. Selainpeli toimii myös puhelimella vaakasuunnassa. Android-kuori on valmiina, mutta sitä ei ole julkaistu.
 - **Kantavat ideat:** varjon byrokratia ja ylisuojelu. *Oikea vastaus* (ikkuna, joka on mahdoton ensimmäisellä kerralla). *Kaksi kelloa*: ulkona päivä on päivä, sisällä osa päivistä tulee kahdesti. Kuitti, röntgen ja kaari korjaamisesta pysymiseen.
@@ -43,8 +43,12 @@ Uusin laadullinen tutkimus (Rowney-Smith ym., PLOS ONE 2026) nimeää ADHD:n hyl
 ## 4. Pienet tarinakorjaukset
 
 1. ~~**Salainen lounas jättää jäljen viikkoon.**~~ Tehty 0.23 (Codex): ”I’ve filed the blank. For completeness.” Samassa versiossa perjantaina varjot muistavat toisensa.
-2. **Labrahetkien paikat:** *Sometime.* maanantain jälkeen, *The voice message* torstai-iltaan ja *A fine.* (”twenty-three days later”) aivan loppuun ennen kuittia. *An ordinary evening* on rauhallinen hengähdys. Se sopii keskiviikon jälkeen, tai sen voi jättää pelkäksi labrahetkeksi.
+2. **Labrahetkien paikat:** ~~*Sometime.*~~ (tehty 0.25, keskiviikon jälkeen, mukana Eeron varjo), *The voice message* torstai-iltaan ja *A fine.* (”twenty-three days later”) aivan loppuun ennen kuittia. *An ordinary evening* on rauhallinen hengähdys. Se sopii keskiviikon jälkeen, tai sen voi jättää pelkäksi labrahetkeksi.
 3. ~~**Kuittiin rivi ”the actual no”**~~ Tehty 0.24.
+
+## 4b. Laajennus muiden varjoina
+
+Seuraava: **Riitan varjo** *Not now.* -hetkeen (jongleeraa yhtätoista asiaa, ”Not now” oli pudonnut pallo). Perustelut ja säännöt: [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Laajennus: muiden varjot.
 
 ## 5. Ennen julkaisua
 

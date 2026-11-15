@@ -15,7 +15,7 @@ var RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)
 var WIDE=true,paused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
 var logDialog=document.getElementById('dialogue-log'),modalWasPaused=false,dragging=false;
 var Q=[],WAIT=null,TIMER=0,LOCK=0,CH=null;
-var NAMES={S:'EKSKYYSMI',H:'HUMAN',A:'SANNA',B:'EERO',P:'PHONE',N:'A MOMENT LATER',R:'RIITTA',Z:'SANNA’S SHADOW',T:'BARTENDER',X:'A STRANGER',L:'LIBRARIAN'};
+var NAMES={S:'EKSKYYSMI',H:'HUMAN',A:'SANNA',B:'EERO',P:'PHONE',N:'A MOMENT LATER',R:'RIITTA',Z:'SANNA’S SHADOW',Y:'EERO’S SHADOW',T:'BARTENDER',X:'A STRANGER',L:'LIBRARIAN'};
 
 function clamp(v,a,b){return v<a?a:v>b?b:v;}
 function approach(v,t,d){return v<t?Math.min(t,v+d):Math.max(t,v-d);}
@@ -738,7 +738,7 @@ function scene(o){return function(){
   var g=G,M=g.morko,Hm=g.human;
   music(o.music||o.set||'room');
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;
-  g.cowA=g.cowB=g.cowR=false;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
+  g.cowA=g.cowB=g.cowR=false;g.yT=g.yShow=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;
@@ -1022,6 +1022,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','Shh.'],
   set({aSweat:0.55,sweat:0}),
   ['A','I do that with “fine”. Someone says “fine” and I’m up till three.'],
+  lensPeek(function(){return {x:G.ax,y:FEETY-150};},'SANNA: ALSO UP TILL THREE.'),
   function(){G.zT=1;},{wait:1.6},
   fridayShadow,
   archive('good',[['2026','She has one too.']]),
@@ -1115,7 +1116,7 @@ function mondayRepair(){
 // Time floats on purpose: a card says roughly when, never which week. To reorder the story, edit AFTER.
 var AFTER={
   2:['enhance','posting'],
-  3:['detail','glass'],
+  3:['detail','glass','sometime'],
   4:['reply','notnow','bar','colleagues'],
   5:['comments']
 };
@@ -1465,6 +1466,18 @@ function sannaShadow(){
   ctx.beginPath();ctx.ellipse(x,by-110,46,21,0,0,Math.PI*2);ctx.fill();circ(x,by-147,19);ctx.fill();circ(x+2,by-168,8);ctx.fill();
   ctx.fillStyle='#f6f1e4';circ(x-8,by-148,4.6);ctx.fill();circ(x+8,by-148,4.6);ctx.fill();
   ctx.fillStyle='#14111d';circ(x-9.6,by-148,2);ctx.fill();circ(x+6.4,by-148,2);ctx.fill();
+  ctx.restore();
+}
+// Eero's shadow works in a different department: later. It runs a little behind him, and its watch has no hands.
+function eeroShadow(){
+  var g=G,k=g.yShow;if(!k||k<0.02)return;var x=g.yx,by=WALLY,bob=RM?0:Math.sin(g.time*1.6)*2;
+  ctx.save();ctx.fillStyle='#3a3a55';ctx.globalAlpha=Math.min(1,k);
+  ctx.beginPath();ctx.moveTo(x-18,by);ctx.lineTo(x+18,by);ctx.lineTo(x+30,by-128);ctx.lineTo(x-30,by-128);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.ellipse(x,by-130,38,16,0,0,Math.PI*2);ctx.fill();circ(x,by-166+bob,17);ctx.fill();
+  ctx.strokeStyle='#3a3a55';ctx.lineWidth=11;ctx.lineCap='round';line(x+30,by-128,x+50,by-152+bob);
+  ctx.fillStyle='#f6f1e4';circ(x+53,by-156+bob,7.5);ctx.fill();ctx.strokeStyle='#3a3a55';ctx.lineWidth=2;circ(x+53,by-156+bob,7.5);ctx.stroke();
+  ctx.fillStyle='#f6f1e4';circ(x-7,by-167+bob,4.4);ctx.fill();circ(x+7,by-167+bob,4.4);ctx.fill();
+  ctx.fillStyle='#14111d';var look=g.yxT>g.yx+2?1.6:0;circ(x-7+look,by-166+bob,1.9);ctx.fill();circ(x+7+look,by-166+bob,1.9);ctx.fill();
   ctx.restore();
 }
 function chapCard(){
@@ -1877,6 +1890,25 @@ function labSometime(){return labScene({set:'office',title:'Sometime.',plan:'Lea
   ['S','Very different departments.']
  ],outside({title:'MEANWHILE, IN THE LIFT',dur:'floors 4 to 1',cap:'Eero is thinking about coffee. He meant it. He just never books anything.',anim:'text'}),[
   calm,
+  function(){var g=G;g.yx=g.yxT=800;g.yT=1;},{wait:1.5},
+  set({mood:'surprised'}),
+  ['S','…Eero left. His shadow didn’t.'],
+  ['Y','Oh! Hello. Has he gone? What time is it?'],
+  ['S','Half past four.'],
+  ['Y','Half past four WHEN?'],
+  ['S','…Today.'],
+  ['Y','Today. Gosh. Today is so soon.'],
+  ['S','He said “sometime”. Is that a polite “never”?'],
+  ['Y','No, no. “Sometime” means he means it. Booking it is MY department. I’m on it.'],
+  ['S','You don’t have a calendar.'],
+  ['Y','I have a lovely calendar. I don’t know where it is. It’s been a lovely year.'],
+  function(){G.yxT=1080;},
+  ['Y','I should catch him up. He’ll need me by Thursday. Roughly.'],
+  {wait:1.6},function(){G.yT=0;},
+  ['S','His watch had no hands.'],
+  ['H','Whose watch?'],
+  ['S','Never mind. Different floor.'],
+  set({mood:'calm'}),
   ['S','Draft a reply. I have options.'],
   {choice:[
     {t:'A form. With boxes.',f:function(){G.someT='form';},then:[['P','You: “Re: sometime. Please tick one. ☐ Tue 12:00 ☐ Thu 12:00 ☐ Never (no hard feelings) (some hard feelings)”'],{wait:1.2},['P','Eero: “HAHA. Ticking Thursday. Can I keep the form”'],['S','He ticked a box. He wants the FORM.']]},
@@ -1958,6 +1990,10 @@ var LOOKS=[
 function lensOn(){var g=G,q=geom();g.lens={x:q.bx+40,y:q.hdY+60,xT:g.human.x+130,yT:FEETY-200,mode:'look',spot:null,done:{},t:0};g.morko.pose='lens';sfx('enhance');}
 function lensTo(k){return function(){addLived('exhibits examined',30);var L=G.lens,s=SPOTS[k];L.xT=s.x;L.yT=s.y;L.spot=k;L.done[k]=1;sfx('card');};}
 function lensSelf(){var L=G.lens,q=geom();L.mode='self';L.spot=null;L.xT=q.bx+6;L.yT=q.hdY+14;G.morko.pose=null;G.morko.mood='worry';sfx('card');}
+// A quick look through the glass, anywhere. The glass is Ekskyysmi's signature tool, so it keeps coming back.
+function lensPeek(at,tag,secs){return function(){return [function(){var q=geom(),p=typeof at==='function'?at():at;
+  G.lens={x:q.bx+40,y:q.hdY+60,xT:p.x,yT:p.y,mode:'peek',tag:tag,spot:null,done:{},t:0};G.morko.pose='lens';sfx('enhance');},
+  {wait:secs||2.3},lensOff];};}   // a step that expands into steps (an array would read as a line of dialogue)
 function lensOff(){G.lens=null;if(G.morko.pose==='lens')G.morko.pose=null;}
 function stepLens(dt){var L=G.lens;if(!L)return;L.t+=dt;var k=RM?1:1-Math.pow(0.0006,dt);L.x+=(L.xT-L.x)*k;L.y+=(L.yT-L.y)*k;}
 function lensHandle(){var L=G.lens,a=L.mode==='self'?Math.PI*0.25:Math.PI*0.75,c=Math.cos(a),s=Math.sin(a);return {x1:L.x+c*LENSR,y1:L.y+s*LENSR,x2:L.x+c*(LENSR+52),y2:L.y+s*(LENSR+52)};}
@@ -1997,7 +2033,7 @@ function drawLens(){
   ctx.restore();
   ctx.save();ctx.beginPath();ctx.arc(L.x,L.y,r,0,Math.PI*2);ctx.clip();
   ctx.fillStyle=L.mode==='self'?'rgba(255,240,200,.07)':'rgba(150,30,40,.15)';ctx.fillRect(L.x-r,L.y-r,r*2,r*2);
-  var tag=L.mode==='look'?lensTag():null;
+  var tag=L.mode==='look'?lensTag():L.mode==='peek'&&L.t>0.45?L.tag:null;
   if(tag){ctx.font='800 10px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';var ls=wrap(tag,r*1.5),ty=L.y+r*0.5-(ls.length-1)*6;
     for(var i=0;i<ls.length;i++){var tw=ctx.measureText(ls[i]).width+10;ctx.fillStyle='rgba(120,20,28,.88)';rr(L.x-tw/2,ty+i*13-7,tw,13,3);ctx.fill();ctx.fillStyle='#fff';ctx.fillText(ls[i],L.x,ty+i*13);}}
   ctx.restore();
@@ -2169,6 +2205,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   function(){G.clock+=120;},
   ['N','Two minutes pass. The bartender polishes a glass. It was already clean.'],
   ['S','He hasn’t looked at us once.'],
+  lensPeek(function(){return {x:G.bar.tx,y:BARY-46};},'BARTENDER: POLISHING. OR AVOIDING. OR POLISHING.'),
   function(){var b=G.bar;b.sT=700;},{wait:2.4},
   function(){G.bar.polish=false;},
   ['T','Evening! What can I get you?'],
@@ -2425,6 +2462,7 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
   ['S','She is fining us. In public. In front of the large-print section.'],
   calm,
   ['L','Did you like it?'],
+  lensPeek({x:760,y:FEETY-150},'FACE: CURIOUS. SUSPICIOUSLY CURIOUS.'),
   set({mood:'alert',s:1.3}),
   ['S','It’s a trap. If we liked it, why did we keep it? If we didn’t, why did we KEEP it?'],
   {choice:[
@@ -2466,6 +2504,7 @@ function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Rea
   ['S','Let’s not be hasty.'],
   ['P','Requirements: excellent communication skills. Attention to detail. Applications by Friday.'],
   ['S','“Excellent.” Not “good”. Excellent.'],
+  lensPeek(function(){return {x:G.human.x+22,y:FEETY-100};},'REQUIREMENT: “EXCELLENT”. WE ARE “FINE”.'),
   archive('bad',[['2019','Applied. Heard nothing. Still checking.'],['2021','“We went with someone with more experience.”'],['2023','Got the interview. Said “you too” to “enjoy your weekend”.']]),
   ['S','I’ve pulled the relevant files.'],
   ['H','They’re not relevant. They’re just old.'],
@@ -2587,7 +2626,7 @@ function update(dt,elapsed){
       if(hh.p>=hh.secs)finishHold();
     }
   }
-  if(g.card>0)g.card-=dt;if(g.job)g.job.t+=elapsed;if(g.chap)g.chap.t+=dt;if(g.bigNote)g.bigNote.t+=dt;if(g.fade>0)g.fade=Math.max(0,g.fade-dt*(g.fadeRate||1.6));Hm.sip=ease(Hm.sip||0,Hm.sipT||0,8*dt);M.wake=ease(M.wake==null?1:M.wake,M.asleep?0:1,2.6*dt);if(g.anx>0.3)g.anx=Math.max(0.3,g.anx-0.06*dt);g.zShow=ease(g.zShow,g.zT,2*dt);if(g.out)g.out.t+=dt;if(g.pop){g.pop.t+=dt;if(g.pop.t>2.6)g.pop=null;}
+  if(g.card>0)g.card-=dt;if(g.job)g.job.t+=elapsed;if(g.chap)g.chap.t+=dt;if(g.bigNote)g.bigNote.t+=dt;if(g.fade>0)g.fade=Math.max(0,g.fade-dt*(g.fadeRate||1.6));Hm.sip=ease(Hm.sip||0,Hm.sipT||0,8*dt);M.wake=ease(M.wake==null?1:M.wake,M.asleep?0:1,2.6*dt);if(g.anx>0.3)g.anx=Math.max(0.3,g.anx-0.06*dt);g.zShow=ease(g.zShow,g.zT,2*dt);g.yShow=ease(g.yShow||0,g.yT||0,2*dt);g.yx=approach(g.yx||0,g.yxT||0,(RM?400:75)*dt);if(g.out)g.out.t+=dt;if(g.pop){g.pop.t+=dt;if(g.pop.t>2.6)g.pop=null;}
   var base=M.sT,offT=-70-(M.s-1)*12;
   if(g.w){var lb=lampBase();base=M.sT+lb.s;offT=lb.off-(M.sT-1)*45;g.w.x=approach(g.w.x,g.w.xT,g.w.speed*dt);g.walking=g.w.x<g.w.xT-0.5&&g.w.speed>0;}
   if(M.st==='free'||M.st==='pokka')M.s=approach(M.s,base,(M.s<base?1.5:1.1)*dt);
@@ -2872,6 +2911,7 @@ function drawLines(){
     else if(l.who==='X'&&g.bar)bubble(g.bar.sx,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='L')bubble(760,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='Z')bubble(g.ax+62,WALLY-178,l.text,{dark:true,noTail:true,reveal:rv});
+    else if(l.who==='Y')bubble(g.yx,WALLY-200,l.text,{dark:true,noTail:true,maxW:mw||250,reveal:rv});
     ctx.restore();
   }
 }
@@ -3016,7 +3056,7 @@ function draw(){
     drawDish();
     drawTics(0);
     if(WAIT==='hold'&&g.hold&&!g.human.gone)holdRing();
-    sannaShadow();
+    sannaShadow();eeroShadow();
     drawCoworkers(1);
     if(g.set==='bar'&&g.bar)barFront();
     drawLens();

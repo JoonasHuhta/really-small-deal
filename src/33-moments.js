@@ -3,7 +3,7 @@
 // Time floats on purpose: a card says roughly when, never which week. To reorder the story, edit AFTER.
 var AFTER={
   2:['enhance','posting'],
-  3:['detail','glass'],
+  3:['detail','glass','sometime'],
   4:['reply','notnow','bar','colleagues'],
   5:['comments']
 };

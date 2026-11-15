@@ -46,6 +46,7 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
   ['S','She is fining us. In public. In front of the large-print section.'],
   calm,
   ['L','Did you like it?'],
+  lensPeek({x:760,y:FEETY-150},'FACE: CURIOUS. SUSPICIOUSLY CURIOUS.'),
   set({mood:'alert',s:1.3}),
   ['S','It’s a trap. If we liked it, why did we keep it? If we didn’t, why did we KEEP it?'],
   {choice:[

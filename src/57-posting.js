@@ -12,6 +12,7 @@ function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Rea
   ['S','Let’s not be hasty.'],
   ['P','Requirements: excellent communication skills. Attention to detail. Applications by Friday.'],
   ['S','“Excellent.” Not “good”. Excellent.'],
+  lensPeek(function(){return {x:G.human.x+22,y:FEETY-100};},'REQUIREMENT: “EXCELLENT”. WE ARE “FINE”.'),
   archive('bad',[['2019','Applied. Heard nothing. Still checking.'],['2021','“We went with someone with more experience.”'],['2023','Got the interview. Said “you too” to “enjoy your weekend”.']]),
   ['S','I’ve pulled the relevant files.'],
   ['H','They’re not relevant. They’re just old.'],
