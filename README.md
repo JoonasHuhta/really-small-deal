@@ -16,11 +16,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.21 toimii paikallise
 
 Versio 0.21 (Claude, 15.11.2026): **kaksi kelloa.**
 
-- **Ulkona päivä on päivä, sisällä osa päivistä tulee kahdesti.** Ensimmäisestä osumasta lähtien loppupäivä eletään kahteen kertaan, ja piikit (säpsähdykset, arkistokäynnit, uusinnat, poistetut äänitykset, ylimuokkaukset, valvominen) tulevat päälle. HUDissa on rivi TIME: ”14:05 outside · 16:02 inside ×2”. Kun sisäkello kiihtyy, numerot rullaavat punaisina.
+- **Ulkona päivä on päivä, sisällä osa päivistä tulee kahdesti.** Ensimmäisestä osumasta lähtien loppupäivä eletään kahteen kertaan, ja piikit (säpsähdykset, arkistokäynnit, uusinnat, poistetut äänitykset, ylimuokkaukset, valvominen) tulevat päälle. Pelin aikana tätä ei näytetä HUDissa (kokeiltu, liikaa infoa), vaan se tulee ilmi tarinassa: tiistaiyönä 03:07 ”Out there, yes. In here it’s about Thursday. I did the afternoon twice.” ja kuitissa päivän lopussa.
 - **Kuitti.** Maanantain lopussa tulostuu DAILY RECEIPT: A DAY, AWAKE 16 h 00 min, ”oh, hi.” 0.4 s, eriteltynä mihin sisäinen aika meni, ja lopuksi DAYS LIVED TODAY (missattu maanantai noin 2,1; salainen lounaspolku 1,1). Viikon lopussa: DAYS ON THE CALENDAR 5, DAYS LIVED noin 8–9. Perjantai on kevein (”rest of the day, 1.4 times”), koska Ekskyysmin työ on vaihtunut. **Copy receipt** kopioi kuitin tekstinä pelin linkin kanssa jaettavaksi.
 - **Röntgensäpsähdys** (uusi hetki *One small thing.*, keskiviikon jälkeen ”THE NEXT MORNING”): Eero kehuu dioja ja sanoo ”Just one small thing.” Salama, ruutu pimenee, ja hetken näkyy röntgen: ihmisen luuranko ja haljennut sydän, varjon kohdalla ei luita vaan arkistokaappi (2011, 2016, 2019, TODAY), ja Eeron luuranko: HEART RATE: NORMAL. ”You okay?” – ”Yeah. It’s nothing.” – ”It is NOT nothing. I have the X-ray.” Pieni asia oli fontti. Vähennetty liike: ei välähdystä, pelkkä röntgen.
 - **Myös pelaajan uusinnat kirjataan:** maanantain uusiminen näkyy seuraavassa kuitissa rivinä ”Mondays replayed, by you … noted”.
 - **Välilehdeltä poistuminen huomataan.** Jos pelaaja on poissa yli kuusi sekuntia, Ekskyysmi: ”You left for 5 min. In here that was 2 h 30 min. I’ve prepared a statement.” Aika menee kuittiin riville ”waiting for you to come back”.
+- Korjattu: alussa ihmisellä ei enää ole kahta varjoa (lattiavarjo on Ekskyysmi), kukaan ei kävele takaperin, ja mukin kahvan vihje lukee nyt ”(mug handle on the wrong side.)”.
 - Kuittinäkymä on aseteltu niin, että napit ovat tekstin alla ja kuitti vieressä myös puhelimen vaakanäkymässä.
 
 Versio 0.20 (Claude, 15.11.2026):

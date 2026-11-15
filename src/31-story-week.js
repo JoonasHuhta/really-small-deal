@@ -54,7 +54,8 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   scene({set:'home',clock:3*3600+7*60}),
   ['N','03:07.'],
   ['S','Are you awake?'],
-  ['H','I am now.'],
+  ['H','I am now. It’s three in the morning.'],
+  ['S','Out there, yes. In here it’s about Thursday. I did the afternoon twice.'],
   ['S','Good. I’ve prepared tomorrow. Three scenarios.'],
   {choice:[
     {t:'Scenario one: “We need to talk about your attitude.”',then:[['S','You say: “I don’t have an attitude.” Which is an attitude.'],['H','I’ll just listen.'],['S','Listening is suspicious.']]},

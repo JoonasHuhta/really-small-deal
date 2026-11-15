@@ -69,7 +69,7 @@ function room(flat){
 function person(x,o){
   var f=o.facing||1,fl=o.flinch||0,top=FEETY-118-fl*5,lg=o.walk?Math.sin(G.time*8)*6:0;
   ctx.save();if(o.alpha!=null)ctx.globalAlpha=o.alpha;
-  ctx.fillStyle='rgba(20,16,30,.2)';ctx.beginPath();ctx.ellipse(x,FEETY+2,30,7,0,0,Math.PI*2);ctx.fill();
+  if(o.shadow!==0){ctx.fillStyle='rgba(20,16,30,'+(0.2*(o.shadow==null?1:o.shadow))+')';ctx.beginPath();ctx.ellipse(x,FEETY+2,30,7,0,0,Math.PI*2);ctx.fill();}
   if(o.puddle>0.02){ctx.fillStyle='rgba(150,205,230,.55)';ctx.beginPath();ctx.ellipse(x+6,FEETY+5,20+o.puddle*70,4+o.puddle*7,0,0,Math.PI*2);ctx.fill();}
   ctx.fillStyle='#3a3944';rr(x-15+lg,FEETY-54,12,54,4);ctx.fill();rr(x+3-lg,FEETY-54,12,54,4);ctx.fill();
   var skin=o.body===SANNA.body?'#c9957a':o.body===MIKA.body?'#e5c4a1':'#e4bba2';
@@ -133,15 +133,16 @@ var SANNA={body:'#62887f',hair:'#463b38'},MIKA={body:'#ac8277',hair:'#895e41'};
 function drawHuman(extra){
   var Hm=G.human,o={body:'#c98f2e',hair:'#4a3b32',facing:Hm.facing||1,cup:!G.cupLeft&&!G.w&&!G.noCup,sip:Hm.sip||0,flinch:Hm.flinch,face:Hm.face,back:Hm.back,sweat:Hm.sweat,blush:Hm.blush,grin:Hm.grin,puddle:Hm.puddle};
   if(o.face==='down')o.down=true;
-  if(!G.w&&Math.abs(Hm.x-Hm.xT)>1)o.walk=true;
+  if(!G.w&&Math.abs(Hm.x-Hm.xT)>1){o.walk=true;if(!Hm.back)o.facing=Hm.xT>Hm.x?1:-1;}   // nobody walks backwards
+  var wk=G.morko.wake;if(wk!=null&&wk<0.98)o.shadow=wk;          // the floor shadow IS Ekskyysmi: never two
   if(extra)for(var k in extra)o[k]=extra[k];
   person(Hm.x,o);
 }
 function drawCoworkers(alpha){
   var g=G;
   var lf=g.lensView?'frown':undefined;
-  if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:g.aFace,face:lf,wave:g.aWave,alpha:alpha,walk:Math.abs(g.ax-g.axT)>1,sweat:g.aSweat});
-  if(g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:g.bFace,face:lf,alpha:alpha,cup:Math.abs(g.bx2-g.bxT)<1&&g.bxT<1000,walk:Math.abs(g.bx2-g.bxT)>1});
+  if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:Math.abs(g.ax-g.axT)>1?(g.axT>g.ax?1:-1):g.aFace,face:lf,wave:g.aWave,alpha:alpha,walk:Math.abs(g.ax-g.axT)>1,sweat:g.aSweat});
+  if(g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:Math.abs(g.bx2-g.bxT)>1?(g.bxT>g.bx2?1:-1):g.bFace,face:lf,alpha:alpha,cup:Math.abs(g.bx2-g.bxT)<1&&g.bxT<1000,walk:Math.abs(g.bx2-g.bxT)>1});
   if(g.cowR)person(g.rx,{body:RIITTA.body,hair:RIITTA.hair,facing:-1,alpha:alpha,brow:g.rBrow});
 }
 
@@ -347,30 +348,22 @@ function hud(){
   var g=G,y=26,rows=g.w?[]:[['A SMALL PLAN',g.planText||'Ask Sanna to lunch.']];
   if(g.chapter===3&&g.yes&&!g.moment)rows.push(['THINGS AGREED TO',String(g.yes)]);
   rows.unshift(['EKSKYYSMI’S JOB',g.jobDone?JOB_NEW:JOB_OLD,g.jobDone?'':'job']);
-  if(g.day0)rows.push([g.w?'ON THE WAY HOME':'TIME','','time']);
-  var show=1;if(COMPACT){show=(g.job&&g.job.t<7)||g.pop||g.rolling?1:clamp(7-(g.hudAge||0),0,1);if(show<=0)return;}
+  var show=1;if(COMPACT){show=(g.job&&g.job.t<7)||g.pop?1:clamp(7-(g.hudAge||0),0,1);if(show<=0)return;}
   ctx.save();ctx.globalAlpha=show;if(COMPACT){ctx.translate(W-14,14);ctx.scale(1.3,1.3);ctx.translate(-(W-14),-14);}
   ctx.textAlign='left';ctx.textBaseline='middle';
   for(var i=0;i<rows.length;i++){
     ctx.font='700 11px system-ui,sans-serif';var w1=ctx.measureText(rows[i][0]).width;
-    ctx.font='500 13px system-ui,sans-serif';var tp=rows[i][2]==='time'?timeParts():null,w2=tp?tp.reduce(function(s,p){return s+ctx.measureText(p[0]).width;},0):ctx.measureText(rows[i][1]).width;
+    ctx.font='500 13px system-ui,sans-serif';var w2=ctx.measureText(rows[i][1]).width;
     var x=W-14-(w1+w2+30);
     ctx.fillStyle='rgba(22,19,30,.72)';rr(x,y-11,w1+w2+30,22,11);ctx.fill();
     ctx.font='700 11px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(rows[i][0],x+10,y);
     ctx.font='500 13px system-ui,sans-serif';
-    if(tp){var tx=x+18+w1;for(var p=0;p<tp.length;p++){ctx.fillStyle=tp[p][1];ctx.fillText(tp[p][0],tx,y);tx+=ctx.measureText(tp[p][0]).width;}}
-    else{ctx.fillStyle='#f1ebdd';ctx.fillText(rows[i][1],x+18+w1,y);}
+    ctx.fillStyle='#f1ebdd';ctx.fillText(rows[i][1],x+18+w1,y);
     if(rows[i][2]==='job'&&g.job)jobRewrite(x+18+w1,y,w2);
     y+=rows[i][2]==='job'&&g.job?50:26;
   }
   if(g.pop){ctx.globalAlpha=clamp(2.6-g.pop.t,0,1);ctx.textAlign='right';ctx.font='700 14px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(g.pop.text,W-20,y+4-Math.min(8,g.pop.t*10));ctx.globalAlpha=1;}
   ctx.restore();
-}
-// Two parts of the TIME row: the wall clock, and the clock Ekskyysmi keeps.
-function timeParts(){
-  var g=G,p=[[hhmm(g.clock)+' outside · ','#f1ebdd'],[innerClockText()+' inside',g.rolling?'#ff8a73':g.mult>1?'#ebbd79':'#bfcfbd']];
-  if(g.mult>1)p.push([' ×'+(g.mult===2?'2':g.mult.toFixed(1)),'#ff8a73']);
-  return p;
 }
 function pausedNote(){
   var g=G,a=g.awayNote;

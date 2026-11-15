@@ -2,7 +2,8 @@
 // The outside clock is the one on the wall. The inside clock is the one Ekskyysmi keeps.
 // Until something lands, they agree. After the first hit of the day, every outside hour is lived twice
 // (once as it happens, once as it is replayed), and the spikes (jolts, archive visits, drafts) come on top.
-// At the end of a day the difference is printed as a receipt, because that is the only format Ekskyysmi trusts.
+// Nothing of this is on screen while it happens (the story says it when it matters). At the end of a day
+// the difference is printed as a receipt, because that is the only format Ekskyysmi trusts.
 var DOUBLE=2;                 // after a hit: each outside minute is lived twice
 var STAY=1.4;                 // after the job changes: still more than one, but no longer two
 var TRIES=0;                  // Mondays the player has replayed. Ekskyysmi notices.
@@ -43,13 +44,6 @@ function doubledUntil(d,pos){
   return (d.stayAt-d.trigAt)*(m1-1)+(pos-d.stayAt)*(Math.min(m1,STAY)-1);
 }
 function spikes(d){return d.ledger.reduce(function(s,e){return s+e.secs;},0);}
-function stepInside(dt){
-  var g=G,d=g.day0;if(!d)return;
-  var target=spikes(d)+doubledUntil(d,dayPos(g.clock)),diff=target-g.livedShown;
-  if(target<g.livedShown)g.livedShown=target;   // a scene that rewinds the clock never makes time un-lived on screen jumpily
-  g.livedShown+=diff*Math.min(1,dt*(RM?20:2.4));if(Math.abs(target-g.livedShown)<1)g.livedShown=target;
-  g.rolling=target-g.livedShown>30;
-}
 function closeDay(){
   var g=G,d=g.day0;if(!d)return null;
   if(d.hits)addLived('lying awake (projected)',Math.min(180,LIVED.tonight*d.hits+30));
@@ -64,10 +58,6 @@ function dur(secs){
   secs=Math.round(secs);if(secs<60)return secs+' s';
   var h=Math.floor(secs/3600),m=Math.round((secs%3600)/60);if(m===60){h++;m=0;}
   return h?h+' h '+(m<10?'0':'')+m+' min':m+' min';
-}
-function innerClockText(){
-  var g=G,s=g.clock+g.livedShown,day=Math.floor(s/86400);
-  return (day>=2?'the day after tomorrow, ':day===1?'tomorrow, ':'')+hhmm(s%86400);
 }
 
 /* ---------- the receipt ---------- */

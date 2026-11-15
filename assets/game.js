@@ -402,8 +402,8 @@ function scPrelude(){return [
   function(){var g=G,Hm=g.human;g.noCup=false;Hm.back=false;Hm.facing=-1;Hm.xT=704;},
   {wait:1.3},
   function(){G.human.facing=1;},
-  addTic('(that handle.)',764,276,{life:1.5}),
-  {wait:1.5},
+  addTic('(mug handle on the wrong side.)',764,276,{life:1.8}),
+  {wait:1.8},
   function(){G.mugFixed=true;sfx('clink');},
   addTic('(better.)',764,276,{life:1.5}),
   {wait:1.5},
@@ -773,7 +773,8 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   scene({set:'home',clock:3*3600+7*60}),
   ['N','03:07.'],
   ['S','Are you awake?'],
-  ['H','I am now.'],
+  ['H','I am now. It’s three in the morning.'],
+  ['S','Out there, yes. In here it’s about Thursday. I did the afternoon twice.'],
   ['S','Good. I’ve prepared tomorrow. Three scenarios.'],
   {choice:[
     {t:'Scenario one: “We need to talk about your attitude.”',then:[['S','You say: “I don’t have an attitude.” Which is an attitude.'],['H','I’ll just listen.'],['S','Listening is suspicious.']]},
@@ -1177,7 +1178,8 @@ function scResponded(){return [
 // The outside clock is the one on the wall. The inside clock is the one Ekskyysmi keeps.
 // Until something lands, they agree. After the first hit of the day, every outside hour is lived twice
 // (once as it happens, once as it is replayed), and the spikes (jolts, archive visits, drafts) come on top.
-// At the end of a day the difference is printed as a receipt, because that is the only format Ekskyysmi trusts.
+// Nothing of this is on screen while it happens (the story says it when it matters). At the end of a day
+// the difference is printed as a receipt, because that is the only format Ekskyysmi trusts.
 var DOUBLE=2;                 // after a hit: each outside minute is lived twice
 var STAY=1.4;                 // after the job changes: still more than one, but no longer two
 var TRIES=0;                  // Mondays the player has replayed. Ekskyysmi notices.
@@ -1218,13 +1220,6 @@ function doubledUntil(d,pos){
   return (d.stayAt-d.trigAt)*(m1-1)+(pos-d.stayAt)*(Math.min(m1,STAY)-1);
 }
 function spikes(d){return d.ledger.reduce(function(s,e){return s+e.secs;},0);}
-function stepInside(dt){
-  var g=G,d=g.day0;if(!d)return;
-  var target=spikes(d)+doubledUntil(d,dayPos(g.clock)),diff=target-g.livedShown;
-  if(target<g.livedShown)g.livedShown=target;   // a scene that rewinds the clock never makes time un-lived on screen jumpily
-  g.livedShown+=diff*Math.min(1,dt*(RM?20:2.4));if(Math.abs(target-g.livedShown)<1)g.livedShown=target;
-  g.rolling=target-g.livedShown>30;
-}
 function closeDay(){
   var g=G,d=g.day0;if(!d)return null;
   if(d.hits)addLived('lying awake (projected)',Math.min(180,LIVED.tonight*d.hits+30));
@@ -1239,10 +1234,6 @@ function dur(secs){
   secs=Math.round(secs);if(secs<60)return secs+' s';
   var h=Math.floor(secs/3600),m=Math.round((secs%3600)/60);if(m===60){h++;m=0;}
   return h?h+' h '+(m<10?'0':'')+m+' min':m+' min';
-}
-function innerClockText(){
-  var g=G,s=g.clock+g.livedShown,day=Math.floor(s/86400);
-  return (day>=2?'the day after tomorrow, ':day===1?'tomorrow, ':'')+hhmm(s%86400);
 }
 
 /* ---------- the receipt ---------- */
@@ -2439,7 +2430,7 @@ function update(dt,elapsed){
   for(var ci=g.cards.length-1;ci>=0;ci--){g.cards[ci].t+=dt;if(g.cards[ci].life!=null&&g.cards[ci].t>g.cards[ci].life)g.cards.splice(ci,1);}
   g.pulse=Math.max(0,g.pulse-dt*0.3);g.shake=Math.max(0,g.shake-dt*2.6);
   if(g.zoom)g.zoom.t+=dt;
-  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepInside(dt);stepJolt(dt);
+  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);
   var hk=(g.planText||'')+'|'+g.jobDone+'|'+g.hud+'|'+g.chapter+'|'+g.lab+'|'+g.yes+'|'+(g.w?1:0);if(hk!==g.hudKey){g.hudKey=hk;g.hudAge=0;}g.hudAge=(g.hudAge||0)+dt;
   stepTics(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
   if(WAIT==='fight'&&g.fight&&!paused)stepFight(elapsed);
@@ -2533,7 +2524,7 @@ function room(flat){
 function person(x,o){
   var f=o.facing||1,fl=o.flinch||0,top=FEETY-118-fl*5,lg=o.walk?Math.sin(G.time*8)*6:0;
   ctx.save();if(o.alpha!=null)ctx.globalAlpha=o.alpha;
-  ctx.fillStyle='rgba(20,16,30,.2)';ctx.beginPath();ctx.ellipse(x,FEETY+2,30,7,0,0,Math.PI*2);ctx.fill();
+  if(o.shadow!==0){ctx.fillStyle='rgba(20,16,30,'+(0.2*(o.shadow==null?1:o.shadow))+')';ctx.beginPath();ctx.ellipse(x,FEETY+2,30,7,0,0,Math.PI*2);ctx.fill();}
   if(o.puddle>0.02){ctx.fillStyle='rgba(150,205,230,.55)';ctx.beginPath();ctx.ellipse(x+6,FEETY+5,20+o.puddle*70,4+o.puddle*7,0,0,Math.PI*2);ctx.fill();}
   ctx.fillStyle='#3a3944';rr(x-15+lg,FEETY-54,12,54,4);ctx.fill();rr(x+3-lg,FEETY-54,12,54,4);ctx.fill();
   var skin=o.body===SANNA.body?'#c9957a':o.body===MIKA.body?'#e5c4a1':'#e4bba2';
@@ -2597,15 +2588,16 @@ var SANNA={body:'#62887f',hair:'#463b38'},MIKA={body:'#ac8277',hair:'#895e41'};
 function drawHuman(extra){
   var Hm=G.human,o={body:'#c98f2e',hair:'#4a3b32',facing:Hm.facing||1,cup:!G.cupLeft&&!G.w&&!G.noCup,sip:Hm.sip||0,flinch:Hm.flinch,face:Hm.face,back:Hm.back,sweat:Hm.sweat,blush:Hm.blush,grin:Hm.grin,puddle:Hm.puddle};
   if(o.face==='down')o.down=true;
-  if(!G.w&&Math.abs(Hm.x-Hm.xT)>1)o.walk=true;
+  if(!G.w&&Math.abs(Hm.x-Hm.xT)>1){o.walk=true;if(!Hm.back)o.facing=Hm.xT>Hm.x?1:-1;}   // nobody walks backwards
+  var wk=G.morko.wake;if(wk!=null&&wk<0.98)o.shadow=wk;          // the floor shadow IS Ekskyysmi: never two
   if(extra)for(var k in extra)o[k]=extra[k];
   person(Hm.x,o);
 }
 function drawCoworkers(alpha){
   var g=G;
   var lf=g.lensView?'frown':undefined;
-  if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:g.aFace,face:lf,wave:g.aWave,alpha:alpha,walk:Math.abs(g.ax-g.axT)>1,sweat:g.aSweat});
-  if(g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:g.bFace,face:lf,alpha:alpha,cup:Math.abs(g.bx2-g.bxT)<1&&g.bxT<1000,walk:Math.abs(g.bx2-g.bxT)>1});
+  if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:Math.abs(g.ax-g.axT)>1?(g.axT>g.ax?1:-1):g.aFace,face:lf,wave:g.aWave,alpha:alpha,walk:Math.abs(g.ax-g.axT)>1,sweat:g.aSweat});
+  if(g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:Math.abs(g.bx2-g.bxT)>1?(g.bxT>g.bx2?1:-1):g.bFace,face:lf,alpha:alpha,cup:Math.abs(g.bx2-g.bxT)<1&&g.bxT<1000,walk:Math.abs(g.bx2-g.bxT)>1});
   if(g.cowR)person(g.rx,{body:RIITTA.body,hair:RIITTA.hair,facing:-1,alpha:alpha,brow:g.rBrow});
 }
 
@@ -2811,30 +2803,22 @@ function hud(){
   var g=G,y=26,rows=g.w?[]:[['A SMALL PLAN',g.planText||'Ask Sanna to lunch.']];
   if(g.chapter===3&&g.yes&&!g.moment)rows.push(['THINGS AGREED TO',String(g.yes)]);
   rows.unshift(['EKSKYYSMI’S JOB',g.jobDone?JOB_NEW:JOB_OLD,g.jobDone?'':'job']);
-  if(g.day0)rows.push([g.w?'ON THE WAY HOME':'TIME','','time']);
-  var show=1;if(COMPACT){show=(g.job&&g.job.t<7)||g.pop||g.rolling?1:clamp(7-(g.hudAge||0),0,1);if(show<=0)return;}
+  var show=1;if(COMPACT){show=(g.job&&g.job.t<7)||g.pop?1:clamp(7-(g.hudAge||0),0,1);if(show<=0)return;}
   ctx.save();ctx.globalAlpha=show;if(COMPACT){ctx.translate(W-14,14);ctx.scale(1.3,1.3);ctx.translate(-(W-14),-14);}
   ctx.textAlign='left';ctx.textBaseline='middle';
   for(var i=0;i<rows.length;i++){
     ctx.font='700 11px system-ui,sans-serif';var w1=ctx.measureText(rows[i][0]).width;
-    ctx.font='500 13px system-ui,sans-serif';var tp=rows[i][2]==='time'?timeParts():null,w2=tp?tp.reduce(function(s,p){return s+ctx.measureText(p[0]).width;},0):ctx.measureText(rows[i][1]).width;
+    ctx.font='500 13px system-ui,sans-serif';var w2=ctx.measureText(rows[i][1]).width;
     var x=W-14-(w1+w2+30);
     ctx.fillStyle='rgba(22,19,30,.72)';rr(x,y-11,w1+w2+30,22,11);ctx.fill();
     ctx.font='700 11px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(rows[i][0],x+10,y);
     ctx.font='500 13px system-ui,sans-serif';
-    if(tp){var tx=x+18+w1;for(var p=0;p<tp.length;p++){ctx.fillStyle=tp[p][1];ctx.fillText(tp[p][0],tx,y);tx+=ctx.measureText(tp[p][0]).width;}}
-    else{ctx.fillStyle='#f1ebdd';ctx.fillText(rows[i][1],x+18+w1,y);}
+    ctx.fillStyle='#f1ebdd';ctx.fillText(rows[i][1],x+18+w1,y);
     if(rows[i][2]==='job'&&g.job)jobRewrite(x+18+w1,y,w2);
     y+=rows[i][2]==='job'&&g.job?50:26;
   }
   if(g.pop){ctx.globalAlpha=clamp(2.6-g.pop.t,0,1);ctx.textAlign='right';ctx.font='700 14px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(g.pop.text,W-20,y+4-Math.min(8,g.pop.t*10));ctx.globalAlpha=1;}
   ctx.restore();
-}
-// Two parts of the TIME row: the wall clock, and the clock Ekskyysmi keeps.
-function timeParts(){
-  var g=G,p=[[hhmm(g.clock)+' outside · ','#f1ebdd'],[innerClockText()+' inside',g.rolling?'#ff8a73':g.mult>1?'#ebbd79':'#bfcfbd']];
-  if(g.mult>1)p.push([' ×'+(g.mult===2?'2':g.mult.toFixed(1)),'#ff8a73']);
-  return p;
 }
 function pausedNote(){
   var g=G,a=g.awayNote;
