@@ -14,7 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.42.0 (Claude, 16.11.2026): **ensimmäinen alfa kavereiden testattavaksi.**
+Versio 0.42.1 (Claude, 16.11.2026): **maanantain musiikki ja ”Excuse me?”.**
+
+- **Ensimmäisen kohtauksen musiikki:** Joonaksen kappale *Guarded Introspection* (`assets/audio/monday.mp3`, 128 kbps). Alun kahvihommat menevät hiljaisuudessa, ja musiikki alkaa noin sekunti sen jälkeen, kun varjo herää. Se nousee neljän sekunnin aikana taustatasolle (0,17, kun aloitusmusiikki on 0,45) ja päättyy kotimatkaan.
+- **Muut äänet ovat musiikin yläpuolella:** kaikki syntetisoidut äänet (puheäänet ja efektit) kulkevat yhden väylän kautta, ja väylää on nostettu 1,3-kertaiseksi. Iskussa (`sfx('hit')`) musiikki laskee hetkeksi noin kolmasosaan ja palaa kahdessa ja puolessa sekunnissa.
+- **”Excuse me?” → ”Yes?”:** baarissa vieras sanoo tiskillä ”Excuse me?”, ja Ekskyysmi vastaa ”Yes?”. Tätä ei selitetä. Nimi Ekskyysmi on suomalaisittain kirjoitettu ”excuse me”.
+- Muiden varjojen nimiehdotukset (Juustsei, Kuikkitsätti, Nouvoris) ovat [NIMIEN_FINAALIKIERROS.md](NIMIEN_FINAALIKIERROS.md):ssä. Peliin niitä ei ole vielä lisätty.
+
+ **ensimmäinen alfa kavereiden testattavaksi.**
 
 - **About-sivu:** musiikin tekijä ja kappaleen nimi poistettu. ”One ordinary life” vaihdettu muotoon ”One week of small moments”, koska ”ordinary” toistui jo edellisessä kappaleessa. Alarivi on nyt ”Alpha 0.42.0, still changing. Made by Joonas Huhta (MoshBitSurfers).” Versio luetaan index.html:n `game.js?v=`-leimasta, joten sitä ei tarvitse päivittää käsin, ja testaaja näkee aina, mitä versiota hän pelaa.
 - **Kapea puhelin:** valikkoikkunoiden vähimmäiskorkeus on 440 px:n sijaan 490 px, joten About ja Settings mahtuvat näytölle ilman vieritystä.
