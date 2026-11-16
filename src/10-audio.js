@@ -26,8 +26,11 @@ var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
 var MUSIC={title:'assets/audio/title.mp3',monday:'assets/audio/monday.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};
 var firstTouch=false,BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 // Scene music is background: well under the voices. It fades in, and steps aside for a moment when something lands.
-var MUSICVOLS={monday:0.17},MUSICFADEIN={monday:4},musicLvl=1,rampId=null;
-function musicTarget(){return (MUSICVOLS[musicName]!=null?MUSICVOLS[musicName]:MUSICVOL)*musicLvl;}
+var MUSICVOLS={monday:0.22},MUSICFADEIN={monday:4},musicLvl=1,talkLvl=1,talkT=null,rampId=null;   // monday.mp3 is mastered at -24 LUFS, ~10 dB under the title track
+function musicTarget(){return (MUSICVOLS[musicName]!=null?MUSICVOLS[musicName]:MUSICVOL)*musicLvl*talkLvl;}
+// While anyone talks, the music steps back, and returns a moment after the last syllable.
+function talkDuck(secs){if(!musicEl||typeof setTimeout!=='function')return;talkLvl=0.4;rampMusic(0.25);
+  if(talkT)clearTimeout(talkT);talkT=setTimeout(function(){talkT=null;talkLvl=1;rampMusic(1.4);},secs*1000+450);}
 function rampMusic(secs){
   var el=musicEl;if(!el)return;if(typeof setInterval!=='function'){el.volume=musicTarget();return;}
   if(rampId)clearInterval(rampId);var step=Math.max(0.004,musicTarget()/Math.max(1,secs*16));
@@ -78,8 +81,9 @@ function speak(who,text){
   for(var i=0;i<text.length&&n<28;i+=3){
     var c=text.charAt(i);if(!/[A-Za-z0-9]/.test(c))continue;
     var loud=/[A-Z]/.test(c)&&/[A-Z]/.test(text.charAt(i+1)||'')?1.14:1;
-    voiceNodes.push(tone(base*loud*(0.92+((i*37)%17)/100),t0+i/55,0.05,v[0],v[2]));n++;
+    voiceNodes.push(tone(base*loud*(0.92+((i*37)%17)/100),t0+i/55,0.05,v[0],v[2]));n++;var last=i;
   }
+  if(n)talkDuck((last||0)/55+0.05);
 }
 function sfx(k){
   var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;

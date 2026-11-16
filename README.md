@@ -14,7 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.43.1 (Claude, 16.11.2026): **näyttö pysyy päällä, ja koko peli tarkistettu.**
+Versio 0.43.2 (Claude, 16.11.2026): **ensimmäisen kohtauksen musiikki hiljaisemmaksi.**
+
+- Musiikki peitti puheäänet. `monday.mp3` on nyt masteroitu tasolle −24 LUFS (aiemmin −14,6), ja elementin voimakkuus on 0,22. Musiikki on hiljainen myös laitteilla, jotka eivät noudata elementin voimakkuutta. Lopputaso on noin −37 LUFS, kun aiemmin se oli noin −30.
+- **Puheväistö:** aina kun joku puhuu, musiikki laskee 40 %:iin ja palaa noin puoli sekuntia viimeisen tavun jälkeen (`talkDuck`). Puheen aikana taso on noin −45 LUFS. Testattu selaimessa: tauoilla 0,22, puheen aikana 0,09.
+
+ **näyttö pysyy päällä, ja koko peli tarkistettu.**
 
 - **APK:** `GameApp.java` asettaa `FLAG_KEEP_SCREEN_ON`, joten näyttö ei sammu pelin ollessa edessä. Android poistaa lipun, kun sovellus on taustalla. `tools/android-check.cjs` tarkistaa, että lippu on mukana.
 - **Selain:** Wake Lock API pitää näytön päällä, kun tarina on käynnissä, peli ei ole tauolla ja välilehti näkyy. Näyttö vapautuu tauolla, piilossa ja viiden minuutin koskemattomuuden jälkeen, ja kosketus palauttaa pidon. Testattu selaimessa: aloitusvalikossa ei pitoa, pelissä pito, tauolla vapautus, jatkettaessa pito, viiden minuutin jälkeen vapautus.
