@@ -2,6 +2,8 @@
 
 16.11.2026 · Claude → Codex · versio 0.40.0. Tämä on luovutusdokumentti: missä peli on, miten sitä työstetään, ja mitä seuraavaksi tehdään, tärkeysjärjestyksessä. Lue sen jälkeen [AGENTS.md](AGENTS.md) (työtavat ja kirjoitussäännöt). Pelin tekstit ovat englantia, dokumentit suomea.
 
+**Päätökset 16.11. (Joonas):** (1) ei karsita vielä: mitä enemmän materiaalia on pelattavana, sitä paremmin testipelaajat ja Joonas näkevät, mikä kaareen kuuluu; (2) toinen näytös saa lyhyen osa-otsikon; (3) Scenario lab on vain kehitystyökalu, eikä sitä lukita: valmis peli on kohtauspohjainen ja etenee kronologisesti kuten *Night in the Woods*; (4) yövalo ensin, *A compliment.* myöhemmin. Yksityiskohdat kohdassa 5.
+
 **Tärkein periaate:** Joonas on linjannut, että julkaisua ei nyt mietitä eikä pituutta lisätä keinotekoisesti. Työ on tarinan, Ekskyysmin reaktioiden ja selkeyden hiomista. Jokaiseen uuteen ideaan suhtaudutaan kriittisesti: sulautuuko se kaareen, toistaako se jotain jo tehtyä, ja raskauttaako se rytmiä.
 
 ## 1. Tarina nyt
@@ -53,14 +55,14 @@ Torstain ja perjantain välissä on nyt yhdeksän hetkeä. Ennen yhtään uutta 
 
 **Tehtävä:** `tools/pace.cjs`. Käytä samaa DOM-tynkää kuin `tests/story.test.cjs`, pelaa tarina läpi ja laske jokaiselle luvulle ja hetkelle arvioitu kesto: repliikit lukunopeudella 230 sanaa/min + 0,6 s per napautus, `{wait}`-askeleet sellaisenaan, pidot niiden `secs`-arvolla, valinnat 4 s. Tulosta taulukko (hetki, repliikkejä, arvioitu kesto) ja kokonaisaika. Lisää `package.json`:iin `"pace": "node tools/pace.cjs"`.
 
-Sen jälkeen ehdota Joonakselle karsintaa. Ensimmäiset ehdokkaat: *The reply* (päällekkäinen *Seen.*-luvun kanssa) ja *Nothing.*-hetken lyhentäminen. **Älä karsi ilman Joonaksen hyväksyntää.**
+Mittari tehdään nyt, mutta **karsintaa ei tehdä vielä** (päätös 16.11.): materiaalia kerätään ja testipelataan ensin. Mittarin tulos kirjataan README:hen, jotta karsintapäätös voidaan myöhemmin tehdä numeroiden ja testipelaajien palautteen pohjalta. Mahdolliset ehdokkaat sitten: *The reply* ja *Nothing.*-hetken lyhentäminen.
 
 ### P3. Toisen näytöksen viimeistely
 
-1. **Osa-otsikko.** Ennen *Nothing.*-hetkeä oma kortti, esim. ”PART TWO · QUIET”, samalla tyylillä kuin lukukortti (`chapCard`). Nyt toinen näytös on piilossa luvun 4 jälkihetkissä, eikä pelaaja tunne siirtymää.
+1. **Osa-otsikko (päätetty).** Ennen *Nothing.*-hetkeä oma kortti samalla tyylillä kuin lukukortti (`chapCard`). Lyhyt ja vähäeleinen: ”PART TWO” ja alle ”QUIET.” tai pelkkä ”QUIET.”. Ei mitään, mikä vihjaa lääkkeeseen tai diagnoosiin. Nyt toinen näytös on piilossa luvun 4 jälkihetkissä, eikä pelaaja tunne siirtymää.
 2. **Lomake jää puhelimella paneelin alle.** 740×360-koossa tekstipaneeli peittää lomakkeen alareunan, jossa allekirjoitusviiva on. Allekirjoitus on hetken tärkein kuva. Korjaus: kun `html.immersive` (paneeli kankaan päällä), piirrä lomake pienempänä ja ylempänä (`drawForm` tiedostossa `src/49-second-act.js`). Tarkista `python tools/audit_layout.py form`.
 3. **Kotimatka *Quiet.*-hetkeen.** Nyt kaksi kertojan riviä. Oikea kävelykohtaus samoilla autoilla kuin maanantaina (`CARS` tiedostossa `src/51-quirks.js`), mutta ajatustekstiä ei tule eikä ihminen hymyile parin kohdalla. Se on hetken paras kuva, jos se toimii.
-4. **Scenario lab paljastaa toisen näytöksen.** Labin listassa näkyvät *Nothing.*, *The form.*, *Quiet.*, *Evenings.* ja *Night shift.* ennen kuin pelaaja on pelannut tarinan sinne asti. Ehdotus: näytä hetki listassa vasta, kun tallennus on ohittanut sen (`loadProgress()`, `saveMoment`), muuten rivi ”Something later in the story.” lukittuna.
+4. **Scenario lab on kehitystyökalu (päätetty).** Labia ei lukita, koska se on vain kehitystä ja testausta varten. Valmis peli on kohtauspohjainen ja etenee kronologisesti (vrt. *Night in the Woods*). Labin piilottaminen valmiista pelistä on julkaisutehtävä (P8), ei nyt.
 5. **Toisen näytöksen äänet.** Lomakkeen rastit käyttävät leimasinääntä, ja lamppu käyttää `turn`-ääntä. Lampun naksahdus ja kynän rahina olisivat parempia (ks. P5).
 
 ### P4. Kankaan teksti puhelimella
@@ -81,8 +83,8 @@ Puhelimen äänet ovat `speak()`-funktiossa (`P`-puhuja: saapuva viesti, lähete
 
 Jokainen on uusi laukaisin samaan kaavaan, ei uusi järjestelmä. Lyhyet luonnokset: [SUUNTA.md](SUUNTA.md) kohdat 5c ja 7.
 
-1. ***A compliment.*** Kehu menee perille, ja Ekskyysmi käsittelee sen samalla koneistolla kuin iskun: tutkii, arkistoi, käy katsomassa neljäkymmentä kertaa. Paras käyttämätön suoni. Valmis luonnos SUUNTA.md:ssä.
-2. **Yövalo loppukuvana.** Viimeisen hetken jälkeen yksi kuva: ihminen jättää pienen valon päälle, ei suojaksi varjolta vaan jotta varjolla olisi paikka olla. Sitoo lampun (*Evenings.*) ja yövuoron (*Night shift.*) loppuun ilman uutta repliikkiä.
+1. **Yövalo loppukuvana (päätetty, ensin).** Viimeisen hetken jälkeen yksi kuva: ihminen jättää pienen valon päälle, ei suojaksi varjolta vaan jotta varjolla olisi paikka olla. Sitoo lampun (*Evenings.*) ja yövuoron (*Night shift.*) loppuun ilman uutta repliikkiä.
+2. ***A compliment.*** (myöhemmin) Kehu menee perille, ja Ekskyysmi käsittelee sen samalla koneistolla kuin iskun: tutkii, arkistoi, käy katsomassa neljäkymmentä kertaa. Paras käyttämätön suoni. Valmis luonnos SUUNTA.md:ssä.
 3. **Tauko on sisältöä.** Ihminen pitää keskustelussa tarkoituksella tauon, ja ruudulle ilmestyy laskuri ”pause: 1.4 s”. Pelaajan ainoa tehtävä on pitää nappia. Sopisi perjantaihin, jos sinne mahtuu.
 4. **Suihkuväittely, myöhästynyt isku, anteeksipyyntölaskuri:** ideavarastossa. Älä toteuta kaikkia: valitse korkeintaan yksi, ja vain jos rytmimittari sallii.
 
@@ -95,7 +97,7 @@ Jokainen on uusi laukaisin samaan kaavaan, ei uusi järjestelmä. Lyhyet luonnok
 
 ### P8. Julkaisu (ei nyt)
 
-Joonaksen linjaus: ei nyt. Kun aika tulee: allekirjoitettu AAB, Play Consolen suljettu testi (henkilökohtainen kehittäjätili vaatii 12 testaajaa 14 päivän ajan), itch.io-sivu selainversiolle. Ohjeet: [ANDROID.md](ANDROID.md).
+Joonaksen linjaus: ei nyt. Kun aika tulee: Scenario labin ja testirajapinnan piilotus valmiista pelistä (esim. näkyviin vain `?dev=1`-osoitteella), allekirjoitettu AAB, Play Consolen suljettu testi (henkilökohtainen kehittäjätili vaatii 12 testaajaa 14 päivän ajan), itch.io-sivu selainversiolle. Ohjeet: [ANDROID.md](ANDROID.md).
 
 ## 4. Säännöt, joista ei tingitä
 
@@ -109,9 +111,9 @@ Kaikki ovat myös [AGENTS.md](AGENTS.md):ssä. Tärkeimmät:
 - **Yksi käsin tehtävä asia hetkeä kohden**, ja sen pitää tarkoittaa jotain.
 - **Ei paranemista.** ”For the record, I intend to go off again on Monday.” on pelin lämpimin lause.
 
-## 5. Avoimet kysymykset Joonakselle
+## 5. Päätökset (Joonas, 16.11.2026)
 
-1. Karsitaanko torstain ja perjantain välistä, kun rytmimittari on valmis? Mitkä?
-2. Tuleeko toiselle näytökselle oma osa-otsikko, ja millä sanalla?
-3. Lukitaanko Scenario labin hetket tarinan etenemisen mukaan?
-4. *A compliment.* ja yövalo: kumpi ensin, vai kumpikaan?
+1. **Karsinta:** ei vielä. Materiaalia kerätään ja testipelataan ensin, koska mitä enemmän on koettavana, sitä paremmin näkee, mikä draaman kaareen kuuluu ja mikä ei. Rytmimittari (P2) tehdään silti, jotta päätös voidaan myöhemmin tehdä numeroiden pohjalta.
+2. **Osa-otsikko toiselle näytökselle:** kyllä, lyhyt ja vähäeleinen (P3.1).
+3. **Scenario lab:** vain kehitystyökalu, ei lukitusta. Valmis peli on kohtauspohjainen ja etenee kronologisesti kuten *Night in the Woods*. Labin piilotus kuuluu julkaisuun (P8).
+4. **Järjestys:** yövalo ensin, *A compliment.* myöhemmin (P6).

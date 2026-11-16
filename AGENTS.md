@@ -28,7 +28,8 @@ A short humorous browser + Android game about rejection sensitivity. The player 
 - No advice, no therapy language, no diagnosis words. "It isn't advice."
 - A habit is a preference, never a compulsion played for laughs.
 - Alcohol is never the fix. In the bar evening it is tiredness that drops the filter; the human drinks ginger beer.
-- Do not add moments between Thursday and Friday without Joonas: there are nine already.
+- Do not add moments between Thursday and Friday without Joonas: there are nine already. Do not cut any either: the decision (16.11.) is to gather and playtest first.
+- The Scenario lab is a development tool only. The finished game is scene-based and runs in chronological order (think *Night in the Woods*). Do not build features around the lab.
 - The default face is the joke; a special look lasts one line.
 - New content is a new trigger in the same formula (trigger, reading, choice with a cost, outside version, receipt). No new meters on screen.
 
