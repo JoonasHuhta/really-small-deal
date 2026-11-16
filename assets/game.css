@@ -131,3 +131,22 @@ html.immersive .receipt{font-size:10.5px;line-height:1.35;padding:10px 11px 18px
 .line:has(.w-S) .speaker-icon{background:#b9a9f2}.line:has(.w-Z) .speaker-icon,.line:has(.w-Y) .speaker-icon,.line:has(.w-W) .speaker-icon{background:#8fb7e6;border-radius:47% 48% 30% 36%}.line:has(.w-P) .speaker-icon{background:#9fd3a8;border-radius:8px}
 /* the shortest phones: the end screen fits without scrolling */
 @media (max-height:380px){html.immersive .end-go+.small{display:none}html.immersive .title-quote{margin:6px 0}html.immersive .end-note{margin:6px 0;padding:8px 12px}}
+
+/* ---- 0.33: less chrome. One menu button; everything else lives behind it. The title screen is the title and two buttons. ---- */
+.menu-label{margin-left:7px;font-size:12px;letter-spacing:.3px}
+html.immersive .menu-label{display:none}
+html:not(.immersive) header{position:relative}
+html:not(.immersive) #menu{display:inline-flex;align-items:center;margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 12px;font-size:15px;line-height:1}
+html:not(.immersive) #menu:hover,html:not(.immersive) body.menu-open #menu{background:#ffffff0d;border-color:#7d8a80}
+html:not(.immersive) nav{display:none;position:absolute;z-index:9;right:0;top:calc(100% + 6px);margin:0;width:210px;padding:6px;gap:2px;background:#1b2328f7;border:1px solid #ffffff30;border-radius:12px;box-shadow:0 12px 30px #0008}
+html:not(.immersive) body.menu-open nav{display:grid;grid-template-columns:1fr}
+html:not(.immersive) nav button{text-align:left;font-size:14px;padding:9px 12px;color:var(--ink);min-height:38px}
+nav button:disabled{display:none}
+body:not(.playing) #restart{display:none}
+/* nothing but the title on the title screen (and on the end screens, which carry their own headings) */
+html:not(.immersive) body:not(.playing) .wordmark,body:not(.playing) .scene-bar,body:not(.playing) footer{display:none}
+html:not(.immersive) body:not(.playing) header{margin-bottom:10px;min-height:36px}
+/* loud, quiet and capitals in the text panel */
+.line p strong{font-weight:800;letter-spacing:.02em}.line .w-S p strong{color:#ebbd79}
+.line p.loud{font-size:calc(23px * var(--ts,1));font-weight:700}.line p.quiet{font-size:calc(13px * var(--ts,1));opacity:.85}
+html.immersive body.playing .line p.loud{font-size:calc(18px * var(--ts,1))}html.immersive body.playing .line p.quiet{font-size:calc(11.5px * var(--ts,1))}

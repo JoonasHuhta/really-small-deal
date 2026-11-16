@@ -58,10 +58,11 @@ Kolme aukkoa on lihavoitu. Ne ovat myös kolme suuntaa, joihin peli voi kasvaa t
 Linjaus: **julkaisua ei nyt mietitä, eikä pituutta lisätä keinotekoisesti.** Luotetaan siihen, että tarina kantaa. Työ kohdistuu tarinaan, Ekskyysmin reaktioihin ja siihen, että kaikki on selkeää. ”Yksinkertaista, selkeää, mutta diippiä ja hauskaa.”
 
 ### 1. Selkeys: siirtymät, otsikot, kuka puhuu
-Tehty 0.31–0.32: puhujien värit, kertojan nimi (”NARRATOR”, ennen ”A MOMENT LATER”, joka oli väärin puolessa riveistä), aikaleimat tiistain sisäisiin leikkauksiin (”The next morning, 9:00. The quick chat.”), kolme välihetken aikamerkintää korjattu vastaamaan kellonaikaa. Jatko: katso läpipeluussa jokainen kortti ja kysy ”tiedänkö missä ja milloin olen”.
+Tehty 0.31–0.33: aloitusruutu siivottu yhteen valikkoon, oletusfontti pykälää isompi, puhujien värit, kertojan nimi (”NARRATOR”, ennen ”A MOMENT LATER”, joka oli väärin puolessa riveistä), aikaleimat tiistain sisäisiin leikkauksiin (”The next morning, 9:00. The quick chat.”), kolme välihetken aikamerkintää korjattu vastaamaan kellonaikaa. Jatko: katso läpipeluussa jokainen kortti ja kysy ”tiedänkö missä ja milloin olen”.
 
-### 2. Ekskyysmin reaktiot ja hauska toimivuus
-Käsikirjoitus on Ekskyysmin osalta vahvempi kuin hänen kehonsa. Hänellä on kymmenkunta ilmettä ja muutama asento, mutta moni repliikki sanotaan oletusilmeellä. Seuraava kierros: käydään viikko repliikki repliikiltä ja annetaan jokaiselle isolle vitsille oma reaktio (kutistuminen, kurotus, käsi suun eteen, katse pois, hidas kääntyminen kameraan). Varjon ei tarvitse olla realistinen: hän saa olla epälooginen ja välillä loogisen epälooginen. ”Valo määrää koon” -sääntö on siksi **hylätty**: se tekisi varjosta fysiikkaa, ja hauskuus on siinä, että hän ei ole.
+### 2. Ekskyysmin reaktiot: perusilme on vitsi, täsmäilme on palkinto
+Linjaus 16.11.: **perusilme pysyy.** Tuttu ja muuttumaton naama on hauska juuri siksi, että sanat ovat niin isoja (Räikkönen-periaate). Erikoisilme säästetään kohtiin, joissa se on oivallus, kuten ”I was demonstrating scale” (katse vasemmalle, suu supussa).
+Tehty 0.33: sama ilme seitsemään muuhun kohtaan (`aside`), versaalit korostuksena, kova ja hiljainen repliikki. Sääntö jatkoon: enintään yksi täsmäilme kohtausta kohden, ja jos sitä pitää selittää, se on väärässä paikassa. Varjon ei tarvitse olla realistinen: hän saa olla epälooginen ja välillä loogisen epälooginen. ”Valo määrää koon” on siksi **hylätty**.
 
 ### 3. RSD ei ole aina hylkäämistä: isku ilman lähettäjää
 Sinun huomiosi, ja se puuttuu pelistä kokonaan. Joskus kukaan ei sano mitään. Aivot vain päättävät, että nyt sattuu, niin paljon että tekisi mieli käpertyä lattialle, ja jälkikäteen se on täysin absurdia. Pelissä jokaisella iskulla on tähän asti laukaisin. Ehdotus yhdeksi lyhyeksi hetkeksi, **ei vielä toteutettu**:

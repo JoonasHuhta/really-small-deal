@@ -15,7 +15,7 @@ function tuesdayOpening(){
   return [
     ['S','Tuesday. Nearly five. No incidents. I’d like it noted that I did nothing all day and it worked.'],
     ['H','You reviewed a comma for an hour.'],
-    ['S','Quietly.']
+    ['S','Quietly.',{quiet:1}]
   ];
 }
 function fridayShadow(){

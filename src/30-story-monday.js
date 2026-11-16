@@ -100,7 +100,7 @@ function scSpiral(){return [
   function(){return G.warningSize<2.6?
     [['S','That’s my SMALL warning?'],['H','It has shoulders.'],['S','For carrying the concern.']]:
     G.warningSize<3.3?
-    [['S','I’m ENORMOUS. Why did nobody say.'],['H','You were presenting.']]:
+    [['S','I’m ENORMOUS. Why did nobody say.',{loud:1}],['H','You were presenting.']]:
     [['S','I appear to have become a load-bearing concern.'],['H','Mind the ceiling.'],['S','The ceiling should mind ME.']] ;},
   pokka,
   ['S','Anyway. I was demonstrating scale.'],

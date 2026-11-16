@@ -3,17 +3,27 @@ function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx
 function circ(x,y,r){ctx.beginPath();ctx.arc(x,y,Math.max(0.1,r),0,Math.PI*2);}
 function line(x1,y1,x2,y2){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
 function wrap(text,maxW){var words=text.split(' '),lines=[],cur='';for(var i=0;i<words.length;i++){var t=cur?cur+' '+words[i]:words[i];if(cur&&ctx.measureText(t).width>maxW){lines.push(cur);cur=words[i];}else cur=t;}if(cur)lines.push(cur);return lines;}
+// A word in capitals is a word said louder: heavier, a touch bigger, and in Ekskyysmi's bubbles in the accent colour.
+function isLoud(w){return /[A-Z]{2}/.test(w)&&!/[a-z]/.test(w);}
+function bubbleK(o){return o&&o.loud?1.34:o&&o.quiet?0.72:1;}
 function bubble(x,y,text,o){
   o=o||{};
-  ctx.font='600 17px system-ui,sans-serif';ctx.textAlign='left';ctx.textBaseline='middle';
-  var lines=wrap(text,o.maxW||250),w=0,i;for(i=0;i<lines.length;i++)w=Math.max(w,ctx.measureText(lines[i]).width);
-  w+=26;var h=lines.length*22+16,bx=clamp(x-w/2,8,W-w-8),by=o.top!=null?o.top:Math.max(8,y-h-12);
-  var fill=o.dark?'#14111d':'#fffdf6',ink=o.dark?'#f6f1e4':'#2b2733';
-  ctx.fillStyle=fill;ctx.strokeStyle=ink;ctx.lineWidth=2;rr(bx,by,w,h,10);ctx.fill();ctx.stroke();
+  var k=bubbleK(o),fs=17*k,lh=22*k,base='600 '+fs+'px system-ui,sans-serif',em='800 '+(fs+1.5*k)+'px system-ui,sans-serif',i,j;
+  ctx.font=base;ctx.textAlign='left';ctx.textBaseline='middle';
+  var lines=wrap(text,(o.maxW||250)*(k>1?1.22:1)),w=0,words=[],widths=[];
+  for(i=0;i<lines.length;i++){var ws=lines[i].split(' '),lw=0,wd=[];
+    for(j=0;j<ws.length;j++){ctx.font=isLoud(ws[j])?em:base;var m=ctx.measureText(ws[j]+(j<ws.length-1?' ':'')).width;wd.push(m);lw+=m;}
+    words.push(ws);widths.push(wd);w=Math.max(w,lw);}
+  w+=26;var h=lines.length*lh+16,bx=clamp(x-w/2,8,W-w-8),by=o.top!=null?o.top:Math.max(8,y-h-12);
+  var fill=o.dark?'#14111d':'#fffdf6',ink=o.dark?'#f6f1e4':'#2b2733',hot=o.dark?'#ebbd79':'#2b2733';
+  ctx.fillStyle=fill;ctx.strokeStyle=ink;ctx.lineWidth=k>1?3:2;rr(bx,by,w,h,10);ctx.fill();ctx.stroke();
   if(!o.noTail){var tx=clamp(x,bx+16,bx+w-16);ctx.beginPath();ctx.moveTo(tx-8,by+h-1);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h-1);ctx.closePath();ctx.fill();
     ctx.beginPath();ctx.moveTo(tx-8,by+h);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h);ctx.stroke();}
   var left=o.reveal==null?1e9:o.reveal;
-  ctx.fillStyle=ink;for(i=0;i<lines.length&&left>0;i++){ctx.fillText(lines[i].slice(0,left),bx+13,by+8+11+i*22);left-=lines[i].length+1;}
+  for(i=0;i<lines.length&&left>0;i++){var cx=bx+13,cy=by+8+lh/2+i*lh;
+    for(j=0;j<words[i].length&&left>0;j++){var wj=words[i][j],ld=isLoud(wj);ctx.font=ld?em:base;ctx.fillStyle=ld?hot:ink;
+      ctx.fillText(wj.slice(0,left),cx,cy);cx+=widths[i][j];left-=wj.length+1;}
+  }
 }
 // A bubble that grows as it is typed, until it is the biggest thing in the room. Its author did not expect that.
 var BIGW=600,BIGX=22,BIGTOP=12;   // left of the HUD rows, over the window
@@ -24,7 +34,7 @@ function bigBubble(text,reveal){
   ctx.fillStyle='#14111d';ctx.strokeStyle='#f6f1e4';ctx.lineWidth=2.5;rr(bx,BIGTOP,BIGW,b.h,12);ctx.fill();ctx.stroke();
   ctx.fillStyle='#f6f1e4';for(i=0;i<b.lines.length;i++)ctx.fillText(b.lines[i],bx+22,BIGTOP+12+16+i*31);
 }
-function bubbleH(text,maxW){ctx.font='600 17px system-ui,sans-serif';return wrap(text,maxW).length*22+16;}
+function bubbleH(text,maxW,o){var k=bubbleK(o);ctx.font='600 '+(17*k)+'px system-ui,sans-serif';return wrap(text,maxW*(k>1?1.22:1)).length*22*k+16;}
 function band(text,y){
   ctx.font='500 18px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
   var lines=wrap(text,820),h=lines.length*24+16;
@@ -288,9 +298,9 @@ function drawLines(){
     if((l.who==='S'||l.who==='H')&&g.human.gone)continue;
     var n=l.text.length,mw=n>90?330:n>50?290:0,rv=Math.floor(g.curT*55);
     ctx.save();
-    if(l.who==='S'){var q=geom(),above=q.hdY-q.hdR-14,sw=mw||260,bh=bubbleH(l.text,sw);
-      if(above-12>=bh+8)bubble(q.bx-70,above+12,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv});
-      else bubble(q.bx-70,0,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,top:Math.min(q.hdY+q.hdR+14,WALLY-bh-70)});}
+    if(l.who==='S'){var q=geom(),above=q.hdY-q.hdR-14,sw=mw||260,bh=bubbleH(l.text,sw,l);
+      if(above-12>=bh+8)bubble(q.bx-70,above+12,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet});
+      else bubble(q.bx-70,0,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet,top:Math.min(q.hdY+q.hdR+14,WALLY-bh-70)});}
     else if(l.who==='H')bubble(g.human.x+60,FEETY-172,l.text,{maxW:mw||230,reveal:rv});
     else if(l.who==='A')bubble(g.ax,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='B')bubble(g.bx2,FEETY-172,l.text,{maxW:mw,reveal:rv});

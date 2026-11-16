@@ -46,7 +46,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['H','It’s a calendar reply.'],
   ['P','Riitta reacted with a thumbs-up.'],
   ['S','A thumb.'],
-  ['S','ONE thumb. She has two.'],
+  aside(['S','ONE thumb. She has two.']),
   calm
  ],outside({title:'WHAT THE CALENDAR SAW',dur:'duration: 40 seconds',cap:'A meeting was scheduled.',anim:'text'}),[
   scene({set:'home',clock:3*3600+7*60}),
@@ -67,7 +67,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','It’s ENORMOUS. Is that how it comes out?'],
   ['H','Imagine being under it.'],
   set({mood:'worry',s:1}),
-  ['S','…I’ll use a smaller font.'],
+  ['S','…I’ll use a smaller font.',{quiet:1}],
   ['H','What time is it?'],
   ['S','Three. The best time. Nobody can reject us at three.'],
   ['H','Nobody can do anything at three. That’s the problem.'],
@@ -84,7 +84,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','Padding.'],
   ['R','One small thing: the summary could be shorter next time.'],
   hit(0.95,'R'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.'],['YEAR 4','“Neat handwriting. Could be neater.”'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
-  ['S','THERE it is.'],
+  ['S','THERE it is.',{loud:1}],
   ['S','“Shorter.” The summary is too long. YOU are too long. Your whole deal is too long.'],
   ['R','Otherwise, great work. Keep it up.'],
   ['S','Did she say something just then? I was busy with the wound.'],
@@ -101,7 +101,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   scene({set:'room',clock:9*3600+12*60}),
   addTic('9:12. Back at the desk.',160,62,{life:3,size:19}),{wait:1.2},
   ['H','That went well.'],
-  ['S','We were CRITICISED.'],
+  ['S','We were CRITICISED.',{loud:1}],
   ['H','I was praised. Twice. You talked over it.'],
   set({mood:'surprised'}),
   ['S','…She said nice things?'],
@@ -148,7 +148,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   extraWorkCallback,
   ['S','And nobody is angry with us.'],
   ['H','I’m a bit angry with us.'],
-  ['S','…That doesn’t count. That’s internal.'],
+  aside(['S','…That doesn’t count. That’s internal.']),
   ['H','It counts.'],
   {choice:[
     {t:'A “no” costs us people.',then:[['S','Every no is a door closing.'],['H','Every yes is me doing slides at midnight.']]},
@@ -192,7 +192,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   set({s:2.5,mood:'stern',anx:0.8}),
   ['S','She hates us. Eero hates us. Riitta wants a shorter you. I’ve run the numbers. It’s unanimous.'],
   ['H','Stop.'],
-  ['S','I’m PROTECTING you.'],
+  ['S','I’m PROTECTING you.',{loud:1}],
   ['H','From what? Board games?'],
   ['H','You’ve had me apologising to furniture all week. I’m at home with eleven bags of snacks.'],
   ['H','You’re not protecting me. You’re just the loudest thing in the room.'],
@@ -282,7 +282,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','I know they are.'],
   stampPutAway,{wait:0.6},
   {choice:[
-    {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.'],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.']]},
+    {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.',{quiet:1}],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.']]},
     {t:'Hold the verdict. Count to two.',then:[['S','One.'],['S','Two.'],['S','It’s been two seconds and nothing has happened to us.'],['H','Nothing was going to.'],['S','We didn’t KNOW that. We know it now.']]},
     {t:'Stay. Wobble visibly.',then:[wobbleOn,['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.'],wobbleOff]}
   ]},
@@ -316,7 +316,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['A','So we’ve been being polite AT each other. For a year.'],
   mondayRepair,
   set({bFace:-1,mood:'alert'}),
-  function(){return G.handout?[['B','By the way, thanks for the handout. You didn’t have to do that.'],['S','He says that NOW.'],['H','He didn’t actually ask for it.'],['S','I may have supplied the asking.']]:[];},
+  function(){return G.handout?[['B','By the way, thanks for the handout. You didn’t have to do that.'],['S','He says that NOW.'],['H','He didn’t actually ask for it.'],aside(['S','I may have supplied the asking.'])]:[];},
   ['B','Hey! While you’re both here — could you also take my Monday shift?'],
   ['S','Here we go. I’ll get the “sure”.'],
   {choice:[

@@ -217,9 +217,9 @@ T.chapter(5);assert.equal(T.G.day,'C','a new Monday must not rewrite a previous 
 T.chapter(1);assert.equal(T.G.day,'A','replaying Monday keeps the saved kind of Monday');
 // Two settings a reader may need: bigger text, and a response window that is survivable.
 {const t=element('textsize'),w=element('slow'),html=document.documentElement;
- assert.equal(t.textContent,'Text: normal');assert.equal(html.style.props['--ts'],1);
- fire(t,'click',{});assert.equal(t.textContent,'Text: large');assert.ok(html.style.props['--ts']>1);
- assert.equal(savedItems.get('ekskyysmi.text'),'1');
+ assert.equal(t.textContent,'Text: normal');assert.ok(html.style.props['--ts']>1,'the default is one step up from the smallest');
+ fire(t,'click',{});assert.equal(t.textContent,'Text: large');assert.ok(html.style.props['--ts']>1.2);
+ assert.equal(savedItems.get('ekskyysmi.text'),'2');
  fire(t,'click',{});fire(t,'click',{});assert.equal(t.textContent,'Text: normal','the size cycles back round');
  const plain=(()=>{T.start('B',true);let n=0;while(T.state()!=='qte'&&n++<2000){T.unlock();if(T.state()==='click')T.advance();else if(T.state()==='choice')T.choose(0);else T.tick(0.2);}return T.G.qte.secs;})();
  fire(w,'click',{});assert.equal(w.textContent,'Slow reality: on');assert.equal(savedItems.get('ekskyysmi.slow'),'on');

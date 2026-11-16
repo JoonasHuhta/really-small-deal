@@ -14,6 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.33 (Claude, 16.11.2026): **siivottu aloitusruutu, korostukset ja muutama täsmäilme.**
+
+- **Aloitusruutu on otsikko ja kaksi nappia.** Yläpalkin kahdeksan nappia ovat nyt yhden *☰ Menu* -napin takana (sama valikko kuin puhelimessa), ja aloitusruudulla on linkki *Settings*. Pois: toistuva logo ja alaotsikko yläpalkista, ”A small social adventure / THE INSIDE VERSION” -palkki ja alareunan tekstit aloitusruudulta, sekä ”AN INTERACTIVE LITTLE OVERREACTION” kokonaan. Pelin aikana luku ja näppäinvihje näkyvät kuten ennen. Valikko pysyy auki, kun asetuksia vaihtaa.
+- **Oletusfontti on pykälän isompi.** Koot ovat nyt *small / normal / large*, ja *normal* on entinen *large*.
+- **Isot kirjaimet ovat korostus myös ruudulla.** Käsikirjoituksen VERSAALIT (”ONE thumb.”, ”It’s EVERYTHING.”) piirretään lihavampina ja Ekskyysmin kuplassa keltaisella, sekä kuplassa että tekstipaneelissa. Sääntö on automaattinen, 85 eri sanaa.
+- **Kova ja hiljainen repliikki** (`['S','…',{loud:1}]` ja `{quiet:1}`): kuusi kovaa (”We were CRITICISED.”, ”It LANDED.”, ”I’m PROTECTING you.”) ja neljä hiljaista. Paras niistä: jättikuplan jälkeen ”…I’ll use a smaller font.” on oikeasti pienellä fontilla.
+- **Täsmäilme** (`aside([...])`): sama katse vasemmalle ja suu supussa kuin kohdassa ”I was demonstrating scale”, nyt seitsemässä muussa kohdassa (”ONE thumb. She has two.”, ”…It’s filed.”, ”No.” linnusta, ”I may have supplied the asking.”). Muualla perusilme pysyy: se on hahmon vitsi.
+
 Versio 0.32 (Claude, 16.11.2026): **palautekierros: vaarakohdat, selkeys, kädet ja koko ruutu.**
 
 - **Lautasproseduuri poistettu** illasta (*An ordinary evening*). Seitsemän sekunnin laskettu rituaali näytti pakko-oireelta. Tilalla tavallinen tiskaus ja kolme repliikkiä: ”It’s the only ten minutes a day when nobody has an opinion about us.” – ”The plate might.” – ”…Don’t.” Periaate kirjattu [OUTOUDET.md](OUTOUDET.md):hen.
@@ -268,7 +276,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.32, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.33, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

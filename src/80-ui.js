@@ -34,7 +34,7 @@ function showTitle(){
    (sv?'<button class="go" type="button" data-go="cont">Continue · '+(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">New game</button>'
       :'<button class="go" type="button" data-go="start">New game <span aria-hidden="true">→</span></button>')+
    '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">Chapters</button>':'')+
-   '<button class="link" type="button" data-go="lab">Scenario lab</button><button class="link" type="button" data-go="about">About</button></div>');
+   '<button class="link" type="button" data-go="lab">Scenario lab</button><button class="link" type="button" data-go="settings">Settings</button><button class="link" type="button" data-go="about">About</button></div>');
   render();
 }
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
@@ -67,6 +67,7 @@ ov.addEventListener('click',function(e){
   if(!t||t===ov)return;var go=t.getAttribute('data-go');
   if(t.getAttribute('data-ch')){startChapter(+t.getAttribute('data-ch'));return;}
   if(t.getAttribute('data-lab')){startLab(t.getAttribute('data-lab'));return;}
+  if(go==='settings'){if(typeof setTimeout==='function')setTimeout(function(){setMenu(true);},0);else setMenu(true);return;}
   if(go==='copyrcpt'){copyReceipt(t);return;}
   if(go==='sharercpt'){shareReceipt(t);return;}
   if(go==='lab'){reset(null);showLab();return;}
@@ -115,7 +116,7 @@ document.getElementById('close-log').addEventListener('click',function(){logDial
 logDialog.addEventListener('close',function(){paused=modalWasPaused;syncPause();document.getElementById('journal').focus();});
 function textUI(){
   var b=document.getElementById('textsize');
-  b.textContent='Text: '+['normal','large','largest'][textStep];
+  b.textContent='Text: '+['small','normal','large'][textStep];
   document.documentElement.style.setProperty('--ts',TEXT_STEPS[textStep]);
 }
 document.getElementById('textsize').addEventListener('click',function(){
@@ -184,6 +185,8 @@ function setMenu(on){document.body.classList.toggle('menu-open',on);if(menuBtn&&
 if(menuBtn&&menuBtn.addEventListener){
   menuBtn.addEventListener('click',function(e){if(e&&e.stopPropagation)e.stopPropagation();setMenu(!document.body.classList.contains('menu-open'));});
   document.addEventListener('click',function(){if(document.body.classList.contains('menu-open'))setMenu(false);});
+  // Settings stay open while you flip them; the three that act on the game close the menu.
+  var navEl=document.getElementById('controls');if(navEl&&navEl.addEventListener)navEl.addEventListener('click',function(e){var id=e&&e.target&&e.target.id;if(id!=='journal'&&id!=='pause'&&id!=='restart'&&e.stopPropagation)e.stopPropagation();});
 }
 var fullBtn=document.getElementById('full');
 if(fullBtn){if(fullSupported())fullBtn.addEventListener('click',toggleFull);else fullBtn.remove();}
