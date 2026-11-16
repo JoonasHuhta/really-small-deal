@@ -491,7 +491,7 @@ function draw(){
     drawCoworkers(1);
     if(g.set==='bar'&&g.bar)barFront();
     drawLens();
-    drawNight();
+    drawNight();drawPie();   // on the screen, not in the room: the camera does not get to zoom into a feeling
     drawLines();
     drawQte();
   }

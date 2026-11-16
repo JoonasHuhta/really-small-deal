@@ -366,7 +366,8 @@ assert.match(tr,/I’ll need the glass/);assert.match(tr,/Exhibit A/);assert.mat
 assert.doesNotMatch(T.history().map(x=>x.who+x.text).join(' '),/YOUR HUMAN/);
 tr=playLab('bar');
 assert.match(tr,/coat stand with opinions/);assert.match(tr,/GINGER BEER\./);assert.match(tr,/the shadow of one/);assert.match(tr,/I always thought that was the bad outcome/);assert.match(tr,/To being furniture/);
-assert.equal(T.G.bar.sdrink,true);assert.equal(T.G.bar.glass,true);
+assert.ok(T.G.barWas&&T.G.barWas.sdrink&&T.G.barWas.glass,'the shadow had its drink before it dozed off');
+assert.match(tr,/I was off duty\. The bill came anyway/);assert.match(tr,/Thanks, you too/);assert.match(tr,/That’s just the background/);assert.equal(T.G.pie,null);assert.equal(T.G.morko.asleep,false);
 T.chapter(2);assert.equal(T.G.bar,null,'the bar does not follow you to work');
 tr=playLab('voice');
 assert.match(tr,/Are you her bank/);assert.match(tr,/take fourteen/);assert.match(tr,/oh, nice\. It’s Sanna/);assert.match(tr,/One for safety/);assert.equal(T.G.rec,null);

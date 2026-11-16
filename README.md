@@ -14,6 +14,15 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.40 (Claude, 16.11.2026): **baari-ilta jatkuu: varjo torkahtaa, ilta onnistuu, ja lasku tulee aamulla.**
+
+- *A quiet drink.* ei enää lopu maljaan. Kello 22:40 Ekskyysmi on juonut ”varjon yhdestä juomasta” ja torkahtaa (”I’m just resting my eyes. Keep an eye on… everything.”). Ihmisellä on silloin vain tavallinen varjo, eikä kukaan tarkasta mitään. Väsymys on syy, ei juoma: ihminen joi inkiväärijuomaa.
+- Ilman suodatinta ihminen kertoo Sannalle sateenvarjotarinan (kolme tapaa, yksi alkaa vuodesta 2011), sanoo ruokalistan tuovalle baarimikolle ”Thanks, you too.” ja vastaa ”Yes. Obviously. YES.” Sanna nauraa kahdeksan kertaa, ja naapuripöytä liittyy seuraan.
+- Aamulla Ekskyysmi herää ja isku tulee jälkikäteen: ”I was off duty. The bill came anyway.” Hän käy läpi ihmisen omat lauseet: ”You said “you too” to a MENU.”
+- Ruudulle tulee kaksi ympyrää: **HOW THE EVENING WENT** (iso vihreä, ”Sanna laughed ×8”, ja reunassa pieni punainen piste: ”you too” to a menu) ja **HOW IT FEELS** (kokonaan punainen: ”everything is ruined”). ”Look at the green one.” – ”That’s just the background.” – ”I’m a shadow. I don’t do colour. I do the dot.”
+- Kolme loppua: pisteen pienentäminen (”I can’t. I’ve laminated it.”), viesti Sannalle (”You were GREAT. … Bring the umbrella story.”) tai pisteen jättäminen paikalleen (”It can stay. Under supervision.”). Kuittiin rivi ”one good evening, audited · 2 h 30 min”.
+- Idea ja kuva: Joonas (kuva *How the day went / How it feels*). Ero muihin poissaoloihin: *Quiet.* on rauhallinen poissaolo, tämä on poissaolo jossa tapahtuu; *Rewind.* vääristää toisen kasvot, tämä tarkastaa omat sanat.
+
 Versio 0.39 (Claude, 16.11.2026): **uusi välihetki *Night shift.*: pimeässä kaikki varjot ovat samaa varjoa.**
 
 - Ihminen nukkuu ja lamppu on sammuksissa. Varjolla ei ole valossa reunoja, joten Ekskyysmi ei ole pieni eikä poissa: hän on koko huone, ja näkyvissä ovat vain silmät. ”I’m not small. I’m not gone. I’m the whole room.”
@@ -330,7 +339,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.39, viisi päivää ja toinen näytös ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.40, viisi päivää ja toinen näytös ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

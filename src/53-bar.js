@@ -168,5 +168,74 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ]},
   function(){G.morko.pose='toast';},{wait:0.8},
   ['S','To being furniture.'],
-  function(){G.morko.pose='drink';}
+  function(){G.morko.pose='drink';},
+  {wait:1.2},
+  // Later. Tired, and the shadow off duty: the filter goes with it. The evening goes very well. The bill comes in the morning.
+  function(){G.clock=22*3600+40*60;},
+  ['N','22:40. Three hours in. Ekskyysmi has had the shadow of one drink.'],
+  set({mood:'calm',s:0.9}),
+  ['S','I’m just resting my eyes. Keep an eye on… everything.',{quiet:1}],
+  function(){G.morko.pose=null;shadowAway();},function(){G.tics.push(tic('z',G.human.x-70,WALLY-150,{life:2.2}));},{wait:1.6},
+  ['N','Ekskyysmi is off duty. Nobody is reviewing anything.'],
+  {choice:[
+    {t:'Tell her about the umbrella.',then:[['H','Can I tell you something odd? My shadow had a drink.'],['A','Your shadow.'],['H','With an umbrella. For cover.']]},
+    {t:'Tell her about the umbrella. With your arms.',then:[['H','Okay. So. My shadow. Had a DRINK.'],['A','With what arms?'],['H','These arms. And an umbrella. For cover.']]},
+    {t:'Tell her everything. Starting in 2011.',then:[['H','In 2011 I waved at someone who was waving at someone else.'],['A','No!'],['H','And tonight my shadow had a drink. With an umbrella.']]}
+  ]},
+  ['A','That’s the best thing I’ve heard all week.'],
+  ['T','Here’s the menu, if you want food.'],
+  ['H','Thanks, you too.'],
+  {wait:0.8},
+  ['A','“You too”!'],
+  ['H','I say it to menus. It’s a whole thing.'],
+  ['A','Same time next week?'],
+  ['H','Yes. Obviously. YES.'],
+  ['N','Sanna laughed eight times. Somebody from the next table joined in. Nobody rehearsed anything.'],
+  function(){var b=G.bar;G.barWas=b?{sdrink:b.sdrink,glass:b.glass}:null;}
+ ],outside({title:'WHAT THE EVENING WAS',dur:'duration: 3 hours',cap:'Two colleagues laughing at a bar. One of them told a story about an umbrella.',anim:'text'}),[
+  scene({set:'home',clock:7*3600+10*60}),
+  function(){var M=G.morko;M.wake=0;M.asleep=false;M.s=M.sT=0.35;G.human.face='neutral';},{wait:1.1},
+  set({s:1.6,mood:'scared'}),
+  ['S','…What happened.'],
+  ['S','I was off duty. The bill came anyway.'],
+  hit(0.7,'after'),
+  ['S','You said “you too” to a MENU.'],
+  ['H','She laughed.'],
+  ['S','You told her about the UMBRELLA. That was classified.'],
+  ['H','She laughed at that too.'],
+  ['S','You said “obviously”. Loudly. With your arms.'],
+  function(){G.pie={t:0};G.lines=[];G.hudWas=G.hud;G.hud=false;sfx('card');},{wait:1.8},
+  ['H','Look at the green one.'],
+  ['S','That’s just the background.',{look:'squint'}],
+  ['H','It’s most of the picture.'],
+  ['S','I’m a shadow. I don’t do colour. I do the dot.'],
+  {choice:[
+    {t:'Make the dot smaller.',then:[['S','I can’t. I’ve laminated it.']]},
+    {t:'Ask Sanna.',then:[function(){G.pie=null;G.hud=G.hudWas;},['P','You: “Sorry about last night. Was I weird?”'],{wait:1.2},['P','Sanna: “You were GREAT. Same time next week. Bring the umbrella story.”'],
+      ['S','…She wants the umbrella story.',{look:'stunned'}],['H','She wants the umbrella story.'],['S','It’s still classified.',{look:'pleased'}]]},
+    {t:'Leave the dot where it is.',then:[['H','It can stay. It’s small.'],['S','It’s the size of a menu.'],['H','Menus are small.'],aside(['S','…Fine. It can stay. Under supervision.'])]}
+  ]},
+  function(){if(G.pie){G.pie=null;G.hud=G.hudWas;}addLived('one good evening, audited',150);},
+  set({s:1.1,mood:'care'}),
+  ['S','Next time I’m staying awake.'],
+  ['H','Next time you’re having two.'],
+  ['S','…Of the shadow ones.']
  ]);}
+// The morning after, the way it looks from the inside: a big green evening, one small red dot, and how it feels.
+function drawPie(){
+  var p=G.pie;if(!p)return;p.t+=1/60;var k=Math.min(1,p.t/0.5),r=84*k,cy=172,lx=250,rx=710;
+  ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.fillStyle='rgba(13,17,20,.6)';ctx.fillRect(-20,-20,W+40,H+40);
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#f6f1e4';ctx.font='700 18px system-ui,sans-serif';
+  ctx.fillText('HOW THE EVENING WENT',lx,52);ctx.fillText('HOW IT FEELS',rx,52);
+  ctx.lineWidth=4;ctx.strokeStyle='#14111d';
+  ctx.fillStyle='#4fb3a6';circ(lx,cy,r);ctx.fill();ctx.stroke();ctx.fillStyle='#e46a52';circ(rx,cy,r);ctx.fill();ctx.stroke();
+  if(k>=1){
+    ctx.fillStyle='#e46a52';circ(lx-38,cy+70,8);ctx.fill();ctx.lineWidth=2.5;ctx.stroke();
+    ctx.fillStyle='#14111d';ctx.font='700 16px system-ui,sans-serif';ctx.fillText('Sanna laughed ×8',lx,cy-10);ctx.font='600 12px system-ui,sans-serif';ctx.fillText('someone joined in',lx,cy+12);
+    ctx.fillStyle='#f6f1e4';ctx.font='600 12px system-ui,sans-serif';ctx.fillText('“you too” (to a menu)',lx-38,cy+108);
+    ctx.strokeStyle='#f6f1e4';ctx.lineWidth=1.5;line(lx-38,cy+78,lx-38,cy+96);
+    ctx.fillStyle='#14111d';ctx.font='800 18px system-ui,sans-serif';ctx.fillText('everything',rx,cy-11);ctx.fillText('is ruined',rx,cy+12);
+  }
+  ctx.restore();
+}
+

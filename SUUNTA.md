@@ -130,6 +130,10 @@ Jokainen on yksi laukaisin samaan kaavaan. Ei toteutettu, paitsi ensimmäinen.
 6. **Myöhästynyt isku:** isku tulee vasta tunteja myöhemmin, kesken hampaiden pesun. ”It arrived. It was delayed. Weather.”
 7. **Kehu, joka ei mahdu:** kehu on fyysisesti liian iso mennäkseen ovesta sisään (sama mittakaavavitsi kuin jättikuplassa, toisinpäin).
 
+8. **Väsymys pudottaa suodattimen** (tehty 0.40, baari-illan jatko): varjo torkahtaa, ilta onnistuu, ja seuraavana aamuna tulee krapula omista sanoista. Kuva: ”how the evening went / how it feels”.
+
+**Rytmihuomio (16.11.):** torstain ja perjantain välissä on nyt yhdeksän hetkeä. Ennen uusia hetkiä sinne pitää pelata kokonaisuus läpi ja karsia, jos rytmi raskastuu. Ensimmäiset karsintaehdokkaat: *The reply* ja *Nothing.*-hetken lyhentäminen.
+
 ## 6. Mitä ei tehdä
 
 - Ei toista sisäistä ääntä. Muut piirteet ovat muiden ihmisten varjoja.
