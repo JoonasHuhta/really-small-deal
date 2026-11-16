@@ -28,7 +28,7 @@ function fridayShadow(){
     ['Z','I moved a worry.']
   ];
   // A chapter opened from an older save may still be their first meeting.
-  return [set({mood:'surprised'}),['S','…She HAS one.'],['S','Hello.'],['Z','…excuse me.'],['S','That’s MY name.']];
+  return [set({mood:'surprised'}),['S','…She HAS one.'],['S','Hello.'],['Z','oh. hi.'],['S','…Noted.']];   // the name joke lives in the bar now, and it is never explained
 }
 function mondayCallback(){
   var g=G;

@@ -43,7 +43,7 @@ function band(text,y){
 }
 function applyCamera(){
   var z=C.z,hw=W/(2*z),hh=H/(2*z),sx=0,sy=0;
-  if(!RM){sx=Math.sin(G.time*0.45)*5+Math.sin(G.time*83)*8*G.shake;sy=Math.sin(G.time*0.9)*2.6+Math.cos(G.time*71)*6*G.shake;}
+  if(!RM&&!G.cctv){sx=Math.sin(G.time*0.45)*5+Math.sin(G.time*83)*8*G.shake;sy=Math.sin(G.time*0.9)*2.6+Math.cos(G.time*71)*6*G.shake;}
   var fx=clamp(C.fx+sx,hw,W-hw),fy=clamp(C.fy+sy,hh,H-hh);
   ctx.translate(W/2,H/2);ctx.scale(z,z);ctx.translate(-fx,-fy);
 }
@@ -505,10 +505,11 @@ function draw(){
     if(g.set==='bar'&&g.bar)barFront();
     drawLens();
     drawNight();drawPie();   // on the screen, not in the room: the camera does not get to zoom into a feeling
-    drawLines();
+    if(!g.cctv)drawLines();
     drawQte();
   }
   ctx.restore();
+  if(g.cctv&&!g.w)drawCctv();   // security footage has no sound: the words stay in the panel
   if(g.flash>0.01&&!RM){ctx.fillStyle='rgba(255,250,235,'+(0.22*g.flash)+')';ctx.fillRect(0,0,W,H);}
   if(g.pulse>0.02){
     var beat=RM?0.6:0.35+0.65*Math.pow(Math.max(0,Math.sin(g.time*9.4)),6),vg=ctx.createRadialGradient(W/2,H/2,H*0.3,W/2,H/2,H*0.8);

@@ -14,7 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.42.1 (Claude, 16.11.2026): **maanantain musiikki ja ”Excuse me?”.**
+Versio 0.42.2 (Claude, 16.11.2026): **syvennys ja valvontakamera.**
+
+- **[SYVENNYS.md](SYVENNYS.md):** tutkimus (RSD kehossa, Clark & Wells, tykkäämiskuilu, valokeilaefekti, kaunis sotku, kaksoisempatia, parisuhteen varmistelu), foorumien kömmähdykset mikrohetkinä, havainnoimatta jääneet asiat ihmisen ja Ekskyysmin välillä, hahmojen halut ja tarpeet (Sanna ja Eero ohuimmat) sekä uudet kuvalliset keinot.
+- **Uusi lab-kohtaus *Footage.*** (`src/52-footage.js`): Ekskyysmi vaihtaa kuvan nurkan valvontakameraan, joka on harmaa ja rakeinen ja jossa näkyvät REC-merkki ja aikaleima. Rajaus on niin tiukka, että Sanna jää kuvan ulkopuolelle, ja kamera ei käänny. Kamerakuvan ajan puhekuplia ei näytetä (”footage has no sound”), ja teksti on lukupaneelissa. Lopussa Sannan varjo kertoo, että hänelläkin on kamera ja että se osoittaa häneen. Ei vielä tarinassa.
+- Perjantain varakohdassa (vanha tallennus, varjot eivät ole tavanneet) Sannan varjo ei enää sano ”…excuse me.”, eikä Ekskyysmi vastaa ”That’s MY name.” Nimivitsi on nyt vain baarissa, eikä sitä selitetä.
+
+ **maanantain musiikki ja ”Excuse me?”.**
 
 - **Ensimmäisen kohtauksen musiikki:** Joonaksen kappale *Guarded Introspection* (`assets/audio/monday.mp3`, 128 kbps). Alun kahvihommat menevät hiljaisuudessa, ja musiikki alkaa noin sekunti sen jälkeen, kun varjo herää. Se nousee neljän sekunnin aikana taustatasolle (0,17, kun aloitusmusiikki on 0,45) ja päättyy kotimatkaan.
 - **Muut äänet ovat musiikin yläpuolella:** kaikki syntetisoidut äänet (puheäänet ja efektit) kulkevat yhden väylän kautta, ja väylää on nostettu 1,3-kertaiseksi. Iskussa (`sfx('hit')`) musiikki laskee hetkeksi noin kolmasosaan ja palaa kahdessa ja puolessa sekunnissa.
