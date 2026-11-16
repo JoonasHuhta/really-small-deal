@@ -24,7 +24,7 @@ var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
 // Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
 // A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
 var MUSIC={title:'assets/audio/title.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};
-var BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
+var firstTouch=false,BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 function loadSound(k,url){
   if(BUF[k]||LOADING[k]||!window.fetch)return;var a=audio();if(!a)return;LOADING[k]=true;
   window.fetch(url).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer();}).then(function(b){return new Promise(function(ok,no){a.decodeAudioData(b,ok,no);});})
@@ -41,7 +41,7 @@ function music(name){
   name=name||null;if(name===musicName&&(musicEl||!MUSIC[name]))return;
   musicName=name;if(musicEl){fadeOut(musicEl);musicEl=null;}
   if(!name||!MUSIC[name]||typeof window.Audio!=='function')return;
-  var el=new window.Audio(MUSIC[name]);el.loop=true;el.preload='auto';el.volume=MUSICVOL;musicEl=el;syncMusic();
+  var el=new window.Audio(MUSIC[name]);el.loop=true;el.preload=firstTouch?'auto':'none';el.volume=MUSICVOL;musicEl=el;syncMusic();
 }
 function syncMusic(){
   var el=musicEl;if(!el)return;

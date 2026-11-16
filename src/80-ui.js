@@ -11,6 +11,7 @@ function showAbout(){
    '<p>You play Ekskyysmi, the overprotective shadow of a perfectly ordinary person. They have small plans. You have concerns.</p>'+
    '<p>Small moments from one ordinary life, in no particular hurry. About 45 minutes. Read at your own pace. Almost nothing is timed. The one thing that is, isn’t fair. That’s the point.</p>'+
    '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice.</p>'+
+   '<p class="small">Made by Joonas Huhta (MoshBitSurfers). Music: “Stargazer’s Field” by Joonas Huhta.</p>'+
    '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
 }
 function showWeekEnd(){
@@ -204,7 +205,7 @@ function appVisibility(){
 document.addEventListener('visibilitychange',appVisibility);
 
 // Browsers and the Android WebView hold all sound until the first touch or key. Whatever was waiting starts then.
-(function(){var done=false;function first(){if(done)return;done=true;syncMusic();}
+(function(){var done=false;function first(){if(done)return;done=true;firstTouch=true;if(musicEl&&musicEl.preload==='none')musicEl.preload='auto';syncMusic();}
   if(document.addEventListener){document.addEventListener('pointerdown',first,true);document.addEventListener('keydown',first,true);document.addEventListener('touchstart',first,true);}})();
 
 // Every ordinary button answers with a small tick. Story choices and the menu have their own sounds.

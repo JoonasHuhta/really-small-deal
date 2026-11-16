@@ -55,7 +55,7 @@ var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
 // Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
 // A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
 var MUSIC={title:'assets/audio/title.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};
-var BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
+var firstTouch=false,BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 function loadSound(k,url){
   if(BUF[k]||LOADING[k]||!window.fetch)return;var a=audio();if(!a)return;LOADING[k]=true;
   window.fetch(url).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer();}).then(function(b){return new Promise(function(ok,no){a.decodeAudioData(b,ok,no);});})
@@ -72,7 +72,7 @@ function music(name){
   name=name||null;if(name===musicName&&(musicEl||!MUSIC[name]))return;
   musicName=name;if(musicEl){fadeOut(musicEl);musicEl=null;}
   if(!name||!MUSIC[name]||typeof window.Audio!=='function')return;
-  var el=new window.Audio(MUSIC[name]);el.loop=true;el.preload='auto';el.volume=MUSICVOL;musicEl=el;syncMusic();
+  var el=new window.Audio(MUSIC[name]);el.loop=true;el.preload=firstTouch?'auto':'none';el.volume=MUSICVOL;musicEl=el;syncMusic();
 }
 function syncMusic(){
   var el=musicEl;if(!el)return;
@@ -3725,15 +3725,15 @@ function person(x,o){
     ctx.lineWidth=2;ctx.lineCap='round';
     if(o.grin>0){
       // A smile that is working too hard: wider with every yes, teeth showing, corners trembling.
-      var gw=Math.min(12,6+o.grin*1.6),gd=Math.min(9,5+o.grin),cy0=ey+8,tr=RM?0:Math.sin(G.time*30)*0.6*Math.min(1,o.grin/3);
+      var gw=Math.min(12,6+o.grin*1.6),gd=Math.min(9,5+o.grin),cy0=ey+11,tr=RM?0:Math.sin(G.time*30)*0.6*Math.min(1,o.grin/3);
       ctx.fillStyle='#fffdf6';ctx.strokeStyle='#34413e';ctx.lineWidth=1.6;
       ctx.beginPath();ctx.moveTo(ex-gw,cy0-1+tr);ctx.quadraticCurveTo(ex,cy0+gd*1.6,ex+gw,cy0-1-tr);ctx.quadraticCurveTo(ex,cy0+2,ex-gw,cy0-1+tr);ctx.closePath();ctx.fill();ctx.stroke();
       if(o.grin>=2){ctx.lineWidth=1.2;line(ex-gw-1,cy0-4,ex-gw-3,cy0+1);line(ex+gw+1,cy0-4,ex+gw+3,cy0+1);}
     }
-    else if(o.face==='smile'){ctx.beginPath();ctx.arc(ex,ey+5,5,0.15*Math.PI,0.85*Math.PI);ctx.stroke();}
-    else if(o.face==='stiff'){line(ex-6,ey+9,ex+6,ey+9);}
-    else if(o.face==='frown'){ctx.beginPath();ctx.arc(ex,ey+14,6,1.15*Math.PI,1.85*Math.PI);ctx.stroke();line(ex-11,ey-9,ex-3,ey-6);line(ex+11,ey-9,ex+3,ey-6);}
-    else line(ex-3,ey+9,ex+3,ey+9);
+    else if(o.face==='smile'){ctx.beginPath();ctx.arc(ex,ey+8,5,0.15*Math.PI,0.85*Math.PI);ctx.stroke();}
+    else if(o.face==='stiff'){line(ex-6,ey+12,ex+6,ey+12);}
+    else if(o.face==='frown'){ctx.beginPath();ctx.arc(ex,ey+17,6,1.15*Math.PI,1.85*Math.PI);ctx.stroke();line(ex-11,ey-9,ex-3,ey-6);line(ex+11,ey-9,ex+3,ey-6);}
+    else line(ex-3.5,ey+12,ex+3.5,ey+12);   // low enough not to read as a second nose
   }
   if(o.blush>0.05){
     // The face goes hot. Past ~0.8 the whole head glows like a bulb and lets off steam.
@@ -4138,6 +4138,7 @@ function showAbout(){
    '<p>You play Ekskyysmi, the overprotective shadow of a perfectly ordinary person. They have small plans. You have concerns.</p>'+
    '<p>Small moments from one ordinary life, in no particular hurry. About 45 minutes. Read at your own pace. Almost nothing is timed. The one thing that is, isn’t fair. That’s the point.</p>'+
    '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice.</p>'+
+   '<p class="small">Made by Joonas Huhta (MoshBitSurfers). Music: “Stargazer’s Field” by Joonas Huhta.</p>'+
    '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
 }
 function showWeekEnd(){
@@ -4331,7 +4332,7 @@ function appVisibility(){
 document.addEventListener('visibilitychange',appVisibility);
 
 // Browsers and the Android WebView hold all sound until the first touch or key. Whatever was waiting starts then.
-(function(){var done=false;function first(){if(done)return;done=true;syncMusic();}
+(function(){var done=false;function first(){if(done)return;done=true;firstTouch=true;if(musicEl&&musicEl.preload==='none')musicEl.preload='auto';syncMusic();}
   if(document.addEventListener){document.addEventListener('pointerdown',first,true);document.addEventListener('keydown',first,true);document.addEventListener('touchstart',first,true);}})();
 
 // Every ordinary button answers with a small tick. Story choices and the menu have their own sounds.

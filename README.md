@@ -14,7 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.41.2 (Claude, 16.11.2026): **verkko- ja Android-tarkistus.**
+Versio 0.41.3 (Claude, 16.11.2026): **suu, musiikin lataus ja tekijätiedot.**
+
+- **Suu on alempana**, ettei se näytä toiselta nenältä: perusilme, hymy, jäykkä ilme, kurtistus ja pakotettu virne siirtyivät 3 px alas.
+- **Musiikki latautuu vasta ensimmäisestä kosketuksesta.** Ennen verkkosivu alkoi ladata 3,7 Mt:n kappaletta heti, vaikka pelaaja painaisi suoraan *New game*.
+- **About-sivulla on tekijätiedot:** ”Made by Joonas Huhta (MoshBitSurfers). Music: “Stargazer’s Field” by Joonas Huhta.”
+
+ **verkko- ja Android-tarkistus.**
 
 - Aloitusruudulla vain ihminen hörppää kahvia; Ekskyysmi ei enää katso sivuun (Joonaksen toive).
 - **Välimuistiongelma korjattu.** `index.html` hakee nyt `game.js?v=0.41.2` ja `game.css?v=0.41.2`. Leiman kirjoittaa `node tools/build.cjs` versionumerosta, ja `npm test` huomauttaa, jos leima on vanha. Ennen palaava pelaaja saattoi saada GitHub Pagesista uuden sivun ja selaimen muistista vanhan pelin.

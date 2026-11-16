@@ -126,15 +126,15 @@ function person(x,o){
     ctx.lineWidth=2;ctx.lineCap='round';
     if(o.grin>0){
       // A smile that is working too hard: wider with every yes, teeth showing, corners trembling.
-      var gw=Math.min(12,6+o.grin*1.6),gd=Math.min(9,5+o.grin),cy0=ey+8,tr=RM?0:Math.sin(G.time*30)*0.6*Math.min(1,o.grin/3);
+      var gw=Math.min(12,6+o.grin*1.6),gd=Math.min(9,5+o.grin),cy0=ey+11,tr=RM?0:Math.sin(G.time*30)*0.6*Math.min(1,o.grin/3);
       ctx.fillStyle='#fffdf6';ctx.strokeStyle='#34413e';ctx.lineWidth=1.6;
       ctx.beginPath();ctx.moveTo(ex-gw,cy0-1+tr);ctx.quadraticCurveTo(ex,cy0+gd*1.6,ex+gw,cy0-1-tr);ctx.quadraticCurveTo(ex,cy0+2,ex-gw,cy0-1+tr);ctx.closePath();ctx.fill();ctx.stroke();
       if(o.grin>=2){ctx.lineWidth=1.2;line(ex-gw-1,cy0-4,ex-gw-3,cy0+1);line(ex+gw+1,cy0-4,ex+gw+3,cy0+1);}
     }
-    else if(o.face==='smile'){ctx.beginPath();ctx.arc(ex,ey+5,5,0.15*Math.PI,0.85*Math.PI);ctx.stroke();}
-    else if(o.face==='stiff'){line(ex-6,ey+9,ex+6,ey+9);}
-    else if(o.face==='frown'){ctx.beginPath();ctx.arc(ex,ey+14,6,1.15*Math.PI,1.85*Math.PI);ctx.stroke();line(ex-11,ey-9,ex-3,ey-6);line(ex+11,ey-9,ex+3,ey-6);}
-    else line(ex-3,ey+9,ex+3,ey+9);
+    else if(o.face==='smile'){ctx.beginPath();ctx.arc(ex,ey+8,5,0.15*Math.PI,0.85*Math.PI);ctx.stroke();}
+    else if(o.face==='stiff'){line(ex-6,ey+12,ex+6,ey+12);}
+    else if(o.face==='frown'){ctx.beginPath();ctx.arc(ex,ey+17,6,1.15*Math.PI,1.85*Math.PI);ctx.stroke();line(ex-11,ey-9,ex-3,ey-6);line(ex+11,ey-9,ex+3,ey-6);}
+    else line(ex-3.5,ey+12,ex+3.5,ey+12);   // low enough not to read as a second nose
   }
   if(o.blush>0.05){
     // The face goes hot. Past ~0.8 the whole head glows like a bulb and lets off steam.
