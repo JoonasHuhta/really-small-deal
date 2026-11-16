@@ -2,7 +2,9 @@
 
 15.11.2026 · Claude. Tämä tiedosto korvaa [TOTEUTUKSEN_SUUNNITTELU.md](TOTEUTUKSEN_SUUNNITTELU.md):n työlistana. Lista on järjestetty sen mukaan, mikä vaikuttaa eniten siihen, että peli toimii ja että siitä kerrotaan eteenpäin.
 
-> **Seuraava iso työ:** [TOINEN_NAYTOS.md](TOINEN_NAYTOS.md) (toinen näytös, päätetty 16.11.2026).
+> **Työjono tärkeysjärjestyksessä (16.11.2026):** [CODEX_JATKO.md](CODEX_JATKO.md). Tämä tiedosto on vanhempi yksityiskohtainen lista.
+>
+> **Toinen näytös:** [TOINEN_NAYTOS.md](TOINEN_NAYTOS.md) (toinen näytös, päätetty 16.11.2026).
 >
 > **Suunta ja painopisteet:** [SUUNTA.md](SUUNTA.md) (15.11.2026). Tämä tiedosto on yksityiskohtainen työlista.
 
