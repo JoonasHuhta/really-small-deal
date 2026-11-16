@@ -7,17 +7,18 @@
 - Outoudet ovat **ihmisen omia**, eivät Ekskyysmin. Ne eivät ole ongelma, jota peli ratkaisee, eikä niille naureta. Ne ovat tapa, jolla ihminen on olemassa.
 - Useimmat näytetään **ilman dialogia**: pieni ajatusteksti ilmassa, laskuri, liike. Ekskyysmi kommentoi vain joskus.
 - Hyvä vitsin lähde on **ero ihmisen syyn ja varjon syyn välillä**. Ihminen ei palauta kirjaa, koska se on kesken. Varjo luulee, että syy on kirjastonhoitajan tuomio.
+- **Vaarakohta (lisätty 0.32):** tapa näytetään mieltymyksenä, ei pakkona. Pelaajaa ei pakoteta katsomaan laskettua rituaalia loppuun, eikä tapaa esitetä niin, että se näyttää oireelta. Jos kohtaus alkaa näyttää pakko-oireisen häiriön pilakuvalta, se on väärin tehty, vaikka tapa itse olisi tosi ja rakas. Testi: nauraako pelaaja ihmisen *kanssa* (”she knows I count”) vai ihmis*elle*?
 - Määrä: korkeintaan yksi tai kaksi per päivä, ja osa niin pieniä, että ne huomaa vasta toisella pelikerralla.
 
 ## Sinulta saadut
 
 | Outous | Tila pelissä |
 |---|---|
-| Rekisterikilpien numeroiden summat, samaa summaa etsitään | **Maanantain kotimatka:** kolme pysäköityä autoa. 3+0+4 = 7, 1+5+1 = 7 ✓ (ihminen hymyilee hetken), 9+9+9 = 27. no. Ei dialogia. |
+| Rekisterikilpien numeroiden summat, samaa summaa etsitään | **Maanantain kotimatka:** kolme autoa nokka jalkakäytävään päin, kilpi edessä (0.32; ennen kilpi oli auton kyljessä). Ajatusteksti nimeää kilven, jota lasketaan: ”KIV-304 … 3+0+4 = 7”, ”ROS-151 … 1+5+1 = 7. a pair ✓” (ihminen hymyilee hetken), ”APU-999 … 27. no.” Peli ei selitä enempää: pari löytyi, ja se riittää. |
 | ”Soitellaan”, ”nähdään”: missä ja milloin? | **Lab: Sometime.** Eero sanoo ”we should grab a coffee sometime” ja lähtee. Ihminen haluaa päivän ja kellonajan, varjo haluaa tietää, tarkoittiko Olli sitä. ”Same question.” – ”Very different departments.” |
 | Pakko korjata, kun joku liioittelee | **Lab: An ordinary evening.** Kaisa: ”I ran like twenty kilometres.” Varjo yrittää estää. Ihminen: ”Twelve.” Kaisa nauraa. ”She knows I count.” |
 | Kirjaa ei voi palauttaa ennen kuin se on luettu | **Lab: An ordinary evening.** Kirja on 23 päivää myöhässä. Varjo: ”They’d KNOW.” Ihminen: ”That’s not why.” |
-| Lautasen tiskaus: 3 vasemmalle, 3 oikealle alta, sama päältä, kantti 3 kierrosta | **Lab: An ordinary evening.** Koko proseduuri näkyy laskurina ilman sanoja. Varjo: ”It’s the only system in this house that works.” |
+| Lautasen tiskaus: 3 vasemmalle, 3 oikealle alta, sama päältä, kantti 3 kierrosta | **Poistettu pelistä 0.32.** Seitsemän sekunnin laskettu proseduuri, jota pelaajan piti katsoa, näytti pakko-oireelta eikä omalta tavalta. Tilalla on tavallinen tiskaus ja hyräily: ”It’s the only ten minutes a day when nobody has an opinion about us.” – ”The plate might.” – ”…Don’t.” Tapa voi palata, jos sille löytyy muoto, jossa se on ihmisen ilo eikä esitys. |
 | Kaiken laskeminen: rappuset, laatikot, tuolit, istuinpaikat | **Torstai:** ihminen laskee snack-pussit 1…11 ennen kuin varjo sanoo ”eleven bags”. **Lab-ilta:** ”…14, 15, 16. Still sixteen stairs.” |
 | Linjassa seinän, lattian viivojen tai katon valojen kanssa | Ei vielä pelissä. Ehdotus: ihminen suoristaa mukin kahvan samaan suuntaan muiden kanssa taukohuoneessa, tai tarkistaa kävellessä hetken, jolloin on seinän kulman kanssa linjassa (ohut viiva välähtää). |
 | Kesken jäänyt laulun säe on pakko laulaa loppuun | **Lab: An ordinary evening.** Hyräily katkeaa puheluun (”the bus is la—”), ja puhelun jälkeen tulee hiljainen ”—te. ♪”. Varjo: ”I couldn’t have carried half a word all evening.” Laulu on keksitty, ei oikea kappale. |

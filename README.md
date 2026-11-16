@@ -14,6 +14,16 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.32 (Claude, 16.11.2026): **palautekierros: vaarakohdat, selkeys, kädet ja koko ruutu.**
+
+- **Lautasproseduuri poistettu** illasta (*An ordinary evening*). Seitsemän sekunnin laskettu rituaali näytti pakko-oireelta. Tilalla tavallinen tiskaus ja kolme repliikkiä: ”It’s the only ten minutes a day when nobody has an opinion about us.” – ”The plate might.” – ”…Don’t.” Periaate kirjattu [OUTOUDET.md](OUTOUDET.md):hen.
+- **Kotimatkan autot** ovat nyt nokka jalkakäytävään päin, joten kilpi on edessä eikä kyljessä. Ajatusteksti nimeää kilven ja kertoo, mitä etsitään: ”ROS-151 … 1+5+1 = 7. a pair ✓”.
+- **Kahvikuppi** on kädessä vain töissä aamupäivällä (ennen se oli mukana kolmelta yöllä ja kirjastossa). **Puhelin** on kädessä, kun puhelin puhuu, ja se tärisee saapuvasta viestistä.
+- **Puhelimen äänet** ovat liioitellut: saapuva viesti surisee kahdesti kuin pöytä, lähetys on suhahdus, ”Seen” on yksi tylsä tömähdys, puhelu pirisee.
+- **Selkeys:** kertojan nimi on ”NARRATOR” (oli ”A MOMENT LATER”). Tiistain leikkaukset saivat aikaleiman (”The next morning, 9:00. The quick chat.” ja ”9:12. Back at the desk.”). Välihetkien kortit: *One small thing.* on ”THE NEXT AFTERNOON” (kello on 14:05, kortti sanoi aamu), *The reply* on ”THE EVENING AFTER BOARD GAMES”, ilta on ”AN EVENING AT HOME”.
+- **Android: koko ruutu.** `tools/android-patch.cjs` kirjoittaa nyt `GameApp.java`:n, joka piilottaa myös navigointipalkin ja antaa ikkunan ulottua kameraloven alle. `adjustMarginsForEdgeToEdge` on `disable`, koska sivu hoitaa turva-alueet itse. **Ei testattu laitteella**: Java on käännetty vain tynkäluokkia vasten. Aja `npm run android:sync` ja käännä uudelleen.
+- [SUUNTA.md](SUUNTA.md) päivitetty: julkaisu ja pituuden lisääminen pois painopisteistä, ”valo määrää koon” hylätty, uusi painopiste ”isku ilman lähettäjää”.
+
 Versio 0.31 (Claude, 15.11.2026): **puhujien värit, kamera joka nojaa sanailuun, ja yksi kortti jonka saa pudottaa.**
 
 - **Puhujan nimi on puhujan värinen.** Ekskyysmi on violetti, ihminen keltainen, muut ihmiset persikka, muiden varjot sininen, puhelin vihreä ja kertoja harmaa. Sama väri näkyy puhujan kuvakkeessa ja Dialogue-lokissa. Fontteihin ei koskettu: koko valitaan valikosta (*Text: normal / large / largest*).
@@ -258,7 +268,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.31, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.32, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

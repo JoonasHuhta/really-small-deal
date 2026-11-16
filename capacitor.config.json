@@ -5,7 +5,7 @@
   "backgroundColor": "#12171b",
   "android": {
     "backgroundColor": "#12171b",
-    "adjustMarginsForEdgeToEdge": "auto",
+    "adjustMarginsForEdgeToEdge": "disable",
     "minWebViewVersion": 108
   },
   "server": { "errorPath": "webview-error.html" }

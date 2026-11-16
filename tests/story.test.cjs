@@ -316,7 +316,7 @@ assert.match(tr,/grab a coffee sometime/);assert.match(tr,/hadn’t been picked 
 assert.match(tr,/Half past four WHEN/);assert.match(tr,/Booking it is MY department/);assert.match(tr,/His watch had no hands/);assert.equal(T.G.yT,0,'Eero’s shadow leaves to catch him up');
 for(const id of ['posting','bar','library']){playLab(id);assert.equal(T.G.lens,null,'the glass goes back in the pocket: '+id);}
 tr=playLab('evening');
-assert.match(tr,/plate procedure/);assert.match(tr,/She knows I count/);assert.match(tr,/page 212/);assert.match(tr,/WHY would you correct/);assert.equal(T.G.dish,null);
+assert.match(tr,/The plate might/);assert.doesNotMatch(tr,/procedure/);assert.match(tr,/She knows I count/);assert.match(tr,/page 212/);assert.match(tr,/WHY would you correct/);assert.equal(T.G.dish,null);
 tr=playLab('glass');
 assert.match(tr,/I’ll need the glass/);assert.match(tr,/Exhibit A/);assert.match(tr,/falls off a printer/);assert.match(tr,/You look smaller/);assert.equal(T.G.lens,null);
 assert.doesNotMatch(T.history().map(x=>x.who+x.text).join(' '),/YOUR HUMAN/);

@@ -49,6 +49,7 @@ function setLine(who,text,o){
   else{g.band=null;g.lines=g.lines.filter(function(l){return l.who!==who;});g.lines.push({who:who,text:text,big:!!(o&&o.big)});if(g.lines.length>2)g.lines.shift();}
   var prev=g.cur&&g.cur.who,pair=(who==='S'&&prev==='H')||(who==='H'&&prev==='S');
   g.bick=pair&&text.length<=46&&!(o&&o.big)?(g.bick||0)+1:(who==='S'||who==='H')&&pair?Math.max(0,(g.bick||0)-1):0;
+  g.phoneN=who==='P'?3:Math.max(0,(g.phoneN||0)-1);if(who==='P'&&!/^You:/.test(text))g.buzz=0.7;
   g.cur={who:who,text:text,big:!!(o&&o.big)};g.curT=0;speak(who,text);
   history.push({who:who,text:text});
 }

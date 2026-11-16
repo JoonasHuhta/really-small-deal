@@ -33,6 +33,9 @@ const plugins=JSON.parse(fs.readFileSync(path.join(native,'assets','capacitor.pl
 assert.ok(plugins.some(p=>p.pkg==='@capacitor/app'),'App plugin missing: back/pause will not work');
 assert.deepEqual(JSON.parse(fs.readFileSync(path.join(native,'assets','capacitor.config.json'))),config,'Capacitor config is stale');
 assert.match(fs.readFileSync(path.join(native,'AndroidManifest.xml'),'utf8'),/android:screenOrientation="sensorLandscape"/);
+assert.match(fs.readFileSync(path.join(native,'AndroidManifest.xml'),'utf8'),/<application\b[^>]*android:name="\.GameApp"/,'Whole-screen mode is not registered');
+assert.ok(fs.existsSync(path.join(native,'java',...config.appId.split('.'),'GameApp.java')),'GameApp.java is missing');
+assert.equal(config.android.adjustMarginsForEdgeToEdge,'disable','The page handles its own safe areas');
 const gradle=fs.readFileSync(path.join(root,'android','app','build.gradle'),'utf8');
 assert.ok(gradle.includes('versionName "'+require('../package.json').version+'"'),'APK version is stale');
-console.log(`PASS: ${count} bundled files match; local fonts/icons, offline entry, App plugin, landscape and version checked.`);
+console.log(`PASS: ${count} bundled files match; local fonts/icons, offline entry, App plugin, landscape, whole-screen mode and version checked.`);

@@ -18,7 +18,7 @@
 
 **Ei vielä tehty:**
 - Sovellusta ei ole käännetty APK:ksi eikä ajettu puhelimessa tai emulaattorissa. Minulla ei ole Android SDK:ta, joten oikean laitteen WebView, lovet ja takaisin-painike ovat testaamatta.
-- Navigointipalkin piilotus (immersive-tila).
+- ~~Navigointipalkin piilotus (immersive-tila).~~ Tehty 0.32, ks. alla ”Koko ruutu”. Laitetesti puuttuu.
 
 ## Näin saat sen puhelimeen
 
@@ -94,3 +94,25 @@ Lähdekuvat ovat `resources/`-kansiossa ja ne ovat gitissä, joten kuvake säily
 Kuvakkeen vaihtaminen: korvaa nämä tiedostot ja aja `npm run android:icons`. Se kirjoittaa kaikki koot `android/app/src/main/res/`-kansioon. Älä muokkaa `res/`-kansion tiedostoja käsin, koska komento ylikirjoittaa ne.
 
 **Huom:** `android/`-kansio ei ole gitissä, vaan se syntyy koneella komennolla `npm run android:sync`. Siksi kaikki kuvakkeeseen liittyvä kannattaa tehdä `resources/`-kansion kautta eikä suoraan Android Studiossa.
+
+## Koko ruutu (0.32)
+
+Ensimmäisessä puhelintestissä ruudun laitaan jäi täyttämätön kaistale. Syy oli navigointipalkki ja kameraloven alue, joihin sovellus ei ulottunut.
+
+Korjaus on `tools/android-patch.cjs`:ssä, eli se tulee voimaan komennolla `npm run android:sync`:
+
+- Kirjoittaa tiedoston `android/app/src/main/java/com/moshbitsurfers/reallysmalldeal/GameApp.java`. Se piilottaa tila- ja navigointipalkin (pyyhkäisy reunasta tuo ne hetkeksi takaisin), sallii ikkunan kameraloven alle ja värjää taustan pelin tummalla (#0d1114).
+- Lisää `AndroidManifest.xml`:n `<application>`-tagiin `android:name=".GameApp"`.
+- `MainActivity.java`:han ei kosketa.
+- `capacitor.config.json`: `adjustMarginsForEdgeToEdge` on nyt `disable`. Sivu jättää itse tilaa lovelle (`env(safe-area-inset-left)`), joten Capacitorin ei pidä lisätä marginaaleja päälle.
+
+Komennot:
+
+```
+cd C:\RSD
+npm run android:sync
+cd android
+.\gradlew.bat assembleDebug
+```
+
+**Testaamatta laitteella.** Jos käännös kaatuu `GameApp.java`:han tai kaistale on yhä näkyvissä, kerro virhe tai ota kuvakaappaus: kaistaleen väri kertoo, kumpi kerros sen piirtää (musta = ikkuna, tumma harmaa = sivun tausta).

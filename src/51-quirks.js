@@ -14,46 +14,38 @@ function drawTics(cam){
   }
   ctx.restore();
 }
-// Monday's walk home: parked cars, and a human quietly adding up number plates.
-var CARS=[{x:150,plate:'KIV-304',sum:'3+0+4 = 7',col:'#6f8aa8'},{x:560,plate:'ROS-151',sum:'1+5+1 = 7  ✓',col:'#a8746f',match:true},{x:1000,plate:'APU-999',sum:'9+9+9 = 27. no.',col:'#8a9a72'}];
+// Monday's walk home: cars parked nose to the pavement, and a human quietly adding up number plates, looking for a pair.
+var CARS=[{x:150,plate:'KIV-304',sum:'KIV-304 …  3+0+4 = 7',col:'#6f8aa8'},{x:560,plate:'ROS-151',sum:'ROS-151 …  1+5+1 = 7.  a pair ✓',col:'#a8746f',match:true},{x:1000,plate:'APU-999',sum:'APU-999 …  27.  no.',col:'#8a9a72'}];
 function carTics(){
   var g=G,w=g.w;if(!w)return;
   for(var i=0;i<CARS.length;i++){var c=CARS[i];
-    if(!g.carsSeen[i]&&w.x>=c.x-190){g.carsSeen[i]=1;g.tics.push(tic(c.sum,c.x+24,WALLY-46,{world:true,life:2.6,col:c.match?'#9fd3a8':'#f1ebdd'}));
+    if(!g.carsSeen[i]&&w.x>=c.x-190){g.carsSeen[i]=1;g.tics.push(tic(c.sum,c.x+24,WALLY-58,{world:true,life:3,col:c.match?'#9fd3a8':'#f1ebdd'}));
       if(c.match){g.human.face='smile';g.smileT=1.6;}}
   }
 }
 function drawCars(cam){
-  for(var i=0;i<CARS.length;i++){var c=CARS[i],x=c.x-cam;if(x<-200||x>W+200)continue;
+  for(var i=0;i<CARS.length;i++){var c=CARS[i],x=c.x-cam+24;if(x<-200||x>W+200)continue;
     var y=WALLY+44;
-    ctx.fillStyle=c.col;rr(x-70,y-38,190,40,12);ctx.fill();
-    ctx.beginPath();ctx.moveTo(x-30,y-38);ctx.lineTo(x-6,y-68);ctx.lineTo(x+62,y-68);ctx.lineTo(x+92,y-38);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#aebfcf';ctx.beginPath();ctx.moveTo(x-18,y-40);ctx.lineTo(x,y-62);ctx.lineTo(x+28,y-62);ctx.lineTo(x+28,y-40);ctx.closePath();ctx.fill();
-    ctx.beginPath();ctx.moveTo(x+36,y-40);ctx.lineTo(x+36,y-62);ctx.lineTo(x+58,y-62);ctx.lineTo(x+80,y-40);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#14111d';circ(x-34,y+2,15);ctx.fill();circ(x+86,y+2,15);ctx.fill();ctx.fillStyle='#55596a';circ(x-34,y+2,6);ctx.fill();circ(x+86,y+2,6);ctx.fill();
-    ctx.fillStyle='#fbf8ef';rr(x-4,y-24,58,15,2);ctx.fill();ctx.strokeStyle='#1d4f9c';ctx.lineWidth=1;ctx.strokeRect(x-4,y-24,58,15);
-    ctx.fillStyle='#14111d';ctx.font='800 10px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(c.plate,x+25,y-16);
+    ctx.fillStyle='#14111d';rr(x-56,y-12,22,18,5);ctx.fill();rr(x+34,y-12,22,18,5);ctx.fill();          // tyres
+    ctx.fillStyle=c.col;rr(x-64,y-52,128,48,14);ctx.fill();                                              // body, seen from the front
+    ctx.beginPath();ctx.moveTo(x-50,y-50);ctx.lineTo(x-38,y-86);ctx.lineTo(x+38,y-86);ctx.lineTo(x+50,y-50);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#aebfcf';ctx.beginPath();ctx.moveTo(x-41,y-54);ctx.lineTo(x-32,y-80);ctx.lineTo(x+32,y-80);ctx.lineTo(x+41,y-54);ctx.closePath();ctx.fill();
+    ctx.fillStyle='rgba(20,17,29,.35)';rr(x-30,y-40,60,8,4);ctx.fill();                                   // grille
+    ctx.fillStyle='#fbf3c8';ctx.strokeStyle='rgba(20,17,29,.45)';ctx.lineWidth=1.5;circ(x-46,y-34,8);ctx.fill();ctx.stroke();circ(x+46,y-34,8);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fbf8ef';rr(x-32,y-27,64,17,2);ctx.fill();ctx.strokeStyle='#1d4f9c';ctx.lineWidth=1.2;ctx.strokeRect(x-32,y-27,64,17);
+    ctx.fillStyle='#14111d';ctx.font='800 11px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(c.plate,x,y-18);
   }
 }
-// The plate procedure: three left and three right underneath, flip, the same on top, three firm turns round the rim.
-var DISH=['under ↺ 1','under ↺ 2','under ↺ 3','under ↻ 1','under ↻ 2','under ↻ 3','flip','top ↺ 1','top ↺ 2','top ↺ 3','top ↻ 1','top ↻ 2','top ↻ 3','rim 1','rim 2','rim 3','✓'];
-var DISHSTEP=0.42;
+// Washing up. No procedure and no count: a plate, a brush, some bubbles, and nobody with an opinion.
+var DISHSECS=3.2;
 function dishes(){G.dish={t:0};}
 function drawDish(){
   var d=G.dish;if(!d)return;
-  var k=Math.min(DISH.length-1,Math.floor(d.t/DISHSTEP)),f=(d.t/DISHSTEP)%1,ph=DISH[k],Hm=G.human;
-  var px=Hm.x+48,py=FEETY-108,top=k>=6,dir=ph.indexOf('↻')>=0?-1:1,ang=(ph.indexOf('rim')===0?f*2*Math.PI*1.6:dir*f*2*Math.PI);
-  if(ph==='flip'){ctx.save();ctx.translate(px,py);ctx.scale(Math.cos(f*Math.PI),1);ctx.translate(-px,-py);}
-  ctx.fillStyle='#f1ede2';circ(px,py,30);ctx.fill();ctx.strokeStyle='#c9c2b0';ctx.lineWidth=2;
-  ctx.beginPath();ctx.arc(px,py,top?18:12,0,Math.PI*2);ctx.stroke();
-  if(top&&k<9){ctx.fillStyle='#c9553f';circ(px+6,py-4,3);ctx.fill();}
-  if(ph==='flip')ctx.restore();
-  if(ph!=='flip'&&ph!=='✓'){var rr2=ph.indexOf('rim')===0?30:16;
-    ctx.strokeStyle='#7a5c3a';ctx.lineWidth=4;ctx.lineCap='round';var bx=px+Math.cos(ang)*rr2,by=py+Math.sin(ang)*rr2;line(bx,by,bx+22,by+26);
-    ctx.fillStyle='#e2b04a';circ(bx,by,6);ctx.fill();}
-  if(!RM&&ph!=='✓'){ctx.fillStyle='rgba(220,235,255,.7)';for(var i=0;i<3;i++){circ(px-20+((i*23+d.t*40)%46),py-34-((d.t*30+i*11)%22),2.5);ctx.fill();}}
-  ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='italic 600 18px Fraunces,Georgia,serif';
-  var w=ctx.measureText(ph).width+20;ctx.fillStyle='rgba(16,14,24,.6)';rr(px-w/2,py-74,w,28,14);ctx.fill();ctx.fillStyle=ph==='✓'?'#9fd3a8':'#f1ebdd';ctx.fillText(ph,px,py-60);ctx.restore();
+  var Hm=G.human,px=Hm.x+48,py=FEETY-108,ang=RM?0.8:d.t*5.2,bx=px+Math.cos(ang)*15,by=py+Math.sin(ang)*15,i;
+  ctx.fillStyle='#f1ede2';circ(px,py,30);ctx.fill();ctx.strokeStyle='#c9c2b0';ctx.lineWidth=2;ctx.beginPath();ctx.arc(px,py,18,0,Math.PI*2);ctx.stroke();
+  if(d.t<1.3){ctx.globalAlpha=clamp(1-d.t/1.3,0,1);ctx.fillStyle='#c9553f';circ(px+6,py-4,3);ctx.fill();ctx.globalAlpha=1;}
+  ctx.strokeStyle='#7a5c3a';ctx.lineWidth=4;ctx.lineCap='round';line(bx,by,bx+22,by+26);ctx.fillStyle='#e2b04a';circ(bx,by,6);ctx.fill();
+  if(!RM){ctx.fillStyle='rgba(220,235,255,.7)';for(i=0;i<4;i++){circ(px-22+((i*19+d.t*40)%46),py-34-((d.t*30+i*11)%24),2.5);ctx.fill();}}
 }
 function kitchen(){
   ctx.fillStyle='#4d566e';rr(330,300,260,95,6);ctx.fill();
@@ -125,11 +117,13 @@ function labEvening(){return labScene({set:'home',title:'An ordinary evening',pl
   addTic('…14, 15, 16.',440,FEETY-250,{life:1.8}),addTic('Still sixteen stairs.',440,FEETY-250,{at:1.9,life:2.2}),
   {wait:4.2},
   ['N','An ordinary evening. Nothing happens in it. That is the plan.'],
-  dishes,{wait:DISH.length*DISHSTEP+0.6},
+  dishes,addTic('♪ hm-hm, hm—',440,FEETY-250,{at:0.5,life:2.2}),{wait:DISHSECS},
   function(){G.dish=null;},
-  ['S','I don’t interfere with the plate procedure.'],
+  ['S','I don’t interfere with the dishes.'],
   ['H','Good.'],
-  ['S','It’s the only system in this house that works.'],
+  ['S','It’s the only ten minutes a day when nobody has an opinion about us.'],
+  ['H','The plate might.'],
+  ['S','…Don’t.'],
   addTic('♪ the bus is late, the bus is la—',440,FEETY-250,{life:30}),{wait:1.8},
   function(){var g=G;g.tics=[];sfx('pick');g.human.flinch=0.4;},
   ['P','Kaisa is calling.'],

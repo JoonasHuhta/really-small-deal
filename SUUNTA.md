@@ -39,7 +39,7 @@ Kolme aukkoa on lihavoitu. Ne ovat myös kolme suuntaa, joihin peli voi kasvaa t
 
 **A. Hyvät uutiset.** Hälytin, jossa ei ole asetusta sanalle ”nice”, on pelin paras käyttämätön vitsi. Kun kehu vihdoin menee perille, Ekskyysmi käsittelee sen samalla koneistolla: epäilee, tutkii suurennuslasilla, arkistoi, käy katsomassa neljäkymmentä kertaa ja suunnittelee häät. Perjantaina syntyi ”the other pile”. Siinä on nyt yksi paperi.
 
-**B. Varjon fysiikka.** Ekskyysmi on varjo, mutta valoa ei käytetä. Keskipäivällä hän on pienimmillään (”Schedule all risks for noon.”), illalla pitkä, katulampun alla kaksi kertaa peräkkäin, ja pimeässä hän on koko huone (”In the dark I’m not gone. I’m everywhere.”). Yksi sääntö, loputtomasti gageja, eikä yhtään uutta mekaniikkaa.
+**B. Varjon fysiikka (hylätty 16.11.).** Varjo saa olla epärealistinen ja epälooginen, ja juuri siksi hauska. Alkuperäinen ajatus: Ekskyysmi on varjo, mutta valoa ei käytetä. Keskipäivällä hän on pienimmillään (”Schedule all risks for noon.”), illalla pitkä, katulampun alla kaksi kertaa peräkkäin, ja pimeässä hän on koko huone (”In the dark I’m not gone. I’m everywhere.”). Yksi sääntö, loputtomasti gageja, eikä yhtään uutta mekaniikkaa.
 
 **C. Virasto toimiston ulkopuolella.** Lomakkeet, osastot ja leimasin toimivat vielä paremmin siellä, missä ne eivät kuulu mihinkään: itsepalvelukassa, äidin puhelu, ryhmächat, automaattiovi joka ei aukea.
 
@@ -50,44 +50,64 @@ Kolme aukkoa on lihavoitu. Ne ovat myös kolme suuntaa, joihin peli voi kasvaa t
 1. **Peli loppuu, kun se alkaa olla kiinnostavinta.** Perjantaina Ekskyysmillä on uusi työnkuva, mutta pelaaja ei pääse pelaamaan sitä. Viikon valinnat ovat suojelemisen tapoja. Pysymisen tapoja on kolme, kaikki perjantaina.
 2. **Uudelleenpeluulle ei ole syytä kuitin lisäksi.** Reittejä on paljon (180 maanantaita), mutta pelaaja ei näe, mitä jäi löytämättä.
 3. **Kaikki tapahtuu yhdessä elämänalueessa.** Se rajaa samastumista: moni tunnistaa itsensä kaupan kassalta paremmin kuin palaverista.
-4. **Jatkuvuus julkaisun jälkeen.** Viikko on valmis kokonaisuus. Sen jälkeen tarvitaan muoto, johon voi lisätä kahden minuutin palan ilman, että kaari muuttuu.
+4. **Isku ilman lähettäjää.** Pelissä jokaisella iskulla on laukaisin. Oikeasti aina ei ole (ks. painopiste 3).
 5. **Kukaan ei ole vielä pelannut sitä loppuun vieraana.** Kaikki yllä oleva on päättelyä yhdestä palautteesta.
 
-## 5. Seuraavat seitsemän asiaa, tässä järjestyksessä
+## 5. Painopisteet (päivitetty 16.11. palautteesi jälkeen)
 
-### 1. Pelaajatesti ja oma puhelin (ennen yhtään uutta kohtausta)
-Viisi ihmistä, maanantai ilman ohjeita, ja sinä itse koko viikko puhelimella. Kysymys, johon tarvitaan vastaus ennen lihottamista: **missä kohtaa he lakkaavat lukemasta?** Jos se on ennen keskiviikkoa, lisää sisältöä ei auta, vaan vanhaa pitää tiivistää.
+Linjaus: **julkaisua ei nyt mietitä, eikä pituutta lisätä keinotekoisesti.** Luotetaan siihen, että tarina kantaa. Työ kohdistuu tarinaan, Ekskyysmin reaktioihin ja siihen, että kaikki on selkeää. ”Yksinkertaista, selkeää, mutta diippiä ja hauskaa.”
 
-### 2. *The other pile*: hyvän vastaanottaminen (uusi suoni A)
-- Uusi hetki ***A compliment.*** (luonnos alla). Paikka tarinassa: perjantain jälkeen jälkikohtauksena tai toisen viikon alussa.
-- **Keräily:** valikkoon *The other pile · 3 / 14*. Sinne kertyvät viikon aikana sanotut ystävälliset asiat, mutta vain jos pelaaja valitsi niin, että ne kuultiin (esim. tiistaina ”Ask what ‘shorter’ means” → Riitan kaksi kehua). Tämä antaa uudelleenpeluulle syyn, joka on sama kuin pelin aihe: kehut jäivät kuulematta, koska oltiin kiireisiä haavan kanssa.
-- Kuittiin rivi: ”nice things heard: 3 · nice things said: 9”.
+### 1. Selkeys: siirtymät, otsikot, kuka puhuu
+Tehty 0.31–0.32: puhujien värit, kertojan nimi (”NARRATOR”, ennen ”A MOMENT LATER”, joka oli väärin puolessa riveistä), aikaleimat tiistain sisäisiin leikkauksiin (”The next morning, 9:00. The quick chat.”), kolme välihetken aikamerkintää korjattu vastaamaan kellonaikaa. Jatko: katso läpipeluussa jokainen kortti ja kysy ”tiedänkö missä ja milloin olen”.
 
-### 3. *Monday. Again.*: toinen viikko, uudet verbit
-Viikon jälkeen aukeaa sama maanantai. Laukaisimet ovat samat, mutta jokaisessa valinnassa on nyt mukana yksi pysymisen tapa (”Say it. Quietly.” · ”Count to two.” · ”Wobble visibly.”), ja Ekskyysmi irtisanoutuu vanhasta työstään koko ajan huonosti (”I’m working out my notice. I wrote the contract.”). Kuitti näyttää eron: 2,1 päivää → 1,4. Edistys näkyy numerona, eikä kukaan sano sanaa ”kasvu”.
-Tämä on halvin tapa tuplata pelin pituus: lavasteet, hahmot ja laukaisimet ovat olemassa.
+### 2. Ekskyysmin reaktiot ja hauska toimivuus
+Käsikirjoitus on Ekskyysmin osalta vahvempi kuin hänen kehonsa. Hänellä on kymmenkunta ilmettä ja muutama asento, mutta moni repliikki sanotaan oletusilmeellä. Seuraava kierros: käydään viikko repliikki repliikiltä ja annetaan jokaiselle isolle vitsille oma reaktio (kutistuminen, kurotus, käsi suun eteen, katse pois, hidas kääntyminen kameraan). Varjon ei tarvitse olla realistinen: hän saa olla epälooginen ja välillä loogisen epälooginen. ”Valo määrää koon” -sääntö on siksi **hylätty**: se tekisi varjosta fysiikkaa, ja hauskuus on siinä, että hän ei ole.
 
-### 4. *Small deals*: antologia työn ulkopuolelta (suoni C)
-Scenario lab nimetään uudelleen *Small deals*, ja siitä tulee pelin jatkuva osa: kahden minuutin itsenäisiä hetkiä samalla kaavalla, jokaisella oma kuittirivi. Ensimmäiset viisi, yksi per elämänalue:
+### 3. RSD ei ole aina hylkäämistä: isku ilman lähettäjää
+Sinun huomiosi, ja se puuttuu pelistä kokonaan. Joskus kukaan ei sano mitään. Aivot vain päättävät, että nyt sattuu, niin paljon että tekisi mieli käpertyä lattialle, ja jälkikäteen se on täysin absurdia. Pelissä jokaisella iskulla on tähän asti laukaisin. Ehdotus yhdeksi lyhyeksi hetkeksi, **ei vielä toteutettu**:
 
-| Laukaisin | Alue | Ekskyysmin luenta |
-|---|---|---|
-| ”Unexpected item in the bagging area.” | kauppa | Kone on hylännyt meidät. Julkisesti. Äänellä. (luonnos alla) |
-| ”You look tired.” | äiti | Lausunto kasvoista. Ilman valitusoikeutta. |
-| Ryhmächat: oma viesti, ei yhtään reaktiota | kaverit | Seitsemän ihmistä näki sen. Seitsemän erillistä päätöstä. |
-| Automaattiovi ei aukea | maailma | Rakennus on tehnyt arvion. |
-| Oma viesti vuodelta 2019 löytyy vahingossa | minä itse | Todiste. Omalla käsialalla. |
+```
+[koti, ilta. Ihminen kantaa pyykkiä. Ei puhelinta, ei ketään.]
+[isku. Täysi. Röntgen, säpsähdys.]
+S: Who was that?
+H: Nobody.
+S: Somebody SAID something.
+H: Nobody’s here.
+[Ekskyysmi tutkii huoneen suurennuslasilla. Sohva. Pyykkikori. Katto.]
+S: The sofa has an alibi.
+[ihminen istuu lattialle. Ekskyysmi ei tiedä mitä tehdä: ei ole mitään, mitä vastaan suojella.]
+S: I don’t have a form for this. There’s no sender.
+H: There doesn’t have to be one.
+S: Then what do I DO?
+H: Sit down.
+[Ekskyysmi istuu. Ensimmäistä kertaa. Hän on istuessaan yllättävän pieni.]
+[ULKOPUOLINEN VERSIO · duration: 4 minutes · “Someone sat on the floor next to a laundry basket.”]
+S: …It’s gone.
+H: It does that.
+S: We didn’t fix anything.
+H: No.
+S: I’d like to file a complaint about the absence of a cause.
+H: With whom?
+S: That’s the complaint.
+```
+Vaarakohta: tämä on pelin haavoittuvin hetki, joten vitsi saa tulla vasta lopussa eikä koskaan ihmisen kustannuksella.
 
-Tahti julkaisun jälkeen: yksi uusi kahdessa viikossa. Se pitää pelin elossa ilman, että viikkoon kosketaan.
+### 4. Hyvän vastaanottaminen (*A compliment.*, luonnos alla)
+Edelleen paras käyttämätön suoni Ekskyysmille. Toteutetaan, kun kohdat 1–3 ovat kunnossa. Keräily (*The other pile*) vain, jos se tuntuu tarinalta eikä pelimekaniikalta.
 
-### 5. Valo määrää koon (suoni B)
-Yksi sääntö moottoriin: kohtauksen valo antaa Ekskyysmille peruskoon ja suunnan. Keskipäivä pieni, ilta pitkä, kaksi lamppua kaksi varjoa (”Don’t look at him. He’s a temp.”), pimeä koko huone. Kolme gagia riittää alkuun: keskipäivän lounas, kotimatkan katulamput, 03:07.
+### 5. Kuvitus: kädet ja esineet kertovat tilanteen
+Tehty 0.32: kahvikuppi on kädessä vain töissä aamupäivällä, ja kun puhelin puhuu, kädessä on puhelin (ja se tärisee liioitellusti). Jatko: sama tarkistus muille esineille (snack-pussit torstaina, kirja kirjastossa, kansio palaverissa).
 
-### 6. Ääni
-Viisi itse äänitettyä ääntä ja yksi teema (lista: SEURAAVAKSI.md, kohta 4c). Tärkein on Ekskyysmin oma ääni: nyt hän piippaa, ja hahmo ansaitsee paremman.
+### 6. Vaarakohdat
+Huumori ei saa tehdä pilkkaa oireesta. Tehty 0.32: lautasproseduuri poistettu, koska se näytti pakko-oireelta (ks. [OUTOUDET.md](OUTOUDET.md)). Jäljellä tarkistettavana: laskeminen (rappuset, snack-pussit, rekkarit) pysyy, koska se on ihmisen ilo ja Kaisa tietää sen. ”Apologising to furniture”, miellyttäminen ja pakastin ovat Ekskyysmin tekoja, eivät ihmisen vikoja, ja se ero pitää säilyä joka kohtauksessa.
 
-### 7. Julkaisupolku
-itch.io-sivu selainversiolla, kuitti jaettavana kuvana (tehty 0.30), Androidin suljettu testi. Vasta tämän jälkeen suomenkielinen versio, koska se on uudelleenkirjoitus.
+### 7. Ääni
+Puhelin sai 0.32:ssa liioitellut äänet (saapuva viesti tärisee kuin pöytä, lähetys on suhahdus josta ei ole paluuta, ”Seen” on yksi tylsä tömähdys). Ekskyysmin oma ääni on yhä tekemättä.
+
+### Ei nyt
+- Julkaisu, itch.io, kaupat, suomennos.
+- *Monday. Again.* ja *Small deals* -antologia: ne ovat pituutta. Ideat säilyvät tässä tiedostossa, mutta niitä ei toteuteta, ellei tarina niitä vaadi.
+- Valo määrää koon.
 
 ## 6. Mitä ei tehdä
 
@@ -95,12 +115,13 @@ itch.io-sivu selainversiolla, kuitti jaettavana kuvana (tehty 0.30), Androidin s
 - Ei mittareita ruudulle pelin aikana. Kuitti riittää.
 - Ei diagnoosisanastoa eikä neuvoja. ”It isn’t advice.”
 - Ei käsin tehtävää asiaa, jolla ei ole merkitystä kohtauksessa. Yksi per hetki.
-- Ei pidempää maanantaita. Uusi sisältö menee viikon jälkeen tai Small dealsiin.
+- Ei pidempää maanantaita.
+- Ei pilkkaa oireesta: tapa on mieltymys, ei pakko.
 - Ei paranemista. Hän laukeaa taas maanantaina, ja se on pelin lämpimin lause.
 
 ## 7. Kaksi kohtausta valmiiksi kirjoitettuna
 
-### A compliment. (kohta 2)
+### A compliment. (kohta 4)
 
 ```
 [toimisto, iltapäivä. Riitta kulkee ohi.]
@@ -135,7 +156,7 @@ S: I don’t want to get used to it. I want to go and look again.
 ```
 Kuittiin: ”visits to one compliment ×40 · 12 min”.
 
-### Unexpected item in the bagging area. (kohta 4)
+### Unexpected item in the bagging area. (ideavarasto)
 
 ```
 [kauppa, itsepalvelukassa. Visiitti numero 413.]

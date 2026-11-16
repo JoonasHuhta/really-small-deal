@@ -39,7 +39,13 @@ var VOICE={S:['triangle',185,0.075],H:['sine',330,0.06],A:['sine',494,0.05],B:['
 function stopVoice(){for(var i=0;i<voiceNodes.length;i++){try{voiceNodes[i].stop();}catch(e){}}voiceNodes=[];}
 function speak(who,text){
   stopVoice();var a=audio();if(!a)return;var t0=a.currentTime+0.02;
-  if(who==='P'){tone(880,t0,0.09,'sine',0.05);tone(1320,t0+0.1,0.16,'sine',0.05);return;}
+  if(who==='P'){
+    if(/^You:/.test(text)){tone(420,t0,0.2,'sine',0.05,1700);tone(1700,t0+0.2,0.07,'sine',0.03);}                 // sent: a whoosh, and no way back
+    else if(/^Seen/.test(text)){tone(150,t0,0.3,'sine',0.11,96);}                                                      // seen: one flat thud
+    else if(/calling/.test(text)){for(var r=0;r<2;r++)for(var q=0;q<5;q++)tone(q%2?1180:940,t0+r*0.62+q*0.07,0.07,'square',0.03);}
+    else{for(var b=0;b<2;b++){tone(92,t0+b*0.2,0.15,'sawtooth',0.085,84);tone(184,t0+b*0.2,0.15,'square',0.02,170);}  // incoming: the table hears it first
+      tone(880,t0+0.42,0.09,'sine',0.05);tone(1320,t0+0.52,0.18,'sine',0.05);}
+    return;}
   var v=VOICE[who];if(!v)return;
   var base=who==='S'?v[1]/Math.sqrt(Math.max(0.6,G.morko.sT)):v[1],n=0;
   for(var i=0;i<text.length&&n<28;i+=3){

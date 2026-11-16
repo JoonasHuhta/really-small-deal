@@ -1,7 +1,7 @@
 /* ================= SCENARIO LAB: stand-alone scenes for trying ideas before they join the week ================= */
 var LABS={
   sometime:{title:'Sometime.',blurb:'A colleague says “we should grab a coffee sometime” and leaves. When is sometime?',script:labSometime},
-  evening:{title:'An ordinary evening',blurb:'Stairs, a plate procedure, a half-hummed line, an overdue book. Nothing happens. On purpose.',script:labEvening},
+  evening:{title:'An ordinary evening',blurb:'Stairs, dishes, a half-hummed line, an overdue book. Nothing happens. On purpose.',script:labEvening},
   glass:{title:'Evidence.',blurb:'Two people stop laughing when you walk in. Ekskyysmi gets out the magnifying glass.',script:labGlass},
   colleagues:{title:'Colleagues.',blurb:'Sanna’s shadow says “oh. hi.” to Ekskyysmi. Now it knows how that felt.',script:labColleagues},
   notnow:{title:'Not now.',blurb:'The one that is real: Riitta is short with you. Right about the fact, wrong about the size.',script:labNotNow},
