@@ -14,6 +14,18 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.34 (Claude, 16.11.2026): **aloitusmusiikki ja viisi uutta ilmettä.**
+
+- **Aloitusruudulla soi musiikki** (*Safe At Last*, `assets/audio/title.mp3`, 2,8 Mt, pakattu 128 kbps:ään ilman kansikuvaa). Selain ja Androidin WebView eivät päästä ääntä läpi ennen ensimmäistä kosketusta tai näppäintä, joten musiikki alkaa siitä. Se häipyy, kun peli alkaa (hiljainen aamu pysyy hiljaisena), ja palaa aloitusruudulle palatessa. *Sound off*, tauko ja sovelluksen vaihto pysäyttävät sen.
+- Musiikki toistetaan nyt `<audio>`-elementillä suoratoistona. Vanha tapa purki koko kappaleen muistiin, mikä olisi vienyt puhelimelta noin 60 Mt. Lisää kappaleita: rivi `MUSIC`-taulukkoon tiedostossa `src/10-audio.js` (esim. `walk`, `home`, `office`, `bar`), ja kohtaus soittaa sen itse.
+- **Viisi uutta ilmettä**, kukin yhden repliikin mittainen (`['S','…',{look:'squint'}]`), minkä jälkeen kasvot palaavat perusilmeeseen:
+  - *squint* (epäluulo: viirut ja yksi päättäväinen kulma): ”“Quick.””, ”Padding.”, ”She bit back. Affectionately. Is that allowed?”
+  - *pleased* (itseensä tyytyväinen, silmät kaarella kiinni): ”I’ve kept it very quiet.”, ”Clean. Dignified.”, ”The peas will keep an eye on it.”
+  - *stunned* (isot silmät, pisteen kokoiset pupillit): ”A thumb.”, ”“Seen.””, ”…She would have said yes.”
+  - *soft* (isot lämpimät pupillit): ”You do?”, ”Nobody came to relieve me.”, ”…Yes. I’m coming.”
+  - *up* (katse kattoon): ”For over an hour I grieved a battery.”
+  Yhteensä 34 kohtaa tiistaista perjantaihin ja välihetkissä. Maanantain avaukseen ei lisätty mitään.
+
 Versio 0.33 (Claude, 16.11.2026): **siivottu aloitusruutu, korostukset ja muutama täsmäilme.**
 
 - **Aloitusruutu on otsikko ja kaksi nappia.** Yläpalkin kahdeksan nappia ovat nyt yhden *☰ Menu* -napin takana (sama valikko kuin puhelimessa), ja aloitusruudulla on linkki *Settings*. Pois: toistuva logo ja alaotsikko yläpalkista, ”A small social adventure / THE INSIDE VERSION” -palkki ja alareunan tekstit aloitusruudulta, sekä ”AN INTERACTIVE LITTLE OVERREACTION” kokonaan. Pelin aikana luku ja näppäinvihje näkyvät kuten ennen. Valikko pysyy auki, kun asetuksia vaihtaa.
@@ -276,7 +288,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.33, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.34, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

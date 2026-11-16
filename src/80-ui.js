@@ -27,7 +27,7 @@ function showWeekEnd(){
    receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function showTitle(){
-  var sv=loadProgress();
+  var sv=loadProgress();music('title');
   G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
   showOv('<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
    '<p class="tagline">A small moment.<br>A very long shadow.</p>'+
@@ -137,7 +137,7 @@ slowUI();
 function motionUI(){document.getElementById('motion').setAttribute('aria-pressed',String(RM));document.body.classList.toggle('reduce-motion',RM);}
 document.getElementById('motion').addEventListener('click',function(){RM=!RM;motionUI();});
 motionUI();
-document.getElementById('sound').addEventListener('click',function(){soundOn=!soundOn;if(!soundOn){stopVoice();var mn=musicName;music(null);musicName=mn;}else{preloadSounds();var mn2=musicName;musicName=null;music(mn2);}try{window.localStorage.setItem('ekskyysmi.sound',soundOn?'on':'off');}catch(e){}soundUI();syncAudioState();if(soundOn)sfx('pick');});
+document.getElementById('sound').addEventListener('click',function(){soundOn=!soundOn;if(!soundOn)stopVoice();else preloadSounds();try{window.localStorage.setItem('ekskyysmi.sound',soundOn?'on':'off');}catch(e){}soundUI();syncAudioState();if(soundOn)sfx('pick');});
 soundUI();
 function backButton(){
   if(logDialog.open){logDialog.close();return 'log';}
@@ -202,3 +202,7 @@ function appVisibility(){
   syncPause();
 }
 document.addEventListener('visibilitychange',appVisibility);
+
+// Browsers and the Android WebView hold all sound until the first touch or key. Whatever was waiting starts then.
+(function(){var done=false;function first(){if(done)return;done=true;syncMusic();}
+  if(document.addEventListener){document.addEventListener('pointerdown',first,true);document.addEventListener('keydown',first,true);document.addEventListener('touchstart',first,true);}})();

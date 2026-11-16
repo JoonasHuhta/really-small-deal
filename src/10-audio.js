@@ -7,6 +7,7 @@ function audio(){
   if(AC.state==='suspended')syncAudioState();return AC;
 }
 function syncAudioState(){
+  syncMusic();
   if(!AC)return;
   var method=paused||appHidden||!soundOn?'suspend':'resume';
   try{if(AC[method]){var p=AC[method]();if(p&&p.catch)p.catch(function(){});}}catch(e){}
@@ -20,19 +21,32 @@ function tone(f,t0,dur,type,vol,f2){
 // Room for recorded sound. List a file under an effect's name and it replaces the synthesized version;
 // list a loop under MUSIC and music('name') plays it. A missing or undecodable file falls back to the synth or to silence.
 var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
-var MUSIC={/* walk:'assets/audio/walk-home.ogg', night:'assets/audio/0307.ogg' */};
-var BUF={},LOADING={},musicNode=null,musicName=null,MUSICVOL=0.35;
+// Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
+// A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
+var MUSIC={title:'assets/audio/title.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};
+var BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 function loadSound(k,url){
   if(BUF[k]||LOADING[k]||!window.fetch)return;var a=audio();if(!a)return;LOADING[k]=true;
   window.fetch(url).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer();}).then(function(b){return new Promise(function(ok,no){a.decodeAudioData(b,ok,no);});})
-    .then(function(buf){BUF[k]=buf;if(musicName&&'music:'+musicName===k)music(musicName);}).catch(function(){LOADING[k]='failed';});
+    .then(function(buf){BUF[k]=buf;}).catch(function(){LOADING[k]='failed';});
 }
-function preloadSounds(){var k;for(k in SAMPLES)loadSound(k,SAMPLES[k]);for(k in MUSIC)loadSound('music:'+k,MUSIC[k]);}
+function preloadSounds(){for(var k in SAMPLES)loadSound(k,SAMPLES[k]);}
 function playBuf(k,vol,loop){var a=audio();if(!a||!BUF[k])return null;var n=a.createBufferSource(),g=a.createGain();n.buffer=BUF[k];n.loop=!!loop;g.gain.value=vol==null?0.8:vol;n.connect(g);g.connect(a.destination);n.start();return n;}
+function fadeOut(el){
+  if(typeof setInterval!=='function'){try{el.pause();}catch(e){}return;}
+  var id=setInterval(function(){var v=el.volume-0.05;if(v<=0.02){try{el.pause();el.src='';}catch(e){}clearInterval(id);var i=fading.indexOf(el);if(i>=0)fading.splice(i,1);}else el.volume=v;},60);
+  fading.push(el);
+}
 function music(name){
-  if(musicNode&&musicName===name)return;if(musicNode){try{musicNode.stop();}catch(e){}musicNode=null;}
-  musicName=name||null;if(!name||!MUSIC[name]||!soundOn)return;
-  if(BUF['music:'+name])musicNode=playBuf('music:'+name,MUSICVOL,true);else loadSound('music:'+name,MUSIC[name]);
+  name=name||null;if(name===musicName&&(musicEl||!MUSIC[name]))return;
+  musicName=name;if(musicEl){fadeOut(musicEl);musicEl=null;}
+  if(!name||!MUSIC[name]||typeof window.Audio!=='function')return;
+  var el=new window.Audio(MUSIC[name]);el.loop=true;el.preload='auto';el.volume=MUSICVOL;musicEl=el;syncMusic();
+}
+function syncMusic(){
+  var el=musicEl;if(!el)return;
+  try{if(soundOn&&!paused&&!appHidden){var p=el.play();if(p&&p.catch)p.catch(function(){});}else el.pause();}catch(e){}
+  if(paused||appHidden||!soundOn)for(var i=0;i<fading.length;i++){try{fading[i].pause();}catch(e){}}
 }
 // One voice per character: waveform, pitch, loudness. The shadow's pitch drops as it grows.
 var VOICE={S:['triangle',185,0.075],H:['sine',330,0.06],A:['sine',494,0.05],B:['triangle',262,0.06],R:['sine',392,0.05],T:['triangle',147,0.06],L:['sine',523,0.05],X:['sine',440,0.05],Z:['triangle',233,0.045]};

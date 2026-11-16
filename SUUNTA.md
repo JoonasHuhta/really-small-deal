@@ -62,7 +62,7 @@ Tehty 0.31–0.33: aloitusruutu siivottu yhteen valikkoon, oletusfontti pykälä
 
 ### 2. Ekskyysmin reaktiot: perusilme on vitsi, täsmäilme on palkinto
 Linjaus 16.11.: **perusilme pysyy.** Tuttu ja muuttumaton naama on hauska juuri siksi, että sanat ovat niin isoja (Räikkönen-periaate). Erikoisilme säästetään kohtiin, joissa se on oivallus, kuten ”I was demonstrating scale” (katse vasemmalle, suu supussa).
-Tehty 0.33: sama ilme seitsemään muuhun kohtaan (`aside`), versaalit korostuksena, kova ja hiljainen repliikki. Sääntö jatkoon: enintään yksi täsmäilme kohtausta kohden, ja jos sitä pitää selittää, se on väärässä paikassa. Varjon ei tarvitse olla realistinen: hän saa olla epälooginen ja välillä loogisen epälooginen. ”Valo määrää koon” on siksi **hylätty**.
+Tehty 0.33: sama ilme seitsemään muuhun kohtaan (`aside`), versaalit korostuksena, kova ja hiljainen repliikki. Tehty 0.34: viisi uutta ilmettä (squint, pleased, stunned, soft, up), 34 kohtaa tiistaista perjantaihin. Sääntö jatkoon: ilme kestää yhden repliikin ja palaa perusilmeeseen, maanantain avaukseen ei lisätä mitään (siinä on jo tarpeeksi seurattavaa), ja jos ilmettä pitää selittää, se on väärässä paikassa. Varjon ei tarvitse olla realistinen: hän saa olla epälooginen ja välillä loogisen epälooginen. ”Valo määrää koon” on siksi **hylätty**.
 
 ### 3. RSD ei ole aina hylkäämistä: isku ilman lähettäjää
 Sinun huomiosi, ja se puuttuu pelistä kokonaan. Joskus kukaan ei sano mitään. Aivot vain päättävät, että nyt sattuu, niin paljon että tekisi mieli käpertyä lattialle, ja jälkikäteen se on täysin absurdia. Pelissä jokaisella iskulla on tähän asti laukaisin. Ehdotus yhdeksi lyhyeksi hetkeksi, **ei vielä toteutettu**:
@@ -103,7 +103,7 @@ Tehty 0.32: kahvikuppi on kädessä vain töissä aamupäivällä, ja kun puheli
 Huumori ei saa tehdä pilkkaa oireesta. Tehty 0.32: lautasproseduuri poistettu, koska se näytti pakko-oireelta (ks. [OUTOUDET.md](OUTOUDET.md)). Jäljellä tarkistettavana: laskeminen (rappuset, snack-pussit, rekkarit) pysyy, koska se on ihmisen ilo ja Kaisa tietää sen. ”Apologising to furniture”, miellyttäminen ja pakastin ovat Ekskyysmin tekoja, eivät ihmisen vikoja, ja se ero pitää säilyä joka kohtauksessa.
 
 ### 7. Ääni
-Puhelin sai 0.32:ssa liioitellut äänet (saapuva viesti tärisee kuin pöytä, lähetys on suhahdus josta ei ole paluuta, ”Seen” on yksi tylsä tömähdys). Ekskyysmin oma ääni on yhä tekemättä.
+Puhelin sai 0.32:ssa liioitellut äänet (saapuva viesti tärisee kuin pöytä, lähetys on suhahdus josta ei ole paluuta, ”Seen” on yksi tylsä tömähdys). Aloitusmusiikki lisätty 0.34 (*Safe At Last*). Ekskyysmin oma ääni ja hetkien äänitehosteet ovat tekemättä: tehosteen saa vaihdettua lisäämällä tiedoston `SAMPLES`-taulukkoon samalla nimellä (esim. `hit`, `stamp`, `drip`), jolloin se korvaa syntetisoidun.
 
 ### Ei nyt
 - Julkaisu, itch.io, kaupat, suomennos.

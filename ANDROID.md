@@ -116,3 +116,18 @@ cd android
 ```
 
 **Testaamatta laitteella.** Jos käännös kaatuu `GameApp.java`:han tai kaistale on yhä näkyvissä, kerro virhe tai ota kuvakaappaus: kaistaleen väri kertoo, kumpi kerros sen piirtää (musta = ikkuna, tumma harmaa = sivun tausta).
+
+## Uusi APK (0.34)
+
+```
+cd C:\RSD
+npm run android:sync
+cd android
+.\gradlew.bat assembleDebug
+```
+
+`android:sync` kopioi pelin ja musiikin (`assets/audio/title.mp3`) sovellukseen, kirjoittaa koko ruudun tilan (`GameApp.java`) ja tarkistaa, että paketti on ajan tasalla. APK syntyy kansioon `android\app\build\outputs\apk\debug\app-debug.apk` ja kasvaa noin 2,8 Mt musiikin verran.
+
+Puhelimeen: `"C:\Users\jvker\AppData\Local\Android\Sdk\platform-tools\adb.exe" install -r app\build\outputs\apk\debug\app-debug.apk`
+
+Musiikki alkaa aloitusruudulla ensimmäisestä kosketuksesta. Se on WebView’n sääntö, eikä sitä voi kiertää sivun puolelta.

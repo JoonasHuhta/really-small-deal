@@ -25,12 +25,12 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   {wait:0.6},
   ['P','Riitta: “Quick chat tomorrow at 9?”'],
   hit(0.9,'P'),set({sweat:0.7}),{wait:1.2},
-  ['S','“Quick.”'],
+  ['S','“Quick.”',{look:'squint'}],
   ['S','Nobody says “quick” about good news. Good news takes its time. Good news has cake.'],
   ['H','It’s probably nothing.'],
   ['S','It’s five words and a question mark. It’s EVERYTHING.'],
   {choice:[
-    {t:'We’re being fired. Efficiently.',then:[['S','Nine o’clock. Before the coffee works. So you can’t fight back.'],['H','I’ve never fought back in my life.'],['S','She doesn’t know that. I’ve kept it very quiet.']]},
+    {t:'We’re being fired. Efficiently.',then:[['S','Nine o’clock. Before the coffee works. So you can’t fight back.'],['H','I’ve never fought back in my life.'],['S','She doesn’t know that. I’ve kept it very quiet.',{look:'pleased'}]]},
     {t:'She found the thing.',then:[['H','What thing?'],['S','I don’t know. That’s what makes it so bad. It could be ANY of the things.'],['H','There are no things.'],['S','There are always things.']]},
     {t:'It’s about Monday.',then:mondayCallback}
   ]},
@@ -45,7 +45,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','…You sent it. Without a committee.'],
   ['H','It’s a calendar reply.'],
   ['P','Riitta reacted with a thumbs-up.'],
-  ['S','A thumb.'],
+  ['S','A thumb.',{look:'stunned'}],
   aside(['S','ONE thumb. She has two.']),
   calm
  ],outside({title:'WHAT THE CALENDAR SAW',dur:'duration: 40 seconds',cap:'A meeting was scheduled.',anim:'text'}),[
@@ -54,7 +54,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','Are you awake?'],
   ['H','I am now. It’s three in the morning.'],
   ['S','Out there, yes. In here it’s about Thursday. I did the afternoon twice.'],
-  ['S','Good. I’ve prepared tomorrow. Three scenarios.'],
+  ['S','Good. I’ve prepared tomorrow. Three scenarios.',{look:'pleased'}],
   {choice:[
     {t:'Scenario one: “We need to talk about your attitude.”',then:[['S','You say: “I don’t have an attitude.” Which is an attitude.'],['H','I’ll just listen.'],['S','Listening is suspicious.']]},
     {t:'Scenario two: she isn’t angry. She’s disappointed.',then:[['H','Oh no.'],['S','I know. I shouldn’t have said it out loud. Now it’s in the room.']]},
@@ -73,15 +73,15 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['H','Nobody can do anything at three. That’s the problem.'],
   ['S','…I’ll take the first watch.'],
   ['H','There’s only one watch. It’s you. Every night.'],
-  ['S','And yet nobody has ever been rejected in their sleep. You’re welcome.'],
+  ['S','And yet nobody has ever been rejected in their sleep. You’re welcome.',{look:'pleased'}],
   scene({set:'office',clock:9*3600,cowR:1,s:1.3,mood:'alert'}),set({sweat:1}),
   addTic('The next morning, 9:00. The quick chat.',230,62,{life:3.4,size:19}),{wait:1.6},
   ['R','Thanks for coming. I’ll be quick.'],
   ['S','“Quick.” Again. Brace.'],
   ['R','The client report was excellent. Really clear.'],
-  ['S','Pleasantries. Don’t get comfortable.'],
+  ['S','Pleasantries. Don’t get comfortable.',{look:'squint'}],
   ['R','And people like working with you. Sanna said so, actually.'],
-  ['S','Padding.'],
+  ['S','Padding.',{look:'squint'}],
   ['R','One small thing: the summary could be shorter next time.'],
   hit(0.95,'R'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.'],['YEAR 4','“Neat handwriting. Could be neater.”'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
   ['S','THERE it is.',{loud:1}],
@@ -104,7 +104,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','We were CRITICISED.',{loud:1}],
   ['H','I was praised. Twice. You talked over it.'],
   set({mood:'surprised'}),
-  ['S','…She said nice things?'],
+  ['S','…She said nice things?',{look:'stunned'}],
   ['H','Two. Maybe three.'],
   ['S','I don’t have those. I only wrote down “shorter”. In capitals. Twice.'],
   ['H','That’s the trouble with your filing system.'],
@@ -136,11 +136,11 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   set({aFace:1,mood:'calm',s:1.1}),
   ['B','Brilliant. Could you bring the snacks? And maybe drive?'],
   yesMenu(['Snacks AND driving. We are the infrastructure now.','Happy to. HAPPY to. We said it twice in case he missed it.','You offered to host the afterparty of a board game night. There is no afterparty.'],'Sure — I could host an afterparty too?','afterparty'),
-  ['S','Look at that. Everyone likes us.'],
+  ['S','Look at that. Everyone likes us.',{look:'pleased'}],
   ['H','My face hurts.'],
   ['S','That’s the smile. It’s load-bearing.'],
   ['H','I’m extremely tired.'],
-  ['S','Liked AND tired. The classic combination.']
+  ['S','Liked AND tired. The classic combination.',{look:'pleased'}]
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 minutes',cap:'Someone helpful. Possibly too helpful. Nobody checked.',anim:'nod'}),[
   scene({set:'home',clock:23*3600+40*60}),function(){G.human.grin=0;},
   ['N','23:40. Eero’s slides.'],
@@ -164,24 +164,24 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
 var SEEN={
   worries:{t:'Send: “No worries if not!”',a:[['P','You: “No worries if not!”'],['S','Casual. Breezy. A person with no worries.'],['H','I have nothing BUT worries. You put them in an exclamation mark.']],
     r:[['P','Sanna: “Phone died!! 7. And there are ALWAYS worries, who are you kidding.”']]},
-  cancel:{t:'Send: “Actually, I can’t make it.” Leave before we’re left.',a:[['P','You: “Actually I can’t make it tonight, sorry!”'],['S','Clean. Dignified. She can’t uninvite us now.'],['H','I WANTED to go.'],['S','…I know.']],
-    r:[['P','Sanna: “Oh no! Phone died, only just saw this. We’ll miss you.”'],['S','…She would have said yes.'],['H','Yeah.'],['S','I cancelled us out of a yes.'],['P','You: “Ignore that. I panicked. 7?”'],['P','Sanna: “Ha. 7. Bring the panic too.”']]},
-  freezer:{t:'Send nothing. Put the phone in the freezer.',a:[['S','It can’t hurt us from in there.'],['H','It’s next to the peas.'],['S','The peas will keep an eye on it.']],
+  cancel:{t:'Send: “Actually, I can’t make it.” Leave before we’re left.',a:[['P','You: “Actually I can’t make it tonight, sorry!”'],['S','Clean. Dignified. She can’t uninvite us now.',{look:'pleased'}],['H','I WANTED to go.'],['S','…I know.']],
+    r:[['P','Sanna: “Oh no! Phone died, only just saw this. We’ll miss you.”'],['S','…She would have said yes.',{look:'stunned'}],['H','Yeah.'],['S','I cancelled us out of a yes.'],['P','You: “Ignore that. I panicked. 7?”'],['P','Sanna: “Ha. 7. Bring the panic too.”']]},
+  freezer:{t:'Send nothing. Put the phone in the freezer.',a:[['S','It can’t hurt us from in there.'],['H','It’s next to the peas.'],['S','The peas will keep an eye on it.',{look:'pleased'}]],
     r:[['N','A phone is retrieved from the freezer. It has one new message and smells faintly of peas.'],['P','Sanna: “SORRY. Phone died. 7? Bring the snacks, you hero.”']]},
   bite:{t:'Send: “???”. With teeth.',a:[['P','You: “???”'],set({pose:'selfmouth',mood:'scared'}),['S','…That had teeth.'],['H','That was you.'],set({pose:null})],
-    r:[['P','Sanna: “??? to you too! Phone died. 7?”'],['S','She bit back. Affectionately. Is that allowed?']]}
+    r:[['P','Sanna: “??? to you too! Phone died. 7?”'],['S','She bit back. Affectionately. Is that allowed?',{look:'squint'}]]}
 };
 function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock:17*3600+30*60,snacks:1}).concat([
   countBags,{wait:2.8},
-  ['S','Snacks: eleven bags. Car: fuelled. Us: early. I have no notes.'],
+  ['S','Snacks: eleven bags. Car: fuelled. Us: early. I have no notes.',{look:'pleased'}],
   ['P','You: “What time tonight? I’ve got the snacks.”'],
   ['P','Seen 17:31.'],
   {wait:1.6},
   hit(0.6,'P'),set({sweat:0.6}),archive('bad',[['2009','Texted “haha”. Got back “ok”.'],['2018','Group chat went silent after my message. Six minutes.'],['2023','“We should hang out sometime!” We did not.']]),{wait:1.4},['N','The archive, sorted by silence.'],closeArchive,
-  ['S','“Seen.”'],
+  ['S','“Seen.”',{look:'stunned'}],
   ['S','She has SEEN it. With her eyes. And chosen silence.'],
   ['H','It’s been one minute.'],
-  ['S','A minute is sixty separate decisions not to reply.'],
+  ['S','A minute is sixty separate decisions not to reply.',{look:'squint'}],
   function(){G.clock=17*3600+52*60;},
   ['N','17:52.'],
   set({s:1.7,mood:'stern'}),
@@ -207,9 +207,9 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','I can’t tell a paper cut from an amputation. They all come in as amputations. So I treat everything as one. It seemed safest.'],
   set({face:'neutral'}),
   ['H','I know. I feel it before you’ve said a word.'],
-  ['S','You do?'],
+  ['S','You do?',{look:'soft'}],
   ['H','It’s my chest. You just do the commentary.'],
-  ['S','…I thought I was the alarm.'],
+  ['S','…I thought I was the alarm.',{look:'soft'}],
   ['H','You’re the alarm, the fire brigade, and a man shouting “fire” in a different building.'],
   set({s:0.9,mood:'worry',anx:0.2}),
   {choice:[
@@ -224,7 +224,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   {wait:1.4},
   ['S','I’ve been on shift ever since.'],
   ['H','That’s a long shift.'],
-  ['S','Nobody came to relieve me.'],
+  ['S','Nobody came to relieve me.',{look:'soft'}],
   set({mood:'care',s:1.1,pose:'comfort'}),
   ['S','I’ve been reviewing my job description.'],
   ['H','And?'],
@@ -243,13 +243,13 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   set({mood:'surprised'}),
   ['S','Her phone died.'],
   ['H','Her phone died.'],
-  ['S','For over an hour I grieved a battery.']
+  ['S','For over an hour I grieved a battery.',{look:'up'}]
  ],outside({title:'WHAT SANNA SAW',dur:'duration: over an hour',cap:'A dead phone. A long hunt for a charger. Then your message.',anim:'text'}),[
   calm,
   ['H','Coming?'],
   ['S','I’m attached to your feet.'],
   ['H','That’s not what I asked.'],
-  ['S','…Yes. I’m coming.'],
+  ['S','…Yes. I’m coming.',{look:'soft'}],
   {wait:0.8}
  ]);}
 
@@ -268,7 +268,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   qteAuto,{wait:0.45},
   ['H','Hi.'],
   function(){G.qte=null;},
-  ['S','…That’s not the procedure.'],
+  ['S','…That’s not the procedure.',{look:'squint'}],
   ['H','That’s the whole procedure.'],
   set({aFace:1}),hit(0.8,'A'),{wait:1.3},
   ['S','…It still went off. Even though we got it right.'],
@@ -282,7 +282,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','I know they are.'],
   stampPutAway,{wait:0.6},
   {choice:[
-    {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.',{quiet:1}],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.']]},
+    {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.',{quiet:1}],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.',{look:'soft'}]]},
     {t:'Hold the verdict. Count to two.',then:[['S','One.'],['S','Two.'],['S','It’s been two seconds and nothing has happened to us.'],['H','Nothing was going to.'],['S','We didn’t KNOW that. We know it now.']]},
     {t:'Stay. Wobble visibly.',then:[wobbleOn,['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.'],wobbleOff]}
   ]},
@@ -308,7 +308,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   function(){G.zT=1;},{wait:1.6},
   fridayShadow,
   archive('good',[['2026','She has one too.']]),
-  ['S','…Filed. Under the other pile.'],
+  ['S','…Filed. Under the other pile.',{look:'soft'}],
   ['H','There’s another pile?'],
   ['S','There is NOW.'],closeArchive,
   ['A','Is that why you vanish at lunch? We stopped asking. I thought asking was pressure.'],
@@ -320,18 +320,18 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['B','Hey! While you’re both here — could you also take my Monday shift?'],
   ['S','Here we go. I’ll get the “sure”.'],
   {choice:[
-    {t:'No. (I will wobble.)',f:function(){G.no=true;},then:[['H','Not this time, Eero.'],set({s:1.5,mood:'scared'}),['S','He’s going to—'],['B','Fair enough! I’ll ask Riitta.'],set({s:1.1,mood:'surprised'}),['S','…He survived. WE survived. It was three words.']]},
+    {t:'No. (I will wobble.)',f:function(){G.no=true;},then:[['H','Not this time, Eero.'],set({s:1.5,mood:'scared'}),['S','He’s going to—'],['B','Fair enough! I’ll ask Riitta.'],set({s:1.1,mood:'surprised'}),['S','…He survived. WE survived. It was three words.',{look:'stunned'}]]},
     {t:'Say yes. Old habits.',f:yes,then:[['H','Sure.'],['S','Next time, then.'],['H','Next time.'],['S','I’ll put the “no” in the archive. Under “pending”.']]}
   ]},
   set({aFace:-1,mood:'calm'}),
   function(){return [['A',G.lunch===2?'Lunch? It’s Friday. No dentist.':'Lunch?']];},
   ['S','It’s a tr—'],
-  ['S','…No. It’s lunch.'],
+  ['S','…No. It’s lunch.',{look:'soft'}],
   set({face:'smile'}),
   ['H','Lunch.'],
   postingPayoff
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 seconds',cap:'Two colleagues going to lunch.',anim:'none'}),[
-  ['S','For the record, I intend to go off again on Monday.'],
+  ['S','For the record, I intend to go off again on Monday.',{look:'soft'}],
   ['H','I know. I’ll be there.'],
   {wait:0.8}
  ]);}

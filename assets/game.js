@@ -35,6 +35,7 @@ function audio(){
   if(AC.state==='suspended')syncAudioState();return AC;
 }
 function syncAudioState(){
+  syncMusic();
   if(!AC)return;
   var method=paused||appHidden||!soundOn?'suspend':'resume';
   try{if(AC[method]){var p=AC[method]();if(p&&p.catch)p.catch(function(){});}}catch(e){}
@@ -48,19 +49,32 @@ function tone(f,t0,dur,type,vol,f2){
 // Room for recorded sound. List a file under an effect's name and it replaces the synthesized version;
 // list a loop under MUSIC and music('name') plays it. A missing or undecodable file falls back to the synth or to silence.
 var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
-var MUSIC={/* walk:'assets/audio/walk-home.ogg', night:'assets/audio/0307.ogg' */};
-var BUF={},LOADING={},musicNode=null,musicName=null,MUSICVOL=0.35;
+// Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
+// A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
+var MUSIC={title:'assets/audio/title.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};
+var BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 function loadSound(k,url){
   if(BUF[k]||LOADING[k]||!window.fetch)return;var a=audio();if(!a)return;LOADING[k]=true;
   window.fetch(url).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer();}).then(function(b){return new Promise(function(ok,no){a.decodeAudioData(b,ok,no);});})
-    .then(function(buf){BUF[k]=buf;if(musicName&&'music:'+musicName===k)music(musicName);}).catch(function(){LOADING[k]='failed';});
+    .then(function(buf){BUF[k]=buf;}).catch(function(){LOADING[k]='failed';});
 }
-function preloadSounds(){var k;for(k in SAMPLES)loadSound(k,SAMPLES[k]);for(k in MUSIC)loadSound('music:'+k,MUSIC[k]);}
+function preloadSounds(){for(var k in SAMPLES)loadSound(k,SAMPLES[k]);}
 function playBuf(k,vol,loop){var a=audio();if(!a||!BUF[k])return null;var n=a.createBufferSource(),g=a.createGain();n.buffer=BUF[k];n.loop=!!loop;g.gain.value=vol==null?0.8:vol;n.connect(g);g.connect(a.destination);n.start();return n;}
+function fadeOut(el){
+  if(typeof setInterval!=='function'){try{el.pause();}catch(e){}return;}
+  var id=setInterval(function(){var v=el.volume-0.05;if(v<=0.02){try{el.pause();el.src='';}catch(e){}clearInterval(id);var i=fading.indexOf(el);if(i>=0)fading.splice(i,1);}else el.volume=v;},60);
+  fading.push(el);
+}
 function music(name){
-  if(musicNode&&musicName===name)return;if(musicNode){try{musicNode.stop();}catch(e){}musicNode=null;}
-  musicName=name||null;if(!name||!MUSIC[name]||!soundOn)return;
-  if(BUF['music:'+name])musicNode=playBuf('music:'+name,MUSICVOL,true);else loadSound('music:'+name,MUSIC[name]);
+  name=name||null;if(name===musicName&&(musicEl||!MUSIC[name]))return;
+  musicName=name;if(musicEl){fadeOut(musicEl);musicEl=null;}
+  if(!name||!MUSIC[name]||typeof window.Audio!=='function')return;
+  var el=new window.Audio(MUSIC[name]);el.loop=true;el.preload='auto';el.volume=MUSICVOL;musicEl=el;syncMusic();
+}
+function syncMusic(){
+  var el=musicEl;if(!el)return;
+  try{if(soundOn&&!paused&&!appHidden){var p=el.play();if(p&&p.catch)p.catch(function(){});}else el.pause();}catch(e){}
+  if(paused||appHidden||!soundOn)for(var i=0;i<fading.length;i++){try{fading[i].pause();}catch(e){}}
 }
 // One voice per character: waveform, pitch, loudness. The shadow's pitch drops as it grows.
 var VOICE={S:['triangle',185,0.075],H:['sine',330,0.06],A:['sine',494,0.05],B:['triangle',262,0.06],R:['sine',392,0.05],T:['triangle',147,0.06],L:['sine',523,0.05],X:['sine',440,0.05],Z:['triangle',233,0.045]};
@@ -153,7 +167,7 @@ function setLine(who,text,o){
   var prev=g.cur&&g.cur.who,pair=(who==='S'&&prev==='H')||(who==='H'&&prev==='S');
   g.bick=pair&&text.length<=46&&!(o&&o.big)?(g.bick||0)+1:(who==='S'||who==='H')&&pair?Math.max(0,(g.bick||0)-1):0;
   g.phoneN=who==='P'?3:Math.max(0,(g.phoneN||0)-1);if(who==='P'&&!/^You:/.test(text))g.buzz=0.7;
-  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet)};g.curT=0;speak(who,text);if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
+  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;speak(who,text);if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
   history.push({who:who,text:text});
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
@@ -546,7 +560,7 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   ['H','Make one.'],
   function(){G.wT=1;},{wait:1.5},
   set({mood:'surprised'}),
-  ['S','…Her shadow is juggling.'],
+  ['S','…Her shadow is juggling.',{look:'stunned'}],
   ['W','Eleven. Can’t look. Eleven.'],
   ['S','One of them hit us.'],
   function(){G.wDrop={t:0};sfx('drip');},{wait:0.9},
@@ -564,9 +578,9 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   ['H','It dropped it. That’s different.'],
   ['S','I’d like to try one. A small one. From 2011.'],
   {toss:{tag:'2011',sub:'waved back. wrong person.',ask:'Right. Dropping it. Any second now.',say:['It’s load-bearing. The whole archive leans on it.','What if we NEED it? …Fine. Fine.'],drag:'Careful. That’s the original.',done:'…It’s on the floor.'}},
-  ['S','Nothing happened.'],
+  ['S','Nothing happened.',{look:'stunned'}],
   ['H','No.'],
-  ['S','It’s still THERE.'],
+  ['S','It’s still THERE.',{look:'squint'}],
   ['H','On the floor. Not on you.'],
   set({mood:'care'}),
   aside(['S','One. I dropped ONE. Don’t tell the archive.']),
@@ -822,12 +836,12 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   {wait:0.6},
   ['P','Riitta: “Quick chat tomorrow at 9?”'],
   hit(0.9,'P'),set({sweat:0.7}),{wait:1.2},
-  ['S','“Quick.”'],
+  ['S','“Quick.”',{look:'squint'}],
   ['S','Nobody says “quick” about good news. Good news takes its time. Good news has cake.'],
   ['H','It’s probably nothing.'],
   ['S','It’s five words and a question mark. It’s EVERYTHING.'],
   {choice:[
-    {t:'We’re being fired. Efficiently.',then:[['S','Nine o’clock. Before the coffee works. So you can’t fight back.'],['H','I’ve never fought back in my life.'],['S','She doesn’t know that. I’ve kept it very quiet.']]},
+    {t:'We’re being fired. Efficiently.',then:[['S','Nine o’clock. Before the coffee works. So you can’t fight back.'],['H','I’ve never fought back in my life.'],['S','She doesn’t know that. I’ve kept it very quiet.',{look:'pleased'}]]},
     {t:'She found the thing.',then:[['H','What thing?'],['S','I don’t know. That’s what makes it so bad. It could be ANY of the things.'],['H','There are no things.'],['S','There are always things.']]},
     {t:'It’s about Monday.',then:mondayCallback}
   ]},
@@ -842,7 +856,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','…You sent it. Without a committee.'],
   ['H','It’s a calendar reply.'],
   ['P','Riitta reacted with a thumbs-up.'],
-  ['S','A thumb.'],
+  ['S','A thumb.',{look:'stunned'}],
   aside(['S','ONE thumb. She has two.']),
   calm
  ],outside({title:'WHAT THE CALENDAR SAW',dur:'duration: 40 seconds',cap:'A meeting was scheduled.',anim:'text'}),[
@@ -851,7 +865,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','Are you awake?'],
   ['H','I am now. It’s three in the morning.'],
   ['S','Out there, yes. In here it’s about Thursday. I did the afternoon twice.'],
-  ['S','Good. I’ve prepared tomorrow. Three scenarios.'],
+  ['S','Good. I’ve prepared tomorrow. Three scenarios.',{look:'pleased'}],
   {choice:[
     {t:'Scenario one: “We need to talk about your attitude.”',then:[['S','You say: “I don’t have an attitude.” Which is an attitude.'],['H','I’ll just listen.'],['S','Listening is suspicious.']]},
     {t:'Scenario two: she isn’t angry. She’s disappointed.',then:[['H','Oh no.'],['S','I know. I shouldn’t have said it out loud. Now it’s in the room.']]},
@@ -870,15 +884,15 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['H','Nobody can do anything at three. That’s the problem.'],
   ['S','…I’ll take the first watch.'],
   ['H','There’s only one watch. It’s you. Every night.'],
-  ['S','And yet nobody has ever been rejected in their sleep. You’re welcome.'],
+  ['S','And yet nobody has ever been rejected in their sleep. You’re welcome.',{look:'pleased'}],
   scene({set:'office',clock:9*3600,cowR:1,s:1.3,mood:'alert'}),set({sweat:1}),
   addTic('The next morning, 9:00. The quick chat.',230,62,{life:3.4,size:19}),{wait:1.6},
   ['R','Thanks for coming. I’ll be quick.'],
   ['S','“Quick.” Again. Brace.'],
   ['R','The client report was excellent. Really clear.'],
-  ['S','Pleasantries. Don’t get comfortable.'],
+  ['S','Pleasantries. Don’t get comfortable.',{look:'squint'}],
   ['R','And people like working with you. Sanna said so, actually.'],
-  ['S','Padding.'],
+  ['S','Padding.',{look:'squint'}],
   ['R','One small thing: the summary could be shorter next time.'],
   hit(0.95,'R'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.'],['YEAR 4','“Neat handwriting. Could be neater.”'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
   ['S','THERE it is.',{loud:1}],
@@ -901,7 +915,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','We were CRITICISED.',{loud:1}],
   ['H','I was praised. Twice. You talked over it.'],
   set({mood:'surprised'}),
-  ['S','…She said nice things?'],
+  ['S','…She said nice things?',{look:'stunned'}],
   ['H','Two. Maybe three.'],
   ['S','I don’t have those. I only wrote down “shorter”. In capitals. Twice.'],
   ['H','That’s the trouble with your filing system.'],
@@ -933,11 +947,11 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   set({aFace:1,mood:'calm',s:1.1}),
   ['B','Brilliant. Could you bring the snacks? And maybe drive?'],
   yesMenu(['Snacks AND driving. We are the infrastructure now.','Happy to. HAPPY to. We said it twice in case he missed it.','You offered to host the afterparty of a board game night. There is no afterparty.'],'Sure — I could host an afterparty too?','afterparty'),
-  ['S','Look at that. Everyone likes us.'],
+  ['S','Look at that. Everyone likes us.',{look:'pleased'}],
   ['H','My face hurts.'],
   ['S','That’s the smile. It’s load-bearing.'],
   ['H','I’m extremely tired.'],
-  ['S','Liked AND tired. The classic combination.']
+  ['S','Liked AND tired. The classic combination.',{look:'pleased'}]
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 minutes',cap:'Someone helpful. Possibly too helpful. Nobody checked.',anim:'nod'}),[
   scene({set:'home',clock:23*3600+40*60}),function(){G.human.grin=0;},
   ['N','23:40. Eero’s slides.'],
@@ -961,24 +975,24 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
 var SEEN={
   worries:{t:'Send: “No worries if not!”',a:[['P','You: “No worries if not!”'],['S','Casual. Breezy. A person with no worries.'],['H','I have nothing BUT worries. You put them in an exclamation mark.']],
     r:[['P','Sanna: “Phone died!! 7. And there are ALWAYS worries, who are you kidding.”']]},
-  cancel:{t:'Send: “Actually, I can’t make it.” Leave before we’re left.',a:[['P','You: “Actually I can’t make it tonight, sorry!”'],['S','Clean. Dignified. She can’t uninvite us now.'],['H','I WANTED to go.'],['S','…I know.']],
-    r:[['P','Sanna: “Oh no! Phone died, only just saw this. We’ll miss you.”'],['S','…She would have said yes.'],['H','Yeah.'],['S','I cancelled us out of a yes.'],['P','You: “Ignore that. I panicked. 7?”'],['P','Sanna: “Ha. 7. Bring the panic too.”']]},
-  freezer:{t:'Send nothing. Put the phone in the freezer.',a:[['S','It can’t hurt us from in there.'],['H','It’s next to the peas.'],['S','The peas will keep an eye on it.']],
+  cancel:{t:'Send: “Actually, I can’t make it.” Leave before we’re left.',a:[['P','You: “Actually I can’t make it tonight, sorry!”'],['S','Clean. Dignified. She can’t uninvite us now.',{look:'pleased'}],['H','I WANTED to go.'],['S','…I know.']],
+    r:[['P','Sanna: “Oh no! Phone died, only just saw this. We’ll miss you.”'],['S','…She would have said yes.',{look:'stunned'}],['H','Yeah.'],['S','I cancelled us out of a yes.'],['P','You: “Ignore that. I panicked. 7?”'],['P','Sanna: “Ha. 7. Bring the panic too.”']]},
+  freezer:{t:'Send nothing. Put the phone in the freezer.',a:[['S','It can’t hurt us from in there.'],['H','It’s next to the peas.'],['S','The peas will keep an eye on it.',{look:'pleased'}]],
     r:[['N','A phone is retrieved from the freezer. It has one new message and smells faintly of peas.'],['P','Sanna: “SORRY. Phone died. 7? Bring the snacks, you hero.”']]},
   bite:{t:'Send: “???”. With teeth.',a:[['P','You: “???”'],set({pose:'selfmouth',mood:'scared'}),['S','…That had teeth.'],['H','That was you.'],set({pose:null})],
-    r:[['P','Sanna: “??? to you too! Phone died. 7?”'],['S','She bit back. Affectionately. Is that allowed?']]}
+    r:[['P','Sanna: “??? to you too! Phone died. 7?”'],['S','She bit back. Affectionately. Is that allowed?',{look:'squint'}]]}
 };
 function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock:17*3600+30*60,snacks:1}).concat([
   countBags,{wait:2.8},
-  ['S','Snacks: eleven bags. Car: fuelled. Us: early. I have no notes.'],
+  ['S','Snacks: eleven bags. Car: fuelled. Us: early. I have no notes.',{look:'pleased'}],
   ['P','You: “What time tonight? I’ve got the snacks.”'],
   ['P','Seen 17:31.'],
   {wait:1.6},
   hit(0.6,'P'),set({sweat:0.6}),archive('bad',[['2009','Texted “haha”. Got back “ok”.'],['2018','Group chat went silent after my message. Six minutes.'],['2023','“We should hang out sometime!” We did not.']]),{wait:1.4},['N','The archive, sorted by silence.'],closeArchive,
-  ['S','“Seen.”'],
+  ['S','“Seen.”',{look:'stunned'}],
   ['S','She has SEEN it. With her eyes. And chosen silence.'],
   ['H','It’s been one minute.'],
-  ['S','A minute is sixty separate decisions not to reply.'],
+  ['S','A minute is sixty separate decisions not to reply.',{look:'squint'}],
   function(){G.clock=17*3600+52*60;},
   ['N','17:52.'],
   set({s:1.7,mood:'stern'}),
@@ -1004,9 +1018,9 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','I can’t tell a paper cut from an amputation. They all come in as amputations. So I treat everything as one. It seemed safest.'],
   set({face:'neutral'}),
   ['H','I know. I feel it before you’ve said a word.'],
-  ['S','You do?'],
+  ['S','You do?',{look:'soft'}],
   ['H','It’s my chest. You just do the commentary.'],
-  ['S','…I thought I was the alarm.'],
+  ['S','…I thought I was the alarm.',{look:'soft'}],
   ['H','You’re the alarm, the fire brigade, and a man shouting “fire” in a different building.'],
   set({s:0.9,mood:'worry',anx:0.2}),
   {choice:[
@@ -1021,7 +1035,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   {wait:1.4},
   ['S','I’ve been on shift ever since.'],
   ['H','That’s a long shift.'],
-  ['S','Nobody came to relieve me.'],
+  ['S','Nobody came to relieve me.',{look:'soft'}],
   set({mood:'care',s:1.1,pose:'comfort'}),
   ['S','I’ve been reviewing my job description.'],
   ['H','And?'],
@@ -1040,13 +1054,13 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   set({mood:'surprised'}),
   ['S','Her phone died.'],
   ['H','Her phone died.'],
-  ['S','For over an hour I grieved a battery.']
+  ['S','For over an hour I grieved a battery.',{look:'up'}]
  ],outside({title:'WHAT SANNA SAW',dur:'duration: over an hour',cap:'A dead phone. A long hunt for a charger. Then your message.',anim:'text'}),[
   calm,
   ['H','Coming?'],
   ['S','I’m attached to your feet.'],
   ['H','That’s not what I asked.'],
-  ['S','…Yes. I’m coming.'],
+  ['S','…Yes. I’m coming.',{look:'soft'}],
   {wait:0.8}
  ]);}
 
@@ -1065,7 +1079,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   qteAuto,{wait:0.45},
   ['H','Hi.'],
   function(){G.qte=null;},
-  ['S','…That’s not the procedure.'],
+  ['S','…That’s not the procedure.',{look:'squint'}],
   ['H','That’s the whole procedure.'],
   set({aFace:1}),hit(0.8,'A'),{wait:1.3},
   ['S','…It still went off. Even though we got it right.'],
@@ -1079,7 +1093,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','I know they are.'],
   stampPutAway,{wait:0.6},
   {choice:[
-    {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.',{quiet:1}],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.']]},
+    {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.',{quiet:1}],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.',{look:'soft'}]]},
     {t:'Hold the verdict. Count to two.',then:[['S','One.'],['S','Two.'],['S','It’s been two seconds and nothing has happened to us.'],['H','Nothing was going to.'],['S','We didn’t KNOW that. We know it now.']]},
     {t:'Stay. Wobble visibly.',then:[wobbleOn,['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.'],wobbleOff]}
   ]},
@@ -1105,7 +1119,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   function(){G.zT=1;},{wait:1.6},
   fridayShadow,
   archive('good',[['2026','She has one too.']]),
-  ['S','…Filed. Under the other pile.'],
+  ['S','…Filed. Under the other pile.',{look:'soft'}],
   ['H','There’s another pile?'],
   ['S','There is NOW.'],closeArchive,
   ['A','Is that why you vanish at lunch? We stopped asking. I thought asking was pressure.'],
@@ -1117,18 +1131,18 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['B','Hey! While you’re both here — could you also take my Monday shift?'],
   ['S','Here we go. I’ll get the “sure”.'],
   {choice:[
-    {t:'No. (I will wobble.)',f:function(){G.no=true;},then:[['H','Not this time, Eero.'],set({s:1.5,mood:'scared'}),['S','He’s going to—'],['B','Fair enough! I’ll ask Riitta.'],set({s:1.1,mood:'surprised'}),['S','…He survived. WE survived. It was three words.']]},
+    {t:'No. (I will wobble.)',f:function(){G.no=true;},then:[['H','Not this time, Eero.'],set({s:1.5,mood:'scared'}),['S','He’s going to—'],['B','Fair enough! I’ll ask Riitta.'],set({s:1.1,mood:'surprised'}),['S','…He survived. WE survived. It was three words.',{look:'stunned'}]]},
     {t:'Say yes. Old habits.',f:yes,then:[['H','Sure.'],['S','Next time, then.'],['H','Next time.'],['S','I’ll put the “no” in the archive. Under “pending”.']]}
   ]},
   set({aFace:-1,mood:'calm'}),
   function(){return [['A',G.lunch===2?'Lunch? It’s Friday. No dentist.':'Lunch?']];},
   ['S','It’s a tr—'],
-  ['S','…No. It’s lunch.'],
+  ['S','…No. It’s lunch.',{look:'soft'}],
   set({face:'smile'}),
   ['H','Lunch.'],
   postingPayoff
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 seconds',cap:'Two colleagues going to lunch.',anim:'none'}),[
-  ['S','For the record, I intend to go off again on Monday.'],
+  ['S','For the record, I intend to go off again on Monday.',{look:'soft'}],
   ['H','I know. I’ll be there.'],
   {wait:0.8}
  ]);}
@@ -2042,7 +2056,7 @@ function labSometime(){return labScene({set:'office',title:'Sometime.',plan:'Lea
   ['H','…When?'],
   ['N','The lift doors close.'],
   set({mood:'alert',s:1.35}),
-  ['S','“Sometime.”'],
+  ['S','“Sometime.”',{look:'squint'}],
   {choice:[
     {t:'“Sometime” is “never” in a nice coat.',then:[['H','Or it’s a time nobody has picked yet.'],['S','A time with no date. That’s not a time. That’s a mood.']]},
     {t:'List every possible sometime.',then:[['S','Tomorrow. The Tuesday after. Some March. 2031. The heat death of the universe.'],['H','Any of those at noon?']]},
@@ -2130,13 +2144,13 @@ function labEvening(){return labScene({set:'home',title:'An ordinary evening',pl
   ['H','Is that a bird?'],
   aside(['S','No.']),
   ['H','It’s flapping.'],
-  ['S','It’s a hobby. Shadows are allowed one. Don’t tell the office.'],
+  ['S','It’s a hobby. Shadows are allowed one. Don’t tell the office.',{look:'pleased'}],
   set({pose:null}),
   ['P','Library: “A Short History of Lighthouses” is 23 days overdue.'],
   ['H','I haven’t finished it.'],
   ['S','Correct. We cannot return an unfinished book.'],
   ['H','Exactly.'],
-  ['S','They’d KNOW.'],
+  ['S','They’d KNOW.',{look:'squint'}],
   ['H','That’s not why.'],
   set({mood:'surprised'}),
   ['S','…There’s a different why?'],
@@ -3178,7 +3192,12 @@ function morkoFace(q){
   if(G.morko.coat){drawCoatFace(q);return;}
   var M=G.morko,r=q.hdR,cx=q.bx,cy=q.hdY,ex=r*0.42;
   var m=M.st==='frozen'||M.st==='hide'?'scared':M.st==='pokka'?'pokka':M.mood,look=m==='pokka'?-1:1;
-  var er=r*0.2,pr=0.45,brow=null,i;
+  // A look lasts exactly one line: {look:'squint'} on the line, and the face goes back to whatever it was.
+  var lk=M.st==='free'&&G.cur&&G.cur.who==='S'&&G.cur.look;if(lk)m=lk;
+  var er=r*0.2,pr=0.45,brow=null,i,py=0;
+  if(m==='stunned'){er=r*0.36;pr=0.13;}
+  else if(m==='soft'){er=r*0.23;pr=0.66;brow='out';py=0.18;}
+  else if(m==='up'){er=r*0.25;pr=0.4;brow='out';py=-0.5;look=0;}
   if(m==='calm'){er=r*0.15;pr=0.5;}
   else if(m==='alert'){er=r*0.25;pr=0.4;}
   else if(m==='scared'||m==='surprised'){er=r*0.34;pr=0.24;brow='up';}
@@ -3190,6 +3209,18 @@ function morkoFace(q){
     if(m==='pokka'){
       ctx.fillStyle='#f6f1e4';ctx.beginPath();ctx.arc(x,y,r*0.2,0,Math.PI);ctx.closePath();ctx.fill();
       ctx.fillStyle='#14111d';circ(x+look*r*0.09,y+r*0.08,r*0.07);ctx.fill();
+    }else if(m==='squint'){   // two slits and one brow that has made up its mind
+      ctx.fillStyle='#f6f1e4';ctx.beginPath();ctx.ellipse(x,y,r*0.25,r*0.085,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#14111d';circ(x+r*0.1,y,r*0.07);ctx.fill();
+      ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2,r*0.09);
+      if(i<0)line(x-r*0.26,y-r*0.3,x+r*0.24,y-r*0.17);else line(x-r*0.24,y-r*0.36,x+r*0.26,y-r*0.4);
+    }else if(m==='pleased'){  // eyes shut in two small arches: entirely satisfied with itself
+      ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2.5,r*0.12);ctx.beginPath();ctx.arc(x,y+r*0.12,r*0.2,Math.PI*1.12,Math.PI*1.88);ctx.stroke();
+    }else if(lk&&(m==='stunned'||m==='soft'||m==='up')){
+      var jx=m==='stunned'&&!RM?Math.sin(G.time*43+i)*r*0.02:0;
+      ctx.fillStyle='#f6f1e4';circ(x+jx,y,er);ctx.fill();
+      ctx.fillStyle='#14111d';circ(x+jx+look*er*0.3,y+er*py,er*pr);ctx.fill();
+      if(m==='soft'){ctx.fillStyle='#f6f1e4';circ(x+look*er*0.3-er*0.2,y+er*py-er*0.22,er*0.16);ctx.fill();}
     }else{
       if(!RM&&brow!=='up'&&G.time%4.7<0.12){ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2,r*0.09);line(x-er,y,x+er,y);}
       else{ctx.fillStyle='#f6f1e4';circ(x,y,er);ctx.fill();
@@ -3454,7 +3485,7 @@ function showWeekEnd(){
    receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function showTitle(){
-  var sv=loadProgress();
+  var sv=loadProgress();music('title');
   G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
   showOv('<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
    '<p class="tagline">A small moment.<br>A very long shadow.</p>'+
@@ -3564,7 +3595,7 @@ slowUI();
 function motionUI(){document.getElementById('motion').setAttribute('aria-pressed',String(RM));document.body.classList.toggle('reduce-motion',RM);}
 document.getElementById('motion').addEventListener('click',function(){RM=!RM;motionUI();});
 motionUI();
-document.getElementById('sound').addEventListener('click',function(){soundOn=!soundOn;if(!soundOn){stopVoice();var mn=musicName;music(null);musicName=mn;}else{preloadSounds();var mn2=musicName;musicName=null;music(mn2);}try{window.localStorage.setItem('ekskyysmi.sound',soundOn?'on':'off');}catch(e){}soundUI();syncAudioState();if(soundOn)sfx('pick');});
+document.getElementById('sound').addEventListener('click',function(){soundOn=!soundOn;if(!soundOn)stopVoice();else preloadSounds();try{window.localStorage.setItem('ekskyysmi.sound',soundOn?'on':'off');}catch(e){}soundUI();syncAudioState();if(soundOn)sfx('pick');});
 soundUI();
 function backButton(){
   if(logDialog.open){logDialog.close();return 'log';}
@@ -3629,6 +3660,10 @@ function appVisibility(){
   syncPause();
 }
 document.addEventListener('visibilitychange',appVisibility);
+
+// Browsers and the Android WebView hold all sound until the first touch or key. Whatever was waiting starts then.
+(function(){var done=false;function first(){if(done)return;done=true;syncMusic();}
+  if(document.addEventListener){document.addEventListener('pointerdown',first,true);document.addEventListener('keydown',first,true);document.addEventListener('touchstart',first,true);}})();
 // ---- src/90-loop.js ----
 /* ================= loop ================= */
 var last=0;
@@ -3639,6 +3674,6 @@ function frame(ts){
   window.requestAnimationFrame(frame);
 }
 syncImmersive();reset(null);showTitle();
-window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,inside:{run:function(){return G.run;},day:function(){return G.day0;},mult:function(){return G.mult;},add:addLived,cameBack:cameBack,receipt:function(){return G.receiptText;}},qteKey:function(k){return qteKey({key:k});},qte:function(){return G.qte;},full:toggleFull,immersive:function(){return htmlEl.classList.contains('immersive');},chapters:showChapters,about:showAbout,lensTap:lensTap,back:backButton,sound:{load:loadSound,has:function(k){return !!BUF[k];},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
+window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,inside:{run:function(){return G.run;},day:function(){return G.day0;},mult:function(){return G.mult;},add:addLived,cameBack:cameBack,receipt:function(){return G.receiptText;}},qteKey:function(k){return qteKey({key:k});},qte:function(){return G.qte;},full:toggleFull,immersive:function(){return htmlEl.classList.contains('immersive');},chapters:showChapters,about:showAbout,lensTap:lensTap,back:backButton,sound:{load:loadSound,has:function(k){return !!BUF[k];},music:function(){return {name:musicName,playing:!!(musicEl&&!musicEl.paused),t:musicEl?musicEl.currentTime:0,vol:musicEl?musicEl.volume:0};},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
 window.requestAnimationFrame(frame);
 })();

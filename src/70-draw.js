@@ -240,7 +240,12 @@ function morkoFace(q){
   if(G.morko.coat){drawCoatFace(q);return;}
   var M=G.morko,r=q.hdR,cx=q.bx,cy=q.hdY,ex=r*0.42;
   var m=M.st==='frozen'||M.st==='hide'?'scared':M.st==='pokka'?'pokka':M.mood,look=m==='pokka'?-1:1;
-  var er=r*0.2,pr=0.45,brow=null,i;
+  // A look lasts exactly one line: {look:'squint'} on the line, and the face goes back to whatever it was.
+  var lk=M.st==='free'&&G.cur&&G.cur.who==='S'&&G.cur.look;if(lk)m=lk;
+  var er=r*0.2,pr=0.45,brow=null,i,py=0;
+  if(m==='stunned'){er=r*0.36;pr=0.13;}
+  else if(m==='soft'){er=r*0.23;pr=0.66;brow='out';py=0.18;}
+  else if(m==='up'){er=r*0.25;pr=0.4;brow='out';py=-0.5;look=0;}
   if(m==='calm'){er=r*0.15;pr=0.5;}
   else if(m==='alert'){er=r*0.25;pr=0.4;}
   else if(m==='scared'||m==='surprised'){er=r*0.34;pr=0.24;brow='up';}
@@ -252,6 +257,18 @@ function morkoFace(q){
     if(m==='pokka'){
       ctx.fillStyle='#f6f1e4';ctx.beginPath();ctx.arc(x,y,r*0.2,0,Math.PI);ctx.closePath();ctx.fill();
       ctx.fillStyle='#14111d';circ(x+look*r*0.09,y+r*0.08,r*0.07);ctx.fill();
+    }else if(m==='squint'){   // two slits and one brow that has made up its mind
+      ctx.fillStyle='#f6f1e4';ctx.beginPath();ctx.ellipse(x,y,r*0.25,r*0.085,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#14111d';circ(x+r*0.1,y,r*0.07);ctx.fill();
+      ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2,r*0.09);
+      if(i<0)line(x-r*0.26,y-r*0.3,x+r*0.24,y-r*0.17);else line(x-r*0.24,y-r*0.36,x+r*0.26,y-r*0.4);
+    }else if(m==='pleased'){  // eyes shut in two small arches: entirely satisfied with itself
+      ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2.5,r*0.12);ctx.beginPath();ctx.arc(x,y+r*0.12,r*0.2,Math.PI*1.12,Math.PI*1.88);ctx.stroke();
+    }else if(lk&&(m==='stunned'||m==='soft'||m==='up')){
+      var jx=m==='stunned'&&!RM?Math.sin(G.time*43+i)*r*0.02:0;
+      ctx.fillStyle='#f6f1e4';circ(x+jx,y,er);ctx.fill();
+      ctx.fillStyle='#14111d';circ(x+jx+look*er*0.3,y+er*py,er*pr);ctx.fill();
+      if(m==='soft'){ctx.fillStyle='#f6f1e4';circ(x+look*er*0.3-er*0.2,y+er*py-er*0.22,er*0.16);ctx.fill();}
     }else{
       if(!RM&&brow!=='up'&&G.time%4.7<0.12){ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2,r*0.09);line(x-er,y,x+er,y);}
       else{ctx.fillStyle='#f6f1e4';circ(x,y,er);ctx.fill();
