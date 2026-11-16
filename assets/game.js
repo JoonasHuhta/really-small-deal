@@ -7,7 +7,7 @@ var LAMPS=[250,690,1130,HOMEX+60];
 var cv=document.getElementById('c'),ctx=cv.getContext('2d'),ov=document.getElementById('ov');
 var elLine=document.getElementById('line'),elOpts=document.getElementById('opts');
 var SC=1;
-function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=640;COMPACT=document.documentElement.classList.contains('immersive');
+function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=520;COMPACT=document.documentElement.classList.contains('immersive');
   HUDL=COMPACT&&((window.innerWidth||w)-w)/2<52?Math.round(58*W/w):0;
   var panel=document.getElementById('play-panel'),cr=cv.getBoundingClientRect(),pr=panel.getBoundingClientRect();
   SCENE_BOTTOM=COMPACT&&G&&G.started&&!G.ended?clamp((pr.top-cr.top)*W/w,120,H):H;
@@ -3791,10 +3791,11 @@ function drawCoworkers(alpha){
 /* ================= drawing: the shadow ================= */
 function geom(){
   var M=G.morko,s=M.s,j=M.coat?0:(RM?0.3:1)*clamp(((G.anx||0)-0.3)/0.6,0,1);
-  var bx=G.human.x+M.off+Math.sin(G.time*47)*1.7*j,by=WALLY;
+  var tr=1+0.6*(1-clamp((cv.clientWidth||960)/960,0,1));   // a tremble you can see on a phone too
+  var bx=G.human.x+M.off+(Math.sin(G.time*23)+0.5*Math.sin(G.time*37))*2.2*tr*j,by=WALLY;
   var baseX=bx,lean=M.wobble?(RM?8:Math.sin(M.wobble.t*4.2)*16*(1-M.wobble.t/3.2)):0;bx+=lean;
   var hgt=190*s*(RM||M.coat?1:1+0.012*Math.sin(G.time*1.7)),shW=58*s,hdR=20*Math.pow(s,0.45);
-  var shY=by-hgt*0.7+Math.sin(G.time*31)*1.3*j,hdY=shY-11*s-hdR*0.8;
+  var shY=by-hgt*0.7+Math.sin(G.time*29)*1.6*tr*j,hdY=shY-11*s-hdR*0.8;
   if(hdY<hdR+34)hdY=hdR+34;if(shY<hdY+hdR*0.7)shY=hdY+hdR*0.7;
   return{bx:bx,baseX:baseX,lean:lean,by:by,shY:shY,shW:shW,hdY:hdY,hdR:hdR,s:s};
 }

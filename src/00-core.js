@@ -3,7 +3,7 @@ var LAMPS=[250,690,1130,HOMEX+60];
 var cv=document.getElementById('c'),ctx=cv.getContext('2d'),ov=document.getElementById('ov');
 var elLine=document.getElementById('line'),elOpts=document.getElementById('opts');
 var SC=1;
-function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=640;COMPACT=document.documentElement.classList.contains('immersive');
+function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=520;COMPACT=document.documentElement.classList.contains('immersive');
   HUDL=COMPACT&&((window.innerWidth||w)-w)/2<52?Math.round(58*W/w):0;
   var panel=document.getElementById('play-panel'),cr=cv.getBoundingClientRect(),pr=panel.getBoundingClientRect();
   SCENE_BOTTOM=COMPACT&&G&&G.started&&!G.ended?clamp((pr.top-cr.top)*W/w,120,H):H;

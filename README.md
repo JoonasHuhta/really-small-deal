@@ -14,7 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.41.4 (Claude, 16.11.2026): **mukit, kävelysuunta ja testikierrosta varten.**
+Versio 0.41.5 (Claude, 16.11.2026): **puhekuplat kapeassa ikkunassa, näkyvämpi tärinä.**
+
+- **Puhekuplat näkyvät, kun pelikuva on vähintään 520 px leveä.** Ennen raja oli 640 px (päätös versiosta 0.18), joten puolikkaassa selainikkunassa tai kapeassa paneelissa kuplat katosivat ja teksti näkyi vain alapaneelissa. Pystyssä pidetyssä puhelimessa teksti näkyy edelleen vain paneelissa, koska kuplan teksti olisi siellä alle 7 px.
+- **Ekskyysmin tärinä on hitaampi ja hieman suurempi, ja pienellä ruudulla sitä vahvistetaan.** Ennen se oli 1,7 px ja 47 Hz, joten puhelimessa liike jäi alle pikselin ja näytti välkkeeltä. Tärinä käynnistyy edelleen, kun ahdistus on yli 0,3, ja pysyy pois Less motion -tilassa. Täydellä viikolla Ekskyysmi tärisee noin 140 s ja koko ruutu nytkähtää 16 kertaa, ja tärinää on joka päivä.
+
+ **mukit, kävelysuunta ja testikierrosta varten.**
 
 - **Aloitusruudulla mukin korva on piilossa** ihmisen pään takana (se on samalla maanantain ”wrong side”).
 - **Kun ihminen kääntää mukin** maanantaiaamuna, mukista lähtee kolme pientä viivaa: jotain tehtiin tässä.
