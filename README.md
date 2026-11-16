@@ -14,7 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.42.2 (Claude, 16.11.2026): **syvennys ja valvontakamera.**
+Versio 0.42.3 (Claude, 16.11.2026): **tasapaino: ihminen pyytää varjoa, ja varjo on kerran oikeassa.**
+
+- Tiistaina ihminen antaa palaverin itse varjolle (”Can you just… handle this one?”), ja myöhemmin myöntää sen (”You asked me to handle it.” – ”…I did.”).
+- Keskiviikkona Eerolla on syy pyynnöilleen (”I hate presenting. You’re good at it.”). Keskiyöllä Ekskyysmi estää sähköpostin, joka olisi lähtenyt ALL STAFF -listalle ja paljastanut Eeron pelon. Hälytin on kerran oikeassa ja ihminen väärässä.
+- Perjantaina Sanna kertoo aikoneensa kysyä maanantaina (”You looked busy.”), ja Ekskyysmi myöntää, että kiireiseltä näyttäminen oli sen idea.
+- Ekskyysmin luonteen jatkoideat: [SYVENNYS.md](SYVENNYS.md) kohta 5c.
+
+ **syvennys ja valvontakamera.**
 
 - **[SYVENNYS.md](SYVENNYS.md):** tutkimus (RSD kehossa, Clark & Wells, tykkäämiskuilu, valokeilaefekti, kaunis sotku, kaksoisempatia, parisuhteen varmistelu), foorumien kömmähdykset mikrohetkinä, havainnoimatta jääneet asiat ihmisen ja Ekskyysmin välillä, hahmojen halut ja tarpeet (Sanna ja Eero ohuimmat) sekä uudet kuvalliset keinot.
 - **Uusi lab-kohtaus *Footage.*** (`src/52-footage.js`): Ekskyysmi vaihtaa kuvan nurkan valvontakameraan, joka on harmaa ja rakeinen ja jossa näkyvät REC-merkki ja aikaleima. Rajaus on niin tiukka, että Sanna jää kuvan ulkopuolelle, ja kamera ei käänny. Kamerakuvan ajan puhekuplia ei näytetä (”footage has no sound”), ja teksti on lukupaneelissa. Lopussa Sannan varjo kertoo, että hänelläkin on kamera ja että se osoittaa häneen. Ei vielä tarinassa.

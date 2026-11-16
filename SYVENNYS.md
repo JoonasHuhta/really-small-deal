@@ -62,6 +62,25 @@ Hyvä kuvallinen keino tekee ajatusvinoumasta esineen, jota Ekskyysmi käyttää
 | Kaksi mittaria | tykkäämiskuilu | Keskustelun jälkeen ”arvioitu tykkäys: 12 %” ja Sannan varjon arkistosta ”todellinen: 81 %”. | ehdotus, paras |
 | Tekstitys | ylitulkinta | Ekskyysmi tekstittää muiden puheen: ”Fine.” → [I am disappointed in you as a person]. Halpa ja selkeä, toimii myös puhelimessa. | ehdotus |
 
+## 5b. Tehty 0.42.3: tasapaino ja motiivit
+
+- **Tiistai:** ihminen pyytää itse: ”Can you just… handle this one?” Ekskyysmi: ”Full authority? I have waited my whole life for that sentence.” Kun ihminen myöhemmin moittii (”You talked over it.”), varjo vastaa ”You asked me to handle it.” ja ihminen myöntää ”…I did.” Suhde on molemminpuolinen.
+- **Keskiviikko, päivä:** Eero: ”Honestly? I hate presenting. You’re good at it.” Ekskyysmi: ”I’m not saying I respect him more. I’m saying I’ve opened a file.”
+- **Keskiviikko, 00:12:** väsynyt ihminen on lähettämässä dioja ALL STAFF -listalle viestillä, jossa paljastuu Eeron pelko. Ekskyysmi pysäyttää: ”We don’t post other people’s files.” Tämä on ainoa kohta, jossa hälytin on oikeassa ja ihminen väärässä. ”I do have one useful setting. It is just very rarely this one.”
+- **Perjantai:** Sanna: ”I was going to ask you on Monday. You looked busy.” Ekskyysmi sivuun: ”Looking busy was my idea.”
+
+## 5c. Ekskyysmi: mitä hahmosta saa vielä irti (ehdotuksia, ei toteutettu)
+
+Hahmo toimii nyt yhdellä tasolla: virkaintoinen turvallisuusasiantuntija. Hätäinen ADHD-hiiri on hyvä toinen taso, mutta satunnaisuus syö hahmon selkeyden, jos sille ei ole sääntöä. Ehdotetut säännöt:
+
+1. **Innostukset eivät ole satunnaisia, vaan turvallisia.** Ekskyysmi innostuu asioista, jotka eivät voi torjua: kävystä, nitojasta, patterista, hyvin tehdystä lomakkeesta tai tarrakirjoittimesta. ”A pinecone. Look at it. It has never once said ’oh, hi.’” Pelaaja oppii ennen pitkää, että sekoilulla on logiikka, ja se on hauskempaa kuin pelkkä sekoilu. Rajaus: enintään yksi innostus päivässä, ja työ keskeyttää sen aina (”WHERE WAS I. Doom.”).
+2. **Kesken hälytyksen huomio karkaa.** Keskellä torjuntakriisiä Ekskyysmi huomaa koi tai hienon fontin Riitan diassa ja unohtaa kriisin kolmeksi sekunniksi. Tämä kertoo jotain tärkeää: hälytys ei ole niin kiinteä kuin se esittää. Se on huomion varassa. Kuvana: silmät seuraavat koita.
+3. **Flirttailu on ihmisen tukahdutettua halua, joka vuotaa varjon kautta.** Jos Ekskyysmi flirttailisi itse ihmisille, se sotkisi, kenen halusta on kyse. Paljon oivaltavampaa on, että varjo sanoo ääneen sen, mitä ihminen ajattelee Sannasta: ”She has a nice laugh.” – ”Don’t say that OUT LOUD.” – ”Nobody can hear me.” – ”I can.” Tämä liittyy baarin filtteri-ideaan (väsyneenä suodatin pettää).
+4. **Ekskyysmin oma ihastus on jo pelissä.** Varjot tapaavat tiistaisin patterin luona (”Tuesday works.” ”By the radiator.”). Tästä syntyy roolien vaihto: torjunnan estämisen asiantuntijalla on nyt itsellä jotain menetettävää. Se valmistelee kolme puheenaihetta ja varasään. Ihminen antaa sille Eeron comfort zone -neuvon, ja Ekskyysmi närkästyy. Tämä on paras ehdotuksista: se näyttää RSD:n ulkopuolelta ilman että kukaan selittää.
+5. **Yhteinen sanasto on läheisyyttä.** Ekskyysmi keksii termejä (”rejection exchange programme”, ”a no in a coat”). Jos ihminen käyttää perjantaina varjon omaa termiä (”It’s a no in a coat, Eero.”), se kertoo suhteesta enemmän kuin mikään repliikki suhteesta.
+6. **Aloitukset, jotka katkeavat.** ”It’s a tr— …No. It’s lunch.” on Ekskyysmin hätäisyyden paras muoto. Sitä kannattaa käyttää tunnusmerkkinä, harvoin ja aina käänteessä.
+7. **Valheen paljastava merkki.** Kun Ekskyysmi sanoo ”I’m fine”, se pienenee kaksi pikseliä. Pelaaja oppii lukemaan varjoa samalla tavalla kuin varjo lukee muita.
+
 ## 6. Kolme seuraavaa askelta, tärkein ensin
 
 1. **Pelaajatesti ensin.** Kaikki yllä on päättelyä. Kysy kavereilta, missä he nauroivat ja missä he tunnistivat itsensä.
