@@ -432,7 +432,7 @@ function jobCard(){
 function hud(){
   var g=G,y=26,rows=g.w?[]:[['A SMALL PLAN',g.planText||'Ask Sanna to lunch.']];
   if(g.chapter===3&&g.yes&&!g.moment)rows.push(['THINGS AGREED TO',String(g.yes)]);
-  rows.unshift(['EKSKYYSMI’S JOB',g.jobDone?JOB_NEW:JOB_OLD,g.jobDone?'':'job']);
+  rows.unshift(['EKSKYYSMI’S JOB',g.plain?'Vacant.':g.jobDone?JOB_NEW+(g.evenings?' Part-time.':''):JOB_OLD,g.jobDone||g.plain?'':'job']);   // away: the post is vacant; back: part-time
   var show=1;if(COMPACT){show=(g.job&&g.job.t<7)||g.pop?1:clamp(7-(g.hudAge||0),0,1);if(show<=0)return;}
   ctx.save();ctx.globalAlpha=show;if(COMPACT){ctx.translate(W-14,14);ctx.scale(1.3,1.3);ctx.translate(-(W-14),-14);}
   ctx.textAlign='left';ctx.textBaseline='middle';

@@ -18,6 +18,7 @@ Versio 0.36 (Claude, 16.11.2026): **toisen näytöksen viimeistely.**
 
 - *Quiet.*- ja *Evenings.*-hetkissä ihmisellä on nyt **tavallinen varjo seinällä**: harmaa, silmätön, ja se nostaa kupin kun ihminen nostaa. Kun lamppu syttyy ja Ekskyysmi palaa, se katoaa.
 - **1.0-kuitti on oikea paperikuitti** (sama piirto kuin jaettavassa kuittikuvassa), ja viikon loppukuitissa on rivi ”one quiet Monday, lived · 1.0 days”.
+- 0.36.1: kulman rivi ”EKSKYYSMI’S JOB” lukee poissaolon aikana **”Vacant.”** ja paluun jälkeen ”Stay with you when it happens. Part-time.”
 - Tekemättä: Ekskyysmin oma istuma-asento ja oikea kotimatka *Quiet.*-hetkeen. Ks. [TOINEN_NAYTOS.md](TOINEN_NAYTOS.md), kohta 0.
 
 Versio 0.35 (Claude, 16.11.2026): **toinen näytös: hiljaisuus.** Neljä uutta hetkeä torstain ja perjantain väliin (`src/49-second-act.js`, ohje ja tila: [TOINEN_NAYTOS.md](TOINEN_NAYTOS.md)).
