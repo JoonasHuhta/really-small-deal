@@ -14,7 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.41.3 (Claude, 16.11.2026): **suu, musiikin lataus ja tekijätiedot.**
+Versio 0.41.4 (Claude, 16.11.2026): **mukit, kävelysuunta ja testikierrosta varten.**
+
+- **Aloitusruudulla mukin korva on piilossa** ihmisen pään takana (se on samalla maanantain ”wrong side”).
+- **Kun ihminen kääntää mukin** maanantaiaamuna, mukista lähtee kolme pientä viivaa: jotain tehtiin tässä.
+- **Kotimatkalla ihminen katsoo kävelysuuntaan.** Ennen suunta jäi siksi, mihin hän viimeksi katsoi, joten hän saattoi kävellä takaperin. Huoneessa, toimistossa ja muissa kohtauksissa kävelysuunta laskettiin jo liikkeestä (ihminen, Sanna, Eero).
+- Korjattu 0.41.1:n sivuvaikutus: lamppupöytä piirtyi myös kotimatkan kadulle. Nyt se piirretään vain huoneeseen.
+
+ **suu, musiikin lataus ja tekijätiedot.**
 
 - **Suu on alempana**, ettei se näytä toiselta nenältä: perusilme, hymy, jäykkä ilme, kurtistus ja pakotettu virne siirtyivät 3 px alas.
 - **Musiikki latautuu vasta ensimmäisestä kosketuksesta.** Ennen verkkosivu alkoi ladata 3,7 Mt:n kappaletta heti, vaikka pelaaja painaisi suoraan *New game*.

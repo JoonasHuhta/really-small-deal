@@ -86,6 +86,9 @@ function room(flat,noFront){
   ctx.fillStyle='#fbf8ef';ctx.fillRect(748,302,12,14);ctx.fillRect(766,302,12,14);
   ctx.strokeStyle='#fbf8ef';ctx.lineWidth=2;ctx.beginPath();ctx.arc(760,309,4,-Math.PI/2,Math.PI/2);ctx.stroke();
   ctx.beginPath();if(G.mugFixed===false)ctx.arc(766,309,4,Math.PI/2,Math.PI*1.5);else ctx.arc(778,309,4,-Math.PI/2,Math.PI/2);ctx.stroke();
+  if(G.mugFx){var mf=G.mugFx,mk=clamp(mf.t/0.18,0,1),ma=clamp(1-(mf.t-0.35)/0.4,0,1);mf.t+=1/60;if(mf.t>0.8)G.mugFx=null;   // three little lines: something was done here
+    ctx.strokeStyle='rgba(43,39,51,'+ma+')';ctx.lineWidth=2;ctx.lineCap='round';
+    for(var mi=-1;mi<=1;mi++){var an=-Math.PI/2+mi*0.62,r0=13,r1=13+9*mk;line(772+Math.cos(an)*r0,308+Math.sin(an)*r0,772+Math.cos(an)*r1,308+Math.sin(an)*r1);}}
   if(!noFront)roomFront(flat);
 }
 
@@ -164,6 +167,7 @@ function drawHuman(extra){
   var Hm=G.human,o={body:'#c98f2e',hair:'#4a3b32',facing:Hm.facing||1,cup:!G.cupLeft&&!G.w&&!G.noCup,phone:!G.w&&!Hm.gone&&((G.phoneN||0)>0||WAIT==='fight'||!!(G.draft&&!G.draft.sent)),buzz:G.buzz||0,sip:Hm.sip||0,flinch:Hm.flinch,face:Hm.face,back:Hm.back,sweat:Hm.sweat,blush:Hm.blush,grin:Hm.grin,puddle:Hm.puddle};
   if(o.face==='down')o.down=true;
   if(!G.w&&Math.abs(Hm.x-Hm.xT)>1){o.walk=true;if(!Hm.back)o.facing=Hm.xT>Hm.x?1:-1;}   // nobody walks backwards
+  else if(G.w&&G.walking&&!Hm.back)o.facing=G.w.xT>G.w.x?1:-1;                          // not on the way home either
   var wk=G.morko.wake;if(wk!=null&&wk<0.98)o.shadow=wk;          // the floor shadow IS Ekskyysmi: never two
   if(extra)for(var k in extra)o[k]=extra[k];
   if(Hm.pose==='floor'){   // sitting on the floor, legs out
@@ -318,7 +322,7 @@ function drawPair(humanOpts){
   plainShadow();
   morkoBody(q);if(up&&!ht.front)morkoArms(q,ht);
   if(up)shadowDrink(q);
-  if(G.roomFront!=null)roomFront(G.roomFront);
+  if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to: not on the street
   drawHuman(humanOpts);
   if(up&&ht.front)morkoArms(q,ht);
   if(up)drawStamp();
@@ -390,7 +394,7 @@ function drawOutside(){
   if(t>2.2){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='500 20px system-ui,sans-serif';ctx.fillText(o.cap,W/2,H-32);}
 }
 function drawWalk(){
-  var g=G,w=g.w,cam=w.x-400,i,sx;
+  var g=G,w=g.w,cam=w.x-400,i,sx;g.roomFront=null;
   ctx.fillStyle='#12152a';ctx.fillRect(-20,-20,W+40,140);
   ctx.fillStyle='#f6f1e4';for(i=0;i<14;i++){var stx=((i*173-cam*0.05)%1000+1000)%1000-20;circ(stx,14+(i*37)%90,1.2);ctx.fill();}
   ctx.fillStyle='#3d4460';ctx.fillRect(-20,120,W+40,WALLY-120);

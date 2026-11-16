@@ -25,7 +25,7 @@ function scPrelude(){return [
   function(){G.human.facing=1;},
   addTic('(mug handle on the wrong side.)',764,276,{life:1.5}),
   {wait:1.5},
-  function(){G.mugFixed=true;sfx('clink');},
+  function(){G.mugFixed=true;G.mugFx={t:0};sfx('clink');},
   addTic('(better.)',764,276,{life:1.1}),
   {wait:1.1},
   function(){var Hm=G.human;Hm.facing=-1;Hm.xT=HOME;},

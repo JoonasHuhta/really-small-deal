@@ -60,7 +60,9 @@ function update(dt,elapsed){
 // Only before the game starts, and never with Less motion.
 function titleIdle(dt){
   var g=G,Hm=g.human;
-  if(g.started||RM||Hm.gone||g.lab){if(g.idleT){g.idleT=0;Hm.sipT=0;}return;}
+  if(g.started||Hm.gone||g.lab){if(g.idleT){g.idleT=0;Hm.sipT=0;}return;}
+  if(g.set==='room')g.mugFixed=false;   // on the title the mug handle hides behind the human's head (and it is Monday's wrong side)
+  if(RM)return;
   var t=(g.idleT=(g.idleT||0)+dt)%11;
   Hm.sipT=t>4&&t<5.4?1:0;
 }
