@@ -14,7 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.41.5 (Claude, 16.11.2026): **puhekuplat kapeassa ikkunassa, näkyvämpi tärinä.**
+Versio 0.42.0 (Claude, 16.11.2026): **ensimmäinen alfa kavereiden testattavaksi.**
+
+- **About-sivu:** musiikin tekijä ja kappaleen nimi poistettu. ”One ordinary life” vaihdettu muotoon ”One week of small moments”, koska ”ordinary” toistui jo edellisessä kappaleessa. Alarivi on nyt ”Alpha 0.42.0, still changing. Made by Joonas Huhta (MoshBitSurfers).” Versio luetaan index.html:n `game.js?v=`-leimasta, joten sitä ei tarvitse päivittää käsin, ja testaaja näkee aina, mitä versiota hän pelaa.
+- **Kapea puhelin:** valikkoikkunoiden vähimmäiskorkeus on 440 px:n sijaan 490 px, joten About ja Settings mahtuvat näytölle ilman vieritystä.
+
+ **puhekuplat kapeassa ikkunassa, näkyvämpi tärinä.**
 
 - **Puhekuplat näkyvät, kun pelikuva on vähintään 520 px leveä.** Ennen raja oli 640 px (päätös versiosta 0.18), joten puolikkaassa selainikkunassa tai kapeassa paneelissa kuplat katosivat ja teksti näkyi vain alapaneelissa. Pystyssä pidetyssä puhelimessa teksti näkyy edelleen vain paneelissa, koska kuplan teksti olisi siellä alle 7 px.
 - **Ekskyysmin tärinä on hitaampi ja hieman suurempi, ja pienellä ruudulla sitä vahvistetaan.** Ennen se oli 1,7 px ja 47 Hz, joten puhelimessa liike jäi alle pikselin ja näytti välkkeeltä. Tärinä käynnistyy edelleen, kun ahdistus on yli 0,3, ja pysyy pois Less motion -tilassa. Täydellä viikolla Ekskyysmi tärisee noin 140 s ja koko ruutu nytkähtää 16 kertaa, ja tärinää on joka päivä.
