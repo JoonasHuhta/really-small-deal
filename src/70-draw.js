@@ -305,6 +305,7 @@ function drawCoatFace(q){
 function drawPair(humanOpts){
   var q=geom(),ht=handTargets(q);
   var up=G.morko.wake==null||G.morko.wake>0.5;
+  plainShadow();
   morkoBody(q);if(up&&!ht.front)morkoArms(q,ht);
   if(up)shadowDrink(q);
   drawHuman(humanOpts);
@@ -481,7 +482,7 @@ function draw(){
     drawDish();
     drawTics(0);
     if(WAIT==='hold'&&g.hold&&!g.human.gone)holdRing();
-    drawToss();drawForm();
+    drawToss();drawForm();drawPaper();
     sannaShadow();eeroShadow();riittaShadow();
     drawCoworkers(1);
     if(g.set==='bar'&&g.bar)barFront();

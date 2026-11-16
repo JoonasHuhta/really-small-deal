@@ -837,7 +837,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;
   g.cowA=g.cowB=g.cowR=false;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -1708,8 +1708,31 @@ function bigNote(){
 /* ================= the second act: a hit with no sender, a form, a quiet day, and a lamp ================= */
 // See TOINEN_NAYTOS.md. Three rules: nothing is named, nothing is the villain, nobody is mocked.
 // "Away" is the shadow asleep: the wall figure fades into the ordinary floor shadow every person has.
-function shadowAway(){var M=G.morko;M.asleep=true;M.wake=0;M.dim=null;G.lines=[];G.bick=0;}
-function shadowBack(s){var M=G.morko;M.asleep=false;M.dim=null;M.s=M.sT=s||0.6;M.mood='worry';}
+function shadowAway(){var M=G.morko;M.asleep=true;M.wake=0;M.dim=null;G.lines=[];G.bick=0;G.plain=true;}
+function shadowBack(s){var M=G.morko;G.plain=false;M.asleep=false;M.dim=null;M.s=M.sT=s||0.6;M.mood='worry';}
+
+// The shadow everybody else has: grey, eyeless, on the wall behind the human, doing exactly what the human does and nothing more.
+function plainShadow(){
+  var g=G,Hm=g.human;if(!g.plain||Hm.gone||g.w)return;
+  var x=Hm.x-58,by=WALLY,sip=Hm.sip||0;
+  ctx.save();ctx.fillStyle='#3d4150';
+  ctx.globalAlpha=0.16;ctx.beginPath();ctx.moveTo(Hm.x-18,FEETY);ctx.lineTo(Hm.x+18,FEETY);ctx.lineTo(x+20,by);ctx.lineTo(x-20,by);ctx.closePath();ctx.fill();
+  ctx.globalAlpha=0.3;rr(x-21,by-100,42,100,12);ctx.fill();circ(x,by-118,17);ctx.fill();
+  ctx.strokeStyle='#3d4150';ctx.lineWidth=10;ctx.lineCap='round';line(x+18,by-84,x+30,by-56-sip*42);
+  ctx.restore();
+}
+// The receipt for the quiet day, on the same paper as every other receipt. The only one that says 1.0.
+function quietReceipt(){
+  var rows=[['days on the calendar','1'],['days lived','1.0','big'],'-',['rehearsals','0'],['verdicts','0'],['exhibits examined','0'],['“for the record”','1 (unanswered)'],['number plates added up','0'],['things noticed','0']];
+  try{G.paper=receiptCanvas('RECEIPT · A QUIET MONDAY',rows,'It all went fine.');}catch(e){G.paper=null;}
+  if(G.paper&&G.paper.width)return [function(){G.lines=[];G.band=null;sfx('card');},{wait:0.8},['N','It all went fine.'],function(){G.paper=null;}];
+  G.paper=null;
+  return outside({title:'RECEIPT · A QUIET MONDAY',dur:'days lived: 1.0',cap:'Rehearsals 0. Verdicts 0. Exhibits 0. Number plates added up 0. “For the record” 1, unanswered. It all went fine.',anim:'text'});
+}
+function drawPaper(){
+  var p=G.paper;if(!p||!p.width)return;var h=H-24,w=h*p.width/p.height;
+  ctx.fillStyle='rgba(13,17,20,.82)';ctx.fillRect(-20,-20,W+40,H+40);ctx.drawImage(p,(W-w)/2,12,w,h);
+}
 
 /* ---- a waiting room ---- */
 function clinic(){
@@ -1927,8 +1950,9 @@ function labQuiet(){
   {wait:1.6},
   gap,
   ['N','Nobody objected.'],
-  function(){G.quiet=true;}
- ],outside({title:'RECEIPT · A QUIET MONDAY',dur:'days lived: 1.0',cap:'Rehearsals 0. Verdicts 0. Exhibits 0. Number plates added up 0. “For the record” 1, unanswered. It all went fine.',anim:'text'}));
+  function(){G.quiet=true;},
+  quietReceipt
+ ]);
 }
 
 /* ================= 4. Evenings. ================= */
@@ -3071,6 +3095,7 @@ function storyRows(){
   if(g.rehearsal)rows.push(['“not now”, rehearsed','3 h 10 min'],['“not now”, actual','4 s']);
   if(g.posting&&g.posting!=='open')rows.push(['applications sent','0'],['rejections avoided','1'],['success rate','100 %']);
   if(g.posting==='open')rows.push(['applications','pending']);
+  if(g.quiet)rows.push(['one quiet Monday, lived','1.0 days']);
   if(g.nothings)rows.push(['“it’s nothing”, said','×'+g.nothings]);
   return rows;
 }
@@ -3561,6 +3586,7 @@ function drawCoatFace(q){
 function drawPair(humanOpts){
   var q=geom(),ht=handTargets(q);
   var up=G.morko.wake==null||G.morko.wake>0.5;
+  plainShadow();
   morkoBody(q);if(up&&!ht.front)morkoArms(q,ht);
   if(up)shadowDrink(q);
   drawHuman(humanOpts);
@@ -3737,7 +3763,7 @@ function draw(){
     drawDish();
     drawTics(0);
     if(WAIT==='hold'&&g.hold&&!g.human.gone)holdRing();
-    drawToss();drawForm();
+    drawToss();drawForm();drawPaper();
     sannaShadow();eeroShadow();riittaShadow();
     drawCoworkers(1);
     if(g.set==='bar'&&g.bar)barFront();
