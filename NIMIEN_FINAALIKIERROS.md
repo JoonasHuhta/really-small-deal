@@ -1,5 +1,30 @@
 # Nimien finaalikierros
 
+## Kierros 2: laatikon ulkopuolelta (16.11.2026, Claude)
+
+Pelin nimi on **Really Small Deal**. Tällä kierroksella haettiin nimeä, joka voittaisi sen yhtä aikaa resonanssissa, huumorissa, koukussa, houkuttelevuudessa ja inhimillisyydessä. Jos sellaista ei löydy, nimi pysyy. Tuloksena nimi pysyy, mutta kolme haastajaa kannattaa testata kavereilla.
+
+| Nimi | Kulma | Vahvuus | Heikkous |
+|---|---|---|---|
+| **Really Small Deal** (nyk.) | lause, jolla toisen tunnetta vähätellään | RSD piilossa, ei alleviivattu; peli todistaa nimen vääräksi | ”deal” = kauppa hakukoneessa; vitsi aukeaa vasta pelatessa |
+| **My Shadow Has Notes** | varjon ääni | ”has notes” = palaute/kritiikki: peli kritiikkiherkkyydestä, jossa varjo antaa palautetta kaikesta. Hauska, inhimillinen, kertoo hahmoparin | ei kerro mittakaavasta; ”notes” voi kuulostaa muistiinpanosovellukselta |
+| **Objects May Appear Larger** | taustapeilin varoitus + suurennuslasi | pelin väite yhdessä lauseessa (”oikeassa siitä että jotain tapahtui, väärässä koosta”) | pitkä, viileämpi; huumori tarvitsee sekunnin |
+| **Quick Chat?** | tiistain laukaisin | välitön tunnistus jokaiselle, jota on kutsuttu ”pikaiseen juttuun” | yksi päivä koko pelistä; kuulostaa chat-sovellukselta |
+| Replay Value | märehtiminen + pelitermi | ”päivä eletään kahdesti” meta-vitsinä | liian nokkela, ei tunnetta |
+| Not to Scale | mittakaava | lyhyt, sopii logoon | yleinen ilmaus, heikko koukku |
+| It’s Nothing | naamio | pelin toistuva valhe | synkkä yksinään, ei huumoria |
+| No Setting for Nice / It’s a No in a Coat | repliikit | hauskimmat | kertovat pelistä vähiten |
+
+Pikahaku 16.11. ei löytänyt samannimistä peliä nimille *Objects May Appear Larger* ja *Read Into It*. Tämä ei ole saatavuustarkistus.
+
+**Testi, joka ratkaisee:** näytä kavereille ennen pelaamista neljä nimeä ja kuvake ja kysy, minkä he klikkaisivat ja mistä peli kertoo. Pelaamisen jälkeen kysy, mikä nimi sopii. Ensimmäinen mittaa houkuttelevuutta, toinen sopivuutta, ja ne voivat erota.
+
+### Oivalluksia, joita ei ole tehty
+
+1. **Logo tekee vitsin, nimi pysyy.** Aloitusruudulla suurennuslasi suurentaa sanan DEAL (”Really Small **DEAL**”). Lopputekstien jälkeen lasi on siirtynyt sanan *Small* päälle. Nimi muuttuu itse tarinan mukana ilman, että sitä vaihdetaan.
+2. **Ekskyysmi = ”excuse me”.** Nimi on suomalaisittain kirjoitettu anteeksipyyntö: varjo on ihmisen tapa pyytää anteeksi olemassaoloaan. Englanninkielinen pelaaja ei huomaa tätä. Yksi hetki riittää: joku sanoo ”Excuse me?”, ja varjo vastaa ”Yes?”. Selittämättä.
+3. **Kaikki varjot saman säännön mukaan.** Nyt muiden varjot ovat SANNA’S SHADOW, EERO’S SHADOW ja RIITTA’S SHADOW. Jos jokainen varjo on nimetty sen kohteliaan fraasin mukaan, jonka taakse omistaja piiloutuu, nimet kertovat hahmot: **Eero → Juustsei** (”just saying”, pyytämättömät neuvot), **Riitta → Kuikkitsätti** (”quick chat”), **Sanna → Nouvoris** (”no worries”, kevyt pinta). Nimet paljastuvat kerran, kun varjot esittäytyvät (*Colleagues.*).
+
 14.11.2026 · Aiempi luova suositus ja rajattu nimihaku.
 
 **Myöhempi päätös: käyttäjä valitsi Ekskyysmin pelin työnimeksi.** Alla oleva vertailu säilytetään suunnitteluhistoriana. Ajantasainen suunta on [pelikonseptissa](PELIKONSEPTI.md); nimeä ei ole varattu.
