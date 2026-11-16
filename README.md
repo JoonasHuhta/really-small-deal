@@ -14,6 +14,17 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.35 (Claude, 16.11.2026): **toinen näytös: hiljaisuus.** Neljä uutta hetkeä torstain ja perjantain väliin (`src/49-second-act.js`, ohje ja tila: [TOINEN_NAYTOS.md](TOINEN_NAYTOS.md)).
+
+- ***Nothing.*** Sunnuntai, pyykit, eikä kukaan ole sanonut mitään. Isku tulee silti. Ekskyysmi etsii syyllistä suurennuslasilla (”The sofa has an alibi.”), ihminen istuu lattialle, ja Ekskyysmi istuu ensimmäistä kertaa viereen. ”I’d like to file a complaint. About the absence of a cause.”
+- ***The form.*** Odotushuone ja kahdeksantoista kysymystä. Ekskyysmi tunnistaa itsensä (”It’s a job description.” / ”…I thought I was bespoke.”), ihminen rastittaa ”yes” pelaajan valinnasta riippumatta, ja Ekskyysmi allekirjoittaa, koska allekirjoittaa kaiken. Allekirjoittaessaan hän haalistuu.
+- ***Quiet.*** Maanantai ilman varjoa. Sanna sanoo ”oh, hi.”, eikä mitään tapahdu. Valinnat tekevät itsensä (uusi askel `{auto}`), ja Ekskyysmin kohdalla paneelissa on vain viiva. Sannan varjo kysyy: ”…Where’s yours?” Lopuksi kuitti, jossa lukee ensimmäistä kertaa *days lived: 1.0*.
+- ***Evenings.*** Yhdeksältä illalla on pimeää ja huoneessa on lamppu. Pelaaja sytyttää sen (uusi askel `{lamp}`), ja varjo palaa pienenä: ”…Am I allowed?” – ”It’s nine. You’re on.” – ”I’ve gone part-time?” Lopussa: ”It was very quiet.” – ”You’re welcome.” – ”I missed it.”
+- **Perjantai** sai kolme pientä lisäystä: ”You left the lamp on.”, Sannan ”There you are.” ja Sannan varjon ”Oh. You’re back.” – ”Evenings. And Fridays.”
+- Lääkettä, diagnoosia tai ammattilaista ei mainita missään. Testi kieltää sanat koko käsikirjoituksesta.
+- Uutta moottorissa: `{auto}`, `{lamp}`, pidot `sit` ja `sign`, tausta `clinic`, lomakkeen piirto, lattialla istuva ihminen, `shadowAway()`/`shadowBack()`.
+- **Tarkistamatta:** oikea laite, ihmispelaaja ja rytmi. Kuvitus ja äänet ovat ensimmäinen versio; puutteet on listattu TOINEN_NAYTOS.md:n kohdassa 0.
+
 Versio 0.34 (Claude, 16.11.2026): **aloitusmusiikki ja viisi uutta ilmettä.**
 
 - **Aloitusruudulla soi musiikki** (*Safe At Last*, `assets/audio/title.mp3`, 2,8 Mt, pakattu 128 kbps:ään ilman kansikuvaa). Selain ja Androidin WebView eivät päästä ääntä läpi ennen ensimmäistä kosketusta tai näppäintä, joten musiikki alkaa siitä. Se häipyy, kun peli alkaa (hiljainen aamu pysyy hiljaisena), ja palaa aloitusruudulle palatessa. *Sound off*, tauko ja sovelluksen vaihto pysäyttävät sen.
@@ -289,7 +300,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.34, viisi päivää ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.35, viisi päivää ja toinen näytös ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

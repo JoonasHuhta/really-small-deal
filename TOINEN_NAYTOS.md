@@ -2,6 +2,24 @@
 
 16.11.2026 · päätetty (Joonas + Claude) · kirjoitettu niin, että Codex tai kuka tahansa voi toteuttaa tämän ilman aiempaa keskustelua. Lue ensin [AGENTS.md](AGENTS.md) (työtavat) ja [SUUNTA.md](SUUNTA.md) (linja). Pelin tekstit ovat englantia, dokumentit suomea.
 
+## 0. Tila: ensimmäinen versio pelissä (0.35, Claude 16.11.2026)
+
+Kaikki neljä hetkeä, järjestys, perjantain kolme muutosta ja testit 1–6 ovat pelissä (`src/49-second-act.js`). Pelattavissa tarinassa ja Scenario labissa. **Ei pelattu oikealla laitteella eikä kenenkään muun kuin testiajurin toimesta.**
+
+Poikkeamat tästä ohjeesta, ja mitä jäi tekemättä (seuraavalle tekijälle):
+
+| Ohjeessa | Toteutettu | Jäljellä |
+|---|---|---|
+| `G.morko.away`, `alpha` | Poissaolo on `M.asleep=true` (seinähahmo sulaa tavalliseksi lattiavarjoksi, sama mekaniikka kuin pelin alussa). Haalistuminen allekirjoittaessa on `M.dim`. Apurit `shadowAway()`, `shadowBack(s)`. | – |
+| tavallinen varjo seinällä, joka toistaa asennon | vain lattiavarjo | `plainShadow()` seinälle: harmaa siluetti, joka nostaa kupin kun ihminen nostaa |
+| `morko.pose='sit'` | vain koko (s = 0,62) ja lippu `G.sat` | oma istuma-asento |
+| kotimatka autoineen *Quiet.*-hetkessä | kertojan kaksi riviä | oikea kävelykohtaus ilman summia |
+| paperikuitti 1.0 | ulkopuolinen kortti ”RECEIPT · A QUIET MONDAY / days lived: 1.0” | sama paperi kuin maanantain kuitti, ja rivi viikon loppukuittiin |
+| lampun napautus lampun kohdalta | napautus mihin tahansa ruudulla tai nappi *Turn on the lamp* | – |
+| Q3:n kolmas vaihtoehto | ”Ask them to define “ended”.” | – |
+
+Kuvitus on ensimmäinen versio: odotushuone, lomake, pyykkikori, lattialla istuva ihminen ja keittiön pöytä ovat yksinkertaisia. Äänet käyttävät vanhoja tehosteita.
+
 ## 1. Mitä tehdään ja miksi
 
 Tarinasta puuttuu jakso **ilman Ekskyysmiä**. Nyt kaari on loiva: torstai-ilta on pohja ja perjantai sovinto. Lisätään neljä lyhyttä hetkeä torstain ja perjantain väliin:

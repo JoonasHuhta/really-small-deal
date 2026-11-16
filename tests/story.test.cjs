@@ -122,6 +122,8 @@ function playOn(pick){
       case 'stretch':T.advance();break;
       case 'hold':T.advance();break;
       case 'toss':T.advance();T.tick(0.4);break;
+      case 'auto':T.tick(3);break;
+      case 'lamp':T.advance();break;
       case 'fight':if(T.G.fight.paced){T.swat();T.tick(0.6);}else T.tick(0.25);break;
       case 'qte':T.tick(1);break; // the story now runs through the short moments too
       case 'choice':{
@@ -270,6 +272,7 @@ toHold('B');T.holdDown();for(let i=0;i<8;i++)T.tick(0.5);assert.equal(T.G.peeked
 toHold('C');T.holdDown();T.tick(0.5);T.tick(0.5);T.tick(0.3);assert.equal(T.G.aWave,false,'nobody waves on the dismissive day');T.holdUp();T.tick(0.5);T.tick(0.5);assert.equal(T.G.peeked,false);
 assert.ok(holds>0);
 // Scenario lab: each scene plays to its own end; the boss fight reacts to how the player swats.
+let seenAuto=0,seenChoice=0;
 function playLab(id,mode){
   T.lab(id);let st=0;
   while(!T.G.labEnd&&st++<6000){
@@ -278,8 +281,10 @@ function playLab(id,mode){
       case 'click':T.advance();break;
       case 'time':T.tick(6);break;
       case 'toss':T.advance();T.tick(0.4);break;
+      case 'auto':seenAuto++;T.tick(3);break;
+      case 'lamp':T.advance();break;
       case 'view':T.advance();T.tick(6);T.advance();break;
-      case 'choice':T.choose((mode==='coat'&&T.options().some(o=>o.t==='Pretend to be a coat.'))||(mode&&mode.indexOf('paced')===0&&T.options().some(o=>o.t.startsWith('One at a time.')))?1:0);break;
+      case 'choice':seenChoice++;T.choose(typeof mode==='number'?mode:(mode==='coat'&&T.options().some(o=>o.t==='Pretend to be a coat.'))||(mode&&mode.indexOf('paced')===0&&T.options().some(o=>o.t.startsWith('One at a time.')))?1:0);break;
       case 'fight':
         if(mode&&mode.indexOf('paced')===0){
           const m=T.G.fight.msgs.find(x=>!x.done);
@@ -295,11 +300,39 @@ function playLab(id,mode){
         else if(mode==='read'){const m=T.G.fight.msgs.find(x=>x.state==='open'&&x.t>0.3);if(m)T.swat();T.tick(0.1);}
         else T.tick(0.2);
         break;
+      case 'hold':T.advance();break;
       default:throw new Error('Lab stalled: '+T.state());
     }
   }
   assert.ok(T.G.labEnd,'lab scene must end');assert.match(element('ov').innerHTML,/Play it again/);
-  return T.history().map(x=>x.text).join('\n');
+  return T.history().map(x=>x.who+': '+x.text).join('\n');
+}
+// ---- the second act (TOINEN_NAYTOS.md) ----
+{
+  let t2=playLab('nothing');
+  assert.match(t2,/The sofa has an alibi/);assert.match(t2,/That’s the complaint/);assert.ok(T.G.sat,'Ekskyysmi sits down, for the first time');
+  for(const pick of [0,1,2]){
+    t2=playLab('form',pick);
+    assert.match(t2,/You ticked yes/);assert.match(t2,/All in order/);assert.match(t2,/It’s a job description/);
+  }
+  seenAuto=0;seenChoice=0;t2=playLab('quiet');
+  assert.equal(seenChoice,0,'nobody to ask: no choices in the quiet day');assert.equal(seenAuto,2,'two choices make themselves');
+  const sLines=t2.split('\n').filter(l=>l.startsWith('S: '));
+  assert.ok(sLines.length===3&&sLines.every(l=>l==='S: —'),'Ekskyysmi says nothing all day: '+sLines.join(' | '));
+  assert.match(t2,/Where’s yours\?/);assert.match(t2,/Nobody objected/);assert.ok(T.G.morko.asleep,'still away when the quiet day ends');
+  t2=playLab('evenings');
+  assert.match(t2,/Am I allowed\?/);assert.match(t2,/I missed it/);assert.equal(T.G.morko.asleep,false,'the lamp brings it back');assert.equal(T.G.lampOff,false);
+}
+// The second act sits between Thursday's moments and Friday, in this order.
+assert.match(require('fs').readFileSync(require('path').join(__dirname,'..','src','33-moments.js'),'utf8'),/4:\['reply','notnow','bar','nothing','form','quiet','evenings'\]/);
+// Nothing in the game names a condition, a drug or a profession. The player works it out, or does not.
+{
+  const fs2=require('fs'),path2=require('path'),dir=path2.join(__dirname,'..','src');
+  const bad=/\b(adhd|autis\w*|medicat\w*|pills?|diagnos\w*|doctors?|therap\w*|prescri\w*|hospital\w*)\b/i;
+  for(const f of fs2.readdirSync(dir)){
+    const src=fs2.readFileSync(path2.join(dir,f),'utf8'),re=/\[\s*'[SHABRPNZYWTXL]'\s*,\s*'((?:[^'\\]|\\.)*)'|(?:cap|title|dur|t|blurb|tag|text)\s*:\s*'((?:[^'\\]|\\.)*)'/g;let m;
+    while((m=re.exec(src))){const line=m[1]||m[2]||'';assert.ok(!bad.test(line),'forbidden word in '+f+': '+line);}
+  }
 }
 let tr=playLab('enhance');
 assert.match(tr,/ENHANCE/);assert.match(tr,/The eyebrow was HUNGER/);assert.match(tr,/WING for eyebrows/);assert.equal(T.G.zoom,null);

@@ -150,3 +150,6 @@ html:not(.immersive) body:not(.playing) header{margin-bottom:10px;min-height:36p
 .line p strong{font-weight:800;letter-spacing:.02em}.line .w-S p strong{color:#ebbd79}
 .line p.loud{font-size:calc(23px * var(--ts,1));font-weight:700}.line p.quiet{font-size:calc(13px * var(--ts,1));opacity:.85}
 html.immersive body.playing .line p.loud{font-size:calc(18px * var(--ts,1))}html.immersive body.playing .line p.quiet{font-size:calc(11.5px * var(--ts,1))}
+
+/* a choice that makes itself: nobody to ask */
+.opt:disabled{opacity:.42;cursor:default}.opt.picked:disabled{opacity:1;border-color:var(--accent);color:var(--accent)}

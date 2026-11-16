@@ -110,7 +110,7 @@ Puhelin sai 0.32:ssa liioitellut äänet (saapuva viesti tärisee kuin pöytä, 
 - *Monday. Again.* ja *Small deals* -antologia: ne ovat pituutta. Ideat säilyvät tässä tiedostossa, mutta niitä ei toteuteta, ellei tarina niitä vaadi.
 - Valo määrää koon.
 
-## 5b. Toinen näytös: hiljaisuus (PÄÄTETTY 16.11., seuraava iso työ)
+## 5b. Toinen näytös: hiljaisuus (päätetty 16.11., ensimmäinen versio pelissä 0.35)
 
 Neljä uutta hetkeä torstain ja perjantain väliin: ***Nothing.*** (isku ilman lähettäjää) → ***The form.*** (Ekskyysmi allekirjoittaa oman poissaolonsa) → ***Quiet.*** (päivä ilman varjoa, kuitissa 1.0) → ***Evenings.*** (ihminen sytyttää lampun, varjo palaa osa-aikaisena).
 

@@ -4,7 +4,7 @@ A short humorous browser + Android game about rejection sensitivity. The player 
 
 ## Read first
 1. `SUUNTA.md`: direction and priorities.
-2. `TOINEN_NAYTOS.md`: the next piece of work, specified step by step.
+2. `TOINEN_NAYTOS.md`: the second act. A first version is in the game (0.35); section 0 lists what is still missing.
 3. `KASIKIRJOITUS.md` (story structure), `OUTOUDET.md` (quirks and the "no mockery" rule), `SEURAAVAKSI.md` (task list).
 
 ## How the code is built

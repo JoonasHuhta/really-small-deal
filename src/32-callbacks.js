@@ -21,7 +21,8 @@ function tuesdayOpening(){
 function fridayShadow(){
   var known=G.metSannaShadow;G.metSannaShadow=true;
   if(known)return [set({mood:'care'}),
-    ['S','…Oh. You again.'],
+    ['Z','Oh. You’re back.'],
+    ['S','Evenings. And Fridays.'],
     ['Z','I checked. Tuesday works.'],
     ['S','By the radiator.'],
     ['Z','I moved a worry.']
