@@ -71,6 +71,12 @@ function speak(who,text){
 function sfx(k){
   var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;
   if(k==='hit'){tone(120,t,0.4,'sine',0.24,42);tone(900,t,0.06,'square',0.025,300);for(var hb=0;hb<3;hb++){tone(62,t+0.6+hb*0.75,0.13,'sine',0.14-hb*0.03);tone(54,t+0.78+hb*0.75,0.13,'sine',0.1-hb*0.02);}}
+  else if(k==='pop'){tone(380,t,0.05,'sine',0.035,720);}
+  else if(k==='popS'){tone(170,t,0.07,'sine',0.05,310);}
+  else if(k==='dotsOff'){tone(560,t,0.09,'sine',0.03,260);}
+  else if(k==='ui'){tone(1250,t,0.025,'triangle',0.022);}
+  else if(k==='menuOn'){tone(520,t,0.05,'sine',0.035);tone(780,t+0.05,0.07,'sine',0.035);}
+  else if(k==='menuOff'){tone(780,t,0.05,'sine',0.03);tone(520,t+0.05,0.07,'sine',0.03);}
   else if(k==='swat'){tone(900,t,0.12,'triangle',0.07,180);tone(240,t+0.02,0.08,'square',0.02,120);}
   else if(k==='stamp'){tone(150,t,0.09,'triangle',0.08,65);tone(780,t,0.025,'square',0.018,260);}
   else if(k==='good'){tone(660,t,0.08,'sine',0.05);tone(990,t+0.09,0.14,'sine',0.05);}

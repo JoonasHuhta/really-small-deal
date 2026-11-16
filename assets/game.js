@@ -99,6 +99,12 @@ function speak(who,text){
 function sfx(k){
   var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;
   if(k==='hit'){tone(120,t,0.4,'sine',0.24,42);tone(900,t,0.06,'square',0.025,300);for(var hb=0;hb<3;hb++){tone(62,t+0.6+hb*0.75,0.13,'sine',0.14-hb*0.03);tone(54,t+0.78+hb*0.75,0.13,'sine',0.1-hb*0.02);}}
+  else if(k==='pop'){tone(380,t,0.05,'sine',0.035,720);}
+  else if(k==='popS'){tone(170,t,0.07,'sine',0.05,310);}
+  else if(k==='dotsOff'){tone(560,t,0.09,'sine',0.03,260);}
+  else if(k==='ui'){tone(1250,t,0.025,'triangle',0.022);}
+  else if(k==='menuOn'){tone(520,t,0.05,'sine',0.035);tone(780,t+0.05,0.07,'sine',0.035);}
+  else if(k==='menuOff'){tone(780,t,0.05,'sine',0.03);tone(520,t+0.05,0.07,'sine',0.03);}
   else if(k==='swat'){tone(900,t,0.12,'triangle',0.07,180);tone(240,t+0.02,0.08,'square',0.02,120);}
   else if(k==='stamp'){tone(150,t,0.09,'triangle',0.08,65);tone(780,t,0.025,'square',0.018,260);}
   else if(k==='good'){tone(660,t,0.08,'sine',0.05);tone(990,t+0.09,0.14,'sine',0.05);}
@@ -170,9 +176,19 @@ function setLine(who,text,o){
   g.bick=pair&&text.length<=46&&!(o&&o.big)?(g.bick||0)+1:(who==='S'||who==='H')&&pair?Math.max(0,(g.bick||0)-1):0;
   var mute=who==='S'&&g.morko.asleep;
   g.phoneN=who==='P'?3:Math.max(0,(g.phoneN||0)-1);if(who==='P'&&!/^You:/.test(text))g.buzz=0.7;
-  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute)speak(who,text);if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
+  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute){speak(who,text);if(who!=='N'&&!(o&&o.big))sfx(who==='S'?'popS':'pop');}if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
   history.push({who:who,text:text});
 }
+// How many characters of a line are showing after t seconds. A full stop is a breath, an ellipsis is a longer one.
+function revealCount(text,t,l){
+  var cps=l&&l.quiet?30:l&&l.loud?85:55,i=0,c,n=text.length;
+  for(;i<n;i++){t-=1/cps;if(t<0)return i;c=text.charAt(i);
+    if(c==='…')t-=0.34;else if((c==='.'||c==='?'||c==='!')&&text.charAt(i+1)===' ')t-=0.24;else if(c===','||c===';')t-=0.1;else if(c==='—')t-=0.18;}
+  return n;
+}
+function revealing(){var c=G.cur;return !RM&&WAIT==='click'&&c&&c.who!=='N'&&!c.big&&revealCount(c.text,G.curT||0,c)<c.text.length;}
+// What a tap does: finish the sentence first, then move on. (The test driver calls advance() directly.)
+function userAdvance(){if(revealing()){G.curT=99;return;}advance();}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 // capitals are emphasis: the panel shows them the way the bubble does
 function emph(h){return h.replace(/(^|[\s“(—-])([A-Z][A-Z’']+)(?![a-z])/g,function(_,a,w){return a+'<strong>'+w+'</strong>';});}
@@ -263,10 +279,10 @@ elOpts.addEventListener('click',function(e){
   if(i==='hold'){holdClick();return;}
   if(i==='skip'){skipIntro();return;}
   if(i==='read'){readReply();return;}
-  if(i==='go')advance();else choose(+i);
+  if(i==='go')userAdvance();else choose(+i);
 });
 var swallowClick=false;
-cv.addEventListener('click',function(e){if(swallowClick){swallowClick=false;return;}if(paused&&G.started&&!G.ended){togglePause();return;}if(lensFree()){lensTap(e);return;}if(WAIT==='hold'){holdClick();return;}if(WAIT==='toss')return;if(WAIT!=='stretch')advance();});
+cv.addEventListener('click',function(e){if(swallowClick){swallowClick=false;return;}if(paused&&G.started&&!G.ended){togglePause();return;}if(lensFree()){lensTap(e);return;}if(WAIT==='hold'){holdClick();return;}if(WAIT==='toss')return;if(WAIT!=='stretch')userAdvance();});
 cv.addEventListener('pointerdown',function(e){if(WAIT==='hold'){holdDown();try{cv.setPointerCapture(e.pointerId);}catch(_){}}});
 elOpts.addEventListener('pointerdown',function(e){var t=e.target&&e.target.closest?e.target.closest('[data-i=hold]'):null;if(t)holdDown();});
 window.addEventListener('pointerup',holdUp);window.addEventListener('pointercancel',holdUp);window.addEventListener('blur',holdUp);
@@ -837,7 +853,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;
   g.cowA=g.cowB=g.cowR=false;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.dots=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -1004,10 +1020,13 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','Snacks: eleven bags. Car: fuelled. Us: early. I have no notes.',{look:'pleased'}],
   ['P','You: “What time tonight? I’ve got the snacks.”'],
   ['P','Seen 17:31.'],
-  {wait:1.6},
+  {wait:1.0},typingDots(2.4),
   hit(0.6,'P'),set({sweat:0.6}),archive('bad',[['2009','Texted “haha”. Got back “ok”.'],['2018','Group chat went silent after my message. Six minutes.'],['2023','“We should hang out sometime!” We did not.']]),{wait:1.4},['N','The archive, sorted by silence.'],closeArchive,
   ['S','“Seen.”',{look:'stunned'}],
   ['S','She has SEEN it. With her eyes. And chosen silence.'],
+  ['S','And she TYPED. I saw the dots. Then she UN-typed.',{look:'stunned'}],
+  ['H','Maybe she sneezed.'],
+  ['S','For two seconds? Nobody sneezes in paragraphs.'],
   ['H','It’s been one minute.'],
   ['S','A minute is sixty separate decisions not to reply.',{look:'squint'}],
   function(){G.clock=17*3600+52*60;},
@@ -2003,6 +2022,14 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
   function(){addLived('one evening, annotated',25);G.evenings=true;},
   lensPeek({x:520,y:300},'EVENINGS: MINE.')
 ]);}
+
+/* ---- three dots: someone is typing. Then they are not. ---- */
+function typingDots(secs){return function(){return [function(){G.dots={t:0};sfx('pop');},{wait:secs},function(){G.dots=null;sfx('dotsOff');},{wait:0.7}];};}
+function drawDots(){
+  var d=G.dots;if(!d)return;d.t+=1/60;var x=G.human.x+182,y=346,i;
+  ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=2;rr(x,y,64,32,16);ctx.fill();ctx.stroke();
+  for(i=0;i<3;i++){var b=RM?0:Math.max(0,Math.sin(d.t*7-i*0.9))*4;ctx.fillStyle='#8b8070';circ(x+18+i*14,y+16-b,4.2);ctx.fill();}
+}
 // ---- src/50-lab.js ----
 /* ================= SCENARIO LAB: stand-alone scenes for trying ideas before they join the week ================= */
 var LABS={
@@ -3240,7 +3267,7 @@ function update(dt,elapsed){
   var g=G,M=g.morko,Hm=g.human;g.time+=dt;LOCK=Math.max(0,LOCK-elapsed);
   if(M.coat){var coat=M.coat;coat.p=RM?(coat.buttons?1:0):approach(coat.p,coat.buttons?1:0,dt*1.7);if(coat.blink>=0)coat.blink+=dt;}
   if(M.wobble)M.wobble.t=Math.min(3.2,M.wobble.t+dt);
-  if(G.cur&&G.cur.big&&WAIT==='click'){var bb=bigBox(G.cur.text,RM?1e9:Math.floor(G.curT*55));M.sT=clamp((WALLY-(BIGTOP+bb.h)-40)/170,0.42,1.15);if(RM)M.s=M.sT;if(bb.lines.length>3)M.mood='scared';}
+  if(G.cur&&G.cur.big&&WAIT==='click'){var bb=bigBox(G.cur.text,RM?1e9:revealCount(G.cur.text,G.curT,G.cur));M.sT=clamp((WALLY-(BIGTOP+bb.h)-40)/170,0.42,1.15);if(RM)M.s=M.sT;if(bb.lines.length>3)M.mood='scared';}
   if(WAIT==='time'){TIMER-=elapsed;if(TIMER<=0)run();}
   else if(WAIT==='view'&&TIMER>0){TIMER-=elapsed;if(TIMER<=0)render();}
   g.clock+=dt*g.rate;
@@ -3603,10 +3630,10 @@ function drawLines(){
   var g=G,i,l,cur=g.cur&&g.cur.who;
   for(var pass=0;pass<2;pass++)for(i=0;i<g.lines.length;i++){
     l=g.lines[i];var isCur=l.who===cur;if((pass===1)!==isCur||!isCur)continue;
-    if(l.big&&l.who==='S'){bigBubble(l.text,RM?1e9:Math.floor(g.curT*55));continue;}   // drawn on every screen: it is a prop, not a caption
+    if(l.big&&l.who==='S'){bigBubble(l.text,RM?1e9:revealCount(l.text,g.curT||0,l));continue;}   // drawn on every screen: it is a prop, not a caption
     if(!WIDE)continue; // on a narrow screen the panel below the scene carries the text
     if((l.who==='S'||l.who==='H')&&g.human.gone)continue;
-    var n=l.text.length,mw=n>90?330:n>50?290:0,rv=Math.floor(g.curT*55);
+    var n=l.text.length,mw=n>90?330:n>50?290:0,rv=isCur?revealCount(l.text,g.curT||0,l):1e9;
     ctx.save();
     if(l.who==='S'&&g.morko.asleep)continue;
     if(l.who==='S'){var q=geom(),above=q.hdY-q.hdR-14,sw=mw||260,bh=bubbleH(l.text,sw,l);
@@ -3767,7 +3794,7 @@ function draw(){
     drawDish();
     drawTics(0);
     if(WAIT==='hold'&&g.hold&&!g.human.gone)holdRing();
-    drawToss();drawForm();drawPaper();
+    drawToss();drawForm();drawDots();drawPaper();
     sannaShadow();eeroShadow();riittaShadow();
     drawCoworkers(1);
     if(g.set==='bar'&&g.bar)barFront();
@@ -3891,7 +3918,7 @@ window.addEventListener('keydown',function(e){
   var tag=e.target.tagName;
   if(e.key===' '||e.key==='Enter'){
     if(tag==='BUTTON'||tag==='INPUT'||tag==='A')return;
-    if(!G.started){startGame(null,false);}else advance();
+    if(!G.started){startGame(null,false);}else userAdvance();
     e.preventDefault();
   }else if((e.key==='f'||e.key==='F')&&tag!=='INPUT'){toggleFull();}else if(e.key>='1'&&e.key<='4'&&tag!=='INPUT'){choose(+e.key-1);}
   else if(e.key==='p'||e.key==='P'){togglePause();}
@@ -3981,7 +4008,7 @@ document.addEventListener('webkitfullscreenchange',syncImmersive);
 
 // Phones: the controls fold away behind one button so that only the scene and the words are on screen.
 var menuBtn=document.getElementById('menu');
-function setMenu(on){document.body.classList.toggle('menu-open',on);if(menuBtn&&menuBtn.setAttribute)menuBtn.setAttribute('aria-expanded',String(on));}
+function setMenu(on){if(on!==document.body.classList.contains('menu-open'))sfx(on?'menuOn':'menuOff');document.body.classList.toggle('menu-open',on);if(menuBtn&&menuBtn.setAttribute)menuBtn.setAttribute('aria-expanded',String(on));}
 if(menuBtn&&menuBtn.addEventListener){
   menuBtn.addEventListener('click',function(e){if(e&&e.stopPropagation)e.stopPropagation();setMenu(!document.body.classList.contains('menu-open'));});
   document.addEventListener('click',function(){if(document.body.classList.contains('menu-open'))setMenu(false);});
@@ -4006,6 +4033,12 @@ document.addEventListener('visibilitychange',appVisibility);
 // Browsers and the Android WebView hold all sound until the first touch or key. Whatever was waiting starts then.
 (function(){var done=false;function first(){if(done)return;done=true;syncMusic();}
   if(document.addEventListener){document.addEventListener('pointerdown',first,true);document.addEventListener('keydown',first,true);document.addEventListener('touchstart',first,true);}})();
+
+// Every ordinary button answers with a small tick. Story choices and the menu have their own sounds.
+if(document.addEventListener)document.addEventListener('click',function(e){
+  var b=e&&e.target&&e.target.closest&&e.target.closest('button');
+  if(!b||b.id==='menu'||b.id==='sound'||b.classList.contains('opt')||b.disabled)return;sfx('ui');
+},true);
 // ---- src/90-loop.js ----
 /* ================= loop ================= */
 var last=0;

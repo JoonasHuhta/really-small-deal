@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.37 (Claude, 16.11.2026): **rytmi, äänet ja kolme pistettä.**
+
+- **Teksti hengittää.** Kuplan teksti ilmestyy edelleen noin 55 merkkiä sekunnissa, mutta piste, kysymys- ja huutomerkki pitävät pienen tauon, ajatusviiva hieman pidemmän ja kolme pistettä (…) pisimmän. Hiljaiset repliikit (`{quiet:1}`) tulevat hitaasti (30/s), kovat (`{loud:1}`) kerralla (85/s). *Less motion* näyttää tekstin heti.
+- **Ensimmäinen napautus näyttää repliikin loppuun**, toinen siirtyy eteenpäin. Ennen napautus kesken lauseen hyppäsi suoraan seuraavaan ja vitsin loppu jäi lukematta.
+- **Äänet:** puhekupla poksahtaa ilmestyessään (Ekskyysmillä matalampi poks), valikko aukeaa ja sulkeutuu omalla kaksisävelellään, ja tavalliset napit naksahtavat. Tarinan valinnoilla oli jo oma äänensä.
+- **Torstai: kolme pistettä.** ”Seen 17:31.” -viestin alle ilmestyy Sannan kirjoitusindikaattori ja katoaa. ”And she TYPED. I saw the dots. Then she UN-typed.” – ”Maybe she sneezed.” – ”For two seconds? Nobody sneezes in paragraphs.” Selitys tulee myöhemmin itsestään: Sannan puhelimesta loppui akku.
+
 Versio 0.36 (Claude, 16.11.2026): **toisen näytöksen viimeistely.**
 
 - *Quiet.*- ja *Evenings.*-hetkissä ihmisellä on nyt **tavallinen varjo seinällä**: harmaa, silmätön, ja se nostaa kupin kun ihminen nostaa. Kun lamppu syttyy ja Ekskyysmi palaa, se katoaa.
@@ -308,7 +315,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.36, viisi päivää ja toinen näytös ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.37, viisi päivää ja toinen näytös ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

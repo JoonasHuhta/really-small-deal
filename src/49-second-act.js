@@ -296,3 +296,11 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
   function(){addLived('one evening, annotated',25);G.evenings=true;},
   lensPeek({x:520,y:300},'EVENINGS: MINE.')
 ]);}
+
+/* ---- three dots: someone is typing. Then they are not. ---- */
+function typingDots(secs){return function(){return [function(){G.dots={t:0};sfx('pop');},{wait:secs},function(){G.dots=null;sfx('dotsOff');},{wait:0.7}];};}
+function drawDots(){
+  var d=G.dots;if(!d)return;d.t+=1/60;var x=G.human.x+182,y=346,i;
+  ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=2;rr(x,y,64,32,16);ctx.fill();ctx.stroke();
+  for(i=0;i<3;i++){var b=RM?0:Math.max(0,Math.sin(d.t*7-i*0.9))*4;ctx.fillStyle='#8b8070';circ(x+18+i*14,y+16-b,4.2);ctx.fill();}
+}

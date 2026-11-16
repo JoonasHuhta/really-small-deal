@@ -53,9 +53,19 @@ function setLine(who,text,o){
   g.bick=pair&&text.length<=46&&!(o&&o.big)?(g.bick||0)+1:(who==='S'||who==='H')&&pair?Math.max(0,(g.bick||0)-1):0;
   var mute=who==='S'&&g.morko.asleep;
   g.phoneN=who==='P'?3:Math.max(0,(g.phoneN||0)-1);if(who==='P'&&!/^You:/.test(text))g.buzz=0.7;
-  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute)speak(who,text);if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
+  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute){speak(who,text);if(who!=='N'&&!(o&&o.big))sfx(who==='S'?'popS':'pop');}if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
   history.push({who:who,text:text});
 }
+// How many characters of a line are showing after t seconds. A full stop is a breath, an ellipsis is a longer one.
+function revealCount(text,t,l){
+  var cps=l&&l.quiet?30:l&&l.loud?85:55,i=0,c,n=text.length;
+  for(;i<n;i++){t-=1/cps;if(t<0)return i;c=text.charAt(i);
+    if(c==='…')t-=0.34;else if((c==='.'||c==='?'||c==='!')&&text.charAt(i+1)===' ')t-=0.24;else if(c===','||c===';')t-=0.1;else if(c==='—')t-=0.18;}
+  return n;
+}
+function revealing(){var c=G.cur;return !RM&&WAIT==='click'&&c&&c.who!=='N'&&!c.big&&revealCount(c.text,G.curT||0,c)<c.text.length;}
+// What a tap does: finish the sentence first, then move on. (The test driver calls advance() directly.)
+function userAdvance(){if(revealing()){G.curT=99;return;}advance();}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 // capitals are emphasis: the panel shows them the way the bubble does
 function emph(h){return h.replace(/(^|[\s“(—-])([A-Z][A-Z’']+)(?![a-z])/g,function(_,a,w){return a+'<strong>'+w+'</strong>';});}
@@ -146,10 +156,10 @@ elOpts.addEventListener('click',function(e){
   if(i==='hold'){holdClick();return;}
   if(i==='skip'){skipIntro();return;}
   if(i==='read'){readReply();return;}
-  if(i==='go')advance();else choose(+i);
+  if(i==='go')userAdvance();else choose(+i);
 });
 var swallowClick=false;
-cv.addEventListener('click',function(e){if(swallowClick){swallowClick=false;return;}if(paused&&G.started&&!G.ended){togglePause();return;}if(lensFree()){lensTap(e);return;}if(WAIT==='hold'){holdClick();return;}if(WAIT==='toss')return;if(WAIT!=='stretch')advance();});
+cv.addEventListener('click',function(e){if(swallowClick){swallowClick=false;return;}if(paused&&G.started&&!G.ended){togglePause();return;}if(lensFree()){lensTap(e);return;}if(WAIT==='hold'){holdClick();return;}if(WAIT==='toss')return;if(WAIT!=='stretch')userAdvance();});
 cv.addEventListener('pointerdown',function(e){if(WAIT==='hold'){holdDown();try{cv.setPointerCapture(e.pointerId);}catch(_){}}});
 elOpts.addEventListener('pointerdown',function(e){var t=e.target&&e.target.closest?e.target.closest('[data-i=hold]'):null;if(t)holdDown();});
 window.addEventListener('pointerup',holdUp);window.addEventListener('pointercancel',holdUp);window.addEventListener('blur',holdUp);

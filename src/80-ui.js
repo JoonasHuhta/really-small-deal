@@ -91,7 +91,7 @@ window.addEventListener('keydown',function(e){
   var tag=e.target.tagName;
   if(e.key===' '||e.key==='Enter'){
     if(tag==='BUTTON'||tag==='INPUT'||tag==='A')return;
-    if(!G.started){startGame(null,false);}else advance();
+    if(!G.started){startGame(null,false);}else userAdvance();
     e.preventDefault();
   }else if((e.key==='f'||e.key==='F')&&tag!=='INPUT'){toggleFull();}else if(e.key>='1'&&e.key<='4'&&tag!=='INPUT'){choose(+e.key-1);}
   else if(e.key==='p'||e.key==='P'){togglePause();}
@@ -181,7 +181,7 @@ document.addEventListener('webkitfullscreenchange',syncImmersive);
 
 // Phones: the controls fold away behind one button so that only the scene and the words are on screen.
 var menuBtn=document.getElementById('menu');
-function setMenu(on){document.body.classList.toggle('menu-open',on);if(menuBtn&&menuBtn.setAttribute)menuBtn.setAttribute('aria-expanded',String(on));}
+function setMenu(on){if(on!==document.body.classList.contains('menu-open'))sfx(on?'menuOn':'menuOff');document.body.classList.toggle('menu-open',on);if(menuBtn&&menuBtn.setAttribute)menuBtn.setAttribute('aria-expanded',String(on));}
 if(menuBtn&&menuBtn.addEventListener){
   menuBtn.addEventListener('click',function(e){if(e&&e.stopPropagation)e.stopPropagation();setMenu(!document.body.classList.contains('menu-open'));});
   document.addEventListener('click',function(){if(document.body.classList.contains('menu-open'))setMenu(false);});
@@ -206,3 +206,9 @@ document.addEventListener('visibilitychange',appVisibility);
 // Browsers and the Android WebView hold all sound until the first touch or key. Whatever was waiting starts then.
 (function(){var done=false;function first(){if(done)return;done=true;syncMusic();}
   if(document.addEventListener){document.addEventListener('pointerdown',first,true);document.addEventListener('keydown',first,true);document.addEventListener('touchstart',first,true);}})();
+
+// Every ordinary button answers with a small tick. Story choices and the menu have their own sounds.
+if(document.addEventListener)document.addEventListener('click',function(e){
+  var b=e&&e.target&&e.target.closest&&e.target.closest('button');
+  if(!b||b.id==='menu'||b.id==='sound'||b.classList.contains('opt')||b.disabled)return;sfx('ui');
+},true);
