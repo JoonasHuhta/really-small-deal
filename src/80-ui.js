@@ -99,7 +99,7 @@ window.addEventListener('keydown',function(e){
   }else if((e.key==='f'||e.key==='F')&&tag!=='INPUT'){toggleFull();}else if(e.key>='1'&&e.key<='4'&&tag!=='INPUT'){choose(+e.key-1);}
   else if(e.key==='p'||e.key==='P'){togglePause();}
 });
-function syncPause(){if(paused||appHidden){stopVoice();holdUp();dragging=false;}syncAudioState();document.getElementById('pause').textContent=paused?'Resume':'Pause';document.body.classList.toggle('is-paused',paused);}
+function syncPause(){if(paused||appHidden){stopVoice();holdUp();dragging=false;}syncAudioState();syncWake();document.getElementById('pause').textContent=paused?'Resume':'Pause';document.body.classList.toggle('is-paused',paused);}
 function togglePause(){if(!G.started||G.ended||logDialog.open||ov.classList.contains('on'))return;paused=!paused;if(!paused)G.awayNote=null;syncPause();}
 document.getElementById('pause').addEventListener('click',togglePause);
 document.getElementById('restart').addEventListener('click',function(){
@@ -209,6 +209,23 @@ document.addEventListener('visibilitychange',appVisibility);
 // Browsers and the Android WebView hold all sound until the first touch or key. Whatever was waiting starts then.
 (function(){var done=false;function first(){if(done)return;done=true;firstTouch=true;if(musicEl&&musicEl.preload==='none')musicEl.preload='auto';syncMusic();}
   if(document.addEventListener){document.addEventListener('pointerdown',first,true);document.addEventListener('keydown',first,true);document.addEventListener('touchstart',first,true);}})();
+
+// The screen stays on while someone is reading. In a browser this is the Wake Lock API: held while a story is running,
+// unpaused and visible, and let go after five minutes without a touch, so a phone left on the table can still sleep.
+// The Android app keeps the screen on natively (GameApp.java): its WebView has no wake lock.
+var wakeLock=null,wakeAsking=false,lastInput=Date.now();
+function wantAwake(){return !!(G&&G.started&&!G.ended&&!paused&&!appHidden&&Date.now()-lastInput<300000);}
+function syncWake(){
+  var nav=window.navigator;if(!nav||!nav.wakeLock||typeof nav.wakeLock.request!=='function')return;
+  if(wantAwake()){
+    if(wakeLock||wakeAsking)return;wakeAsking=true;
+    nav.wakeLock.request('screen').then(function(l){wakeAsking=false;wakeLock=l;l.addEventListener&&l.addEventListener('release',function(){if(wakeLock===l)wakeLock=null;});if(!wantAwake())syncWake();})
+      .catch(function(){wakeAsking=false;});
+  }else if(wakeLock){var l=wakeLock;wakeLock=null;try{l.release();}catch(e){}}
+}
+if(document.addEventListener){['pointerdown','keydown','touchstart'].forEach(function(t){document.addEventListener(t,function(){lastInput=Date.now();if(typeof setTimeout==='function')setTimeout(syncWake,0);else syncWake();},true);});   // after the game has handled the touch
+  document.addEventListener('visibilitychange',function(){if(typeof setTimeout==='function')setTimeout(syncWake,0);else syncWake();});}
+if(typeof setInterval==='function')setInterval(syncWake,15000);
 
 // Every ordinary button answers with a small tick. Story choices and the menu have their own sounds.
 if(document.addEventListener)document.addEventListener('click',function(e){

@@ -14,7 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.43.0 (Claude, 16.11.2026): **Ekskyysmin luonne: innostus, karkaava huomio, ihastus, yhteinen sanasto ja valheen merkki.** Tämä on toinen alfa kavereille.
+Versio 0.43.1 (Claude, 16.11.2026): **näyttö pysyy päällä, ja koko peli tarkistettu.**
+
+- **APK:** `GameApp.java` asettaa `FLAG_KEEP_SCREEN_ON`, joten näyttö ei sammu pelin ollessa edessä. Android poistaa lipun, kun sovellus on taustalla. `tools/android-check.cjs` tarkistaa, että lippu on mukana.
+- **Selain:** Wake Lock API pitää näytön päällä, kun tarina on käynnissä, peli ei ole tauolla ja välilehti näkyy. Näyttö vapautuu tauolla, piilossa ja viiden minuutin koskemattomuuden jälkeen, ja kosketus palauttaa pidon. Testattu selaimessa: aloitusvalikossa ei pitoa, pelissä pito, tauolla vapautus, jatkettaessa pito, viiden minuutin jälkeen vapautus.
+- **Virhekierros:** kaikki 21 lab-kohtausta kolmella valintapolulla ja kaikki viisi päivää kahdella polulla ajettiin selaimessa oikealla piirrolla. Ei kaatumisia, jumiutumisia eikä sivuvirheitä. Testiajurilla lisäksi tarkistettiin, ettei mikään repliikki ole tyhjä, `undefined` tai tuntemattoman puhujan. Tyhjät rivit pito-, heitto- ja taistelukohdissa ovat tarkoituksellisia. Täysi asettelutarkastus (28 tilaa × 5 kokoa) on puhdas lukuun ottamatta tarkoituksellisesti vierivää lab-listaa.
+- Maanantain loppuruudun 4 px:n vieritys pienimmillä puhelimilla (alle 370 px korkeat) on korjattu.
+
+ **Ekskyysmin luonne: innostus, karkaava huomio, ihastus, yhteinen sanasto ja valheen merkki.** Tämä on toinen alfa kavereille.
 
 - Tiistaina nitoja (turvallinen innostus), torstaina koi kesken hälytyksen, ja torstain ”It’s fine.” -repliikissä varjo pienenee hetkeksi (`fib()`).
 - Perjantaina ihminen käyttää varjon omaa ilmausta ”a no in a coat”, jos pelaaja kuuli sen keskiviikkona (`G.coatNo`, tallentuu).

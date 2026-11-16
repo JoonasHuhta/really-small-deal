@@ -16,6 +16,7 @@ if(!/android:windowFullscreen/.test(s)){
 }else console.log('styles.xml: fullscreen already set.');
 // 3. The whole screen. Hides the navigation bar as well as the status bar, and lets the window run under the camera cutout,
 //    so no strip is left at the side in landscape. Done from an Application class, so MainActivity is never edited.
+//    It also keeps the screen on while the game is in front: nobody wants the phone to go dark mid-sentence.
 const appId=require('../capacitor.config.json').appId,pkgDir=path.join(app,'java',...appId.split('.'));
 const gameApp=`package ${appId};
 
@@ -70,6 +71,7 @@ public class GameApp extends Application {
                 w.setAttributes(lp);
             }
         }
+        w.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);   // only while this window is visible; Android drops it in the background
         decor.setBackgroundColor(Color.parseColor("#0d1114"));
         WindowCompat.setDecorFitsSystemWindows(w, false);
         WindowInsetsControllerCompat c = WindowCompat.getInsetsController(w, decor);
