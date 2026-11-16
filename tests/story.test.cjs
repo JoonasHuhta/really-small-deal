@@ -312,6 +312,12 @@ function playLab(id,mode){
   let tr0=playLab('rewind',0);assert.match(tr0,/Memory is a living document/);assert.match(tr0,/The one with horns/);assert.equal(T.G.tape,null);
   tr0=playLab('rewind',1);assert.match(tr0,/The actual one/);assert.doesNotMatch(tr0,/She has horns/);assert.match(tr0,/I’m EVERYWHERE/);
 }
+// Night shift: the other shadows, in the dark, and a morning.
+{
+  const tn=playLab('night');
+  assert.match(tn,/Z: It’s me\. Sanna’s/);assert.match(tn,/W: Heavy\./);assert.match(tn,/One arm is still under the bed/);assert.match(tn,/They’re all like us/);
+  assert.equal(T.G.night,null);assert.equal(T.G.human.gone,false,'the human gets up in the morning');
+}
 // ---- the second act (TOINEN_NAYTOS.md) ----
 {
   let t2=playLab('nothing');
@@ -329,7 +335,7 @@ function playLab(id,mode){
   assert.match(t2,/Am I allowed\?/);assert.match(t2,/I missed it/);assert.equal(T.G.morko.asleep,false,'the lamp brings it back');assert.equal(T.G.lampOff,false);
 }
 // The second act sits between Thursday's moments and Friday, in this order.
-assert.match(require('fs').readFileSync(require('path').join(__dirname,'..','src','33-moments.js'),'utf8'),/4:\['reply','notnow','bar','nothing','form','quiet','evenings'\]/);
+assert.match(require('fs').readFileSync(require('path').join(__dirname,'..','src','33-moments.js'),'utf8'),/4:\['reply','notnow','bar','nothing','form','quiet','evenings','night'\]/);
 // Nothing in the game names a condition, a drug or a profession. The player works it out, or does not.
 {
   const fs2=require('fs'),path2=require('path'),dir=path2.join(__dirname,'..','src');

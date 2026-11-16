@@ -324,7 +324,7 @@ function drawLines(){
     l=g.lines[i];var isCur=l.who===cur;if((pass===1)!==isCur||!isCur)continue;
     if(l.big&&l.who==='S'){bigBubble(l.text,RM?1e9:revealCount(l.text,g.curT||0,l));continue;}   // drawn on every screen: it is a prop, not a caption
     if(!WIDE)continue; // on a narrow screen the panel below the scene carries the text
-    if((l.who==='S'||l.who==='H')&&g.human.gone)continue;
+    if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)continue;   // at night the human is in bed, but the shadow is very much awake
     var n=l.text.length,mw=n>90?330:n>50?290:0,rv=isCur?revealCount(l.text,g.curT||0,l):1e9;
     ctx.save();
     if(l.who==='S'&&g.morko.asleep)continue;
@@ -491,6 +491,7 @@ function draw(){
     drawCoworkers(1);
     if(g.set==='bar'&&g.bar)barFront();
     drawLens();
+    drawNight();
     drawLines();
     drawQte();
   }

@@ -55,6 +55,7 @@ Muutos on yksi rivi tiedostossa `src/33-moments.js`:
 | **uusi** | ***The form.*** | käänne |
 | **uusi** | ***Quiet.*** | valevoitto |
 | **uusi** | ***Evenings.*** | paluu |
+| **uusi 0.39** | ***Night shift.*** | yhteisö: pimeässä kaikki varjot ovat samaa varjoa |
 | luku 5 | *Oh, hi. Again.* (perjantai) | kolme pientä muutosta, ks. 4.5 |
 | | *The group chat* | ennallaan |
 

@@ -14,6 +14,15 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.39 (Claude, 16.11.2026): **uusi välihetki *Night shift.*: pimeässä kaikki varjot ovat samaa varjoa.**
+
+- Ihminen nukkuu ja lamppu on sammuksissa. Varjolla ei ole valossa reunoja, joten Ekskyysmi ei ole pieni eikä poissa: hän on koko huone, ja näkyvissä ovat vain silmät. ”I’m not small. I’m not gone. I’m the whole room.”
+- Ohi ajavan auton valot pyyhkäisevät huoneen, ja Ekskyysmi venyy kattoon. ”Every car that passes is a short holiday.”
+- Pimeydestä ilmestyy muitakin silmäpareja: Sannan, Eeron ja Riitan varjot. Pimeässä he ovat samaa ainetta. Ekskyysmi saa ensimmäistä kertaa tietää, että kaikki tekevät samaa työtä: Eeron varjo kirjoittaa huomisen anteeksipyynnön etukäteen, Riitan varjo laskee yksitoista asiaa käsistään ja sanoo taas ”Heavy.” (”I say it every night. Somebody should.”), Sannan varjo valvoi kolmeen sanan ”fine” takia. ”There’s no meeting. It’s just dark. We’re always here.”
+- Yksin jäätyään: ”You’ve gone somewhere again. I can’t follow. There’s no light in there.” – ”I’ll wait by the bed. You always come back.” – ”I check. Twice.”
+- Aamulla 06:40 hän kokoaa itsensä nurkista: ”One arm is still under the bed.” Ihminen: ”Did you sleep?” – ”I had a meeting.” – ”With whom?” – ”Everybody. They’re all like us.”
+- Paikka: heti *Evenings.*-hetken jälkeen, ennen perjantaita. Perjantaina Sannan varjo sanoo nyt ”Oh. Daylight. You look smaller.” – ”Evenings. Nights. And Fridays.”
+
 Versio 0.38 (Claude, 16.11.2026): **uusi välihetki *Rewind.*: muisti muokkaa.**
 
 - Kello 23:40 Ekskyysmi katsoo nauhalta Sannan maanantaisen ”oh, hi.” -tervehdyksen uudestaan. Joka kelauksella muisto pahenee: ”oh, hi.” → ”oh. hi.” → ”Oh. Hi.” → ”OH. HI.”, kulmat painuvat, suu kääntyy alas ja kuva punertaa. ”It’s getting WORSE. Which means it was always bad and I’m only now seeing it clearly.”
@@ -321,7 +330,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.38, viisi päivää ja toinen näytös ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.39, viisi päivää ja toinen näytös ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

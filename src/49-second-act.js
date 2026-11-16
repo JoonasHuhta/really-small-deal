@@ -368,3 +368,99 @@ function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',c
   ['H','Go to sleep.'],
   ['S','I’m a shadow. It’s dark. I’m EVERYWHERE.']
 ]);}
+
+/* ================= Night shift. In the dark every shadow is the same shadow. ================= */
+// A shadow needs light to have edges. With the lamp off, Ekskyysmi is not small and not gone: it is the whole room,
+// and so are all the others. Only their eyes show. Nobody planned a meeting; it is just dark, and they are always here.
+var NIGHT_EYES={S:null,Z:{x:300,y:WALLY-150},Y:{x:610,y:WALLY-176},W:{x:840,y:WALLY-212}};
+function nightOn(){var g=G,M=g.morko;g.night={eyes:{S:1},t:0};g.bed=true;g.human.gone=true;g.lampOff=true;g.darkT=g.dark=1;M.asleep=false;M.dim=0.04;M.s=M.sT=1.35;
+  g.ax=NIGHT_EYES.Z.x-62;g.yx=g.yxT=NIGHT_EYES.Y.x;g.rx=NIGHT_EYES.W.x-92;}
+function eyesOn(k){return function(){G.night.eyes[k]=1;sfx('pop');};}
+function eyesOff(){var e=G.night.eyes;for(var k in e)if(k!=='S')e[k]=0;sfx('dotsOff');}
+function passingCar(){G.night.car=0;sfx('car');}
+function dawn(){var g=G,M=g.morko;g.night=null;g.lampOff=false;g.darkT=0;M.dim=null;M.s=0.3;M.sT=1;M.mood='calm';g.dawn=1;}
+function wakeUp(){var g=G,Hm=g.human;g.bed=false;Hm.gone=false;Hm.x=Hm.xT=470;Hm.face='neutral';Hm.facing=1;}
+function drawBed(){
+  if(!G.bed)return;var x=330,y=FEETY-44;
+  ctx.fillStyle='#4a3d52';rr(x,y,300,44,8);ctx.fill();ctx.fillStyle='#3a3044';rr(x-8,y-52,22,96,6);ctx.fill();
+  ctx.fillStyle='#e9e2cf';rr(x+20,y-16,70,22,10);ctx.fill();                                                        // pillow
+  ctx.fillStyle='#e4bba2';circ(x+58,y-20,15);ctx.fill();ctx.fillStyle='#4a3b32';ctx.beginPath();ctx.arc(x+58,y-24,15,Math.PI*0.95,Math.PI*2.05);ctx.fill();
+  ctx.strokeStyle='#2b2027';ctx.lineWidth=1.6;line(x+50,y-18,x+56,y-18);line(x+61,y-18,x+67,y-18);                  // eyes shut
+  var br=RM?0:Math.sin(G.time*1.5)*2.5;ctx.fillStyle='#c98f2e';rr(x+74,y-26-br,236,34+br,12);ctx.fill();             // blanket, breathing
+}
+function drawNight(){
+  var n=G.night,i;if(!n)return;n.t+=1/60;
+  ctx.fillStyle='rgba(6,6,16,.62)';ctx.fillRect(-20,-20,W+40,H+40);
+  if(n.car!=null){n.car+=1/60;var f=n.car/1.9;if(f>1)n.car=null;else{   // headlights sweep the room, and drag Ekskyysmi up the ceiling with them
+    var sx=-160+f*(W+320);ctx.fillStyle='rgba(255,236,190,.16)';ctx.beginPath();ctx.moveTo(sx-60,0);ctx.lineTo(sx+60,0);ctx.lineTo(sx+150,WALLY);ctx.lineTo(sx+30,WALLY);ctx.closePath();ctx.fill();
+    ctx.fillStyle='rgba(20,16,30,.9)';ctx.beginPath();ctx.moveTo(sx+40,WALLY);ctx.lineTo(sx+110,WALLY);ctx.lineTo(sx-20,10);ctx.lineTo(sx-150,10);ctx.closePath();ctx.fill();}}
+  for(var k in NIGHT_EYES){if(!n.eyes[k])continue;var p=k==='S'?(function(){var q=geom();return {x:q.bx,y:q.hdY};})():NIGHT_EYES[k],bl=Math.sin(n.t*0.9+p.x)>0.985;
+    ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';for(i=-1;i<=1;i+=2){if(bl){ctx.fillRect(p.x+i*8-5,p.y,10,1.6);continue;}circ(p.x+i*8,p.y,4.6);ctx.fill();}
+    if(!bl){ctx.fillStyle='#06060f';for(i=-1;i<=1;i+=2){circ(p.x+i*8+1.4,p.y+0.6,2);ctx.fill();}ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';}}
+}
+function labNight(){return labScene({set:'home',title:'Night shift.',plan:'Sleep.',clock:23*3600+50*60}).concat([
+  nightOn,
+  ['N','23:50. The human is asleep. The lamp is off.'],
+  addTic('z',388,FEETY-92,{life:2.4}),addTic('z',398,FEETY-112,{at:0.8,life:2.4}),
+  ['S','Night shift. Perimeter: one door, one window, one human. All accounted for.'],
+  ['S','Human: breathing. Fourteen a minute. I’m counting.'],
+  {wait:1.4},
+  ['S','…It’s very dark. I’ve lost my edges.'],
+  ['S','I’m not small. I’m not gone. I’m the whole room.'],
+  passingCar,{wait:2.1},
+  ['S','A car. I went all the way up the ceiling.'],
+  ['S','Every car that passes is a short holiday.'],
+  {wait:1.2},
+  eyesOn('Z'),{wait:0.9},
+  ['Z','Evening.'],
+  ['S','Who’s THERE?',{loud:1}],
+  ['Z','It’s me. Sanna’s. It’s dark. We’re the same thing now.'],
+  ['S','That’s a breach of privacy.'],
+  eyesOn('Y'),{wait:0.7},
+  ['Y','Eero’s asleep. I’m drafting tomorrow’s apology. In advance.'],
+  eyesOn('W'),{wait:0.7},
+  ['W','Eleven things. I put them down at night. Don’t tell anyone.'],
+  ['S','…You ALL do this?'],
+  ['Z','Every night. You never came.'],
+  ['S','I was guarding the door.'],
+  ['Z','From what?'],
+  aside(['S','…It’s a very important door.']),
+  ['Y','Is it true you think “sometime” is a threat?'],
+  ['S','It IS a threat. It has no date.'],
+  ['Y','That’s what I SAID.'],
+  ['W','What do you do with yours? The things.'],
+  ['S','I file them. Since 2011.'],
+  ['W','All of them?'],
+  ['S','All of them.'],
+  ['W','Heavy.'],
+  ['S','…You said that before.'],
+  ['W','I say it every night. Somebody should.'],
+  ['Z','Sanna was up till three again. Someone said “fine”.'],
+  ['S','Ours was up over “oh, hi.”'],
+  ['Z','Yours said that to mine.'],
+  ['S','I know. I replayed it. She had horns by the end.'],
+  ['Z','She had a mug.'],
+  ['S','I know that NOW.'],
+  {wait:1.2},
+  ['Z','Same time tomorrow.'],
+  ['S','There’s a meeting? Every night?'],
+  ['Z','There’s no meeting. It’s just dark. We’re always here.'],
+  eyesOff,{wait:1.6},
+  ['S','…Huh.',{quiet:1}],
+  {wait:1.0},
+  ['S','You’ve gone somewhere again. I can’t follow. There’s no light in there.'],
+  ['S','I’ll wait by the bed. You always come back.'],
+  ['S','I check. Twice.',{quiet:1}],
+  {wait:1.2},
+  function(){G.clock=6*3600+40*60;},dawn,{wait:1.6},
+  ['N','06:40.'],
+  ['S','Morning. I’m reassembling.'],
+  ['S','One arm is still under the bed.'],
+  wakeUp,{wait:0.8},
+  ['H','Did you sleep?'],
+  ['S','I had a meeting.'],
+  ['H','With whom?'],
+  ['S','Everybody. They’re all like us.',{look:'soft'}],
+  ['H','…Everybody?'],
+  ['S','It was dark. We talked.',{look:'pleased'}]
+]);}
