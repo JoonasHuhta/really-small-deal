@@ -12,7 +12,7 @@ Poikkeamat tästä ohjeesta, ja mitä jäi tekemättä (seuraavalle tekijälle):
 |---|---|---|
 | `G.morko.away`, `alpha` | Poissaolo on `M.asleep=true` (seinähahmo sulaa tavalliseksi lattiavarjoksi, sama mekaniikka kuin pelin alussa). Haalistuminen allekirjoittaessa on `M.dim`. Apurit `shadowAway()`, `shadowBack(s)`. | – |
 | tavallinen varjo seinällä, joka toistaa asennon | tehty 0.36: `plainShadow()`, lippu `G.plain` | – |
-| `morko.pose='sit'` | vain koko (s = 0,62) ja lippu `G.sat` | oma istuma-asento |
+| `morko.pose='sit'` | tehty 0.36.2: reidet ja polvet `morkoBody`-funktiossa | – |
 | kotimatka autoineen *Quiet.*-hetkessä | kertojan kaksi riviä | oikea kävelykohtaus ilman summia |
 | paperikuitti 1.0 | tehty 0.36: `quietReceipt()` piirtää paperin, ja viikon kuitissa on oma rivi | – |
 | lampun napautus lampun kohdalta | napautus mihin tahansa ruudulla tai nappi *Turn on the lamp* | – |

@@ -125,7 +125,7 @@ function labNothing(){return labScene({set:'home',title:'Nothing.',plan:'Fold th
   ['H','There doesn’t have to be one.'],
   ['S','Then what do I DO?'],
   ['H','Sit down.'],
-  set({s:0.62,mood:'worry'}),function(){G.sat=true;},{wait:1.2},
+  set({s:0.62,mood:'worry',pose:'sit'}),function(){G.sat=true;sfx('drip');},{wait:1.2},
   {hold:{kind:'sit',secs:5,clock:1,text:'Sitting. No cause. No verdict. Sitting.'}}
  ],outside({title:'WHAT THE CALENDAR SAW',dur:'duration: 4 minutes',cap:'Someone sat on the floor next to a laundry basket.',anim:'text'}),[
   set({s:0.8,mood:'calm'}),
@@ -136,7 +136,7 @@ function labNothing(){return labScene({set:'home',title:'Nothing.',plan:'Fold th
   ['S','I’d like to file a complaint. About the absence of a cause.'],
   ['H','With whom?'],
   aside(['S','That’s the complaint.']),
-  function(){G.human.pose=null;G.human.face='neutral';},
+  function(){G.human.pose=null;G.human.face='neutral';},set({pose:null,s:1}),
   ['H','I’m going to ring someone tomorrow.'],
   ['S','About the sofa?'],
   ['H','About this.'],

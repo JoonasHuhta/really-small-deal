@@ -1832,7 +1832,7 @@ function labNothing(){return labScene({set:'home',title:'Nothing.',plan:'Fold th
   ['H','There doesn’t have to be one.'],
   ['S','Then what do I DO?'],
   ['H','Sit down.'],
-  set({s:0.62,mood:'worry'}),function(){G.sat=true;},{wait:1.2},
+  set({s:0.62,mood:'worry',pose:'sit'}),function(){G.sat=true;sfx('drip');},{wait:1.2},
   {hold:{kind:'sit',secs:5,clock:1,text:'Sitting. No cause. No verdict. Sitting.'}}
  ],outside({title:'WHAT THE CALENDAR SAW',dur:'duration: 4 minutes',cap:'Someone sat on the floor next to a laundry basket.',anim:'text'}),[
   set({s:0.8,mood:'calm'}),
@@ -1843,7 +1843,7 @@ function labNothing(){return labScene({set:'home',title:'Nothing.',plan:'Fold th
   ['S','I’d like to file a complaint. About the absence of a cause.'],
   ['H','With whom?'],
   aside(['S','That’s the complaint.']),
-  function(){G.human.pose=null;G.human.face='neutral';},
+  function(){G.human.pose=null;G.human.face='neutral';},set({pose:null,s:1}),
   ['H','I’m going to ring someone tomorrow.'],
   ['S','About the sofa?'],
   ['H','About this.'],
@@ -3504,7 +3504,11 @@ function morkoBody(q){
   ctx.globalAlpha=0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.baseX-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
   ctx.beginPath();ctx.moveTo(q.baseX-26*q.s,q.by);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.bx+q.shW*0.8,q.shY+6);ctx.lineTo(q.bx-q.shW*0.8,q.shY+6);ctx.closePath();ctx.fill();
   ctx.beginPath();ctx.ellipse(q.bx,q.shY+4,q.shW,Math.max(14,26*q.s),0,0,Math.PI*2);ctx.fill();
-  circ(q.bx,q.hdY,q.hdR);ctx.fill();ctx.globalAlpha=1;
+  circ(q.bx,q.hdY,q.hdR);ctx.fill();
+  if(G.morko.pose==='sit'){   // sitting on the floor of the wall: thighs out, knees up, and much less of it than usual
+    var s=q.s;ctx.beginPath();ctx.ellipse(q.bx-40*s,q.by-16*s,56*s,17*s,0,0,Math.PI*2);ctx.fill();
+    circ(q.bx-84*s,q.by-38*s,20*s);ctx.fill();ctx.fillRect(q.bx-98*s,q.by-38*s,28*s,38*s);}
+  ctx.globalAlpha=1;
   if(wk>0.4)morkoFace(q);
   if(G.ninja)drawHeadband(q);
 }
