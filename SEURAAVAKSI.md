@@ -8,9 +8,10 @@
 >
 > **Suunta ja painopisteet:** [SUUNTA.md](SUUNTA.md) (15.11.2026). Tämä tiedosto on yksityiskohtainen työlista.
 
-## Missä ollaan (0.40)
+## Missä ollaan (0.41)
 
-- **Peli:** viisi päivää (Oh, hi · Quick chat? · Could you just… · Seen. · For now) ja niiden välissä yksitoista lyhyttä hetkeä. Yksi läpipeluu kestää lukutahdissa noin 38 minuuttia. Selainpeli toimii myös puhelimella vaakasuunnassa. Android-kuori on valmiina, mutta sitä ei ole julkaistu.
+- **Peli:** viisi päälukua ja 17 lyhyttä hetkeä, kolme osaa. `npm run pace` arvioi yhden reitin 44 minuutiksi (230 sanaa/min, ei omia taukoja). Androidin paikallinen testiversio rakennetaan komennolla `tools\build-apk.cmd`; 0.41:n oikea laitetesti S23 Ultralla on seuraava askel.
+- **Viimeistelty:** osaotsikot, yövalo ja varjolintu, hiljaisen päivän säilyvä hyöty, Sannan vastavuoroisuus, baarin tarinoiden muistaminen ja lomakkeen puhelinasettelu. Tarkempi muutos ja testit: [README.md](README.md). Uusia välihetkiä ei lisätty.
 - **Rakenne on mitattu ja järjestetty** (Weilandin käännekohdat, Trubyn perusaskeleet): ks. [KASIKIRJOITUS.md](KASIKIRJOITUS.md) → Rakenne.
 - **Kantavat ideat:** varjon byrokratia ja ylisuojelu, *oikea vastaus* (mahdoton ikkuna), kaksi kelloa ja kuitti, röntgen, suurennuslasi, muiden ihmisten varjot ja kaari korjaamisesta pysymiseen.
 - **Vain labrassa:** *The voice message* ja *A fine.*

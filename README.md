@@ -8,11 +8,29 @@ Ei asennusta, ei kirjautumista. Toimii puhelimella vaakasuunnassa ja tietokoneel
 
 ## Pelaa paikallisesti
 
-Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
+Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallisesti ilman asennusta tai verkkoyhteyttä. Kieli on edelleen englanti. Vanha `taukohuone.html` ohjaa tähän versioon.
 
 **Pelin ydin (14.11.):** varjo ei opeta eikä anna vinkkejä, se vain yrittää suojella, kuten AwA:n susi. Huumori syntyy mittakaavasta: sisällä katastrofi, ulkona kaksi sekuntia. Vitsit kohdistuvat varjon byrokratiaan, arkistoon, välimerkkeihin, ylisuojeluun ja omaan arvokkuuteen, eivät ihmisen kipuun eikä toisten aitoon julmuuteen. Päämäärä on, että pelaaja nauraa, tunnistaa itsensä ja näkee lopussa suhteen muuttuvan: korjaamisesta pysymiseen.
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
+
+Versio 0.41.1 (Claude, 16.11.2026): **aloitusruudun hionta ja uusi musiikki.**
+
+- **Lamppupöytä on nyt varjon edessä.** Pöytä seisoo lattialla seinän edessä, joten seinällä oleva varjo jää sen taakse. Pöytä piirretään varjon ja ihmisen väliin (`roomFront()`), joten ihminen kulkee edelleen pöydän edestä.
+- **Posket pysyvät kasvoilla.** Kauempi poskipuna ylitti pään reunan, kun ihminen katsoo sivulle. Nyt posket rajataan kasvojen sisään.
+- **Aloitusruutu elää hiljaa.** Noin 11 sekunnin välein ihminen hörppää kahvia, ja Ekskyysmi katsoo kohteliaasti sivuun, suu supussa. Ei muuta. *Less motion* poistaa liikkeen.
+- **Uusi aloitusmusiikki** *Stargazer’s Field* (Joonas, 3:49) korvaa kappaleen *Safe At Last* samalla tiedostonimellä `assets/audio/title.mp3`. Pakattu 128 kbps:ään ilman kansikuvaa, 3,7 Mt.
+
+ **kolme hengähdystä, vastavuoroisempi tarina ja yövalo loppuun.**
+
+- Osaotsikot **Better safe. / A little room. / Still here.** odottavat pelaajan jatkamista. Part Two alkaa ennen *Nothing.*-hetkeä, Part Three ennen perjantaita. Kaikki 17 välihetkeä säilyvät entisillä tunnisteilla.
+- Sanna vetää baarissa oman kutsunsa takaisin liian nopeasti. Ihminen saa olla epävarma ja loukkaantunut, vaikka tietää illan menneen hyvin. Baarin kolme tarinavalintaa palaavat Sannan perjantain repliikissä ja säilyvät tallennuksessa. Nukkuvan Ekskyysmin aikana valinnan puhujana näkyy HUMAN.
+- *Quiet.* on aidosti helpompi päivä: huumori, rekisterikilpipari ja valmis viisijalkainen kissa jäävät. Sama piirros jaetaan lopussa. Lomakkeen allekirjoitus ei haalista varjoa; iltaa ei selitetä vaikutuksen loppumisen kellonlyömällä. Sanna ei kutsu hiljaisen päivän ihmistä vääräksi versioksi itsestään.
+- Riitan sävyä ei selitetä pois. Eero saa pettyä. Rewindin ulkopuolinen kuva myöntää, ettei tervehdyksestä ole tallennetta. Loppu ei riipu kaikkien hyväksynnästä: piirros jätetään näkyviin. Yövalo ja varjolintu ovat yksi pelaajan tahdissa katsottava loppukuva.
+- Korjattu maanantain uusinnan ja Rewindin samannimisten funktioiden törmäys, tauolla jatkuneet animaatiokellot sekä nukkuvan varjon kuplien canvas-tilapinon vuoto. Lomake ja kuitti mahtuvat tekstipaneelin yläpuolelle; lomakkeen kysymykset voi lukea myös paneelista.
+- `npm run pace`: **44:00**, 5 850 sanaa, maanantai B ja ensimmäiset sallitut valinnat. Arvio käyttää 230 sanaa/min, repliikkeihin 0,6 s lisän, valintoihin 4 s ja käsikirjoituksen odotuksia. Ei sisällä omia taukoja tai uudelleenlukemista; ei ole testipelaajan mitattu peliaika.
+- Tarkistukset: 180 maanantain reittiä, 12 koko tarinan ajoa, tallennukset, baarin kaikki kolme tarinaa, osaotsikot, tauot ja loppukuva. Selaimessa 13 tilaa × 5 puhelinkokoa × 2 tekstikokoa: ei sivun/paneelin ylivuotoa tai ruudun ulkopuolisia valintanappeja. **0.41:n oikea laitetesti S23 Ultralla on vielä tekemättä.**
+- APK:n rakennus: `tools\build-apk.cmd`. Ohje ja tarkistuksen rajat: [ANDROID.md](ANDROID.md). Tätä versiota ei ole julkaistu verkkosivulle tämän kierroksen aikana.
 
 Versio 0.40 (Claude, 16.11.2026): **baari-ilta jatkuu: varjo torkahtaa, ilta onnistuu, ja lasku tulee aamulla.**
 
@@ -340,7 +358,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.40, viisi päivää ja toinen näytös ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.41, viisi päälukua ja 17 välihetkeä, kolme osaa. Yhden reitin laskennallinen lukuaika noin 44 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

@@ -11,7 +11,7 @@ function scPrelude(){return [
   function(){var g=G,Hm=g.human,M=g.morko;music('intro');g.skippable=true;g.hud=false;g.clock=8*3600+51*60+20;
     Hm.gone=true;Hm.x=Hm.xT=1010;Hm.facing=-1;g.noCup=true;g.mugFixed=false;M.asleep=true;M.wake=0;M.s=M.sT=0.3;
     g.chap={day:CHAPTERS[1].day,title:CHAPTERS[1].title,t:0};g.chapter=1;newDay();sfx('card');},
-  {wait:2.2},
+  function(){return partCard(1);},
   function(){G.chap=null;G.fade=1;G.fadeRate=0.36;},
   addTic('Monday, 8:52. Nobody here yet.',190,62,{at:0.9,life:3.4,size:19}),
   {wait:2.6},
@@ -104,7 +104,7 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   set({mood:'surprised'}),
   ['S','…You agree?'],
   ['H','She was short with me. It happened.']
- ],outside({title:'WHAT HAPPENED',dur:'duration: 4 seconds',cap:'Riitta was short with you. She has eleven things on her list. You are not one of them.',anim:'text'}),[
+ ],outside({title:'WHAT HAPPENED',dur:'duration: 4 seconds',cap:'Riitta cut you off. The meeting moved on. Nobody explained the tone.',anim:'text'}),[
   calm,
   ['S','So I was right.'],
   ['H','That it happened. Yes.'],
@@ -113,10 +113,10 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   ['S','I rounded up.'],
   ['H','It stung.'],
   ['S','For how long?'],
-  ['H','About this long.'],
+  ['H','Still going, actually.'],
   function(){return G.jobDone?[['S','…Is this the staying part?'],['H','This is the staying part.'],['S','It’s mostly standing.'],['H','Mostly.']]:[];},
   {wait:1.8},
-  ['H','There.'],
+  ['H','I still want to suggest Thursday.'],
   ['S','That’s IT? I had a whole evening planned.'],
   ['S','She didn’t apologise.'],
   ['H','No.'],

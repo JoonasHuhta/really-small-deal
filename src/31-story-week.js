@@ -6,8 +6,8 @@ function dayName(n){return CHAPTERS[n].title;} // kept under its old name: the t
 function scene(o){return function(){
   var g=G,M=g.morko,Hm=g.human;
   music(o.music||o.set||'room');
-  g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;
-  g.cowA=g.cowB=g.cowR=false;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
+  g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
+  g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;
@@ -16,7 +16,7 @@ function scene(o){return function(){
 function begin(n,o){return [scene(o),function(){
   var g=G;g.chapter=n;g.moment=null;newDay();g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
   g.morko.s=1;g.morko.off=-70;g.chap={day:CHAPTERS[n].day,title:CHAPTERS[n].title,t:0};saveProgress(n);stopVoice();sfx('card');
- },{wait:2.8},function(){G.chap=null;G.fade=1;}];}
+ },function(){return n===5?partCard(3):[{wait:2.8}];},function(){G.chap=null;G.fade=1;}];}
 function shadowHit(){var g=G;trigger();addLived('the one that landed',LIVED.shadowHit);sfx('hit');g.pulse=0.9;g.shake=RM?0:0.8;g.lines=[];g.cur=null;g.flash=0.8;g.morko.sT=0.62;g.morko.mood='scared';g.morko.pose=null;g.anx=0.9;g.cz=1.08;g.cx=W/2-30;g.cy=300;}
 function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);}
 
@@ -262,7 +262,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   set({cowB:1,bx:880}),
   set({sweat:0.45}),
   ['S','Friday. Same room. Same coffee. I’d like to flag that I’m calm.'],
-  function(){return G.lab?[]:[['H','You’re in early.'],['S','I asked for one morning back. A week.'],['H','Who did you ask?'],aside(['S','…You left the lamp on.'])];},
+  function(){return G.lab?[]:[['H','You’ve brought the whole archive.'],['S','Just the travel edition.'],aside(['S','It has wheels.'])];},
   ['H','You’re vibrating.'],
   ['H','And I’m sweating.'],
   ['S','Professionally.'],
@@ -272,9 +272,9 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   qteAuto,{wait:0.45},
   ['H','Hi.'],
   function(){G.qte=null;},
-  function(){return G.lab?[]:[['A','There you are.'],['H','I’ve been here all week.'],['A','Mm. Not quite.']];},
+  function(){return G.barStory?[['A',G.barStory==='2011'?'I waved at the wrong person yesterday. Thought of you.':G.barStory==='arms'?'I tried to tell Eero the umbrella story. I needed more arms.':'I saw a tiny umbrella yesterday. Thought of you.'],['H','Oh no.'],['A','In a good way.']]:[];},
   ['S','…That’s not the procedure.',{look:'squint'}],
-  ['H','That’s the whole procedure.'],
+  ['H','It came out before yours.'],
   set({aFace:1}),hit(0.8,'A'),{wait:1.3},
   ['S','…It still went off. Even though we got it right.'],
   ['H','I felt it.'],
@@ -288,7 +288,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   stampPutAway,{wait:0.6},
   {choice:[
     {t:'Read the verdict anyway. Quietly.',then:[['S','For the record: she hates us.',{quiet:1}],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.',{look:'soft'}]]},
-    {t:'Hold the verdict. Count to two.',then:[['S','One.'],['S','Two.'],['S','It’s been two seconds and nothing has happened to us.'],['H','Nothing was going to.'],['S','We didn’t KNOW that. We know it now.']]},
+    {t:'Hold the verdict. Count to two.',then:[['S','One.'],['S','Two.'],['S','It’s been two seconds and nothing has happened to us.'],['H','I wasn’t sure either.'],['S','I’ll keep the counting finger ready.']]},
     {t:'Stay. Wobble visibly.',then:[wobbleOn,['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.'],wobbleOff]}
   ]},
   calm,set({aFace:-1,near:1}),
@@ -301,7 +301,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   {wait:1.4},
   set({mood:'calm'}),
   ['H','Okay. Can I say something odd?'],
-  ['A','Always.'],
+  ['A','Go on.'],
   ['H','When someone says “oh, hi”, my brain hears a verdict. It’s very loud for two seconds. Then I spend a day on it.'],
   ['S','A WEEK. Be accurate.'],
   ['A','…Oh.'],
@@ -312,11 +312,11 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   lensPeek(function(){return {x:G.ax,y:FEETY-150};},'SANNA: ALSO UP TILL THREE.'),
   function(){G.zT=1;},{wait:1.6},
   fridayShadow,
-  archive('good',[['2026','She has one too.']]),
+  archive('good',[['2026','She told me herself.']]),
   ['S','…Filed. Under the other pile.',{look:'soft'}],
   ['H','There’s another pile?'],
   ['S','There is NOW.'],closeArchive,
-  ['A','Is that why you vanish at lunch? We stopped asking. I thought asking was pressure.'],
+  ['A','Is that why you used to vanish at lunch? We stopped asking. I thought asking was pressure.'],
   ['H','I thought not being asked was the verdict.'],
   ['A','So we’ve been being polite AT each other. For a year.'],
   mondayRepair,
@@ -325,7 +325,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['B','Hey! While you’re both here — could you also take my Monday shift?'],
   ['S','Here we go. I’ll get the “sure”.'],
   {choice:[
-    {t:'No. (I will wobble.)',f:function(){G.no=true;},then:[['H','Not this time, Eero.'],set({s:1.5,mood:'scared'}),['S','He’s going to—'],['B','Fair enough! I’ll ask Riitta.'],set({s:1.1,mood:'surprised'}),['S','…He survived. WE survived. It was three words.',{look:'stunned'}]]},
+    {t:'No. (I will wobble.)',f:function(){G.no=true;},then:[['H','Not this time, Eero.'],set({s:1.5,mood:'scared'}),['S','He’s going to—'],['B','Oh. Right. I’ll ask Riitta.'],set({s:1.1,mood:'surprised'}),['S','He sounds disappointed.'],['H','I think he is.'],['S','…He survived. WE survived. It was three words.',{look:'stunned'}]]},
     {t:'Say yes. Old habits.',f:yes,then:[['H','Sure.'],['S','Next time, then.'],['H','Next time.'],['S','I’ll put the “no” in the archive. Under “pending”.']]}
   ]},
   set({aFace:-1,mood:'calm'}),

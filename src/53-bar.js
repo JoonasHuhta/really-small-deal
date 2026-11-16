@@ -125,7 +125,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ['T','Sorry, didn’t see you there! What’ll it be?'],
   set({mood:'surprised'}),
   ['S','“Didn’t see you.” So we ARE invisible. I’d like that confirmed in writing.'],
-  ['H','He was changing a barrel.'],
+  ['H','He missed me. I still want the drink.'],
   ['H','A ginger beer, please.'],
   ['T','What?'],
   hit(0.75,'P'),{wait:1.3},
@@ -163,7 +163,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ['A','Sorry I’m late! Have you been waiting ages?'],
   {choice:[
     {t:'“No, just got here.” (Seventeen minutes.)',then:[['H','Seventeen minutes. I counted.'],['A','Ha! Of course you did. Next one’s on me.']]},
-    {t:'“It’s FINE.” With the face.',then:[['H','It was fine, actually. I had a drink. So did he.'],['A','Who?'],['H','Long story.']]},
+    {t:'“It’s FINE.” With the face.',then:[['H','It’s fine.'],['A','I did text.'],['H','I know. I got a bit stranded.'],['A','Next time I’ll text before I’m already late.']]},
     {t:'Tell her the truth: it was nice.',then:[['H','A bit. It was nice, though.'],['A','Good. I’ll get the next one.'],['S','Don’t tell her about the umbrella.']]}
   ]},
   function(){G.morko.pose='toast';},{wait:0.8},
@@ -177,10 +177,10 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ['S','I’m just resting my eyes. Keep an eye on… everything.',{quiet:1}],
   function(){G.morko.pose=null;shadowAway();},function(){G.tics.push(tic('z',G.human.x-70,WALLY-150,{life:2.2}));},{wait:1.6},
   ['N','Ekskyysmi is off duty. Nobody is reviewing anything.'],
-  {choice:[
-    {t:'Tell her about the umbrella.',then:[['H','Can I tell you something odd? My shadow had a drink.'],['A','Your shadow.'],['H','With an umbrella. For cover.']]},
-    {t:'Tell her about the umbrella. With your arms.',then:[['H','Okay. So. My shadow. Had a DRINK.'],['A','With what arms?'],['H','These arms. And an umbrella. For cover.']]},
-    {t:'Tell her everything. Starting in 2011.',then:[['H','In 2011 I waved at someone who was waving at someone else.'],['A','No!'],['H','And tonight my shadow had a drink. With an umbrella.']]}
+  {who:'H',choice:[
+    {t:'Tell her about the umbrella.',f:function(){G.barStory='umbrella';},then:[['H','Can I tell you something odd? My shadow had a drink.'],['A','Your shadow.'],['H','With an umbrella. For cover.']]},
+    {t:'Tell her about the umbrella. With your arms.',f:function(){G.barStory='arms';},then:[['H','Okay. So. My shadow. Had a DRINK.'],['A','With what arms?'],['H','These arms. And an umbrella. For cover.']]},
+    {t:'Tell her everything. Starting in 2011.',f:function(){G.barStory='2011';},then:[['H','In 2011 I waved at someone who was waving at someone else.'],['A','No!'],['H','And tonight my shadow had a drink. With an umbrella.']]}
   ]},
   ['A','That’s the best thing I’ve heard all week.'],
   ['T','Here’s the menu, if you want food.'],
@@ -189,6 +189,10 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ['A','“You too”!'],
   ['H','I say it to menus. It’s a whole thing.'],
   ['A','Same time next week?'],
+  ['H','I haven’t checked—'],
+  ['A','Right. Forget I asked.'],
+  ['H','The calendar. I haven’t checked the calendar.'],
+  ['A','Oh. I was halfway out of the building.'],
   ['H','Yes. Obviously. YES.'],
   ['N','Sanna laughed eight times. Somebody from the next table joined in. Nobody rehearsed anything.'],
   function(){var b=G.bar;G.barWas=b?{sdrink:b.sdrink,glass:b.glass}:null;}
@@ -207,7 +211,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   function(){G.pie={t:0};G.lines=[];G.hudWas=G.hud;G.hud=false;sfx('card');},{wait:1.8},
   ['H','Look at the green one.'],
   ['S','That’s just the background.',{look:'squint'}],
-  ['H','It’s most of the picture.'],
+  ['H','I know it’s most of the picture. I still want to apologise.'],
   ['S','I’m a shadow. I don’t do colour. I do the dot.'],
   {choice:[
     {t:'Make the dot smaller.',then:[['S','I can’t. I’ve laminated it.']]},
@@ -223,7 +227,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
  ]);}
 // The morning after, the way it looks from the inside: a big green evening, one small red dot, and how it feels.
 function drawPie(){
-  var p=G.pie;if(!p)return;p.t+=1/60;var k=Math.min(1,p.t/0.5),r=84*k,cy=172,lx=250,rx=710;
+  var p=G.pie;if(!p)return;var k=Math.min(1,p.t/0.5),r=84*k,cy=172,lx=250,rx=710;
   ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.fillStyle='rgba(13,17,20,.6)';ctx.fillRect(-20,-20,W+40,H+40);
   ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#f6f1e4';ctx.font='700 18px system-ui,sans-serif';
   ctx.fillText('HOW THE EVENING WENT',lx,52);ctx.fillText('HOW IT FEELS',rx,52);

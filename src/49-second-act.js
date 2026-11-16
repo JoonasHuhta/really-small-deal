@@ -16,15 +16,16 @@ function plainShadow(){
 }
 // The receipt for the quiet day, on the same paper as every other receipt. The only one that says 1.0.
 function quietReceipt(){
-  var rows=[['days on the calendar','1'],['days lived','1.0','big'],'-',['rehearsals','0'],['verdicts','0'],['exhibits examined','0'],['“for the record”','1 (unanswered)'],['number plates added up','0'],['things noticed','0']];
-  try{G.paper=receiptCanvas('RECEIPT · A QUIET MONDAY',rows,'It all went fine.');}catch(e){G.paper=null;}
-  if(G.paper&&G.paper.width)return [function(){G.lines=[];G.band=null;sfx('card');},{wait:0.8},['N','It all went fine.'],function(){G.paper=null;}];
+  var rows=[['days on the calendar','1'],['days lived','1.0','big'],'-',['lunches arranged','1'],['shifts declined','1'],['drawings finished','1'],['“for the record”','1 (unanswered)']];
+  try{G.paper=receiptCanvas('RECEIPT · A QUIET MONDAY',rows,'Room for something else.');}catch(e){G.paper=null;}
+  if(G.paper&&G.paper.width)return [function(){G.lines=[];G.band=null;sfx('card');},{wait:0.8},['N','One lunch arranged. One shift declined. One drawing finished.'],function(){G.paper=null;}];
   G.paper=null;
-  return outside({title:'RECEIPT · A QUIET MONDAY',dur:'days lived: 1.0',cap:'Rehearsals 0. Verdicts 0. Exhibits 0. Number plates added up 0. “For the record” 1, unanswered. It all went fine.',anim:'text'});
+  return outside({title:'RECEIPT · A QUIET MONDAY',dur:'days lived: 1.0',cap:'One lunch arranged. One shift declined. One drawing finished. “For the record” once, unanswered.',anim:'text'});
 }
 function drawPaper(){
-  var p=G.paper;if(!p||!p.width)return;var h=H-24,w=h*p.width/p.height;
-  ctx.fillStyle='rgba(13,17,20,.82)';ctx.fillRect(-20,-20,W+40,H+40);ctx.drawImage(p,(W-w)/2,12,w,h);
+  var p=G.paper;if(!p||!p.width)return;var h=SCENE_BOTTOM-24,w=h*p.width/p.height;
+  ctx.save();ctx.setTransform(SC,0,0,SC,0,0);
+  ctx.fillStyle='rgba(13,17,20,.82)';ctx.fillRect(-20,-20,W+40,H+40);ctx.drawImage(p,(W-w)/2,12,w,h);ctx.restore();
 }
 
 /* ---- a waiting room ---- */
@@ -48,12 +49,12 @@ var FORM_Q=[
   {n:18,q:'Does this cause problems in your daily life?',opts:['No','','Yes']}
 ];
 function formOpen(){G.form={i:-1,ticks:[-1,-1,-1,-1],sig:0};}
-function formQ(i){return function(){G.form.i=i;sfx('card');};}
+function formQ(i){return function(){G.form.i=i;sfx('card');return [['N',FORM_Q[i].q]];};}
 function formTick(i,k){return function(){G.form.ticks[i]=k;sfx('stamp');};}
 function drawForm(){
   var fm=G.form;if(!fm)return;
-  var x=604,y=70,w=318,h=392,i,q=FORM_Q[fm.i];
-  ctx.save();ctx.translate(x+w/2,y+h/2);ctx.rotate(-0.012);ctx.translate(-w/2,-h/2);
+  var w=318,h=392,k=Math.min(1,(SCENE_BOTTOM-32)/h),x=COMPACT?W*0.7-w*k/2:604,y=COMPACT?16:70,i,q=FORM_Q[fm.i];
+  ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.translate(x,y);ctx.scale(k,k);ctx.translate(w/2,h/2);ctx.rotate(-0.012);ctx.translate(-w/2,-h/2);
   ctx.fillStyle='rgba(20,17,29,.22)';rr(6,8,w,h,5);ctx.fill();ctx.fillStyle='#fbf8ef';ctx.strokeStyle='#8b8070';ctx.lineWidth=1.5;rr(0,0,w,h,5);ctx.fill();ctx.stroke();
   ctx.fillStyle='#55605c';rr(w/2-34,-10,68,20,5);ctx.fill();                                                                       // the clip
   ctx.fillStyle='#2b2733';ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='800 17px system-ui,sans-serif';ctx.fillText('ABOUT YOU',22,38);
@@ -70,7 +71,7 @@ function drawForm(){
       if(fm.ticks[fm.i]===i){ctx.strokeStyle='#c9553f';ctx.lineWidth=3.5;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(bx+2,by);ctx.lineTo(bx+7,by+6);ctx.lineTo(bx+19,by-11);ctx.stroke();}
     }
   }
-  ctx.strokeStyle='#2b2733';ctx.lineWidth=1.2;line(22,h-44,w-22,h-44);ctx.fillStyle='#8b8070';ctx.font='600 10px system-ui,sans-serif';ctx.fillText('Signature',22,h-30);
+  ctx.strokeStyle='#2b2733';ctx.lineWidth=1.2;line(22,h-44,w-22,h-44);ctx.fillStyle='#8b8070';ctx.font='600 10px system-ui,sans-serif';ctx.fillText('Witness',22,h-30);
   if(fm.sig>0){ // a flourish, and a full stop it is rather proud of
     var n=Math.floor(46*fm.sig),px=60,py=h-58;ctx.strokeStyle='#14111d';ctx.lineWidth=2.4;ctx.lineCap='round';ctx.beginPath();
     for(i=0;i<=n;i++){var u=i/46,sx=px+u*190,sy=py-Math.sin(u*Math.PI*5)*14*(1-u*0.6);if(i===0)ctx.moveTo(sx,sy);else ctx.lineTo(sx,sy);}
@@ -122,15 +123,15 @@ function labNothing(){return labScene({set:'home',title:'Nothing.',plan:'Fold th
   ['H','By whom?'],
   {wait:1.1},
   ['S','I don’t have a form for this. There’s no sender.'],
-  ['H','There doesn’t have to be one.'],
+  ['H','I don’t know where it came from either.'],
   ['S','Then what do I DO?'],
-  ['H','Sit down.'],
+  ['H','Could you sit with me?'],
   set({s:0.62,mood:'worry',pose:'sit'}),function(){G.sat=true;sfx('drip');},{wait:1.2},
   {hold:{kind:'sit',secs:5,clock:1,text:'Sitting. No cause. No verdict. Sitting.'}}
  ],outside({title:'WHAT THE CALENDAR SAW',dur:'duration: 4 minutes',cap:'Someone sat on the floor next to a laundry basket.',anim:'text'}),[
   set({s:0.8,mood:'calm'}),
-  ['S','…It’s gone.'],
-  ['H','It does that.'],
+  ['S','…Still there?'],
+  ['H','A bit. My legs have gone to sleep as well.'],
   ['S','We didn’t fix anything.'],
   ['H','No.'],
   ['S','I’d like to file a complaint. About the absence of a cause.'],
@@ -185,10 +186,12 @@ function labForm(){
   ['S','A WEEK. …'],
   ['H','A long year.'],
   ['S','…Be accurate.',{quiet:1}],
-  ['S','I’ll sign. I sign everything. It’s the best part.',{look:'pleased'}],
-  {hold:{kind:'sign',secs:3,text:'Signing. With a flourish.'}},
+  ['H','I’m signing this. I want to talk to someone.'],
+  ['S','I could witness it. I have excellent handwriting.',{look:'pleased'}],
+  {hold:{kind:'sign',secs:3,text:'Witnessing the signature. With a flourish.'}},
   ['S','There. All in order.'],
-  ['S','…Why is it so bright in here?'],
+  ['H','You’ve gone into the margin.'],
+  ['S','The margin needed a witness too.'],
   function(){G.form=null;}
  ],outside({title:'WHAT THE CALENDAR SAW',dur:'duration: 40 minutes',cap:'An appointment. A form with eighteen questions. A small paper bag.',anim:'text'}));
 }
@@ -220,16 +223,17 @@ function labQuiet(){
   ['B','Could you take my Thursday shift?'],
   {auto:{opts:['No.','No.','No.'],pick:1,secs:1.9}},
   ['H','No. Sorry.'],
-  ['B','Fair enough!'],
+  ['B','Ah. I was hoping you could. I’ll ask Riitta.'],
   ['N','Nobody rehearsed anything.'],
   set({bx:1100}),{wait:1.2},
   function(){var g=G;g.cowB=false;g.cowA=true;g.ax=1010;g.clock=12*3600+4*60;},set({near:1,aFace:-1}),{wait:1.6},
   ['N','Lunch. It goes well.'],
-  ['A','You seem… well.'],
-  ['H','I am. I think.'],
+  ['A','I nearly cancelled. Didn’t think you’d want another lunch.'],
+  ['H','I asked you this morning.'],
+  ['A','Yes. I brought my own argument.'],
   ['A','You didn’t apologise to the chair.'],
-  ['H','Should I have?'],
-  ['A','No. …It was sort of your thing.'],
+  ['H','We settled out of court.'],
+  ['A','Good. It looked expensive.'],
   function(){G.zT=1;},{wait:1.8},
   ['Z','…Where’s yours?'],
   {wait:1.6},
@@ -238,7 +242,10 @@ function labQuiet(){
   function(){G.zT=0;},
   scene({set:'home',clock:18*3600+20*60}),shadowAway,
   ['N','The way home. KIV-304. ROS-151. Two sevens.'],
-  ['N','Nobody counted.'],
+  ['H','Pair.'],
+  ['N','At home, the half-finished cat gets its last leg.'],
+  ['H','Five. Excellent. Very stable cat.'],
+  function(){G.quietDrawing=true;},
   ['H','For the record.'],
   {wait:1.6},
   gap,
@@ -251,19 +258,19 @@ function labQuiet(){
 /* ================= 4. Evenings. ================= */
 function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The lamp.',clock:21*3600}).concat([
   shadowAway,lampOff,
-  ['N','Nine in the evening. It wears off about now.'],
+  ['N','Nine in the evening. One lamp beside the sofa.'],
   {lamp:true},
   {wait:1.8},
   ['S','…Am I allowed?',{quiet:1}],
   ['H','It’s nine. You’re on.'],
   ['S','I’ve gone part-time?'],
   ['H','Evenings.'],
-  ['S','Nobody asked me.'],
-  ['H','You signed.'],
-  ['S','I sign EVERYTHING. That’s not consent, that’s a hobby.'],
+  ['S','Was that on the form?'],
+  ['H','I don’t remember.'],
+  ['S','I’ll need an appendix. Just a little one.'],
   set({s:0.8}),
   ['S','What happened today? Without me.'],
-  ['H','Everything went fine.'],
+  ['H','I had lunch. Said no to a shift. Finished the cat.'],
   ['S','…Oh.',{look:'soft'}],
   ['H','I asked her to lunch. It took four seconds.'],
   ['S','Four. I’d budgeted a week.'],
@@ -278,13 +285,13 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
   ['H','It’s not the same when I do it.'],
   {wait:1.4},
   ['S','So I’m not needed.'],
-  ['H','No.'],
+  ['H','Not for every sentence.'],
   {wait:1.0},
-  ['H','I didn’t turn the lamp on because you’re needed.'],
-  ['S','Then why?'],
-  ['H','It was very quiet.'],
-  ['S','You’re welcome.'],
-  ['H','I missed it.'],
+  ['H','Move over. You’re on the cat.'],
+  ['S','It has five legs.'],
+  ['H','I know. I like it.'],
+  ['S','I’ll allow it. Provisionally.'],
+  ['H','I missed you. I’m keeping the easier day, though.'],
   set({s:1,mood:'care'}),{wait:1.2},
   ['S','For the record—'],
   ['H','Go on.'],
@@ -300,16 +307,16 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
 /* ---- three dots: someone is typing. Then they are not. ---- */
 function typingDots(secs){return function(){return [function(){G.dots={t:0};sfx('pop');},{wait:secs},function(){G.dots=null;sfx('dotsOff');},{wait:0.7}];};}
 function drawDots(){
-  var d=G.dots;if(!d)return;d.t+=1/60;var x=G.human.x+182,y=346,i;
+  var d=G.dots;if(!d)return;var x=G.human.x+182,y=346,i;
   ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=2;rr(x,y,64,32,16);ctx.fill();ctx.stroke();
   for(i=0;i<3;i++){var b=RM?0:Math.max(0,Math.sin(d.t*7-i*0.9))*4;ctx.fillStyle='#8b8070';circ(x+18+i*14,y+16-b,4.2);ctx.fill();}
 }
 
 /* ================= Rewind. Memory edits. Every replay of the same "oh, hi." is a little worse than the last. ================= */
 var TAPE_SAYS=['oh, hi.','oh. hi.','Oh. Hi.','OH. HI.','OH. HI.'];
-function replay(n){return function(){return [function(){G.tape={n:n,t:0};G.lines=[];G.cur=null;sfx('rewind');},{wait:2.3}];};}
+function rewindTape(n){return function(){return [function(){G.tape={n:n,t:0};G.lines=[];G.cur=null;sfx('rewind');},{wait:2.3}];};}
 function drawTape(){
-  var tp=G.tape;if(!tp)return;tp.t+=1/60;
+  var tp=G.tape;if(!tp)return;
   var x=610,y=96,w=250,h=176,cx=x+w/2,cy=y+76,a=Math.min(tp.n,4),wob=RM?0:Math.max(0,0.5-tp.t)*6,i;
   ctx.save();
   ctx.fillStyle='#14111d';rr(x-12,y-12,w+24,h+24,14);ctx.fill();ctx.fillStyle='#232733';rr(x+w/2-30,y+h+12,60,14,4);ctx.fill();   // the set and its stand
@@ -334,20 +341,20 @@ function drawTape(){
 function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',clock:23*3600+40*60}).concat([
   ['N','23:40. Lights off. Ekskyysmi has the tape.'],
   ['S','Just once more. For accuracy.'],
-  replay(0),
+  rewindTape(0),
   ['S','Friendly. Suspiciously friendly.',{look:'squint'}],
-  replay(1),
+  rewindTape(1),
   ['S','Did you hear the full stop that time?'],
   ['H','There wasn’t one.'],
   ['S','There is NOW.'],
-  replay(2),
+  rewindTape(2),
   ['S','Capital letters. She’s escalating.'],
   ['H','It’s the same tape.'],
   ['S','It’s getting WORSE. Which means it was always bad and I’m only now seeing it clearly.'],
-  replay(3),
+  rewindTape(3),
   ['S','There. THAT’S what she meant.',{look:'pleased'}],
   {choice:[
-    {t:'Rewind once more. For thoroughness.',then:[replay(4),
+    {t:'Rewind once more. For thoroughness.',then:[rewindTape(4),
       ['H','She has horns.'],
       ['S','She does now.'],
       ['H','She didn’t this morning.'],
@@ -359,9 +366,9 @@ function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',c
       ['S','That one’s in the archive. Nobody watches it. It’s very boring.']]}
   ]},
   function(){G.tape=null;addLived('one “oh, hi.”, replayed',40);}
- ],outside({title:'THE ORIGINAL TAPE',dur:'duration: 2 seconds',cap:'Sanna at the coffee machine, waving with a mug. She was smiling. Nobody filmed it.',anim:'text'}),[
-  ['S','…She was smiling.',{look:'soft'}],
-  ['H','She usually is.'],
+ ],outside({title:'WHAT WAS RECORDED',dur:'duration: 0 seconds',cap:'No camera. No recording. One greeting, remembered differently at 23:40.',anim:'text'}),[
+  ['S','…I remember a smile. Somewhere under the horns.',{look:'soft'}],
+  ['H','I don’t remember the exact face anymore.'],
   ['S','I’ll file it next to the other one.'],
   ['H','Which other one?'],
   ['S','The one with horns.',{look:'pleased'}],
@@ -389,11 +396,11 @@ function drawBed(){
   var br=RM?0:Math.sin(G.time*1.5)*2.5;ctx.fillStyle='#c98f2e';rr(x+74,y-26-br,236,34+br,12);ctx.fill();             // blanket, breathing
 }
 function drawNight(){
-  var n=G.night,i;if(!n)return;n.t+=1/60;
+  var n=G.night,i;if(!n)return;
   ctx.fillStyle='rgba(6,6,16,.62)';ctx.fillRect(-20,-20,W+40,H+40);
-  if(n.car!=null){n.car+=1/60;var f=n.car/1.9;if(f>1)n.car=null;else{   // headlights sweep the room, and drag Ekskyysmi up the ceiling with them
+  if(n.car!=null){var f=n.car/1.9;   // headlights sweep the room, and drag Ekskyysmi up the ceiling with them
     var sx=-160+f*(W+320);ctx.fillStyle='rgba(255,236,190,.16)';ctx.beginPath();ctx.moveTo(sx-60,0);ctx.lineTo(sx+60,0);ctx.lineTo(sx+150,WALLY);ctx.lineTo(sx+30,WALLY);ctx.closePath();ctx.fill();
-    ctx.fillStyle='rgba(20,16,30,.9)';ctx.beginPath();ctx.moveTo(sx+40,WALLY);ctx.lineTo(sx+110,WALLY);ctx.lineTo(sx-20,10);ctx.lineTo(sx-150,10);ctx.closePath();ctx.fill();}}
+    ctx.fillStyle='rgba(20,16,30,.9)';ctx.beginPath();ctx.moveTo(sx+40,WALLY);ctx.lineTo(sx+110,WALLY);ctx.lineTo(sx-20,10);ctx.lineTo(sx-150,10);ctx.closePath();ctx.fill();}
   for(var k in NIGHT_EYES){if(!n.eyes[k])continue;var p=k==='S'?(function(){var q=geom();return {x:q.bx,y:q.hdY};})():NIGHT_EYES[k],bl=Math.sin(n.t*0.9+p.x)>0.985;
     ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';for(i=-1;i<=1;i+=2){if(bl){ctx.fillRect(p.x+i*8-5,p.y,10,1.6);continue;}circ(p.x+i*8,p.y,4.6);ctx.fill();}
     if(!bl){ctx.fillStyle='#06060f';for(i=-1;i<=1;i+=2){circ(p.x+i*8+1.4,p.y+0.6,2);ctx.fill();}ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';}}
@@ -460,7 +467,7 @@ function labNight(){return labScene({set:'home',title:'Night shift.',plan:'Sleep
   ['H','Did you sleep?'],
   ['S','I had a meeting.'],
   ['H','With whom?'],
-  ['S','Everybody. They’re all like us.',{look:'soft'}],
-  ['H','…Everybody?'],
-  ['S','It was dark. We talked.',{look:'pleased'}]
+  ['S','The others. Different departments. Same hours.',{look:'soft'}],
+  ['H','…You talked?'],
+  ['S','It was dark. Nobody could see my filing.',{look:'pleased'}]
 ]);}

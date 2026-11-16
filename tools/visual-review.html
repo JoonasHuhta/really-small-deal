@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>RSD local visual review</title>
+<style>body{margin:0;background:#0d1114}iframe{width:100vw;height:100dvh;border:0;display:block}#qa{position:fixed;z-index:20;right:4px;top:4px;background:#eee;color:#111;font:11px system-ui;padding:3px;opacity:.9}#results{max-height:45vh;overflow:auto;white-space:pre-wrap;display:none}button,select{font:11px system-ui}#qa:focus-within{opacity:1}</style>
+<iframe id="game" src="../index.html" title="Game under review"></iframe>
+<div id="qa"><select id="scenario" aria-label="Review scene"></select><button id="load">Load state</button><button id="all">Check all</button><span id="status"></span><pre id="results"></pre></div>
+<script>
+// Development only: not copied into www/ or the APK. Drive real scripts via explicit review controls.
+const frame=document.querySelector('#game'),select=document.querySelector('#scenario');
+const cases=['part1','part2','part3','form','sign','quiet','receipt','bar-human','pie','rewind','night','final','chat-paced'];
+for(const name of cases)select.add(new Option(name,name));
+select.value=new URLSearchParams(location.search).get('state')||'part1';
+let T,w;
+function step(){
+  T.unlock();const s=T.state();
+  if(s==='click'||s==='stretch'||s==='lamp'||s==='hold')T.advance();
+  else if(s==='toss'){T.advance();T.tick(.4);}
+  else if(s==='view'){T.tick(3);T.unlock();T.advance();}
+  else if(s==='choice')T.choose(T.options().findIndex(o=>!o.off));
+  else if(s==='fight'){if(T.G.fight.paced)T.swat();T.tick(.25);}
+  else T.tick(.2);
+}
+function until(test){for(let i=0;i<18000;i++){if(test())return;if(T.G.ended)throw Error('Ended before target');step();}throw Error('Target not reached');}
+function load(name){
+  document.querySelector('#results').style.display='none';
+  if(name==='part1')T.start('B',false);
+  else if(name==='part3')T.chapter(5);
+  else if(name==='part2'){T.chapter(4);until(()=>T.G.chap&&T.G.chap.part===2);}
+  else if(name==='form'||name==='sign'){T.lab('form');until(()=>name==='sign'?T.state()==='hold':T.state()==='choice');if(name==='sign'){T.holdDown();T.tick(1.5);T.holdUp();}}
+  else if(name==='quiet'||name==='receipt'){T.lab('quiet');until(()=>name==='quiet'?T.state()==='auto':T.G.cur&&T.G.cur.text.startsWith('One lunch arranged'));}
+  else if(name==='bar-human'||name==='pie'){T.lab('bar');until(()=>name==='bar-human'?T.state()==='choice'&&T.G.choiceWho==='H':T.G.pie&&T.state()==='choice');}
+  else if(name==='rewind'){T.lab('rewind');until(()=>T.G.tape&&T.state()==='click');}
+  else if(name==='night'){T.lab('night');until(()=>T.G.night&&T.G.night.eyes.W&&T.state()==='click');}
+  else if(name==='final'){T.lab('comments');until(()=>T.G.finalFrame);}
+  else if(name==='chat-paced'){T.lab('comments');until(()=>T.state()==='choice'&&T.options().some(o=>o.t.startsWith('One at a time.')));T.unlock();T.choose(1);until(()=>T.state()==='fight');}
+  for(let i=0;i<(name==='final'?45:15);i++)T.tick(.05);T.draw();
+  document.querySelector('#status').textContent=w.innerWidth+'×'+w.innerHeight;
+  return check();
+}
+function check(){
+  const d=frame.contentDocument,problems=[],p=d.querySelector('#play-panel');
+  if(d.documentElement.scrollHeight>w.innerHeight+1||d.documentElement.scrollWidth>w.innerWidth+1)problems.push('page overflow');
+  if(p.scrollHeight>p.clientHeight+1)problems.push('panel overflow '+(p.scrollHeight-p.clientHeight));
+  for(const b of d.querySelectorAll('#opts button,#menu')){const r=b.getBoundingClientRect();if(!r.width||!r.height)continue;
+    if(r.height<43)problems.push('small target '+b.textContent.trim());
+    if(r.top<0||r.left<0||r.right>w.innerWidth+1||r.bottom>w.innerHeight+1)problems.push('offscreen '+b.textContent.trim());}
+  return problems;
+}
+frame.addEventListener('load',()=>{w=frame.contentWindow;T=w.__T;w.requestAnimationFrame=()=>0;load(select.value);});
+document.querySelector('#load').onclick=()=>{try{const r=load(select.value);document.querySelector('#status').textContent+=' '+(r.length?r.join('; '):'PASS');}catch(e){document.querySelector('#status').textContent=e.message;}};
+document.querySelector('#all').onclick=()=>{const report=[];for(const name of cases){try{report.push(name+': '+(load(name).join('; ')||'PASS'));}catch(e){report.push(name+': ERROR '+e.message);}}
+  const r=document.querySelector('#results');r.textContent=report.join('\n');r.style.display='block';document.querySelector('#status').textContent='13 states checked';};
+</script></html>

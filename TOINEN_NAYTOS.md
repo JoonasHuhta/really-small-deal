@@ -2,7 +2,20 @@
 
 16.11.2026 · päätetty (Joonas + Claude) · kirjoitettu niin, että Codex tai kuka tahansa voi toteuttaa tämän ilman aiempaa keskustelua. Lue ensin [AGENTS.md](AGENTS.md) (työtavat) ja [SUUNTA.md](SUUNTA.md) (linja). Pelin tekstit ovat englantia, dokumentit suomea.
 
-## 0. Tila: ensimmäinen versio pelissä (0.35–0.36, Claude 16.11.2026)
+## 0. Nykyinen toteutus 0.41 (Codex, 16.11.2026)
+
+Tämä jakso alkaa nyt pelaajan tahdissa etenevällä **PART TWO · A little room.** -kortilla. Perjantai alkaa **PART THREE · Still here.** -kortilla. Vanha neljän hetken suunnitelma alempana on kehityshistoriaa; myös *Night shift.* on mukana. Nykyinen dialogi on lähdekoodissa.
+
+0.41 tarkentaa alkuperäistä suunnitelmaa näiltä osin:
+
+- Allekirjoitus ei tarkoita Ekskyysmin huijaamista pois. Ihminen päättää allekirjoittaa ja puhua jollekulle; varjo toimii todistajana ja vie komean allekirjoituksensa marginaaliin. `M.dim` ei muutu allekirjoituksessa.
+- *Quiet.* ei ole valevoitto eikä persoonan katoaminen. Lounas, kieltäytyminen ja valmis piirros ovat todellisia hyötyjä. Ihminen huomaa rekisterikilpiparin ja vitsailee edelleen. Varjon puhe puuttuu, ihminen ei. Kuittiin jää myös valmis piirros.
+- *Evenings.* ei määrittele vaikutuksen loppumisaikaa. Lamppu on vertauskuva tilasta varjolle. ”I missed you. I’m keeping the easier day, though.” Muutos ei lupaa mitään tiettyä hoitovastetta.
+- Perjantai ei kutsu aiempaa ihmistä vääräksi versioksi itsestään. Sanna muistaa baarissa kerrotun tarinan. Hiljaisena päivänä valmistunut piirros jaetaan lopussa.
+- *Nothing.*-hetken pito ei poista kipua kellon mukaan: hetken jälkeen sitä on vielä vähän. *The group chat* päättyy samaan yövaloon ja varjolintuun, ilman uutta puhetta.
+- Lomakkeen kysymykset ovat myös lukupaneelissa, ja allekirjoitus skaalautuu näkyviin sen yläpuolelle. Selaimen puhelinkoot ja suuri teksti tarkistettu; oikean puhelimen testi on vielä tekemättä.
+
+## 0a. Ensimmäisen version toteutushistoria (0.35–0.36)
 
 Kaikki neljä hetkeä, järjestys, perjantain kolme muutosta ja testit 1–6 ovat pelissä (`src/49-second-act.js`). Pelattavissa tarinassa ja Scenario labissa. **Ei pelattu oikealla laitteella eikä kenenkään muun kuin testiajurin toimesta.**
 

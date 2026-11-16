@@ -1,6 +1,20 @@
 # Jatko Codexille
 
-16.11.2026 · Claude → Codex · versio 0.40.0. Tämä on luovutusdokumentti: missä peli on, miten sitä työstetään, ja mitä seuraavaksi tehdään, tärkeysjärjestyksessä. Lue sen jälkeen [AGENTS.md](AGENTS.md) (työtavat ja kirjoitussäännöt). Pelin tekstit ovat englantia, dokumentit suomea.
+16.11.2026 · Claude → Codex · päivitetty 0.41.0. Lue sen jälkeen [AGENTS.md](AGENTS.md) (työtavat ja kirjoitussäännöt). Pelin tekstit ovat englantia, dokumentit suomea.
+
+## 0. Toteutettu kehityskierros 0.41 — lue tämä ennen vanhaa työjonoa
+
+Joonas hyväksyi tarinan nykyisiin kohtauksiin tehtävän kehityskierroksen, osaotsikot, eheyden tarkistuksen ja uuden APK:n. Mitään välihetkeä ei lisätty tai poistettu. Oikea määrä on **17 välihetkeä, joista kahdeksan torstain ja perjantain välissä**. Alla olevat 0.40:n arviot ovat lähtötilanteen historiaa.
+
+- **P2 tehty:** `npm run pace` käyttää testien kanssa yhteistä `tests/harness.cjs`:ää. Nykyreitti (B, ensimmäiset sallitut valinnat): 44:00. Lukunopeusarvio, ei oikea testipeliaika. Karsintaa ei tehty.
+- **P3/P4:** Part One *Better safe.*, Part Two *A little room.* ja Part Three *Still here.* (`src/27-parts.js`) odottavat pelaajaa. Lomakkeen ja kuitin koko seuraa paneelin yläpuolelle jäävää tilaa; kysymykset ovat myös tekstipaneelissa. Ei toteutettu ilottoman kotimatkan versiota: *Quiet.* säilyttää ihmisen oman rekisterikilpiparin ja huumorin.
+- **3b:n tarinapainotukset:** Riitan töksäytystä ja Eeron pettymystä ei kumota, Rewind myöntää muistin epävarmuuden, ihmisen aamuhäpeä säilyy hyvän illan rinnalla. Sanna vetää oman kutsunsa liian nopeasti takaisin. Baarissa HUMAN-valinta toimii HUMANin puheena; valinnan muisto tulee perjantaina.
+- **Hiljainen päivä:** ihminen saa piirroksen valmiiksi. `quietDrawing` kuljettaa sen loppuun. `barStory` ja `quietDrawing` tallennetaan taaksepäin yhteensopivasti. Lomakkeen allekirjoitus ei häivytä varjoa. Poistettu ”It wears off about now” ja ”Mm. Not quite.”. *Evenings.* erottaa varjon kaipuun helpomman päivän säilyttämisestä.
+- **P6 yövalo tehty:** varjolintu ja lamppu ovat sama loppukuva *The group chat* -hetken sisällä. Ei uutta kohtaustunnistetta eikä puhetta kuvassa. Kuvan saavutettava kuvaus on canvasin nimessä.
+- **Eheys:** Rewindin `replay` nimetty `rewindTape`:ksi (se korvasi maanantain funktion). Animaatiokellot siirretty piirrosta päivitykseen, canvasin save/restore-vuoto korjattu, muiden varjot nollautuvat kohtauksen vaihtuessa. Regressiotestit kattavat nämä.
+- **Tarkastus:** `npm test`; selain 13 tilaa × viisi puhelinkokoa × normaali/suuri teksti. `tools/visual-review.html` on paikallinen tarkistussivu, jota ei kopioida APK:hon. APK:n toistettava rakennus: `tools\build-apk.cmd`. Ei verkkopäivitystä tai git-committia: C:\RSD:ssä ei ole `.git`-kansiota.
+
+**Seuraava askel:** S23 Ultran oikea läpipeluu ja rytmi-/tulkintapalaute. Erityisesti: tuntuuko Part Two oikealta hengähdykseltä, ymmärretäänkö helpotus ihmisen omaksi elämäksi, ja jääkö loppuun tilaa. Aito kosketus, äänenvoimakkuus, kameralovi ja Androidin taustalta paluu vaativat edelleen laitetestin. *A compliment.* pysyy ideavarastossa.
 
 **Päätökset 16.11. (Joonas):** (1) ei karsita vielä: mitä enemmän materiaalia on pelattavana, sitä paremmin testipelaajat ja Joonas näkevät, mikä kaareen kuuluu; (2) toinen näytös saa lyhyen osa-otsikon; (3) Scenario lab on vain kehitystyökalu, eikä sitä lukita: valmis peli on kohtauspohjainen ja etenee kronologisesti kuten *Night in the Woods*; (4) yövalo ensin, *A compliment.* myöhemmin. Yksityiskohdat kohdassa 5.
 

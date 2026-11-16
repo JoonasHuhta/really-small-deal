@@ -5,34 +5,7 @@ const vm = require('node:vm');
 const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 assert.ok(require('../tools/build.cjs').fresh(),'assets/game.js is out of date: run node tools/build.cjs');
-const gradient = {addColorStop(){}};
-const ctx = new Proxy({}, {get(o,k){
-  if(k==='measureText') return t=>({width:t.length*8});
-  if(k==='createLinearGradient'||k==='createRadialGradient') return ()=>gradient;
-  return o[k] ?? (()=>{});
-}, set(o,k,v){o[k]=v;return true;}});
-const els = new Map();
-function element(id){
-  if(els.has(id))return els.get(id);
-  const classes=new Set();
-  const el={id,tagName:'DIV',dataset:{},style:{},events:{},clientWidth:960,innerHTML:'',textContent:'',open:false,remove(){},
-    classList:{add(x){classes.add(x)},remove(x){classes.delete(x)},contains(x){return classes.has(x)},toggle(x,v){v??=!classes.has(x);v?classes.add(x):classes.delete(x)}},
-    addEventListener(k,f){(this.events[k]??=[]).push(f)},setAttribute(k,v){this[k]=v},getAttribute(k){return this[k]},
-    getContext(){return ctx},getBoundingClientRect(){return{top:0,left:0,width:960,height:540}},setPointerCapture(){},
-    style:{props:{},setProperty(k,v){this.props[k]=v}},
-    querySelector(){return element('focus')},focus(){},showModal(){this.open=true},close(){this.open=false;fire(this,'close',{})}};
-  Object.defineProperty(el,'className',{get(){return [...classes].join(' ')},set(value){classes.clear();for(const c of value.split(/\s+/))if(c)classes.add(c)}});
-  els.set(id,el);return el;
-}
-function fire(el,event,payload){for(const fn of el.events[event]??[])fn(payload)}
-const document={getElementById:element,body:element('body'),documentElement:Object.assign(element('html'),{requestFullscreen(){}}),hidden:false,events:{},addEventListener(k,f){(this.events[k]??=[]).push(f)}};
-const savedItems=new Map();
-const window={localStorage:{getItem(k){return savedItems.get(k)??null},setItem(k,v){savedItems.set(k,String(v))}},devicePixelRatio:1,events:{},matchMedia(q){const narrow=/max-height/.test(q);return{get matches(){return narrow?!!window.__narrow:false},addEventListener(){},addListener(){}}},requestAnimationFrame(){},addEventListener(k,f){(this.events[k]??=[]).push(f)}};
-const nativeListeners={};let nativeExits=0;
-window.Capacitor={Plugins:{App:{addListener(k,f){nativeListeners[k]=f;},exitApp(){nativeExits++;}}}};
-const sandbox={window,document,console,Math};
-vm.runInNewContext(fs.readFileSync(path.join(root,'assets/game.js'),'utf8'),sandbox);
-const T=window.__T;
+const {T,window,document,element,fire,savedItems,nativeListeners,nativeState,ctx}=require('./harness.cjs')();
 const routes=['grow','cover','exit','none'];
 let runs=0,views=0,stretches=0,holds=0;
 for(const day of ['A','B','C'])for(let fear=0;fear<3;fear++)for(let route=0;route<4;route++)for(let walk=0;walk<5;walk++){
@@ -158,7 +131,7 @@ for(const day of ['A','B','C'])for(let v=0;v<4;v++){
    assert.match(element('ov').innerHTML,/DAYS ON THE CALENDAR/);assert.match(T.inside.receipt(),/DAYS ON THE CALENDAR\s+5/);
    assert.match(days[4].ledger[0].label,/1\.4 times/);}
   // The short moments are part of the story now, in order, each behind its own card and never labelled as lab scenes.
-  for(const must of [/You showed someone a drawing/,/Last time you showed someone a drawing/,/Eleven people liked it/,/The eyebrow was HUNGER/,/falls off a printer/,/I rounded up/,/Nothing in it can be rejected/,/I always thought that was the bad outcome/,/busy near each other/,/I’m keeping the headband/])assert.match(tr,must);
+  for(const must of [/You showed someone a drawing/,/Last time you showed someone a drawing/,/This time I left it up/,/The eyebrow was HUNGER/,/falls off a printer/,/I rounded up/,/Nothing in it can be rejected/,/I always thought that was the bad outcome/,/busy near each other/,/I’m keeping the headband/])assert.match(tr,must);
   assert.ok(tr.indexOf('The eyebrow was HUNGER')<tr.indexOf('rejection exchange programme'),'the eyebrow comes before the favours');
   assert.ok(tr.indexOf('Seen 17:31')<tr.indexOf('Nothing in it can be rejected'),'the reply comes after board game night');
   // Structure: the shadow that says "oh. hi." to Ekskyysmi comes before Thursday, so Thursday's line lands on something;
@@ -171,7 +144,7 @@ for(const day of ['A','B','C'])for(let v=0;v<4;v++){
   assert.ok(tr.indexOf('That one landed')<tr.lastIndexOf('With a full stop.')&&tr.lastIndexOf('With a full stop.')<tr.indexOf('You showed someone a drawing'),'Thursday’s hit remembers the full stop');
   assert.ok(tr.indexOf('Same hours. Fewer exits')<tr.indexOf('I’m working out my notice'),'the relapse comes after the new job');
   assert.ok(tr.indexOf('I’m working out my notice')<tr.indexOf('This is the staying part')&&tr.indexOf('This is the staying part')<tr.indexOf('I always thought that was the bad outcome'));
-  assert.ok(tr.indexOf('You look smaller')>tr.length*0.35&&tr.indexOf('You look smaller')<tr.length*0.6,'the glass turned on its owner sits near the middle');
+  assert.ok(tr.indexOf('You look smaller')>tr.indexOf('I had the whole skeleton out')&&tr.indexOf('You look smaller')<tr.indexOf('Half past four WHEN'),'the glass turns inward between the slides and Sometime; pace is reported separately');
   assert.equal(T.G.moment,'comments');assert.equal(T.G.lab,null);
   assert.ok(['sorry','explain','quiet','ask'].includes(T.G.fb));assert.ok(['worries','cancel','freezer','bite'].includes(T.G.txt));
   if(T.G.txt==='cancel')assert.match(tr,/Ignore that\. I panicked/);
@@ -194,7 +167,7 @@ const checkpointFixture={version:2,ch:5,unlocked:5,chapters:{
   1:{day:'A'},
   3:{day:'A',lunch:1,leak:'cover',fear:2,fb:'ask',yes:0},
   4:{day:'B',lunch:2,leak:'grow',yes:5,handout:true,afterparty:true,fb:'explain'},
-  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true}
+  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true}
 }};
 savedItems.set(saveKey,JSON.stringify(checkpointFixture));
 T.chapter(3);
@@ -234,6 +207,7 @@ T.chapter(1);assert.equal(T.G.day,'A','replaying Monday keeps the saved kind of 
 // Closing the tab in the middle of a chapter: Continue picks the story up at that moment, with its history.
 function stepUntil(done){let n=0;while(!done()&&n++<6000){T.unlock();T.draw();const st=T.state();
   if(st==='click')T.advance();else if(st==='view'){T.advance();T.tick(6);T.advance();}else if(st==='stretch'||st==='hold')T.advance();
+  else if(st==='toss'){T.advance();T.tick(.4);}
   else if(st==='choice')T.choose(T.options().findIndex(o=>!o.off));else T.tick(1);}assert.ok(done(),'reached');}
 T.chapter(3);stepUntil(()=>T.G.moment==='sometime'&&T.state()==='click');
 {const yes=T.G.yes;assert.ok(yes>=3);saved=JSON.parse(savedItems.get(saveKey));
@@ -315,7 +289,7 @@ function playLab(id,mode){
 // Night shift: the other shadows, in the dark, and a morning.
 {
   const tn=playLab('night');
-  assert.match(tn,/Z: It’s me\. Sanna’s/);assert.match(tn,/W: Heavy\./);assert.match(tn,/One arm is still under the bed/);assert.match(tn,/They’re all like us/);
+  assert.match(tn,/Z: It’s me\. Sanna’s/);assert.match(tn,/W: Heavy\./);assert.match(tn,/One arm is still under the bed/);assert.match(tn,/Different departments. Same hours/);
   assert.equal(T.G.night,null);assert.equal(T.G.human.gone,false,'the human gets up in the morning');
 }
 // ---- the second act (TOINEN_NAYTOS.md) ----
@@ -332,7 +306,7 @@ function playLab(id,mode){
   assert.ok(sLines.length===3&&sLines.every(l=>l==='S: —'),'Ekskyysmi says nothing all day: '+sLines.join(' | '));
   assert.match(t2,/Where’s yours\?/);assert.match(t2,/Nobody objected/);assert.ok(T.G.morko.asleep,'still away when the quiet day ends');
   t2=playLab('evenings');
-  assert.match(t2,/Am I allowed\?/);assert.match(t2,/I missed it/);assert.equal(T.G.morko.asleep,false,'the lamp brings it back');assert.equal(T.G.lampOff,false);
+  assert.match(t2,/Am I allowed\?/);assert.match(t2,/I missed you/);assert.equal(T.G.morko.asleep,false,'the lamp brings it back');assert.equal(T.G.lampOff,false);
 }
 // The second act sits between Thursday's moments and Friday, in this order.
 assert.match(require('fs').readFileSync(require('path').join(__dirname,'..','src','33-moments.js'),'utf8'),/4:\['reply','notnow','bar','nothing','form','quiet','evenings','night'\]/);
@@ -454,16 +428,16 @@ tr=playLab('notnow');
 assert.match(tr,/That one was real/);assert.match(tr,/I rounded up/);assert.match(tr,/A bit stung\. And fine\./);
 // The quiet opening: an ordinary shadow until the human has a plan. It can be skipped.
 T.start();assert.equal(T.G.morko.asleep,true);assert.equal(T.G.human.gone,true);assert.equal(T.G.skippable,true);
-T.tick(3);T.tick(5);assert.equal(T.G.human.gone,false,'the human walks in');
+assert.equal(T.G.chap.part,1);T.tick(30);assert.equal(T.state(),'click','part card waits for the reader');T.unlock();T.advance();T.tick(3);T.tick(5);assert.equal(T.G.human.gone,false,'the human walks in');
 T.skipIntro();assert.equal(T.state(),'click');assert.equal(T.G.skippable,false);assert.equal(T.G.human.x,450);assert.equal(T.G.morko.asleep,true);
 assert.match(T.history().map(x=>x.text).join(' '),/ask Sanna to lunch/);
 T.unlock();T.advance();T.tick(2);T.tick(2);T.tick(2);assert.equal(T.G.morko.asleep,false,'the plan wakes the shadow');
 assert.match(T.history().map(x=>x.text).join(' '),/WHAT are we doing today/);
 tr=playLab('comments','none');
 assert.equal(T.G.fightRes.deflected,0);assert.equal(T.G.fightRes.noteDelivered,true);
-assert.match(tr,/didn’t swat anything/);assert.match(tr,/stung for about a second/);assert.match(tr,/Mostly… cats/);assert.doesNotMatch(tr,/EXACTLY like a dagger/);
+assert.match(tr,/didn’t swat anything/);assert.match(tr,/It stings. I keep looking/);assert.match(tr,/Mostly… cats/);assert.doesNotMatch(tr,/EXACTLY like a dagger/);
 tr=playLab('comments','all');
-assert.ok(T.G.fightRes.deflected>=6,'swatting everything deflects most replies');assert.match(tr,/EXACTLY like a dagger/);assert.equal(T.G.boss.friendly,true);
+assert.ok(T.G.fightRes.deflected>=6,'swatting everything deflects most replies');assert.match(tr,/EXACTLY like a dagger/);assert.equal(T.G.finalFrame,true);assert.equal(T.G.boss,null,'the boss does not follow us to bed');
 tr=playLab('comments','read');
 assert.ok(T.G.fightRes.readThenSwatted>0);assert.match(tr,/You read that one first/);
 for(const mode of ['paced-none','paced-all','paced-read-swat','paced-note']){
@@ -489,7 +463,7 @@ T.start('B',true);
 fire(element('menu'),'click',{stopPropagation(){}});assert.equal(T.back(),'menu');assert.equal(T.G.started,true);
 fire(element('restart'),'click',{});assert.equal(T.back(),'cancel');assert.equal(element('pause').textContent,'Pause');assert.equal(T.G.started,true);
 fire(element('journal'),'click',{});assert.equal(T.back(),'log');assert.equal(element('pause').textContent,'Pause');
-T.reset();T.title();const exitsBefore=nativeExits;nativeListeners.backButton();assert.equal(nativeExits,exitsBefore+1);
+T.reset();T.title();const exitsBefore=nativeState.exits;nativeListeners.backButton();assert.equal(nativeState.exits,exitsBefore+1);
 toHold('B');T.holdDown();T.tick(0.3);const heldAt=T.G.hold.p;
 nativeListeners.pause();const awayAt=T.G.awayAt;assert.equal(T.G.hold.on,false);
 assert.equal(element('pause').textContent,'Resume');T.frame(31000000);assert.equal(T.G.hold.p,heldAt);
@@ -603,4 +577,42 @@ T.tick(0.05,0.5);T.advance();
 assert.notEqual(T.G.cur.text,throttledLine,'shortcut delay must not depend on animation frame rate');
 // Direct file entry must resolve all resources locally, including font licenses.
 for(const file of ['assets/game.css','assets/game.js','assets/icon.svg','assets/fonts/Fraunces.ttf','assets/fonts/DMSans.ttf','assets/fonts/Fraunces-OFL.txt','assets/fonts/DMSans-OFL.txt'])assert.ok(fs.statSync(path.join(root,file)).size>0,file);
-console.log(`PASS: the correct response (4 ways); 13 lab scenes including four paced chat strategies and three posting tactics; the mask coming off on Friday; coat and umbrella gags with reduced motion, pause and scene cleanup; quiet opening; ${weeks} full weeks and 4 chapter starts; ${runs} complete Monday paths, ${views} reader-paced cutaways, ${stretches} size interactions; two clocks and receipts; pause, journal, keyboard, reset and local assets.`);
+// Part cards are real reading stops. Pausing and resuming must not swallow them.
+for(const part of [1,2,3]){
+  if(part===1)T.start('B',false);else if(part===3)T.chapter(5);else{T.chapter(4);stepUntil(()=>T.G.chap&&T.G.chap.part===2);}
+  assert.equal(T.G.chap.part,part);assert.equal(T.state(),'click');
+  const caption=T.G.cur.text;T.tick(60);T.draw();assert.equal(T.G.cur.text,caption);assert.equal(T.G.chap.part,part);
+  const t=T.G.chap.t;T.pause();T.frame(90000000);assert.equal(T.G.chap.t,t);T.pause();
+  T.unlock();T.advance();assert.ok(!T.G.chap||!T.G.chap.part,'continue leaves the part card');
+}
+// The two replay effects have different state and cannot overwrite one another.
+T.start('B',true);stepUntil(()=>T.G.w&&T.state()==='choice');
+T.unlock();T.choose(T.options().findIndex(o=>o.t.startsWith('Review the')));
+stepUntil(()=>T.G.rep);assert.equal(T.G.tape,undefined,'Monday uses its own replay effect');
+T.lab('rewind');stepUntil(()=>T.G.tape);assert.equal(T.G.rep,null,'Rewind uses the TV tape');
+// Drawing must never advance animations: the render loop still draws while paused.
+for(const name of ['dots','tape','pie','night']){
+  T.chapter(2);T.G[name]=name==='night'?{t:0,car:.2,eyes:{S:1}}:name==='tape'?{t:0,n:1}:{t:0};
+  const before=JSON.stringify(T.G[name]);T.pause();T.frame(91000000);T.draw();T.draw();
+  assert.equal(JSON.stringify(T.G[name]),before,name+' must freeze while paused');T.pause();
+  T.tick(.2);assert.ok(T.G[name].t>0);T.chapter(3);assert.equal(T.G[name],null,name+' clears on a new scene');
+}
+// The witness signature does not erase the shadow; the form question is also in the reading panel.
+T.lab('quiet');stepUntil(()=>T.G.cur&&T.G.cur.who==='S'&&T.G.cur.text==='—');
+{let depth=0;const save=ctx.save,restore=ctx.restore;ctx.save=()=>depth++;ctx.restore=()=>depth--;
+ for(let i=0;i<120;i++)T.draw();assert.equal(depth,0,'silent shadow bubbles must not leak the canvas stack');ctx.save=save;ctx.restore=restore;}
+T.lab('form');stepUntil(()=>T.state()==='choice');assert.match(element('line').innerHTML,/How often do you replay/);
+stepUntil(()=>T.state()==='hold');T.holdDown();T.tick(1.5);T.holdUp();assert.ok(T.G.form.sig>=.5);assert.equal(T.G.morko.dim,null);
+for(const pick of [0,1,2]){const bt=playLab('bar',pick);assert.match(bt,/I haven’t checked the calendar/);assert.equal(T.G.barStory,['umbrella','arms','2011'][pick]);}
+T.chapter(4);stepUntil(()=>T.G.moment==='bar'&&T.state()==='choice'&&T.G.choiceWho==='H');
+assert.match(element('line').innerHTML,/human has the floor/);T.unlock();T.choose(2);assert.equal(T.G.cur.who,'H');
+stepUntil(()=>T.G.chap&&T.G.chap.part===2);
+assert.equal(JSON.parse(savedItems.get(saveKey)).at.state.barStory,'2011');
+T.reset();T.title();fire(element('ov'),'click',{target:{getAttribute(k){return k==='data-go'?'cont':null}}});
+assert.equal(T.G.chap.part,2);assert.equal(T.G.barStory,'2011');playOn(()=>0);
+const revised=T.history().map(l=>l.text).join('\n');
+assert.match(revised,/I waved at the wrong person yesterday/);assert.match(revised,/Finished it on Monday. I still like it/);
+assert.match(revised,/I missed you. I’m keeping the easier day/);assert.doesNotMatch(revised,/It wears off about now|Mm. Not quite|Eleven people liked it/);
+assert.equal(T.G.finalFrame,true);assert.equal(T.G.bed,true);assert.equal(T.G.lampOff,false);assert.equal(T.G.morko.pose,'puppet');assert.equal(T.G.zShow,0);
+T.chapter(2);assert.equal(T.G.finalFrame,false);assert.equal(T.G.bed,false);assert.equal(T.G.morko.pose,null);
+console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment resumes; all three bar stories; part cards; distinct replays; form signature; quiet-day payoff; nightlight ending; paused animations; phone controls, audio and local assets. Cutaways: ${views}; size interactions: ${stretches}.`);

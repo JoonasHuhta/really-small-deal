@@ -1,11 +1,12 @@
 {
   "name": "really-small-deal",
-  "version": "0.40.0",
+  "version": "0.41.1",
   "private": true,
   "description": "Really Small Deal. A small moment. A very long shadow.",
   "scripts": {
     "build": "node tools/build.cjs",
     "test": "node tools/build.cjs --check && node tests/story.test.cjs",
+    "pace": "node tools/pace.cjs",
     "www": "node tools/build.cjs && node tools/www.cjs",
     "android:init": "npm run android:sync",
     "android:sync": "npm run www && node tools/android-prepare.cjs && node tools/android-check.cjs",

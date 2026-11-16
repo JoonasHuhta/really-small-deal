@@ -247,6 +247,7 @@ function drawHeadband(q){
 function labComments(){return labScene({set:'home',title:'The group chat',plan:'Share the drawing.',clock:20*3600+14*60}).concat([
   ['N','Sunday evening. One drawing. One group chat with eleven people in it.'],
   ['H','I’m going to share the drawing.'],
+  function(){return G.quietDrawing?[['S','The five-legged cat.'],['H','Finished it on Monday. I still like it.']]:[];},
   set({mood:'alert',s:1.3}),
   ['S','The drawing.'],
   ['H','In the group chat.'],
@@ -280,7 +281,7 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
  ],outside({title:'WHAT WAS ACTUALLY SENT',dur:'eleven people, one evening',cap:'Seven nice things. One opinion about colours.',anim:'chatlog'}),[
   function(){
     var r=G.fightRes,o=[];
-    if(r.noteDelivered)o.push(['H','One of them didn’t like the colours.'],['S','A DAGGER. I KNEW it.'],['H','It was one person’s taste. It stung for about a second.'],['S','…A second?'],['S','I’ve been training for that second my whole life.']);
+    if(r.noteDelivered)o.push(['H','One of them didn’t like the colours.'],['S','A DAGGER. I KNEW it.'],['H','It stings. I keep looking at that one.'],['S','Shall I get the headband tighter?'],['H','I’m leaving the drawing up.'],['S','…Then I’ll loosen it. One notch.']);
     else if(r.deflectedNote){o.push(['S','For the record, one of them WAS a bit sharp.'],['H','The colours one.'],['S','You’re welcome.']);
       if(r.deflectedGood>0)o.push(['H','You also swatted the nice ones.'],['S','Collateral.']);
       else o.push(['H','The drawing can stay, even if someone dislikes the colours.'],['S','I’ll keep the headband nearby.']);}
@@ -292,9 +293,9 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   },
   function(){G.boss.friendly=true;G.boss.name='THE GROUP CHAT';sfx('turn');},
   ['N','BOSS DEFEATED. Correction: there was no boss.'],
-  function(){return G.lab?[]:[['S','Year two. Somebody laughed.'],['H','Eleven people liked it.'],['S','…I’ll update the file.'],function(){var g=G;g.cards.push({kind:'good',year:'TODAY',text:'Showed eleven people a drawing. They liked the cat.',t:0,life:null,x:790,y:178,rot:-0.03});sfx('card');},{wait:2.2},closeArchive];},
+  function(){return G.lab?[]:[['S','Year two. Somebody laughed.'],['H','This time I left it up.'],['S','…I’ll update the file.'],function(){var g=G;g.cards.push({kind:'good',year:'TODAY',text:'Shared a drawing. Left it up.',t:0,life:null,x:790,y:178,rot:-0.03});sfx('card');},{wait:2.2},closeArchive];},
   ['S','I’m keeping the headband.'],
-  set({pose:'puppet',mood:'care'}),{wait:2.2},set({pose:null})   // nothing to prevent: the bird again, and this time nobody asks
+  nightlightEnding   // the lamp and the bird share the final image; the reader decides when to leave
  ]);}
 function drawChatlog(o){
   var log=G.fightLog||[],x=W/2-330,y=72,w=440;

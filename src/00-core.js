@@ -4,8 +4,11 @@ var cv=document.getElementById('c'),ctx=cv.getContext('2d'),ov=document.getEleme
 var elLine=document.getElementById('line'),elOpts=document.getElementById('opts');
 var SC=1;
 function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=640;COMPACT=document.documentElement.classList.contains('immersive');
-  HUDL=COMPACT&&((window.innerWidth||w)-w)/2<52?Math.round(58*W/w):0;}
-var COMPACT=false,HUDL=0; // the immersive layout: the on-canvas HUD shows itself briefly, then gets out of the way
+  HUDL=COMPACT&&((window.innerWidth||w)-w)/2<52?Math.round(58*W/w):0;
+  var panel=document.getElementById('play-panel'),cr=cv.getBoundingClientRect(),pr=panel.getBoundingClientRect();
+  SCENE_BOTTOM=COMPACT&&G&&G.started&&!G.ended?clamp((pr.top-cr.top)*W/w,120,H):H;
+}
+var COMPACT=false,HUDL=0,SCENE_BOTTOM=540; // visible space above the reading panel, in canvas units
 window.addEventListener('resize',resize);
 var RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 // Two settings the player can change at any time. Slow reality only ever makes the window longer:

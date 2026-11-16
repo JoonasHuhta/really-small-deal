@@ -9,7 +9,8 @@ function checkpoint(g){
     yes:Number.isFinite(g.yes)?clamp(Math.floor(g.yes),0,20):0,
     handout:!!g.handout,afterparty:!!g.afterparty,reflected:!!g.reflected,peeked:!!g.peeked,metSannaShadow:!!g.metSannaShadow,
     posting:['archived','rejected','open'].indexOf(g.posting)>=0?g.posting:null,
-    nothings:Number.isFinite(g.nothings)?clamp(Math.floor(g.nothings),0,20):0,rehearsal:!!g.rehearsal};
+    nothings:Number.isFinite(g.nothings)?clamp(Math.floor(g.nothings),0,20):0,rehearsal:!!g.rehearsal,
+    barStory:['umbrella','arms','2011'].indexOf(g.barStory)>=0?g.barStory:null,quietDrawing:!!g.quietDrawing};
 }
 function loadProgress(){
   try{

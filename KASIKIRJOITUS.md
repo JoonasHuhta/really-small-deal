@@ -2,6 +2,8 @@
 
 15.11.2026 · Claude. Arvio nykyisestä viikosta ja ehdotus siitä, mihin kokeilukohtaukset sidotaan. Dialogiluonnokset ovat englanniksi, koska peli on.
 
+> **0.41 / 16.11.2026:** Kolme osaa: *Better safe.* (vanha työ), *A little room.* (ennen Nothing.: tilaa ihmiselle ja helpommalle päivälle), *Still here.* (perjantai ja piirros: vastavuoroisuus ja keskeneräisyys). Hiljaisena päivänä valmistuva piirros säilyy loppuun. Loppukuva yhdistää lampun ja varjolinnun. Viisi päälukua ja 17 välihetkeä; `npm run pace` antaa yhdelle reitille 44:00. Alla oleva 0.26:n 38 minuutin/prosenttien rakenneanalyysi on historiaa, ei nykyversion mittaus tai karsintaperuste. Nykyinen järjestys: `src/33-moments.js`.
+
 > Päivitys 0.13: luonnokset A (oikea torjunta) ja C (varjot tapaavat) ovat nyt pelattavina lab-kohtauksina *Not now.* ja *Colleagues.* Peli alkaa hiljaisella introlla, jossa varjo on vielä tavallinen varjo.
 
 > Päivitys 0.18: peli ei ole enää sidottu yhteen viikkoon. Luvut ja lyhyet hetket ovat jonossa, ja aika kelluu niiden välissä. Alla oleva ”Viikko nyt” -taulukko kuvaa edelleen viittä pitkää lukua. Nykyinen järjestys on tiedostossa `src/33-moments.js`. Piirros-lanka on jo osittain paikallaan: *The group chat* on nyt pelin viimeinen hetki. Arkistokortti ja varjon alkuperä (luonnos B) puuttuvat vielä.

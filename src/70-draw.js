@@ -49,7 +49,15 @@ function applyCamera(){
 }
 
 /* ================= drawing: break room ================= */
-function room(flat){
+// The lamp table stands on the floor in front of the wall, so the shadow on the wall goes behind it.
+// In a scene it is drawn between the shadow and the human (drawPair); room() draws it itself only when asked to draw the whole room.
+function roomFront(flat){
+  ctx.fillStyle='#6b563e';ctx.fillRect(604,420,72,8);ctx.fillRect(610,428,6,40);ctx.fillRect(664,428,6,40);
+  ctx.strokeStyle='#3d3a44';ctx.lineWidth=4;line(640,420,640,366);
+  ctx.fillStyle=flat?'#d9c79a':'#f3d27a';ctx.beginPath();ctx.moveTo(624,340);ctx.lineTo(656,340);ctx.lineTo(666,368);ctx.lineTo(614,368);ctx.closePath();ctx.fill();
+  if(G.cupLeft){ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(650,406,12,14,2);ctx.fill();ctx.stroke();}
+}
+function room(flat,noFront){
   ctx.fillStyle=flat?'#d8d9cc':'#dce0cd';ctx.fillRect(-20,-20,W+40,WALLY+20);
   if(!flat){var gr=ctx.createRadialGradient(640,345,10,640,345,420);gr.addColorStop(0,'rgba(255,228,150,.6)');gr.addColorStop(1,'rgba(255,228,150,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);}
   ctx.fillStyle=flat?'#b1b5a3':'#b8bda7';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);
@@ -78,10 +86,7 @@ function room(flat){
   ctx.fillStyle='#fbf8ef';ctx.fillRect(748,302,12,14);ctx.fillRect(766,302,12,14);
   ctx.strokeStyle='#fbf8ef';ctx.lineWidth=2;ctx.beginPath();ctx.arc(760,309,4,-Math.PI/2,Math.PI/2);ctx.stroke();
   ctx.beginPath();if(G.mugFixed===false)ctx.arc(766,309,4,Math.PI/2,Math.PI*1.5);else ctx.arc(778,309,4,-Math.PI/2,Math.PI/2);ctx.stroke();
-  ctx.fillStyle='#6b563e';ctx.fillRect(604,420,72,8);ctx.fillRect(610,428,6,40);ctx.fillRect(664,428,6,40);
-  ctx.strokeStyle='#3d3a44';ctx.lineWidth=4;line(640,420,640,366);
-  ctx.fillStyle=flat?'#d9c79a':'#f3d27a';ctx.beginPath();ctx.moveTo(624,340);ctx.lineTo(656,340);ctx.lineTo(666,368);ctx.lineTo(614,368);ctx.closePath();ctx.fill();
-  if(G.cupLeft){ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(650,406,12,14,2);ctx.fill();ctx.stroke();}
+  if(!noFront)roomFront(flat);
 }
 
 /* ================= drawing: people ================= */
@@ -116,7 +121,8 @@ function person(x,o){
     if(o.brow){ctx.strokeStyle='#34413e';ctx.lineWidth=2.2;line(ex+1,ey-8,ex+10,ey-14);line(ex-11,ey-8,ex-3,ey-8);}
     if(o.body===MIKA.body){circ(ex-7,ey,6);ctx.stroke();circ(ex+7,ey,6);ctx.stroke();line(ex-1,ey,ex+1,ey);}
     line(ex+1,ey+3,ex+3,ey+6);
-    ctx.fillStyle='#c77f7055';circ(ex-13,ey+6,4);ctx.fill();circ(ex+13,ey+6,4);ctx.fill();
+    ctx.save();ctx.beginPath();ctx.arc(hx,hy,20,0,Math.PI*2);ctx.clip();   // cheeks stay on the face, even the far one
+    ctx.fillStyle='#c77f7055';circ(ex-13,ey+6,4);ctx.fill();circ(ex+13,ey+6,4);ctx.fill();ctx.restore();
     ctx.lineWidth=2;ctx.lineCap='round';
     if(o.grin>0){
       // A smile that is working too hard: wider with every yes, teeth showing, corners trembling.
@@ -312,6 +318,7 @@ function drawPair(humanOpts){
   plainShadow();
   morkoBody(q);if(up&&!ht.front)morkoArms(q,ht);
   if(up)shadowDrink(q);
+  if(G.roomFront!=null)roomFront(G.roomFront);
   drawHuman(humanOpts);
   if(up&&ht.front)morkoArms(q,ht);
   if(up)drawStamp();
@@ -326,8 +333,8 @@ function drawLines(){
     if(!WIDE)continue; // on a narrow screen the panel below the scene carries the text
     if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)continue;   // at night the human is in bed, but the shadow is very much awake
     var n=l.text.length,mw=n>90?330:n>50?290:0,rv=isCur?revealCount(l.text,g.curT||0,l):1e9;
-    ctx.save();
     if(l.who==='S'&&g.morko.asleep)continue;
+    ctx.save();
     if(l.who==='S'){var q=geom(),above=q.hdY-q.hdR-14,sw=mw||260,bh=bubbleH(l.text,sw,l);
       if(above-12>=bh+8)bubble(q.bx-70,above+12,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet});
       else bubble(q.bx-70,0,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet,top:Math.min(q.hdY+q.hdR+14,WALLY-bh-70)});}
@@ -465,7 +472,7 @@ function draw(){
   var g=G;
   ctx.setTransform(SC,0,0,SC,0,0);
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
-  if(g.chap){chapCard();return;}
+  if(g.chap){chapCard();if(paused)pausedNote();return;}
   if(g.out){drawOutside();return;}
   if(g.rep){drawReplay();return;}
   if(g.zoom){drawZoom();return;}
@@ -482,6 +489,7 @@ function draw(){
       else{var gx=g.gazeFrom==='B'?g.bx2:g.gazeFrom==='R'?g.rx:g.ax;ctx.moveTo(gx-14,FEETY-150);ctx.lineTo(g.human.x+16,FEETY-176);ctx.lineTo(g.human.x+16,FEETY);ctx.closePath();ctx.fill();}
     }
     if(!g.human.gone)drawPair();
+    else if(g.finalFrame){var endQ=geom();morkoBody(endQ);morkoArms(endQ,handTargets(endQ));}
     drawFight();
     drawDish();
     drawTics(0);

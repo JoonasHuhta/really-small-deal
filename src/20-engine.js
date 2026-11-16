@@ -12,6 +12,7 @@ function reset(day){
      lines:[],band:null,out:null,w:null,card:0,
      hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0};
   G.handout=false;G.afterparty=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.stamp=null;
+  G.choiceWho='S';G.finalFrame=false;G.barStory=null;G.quietDrawing=false;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
   document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
   C.z=1.025;C.fx=W/2;C.fy=H/2;
@@ -32,9 +33,10 @@ function run(){
     if(s.toss){tossStart(s.toss);return;}
     if(s.auto){G.auto={opts:s.auto.opts,pick:s.auto.pick||0,secs:s.auto.secs||1.8,t:0,done:false};G.lines=[];G.cur=null;WAIT='auto';render();return;}
     if(s.lamp){G.lines=[];G.cur=null;WAIT='lamp';LOCK=0.6;render();return;}
+    if(s.still){G.lines=[];G.cur=null;G.band=null;WAIT='click';LOCK=0.6;render();return;}
     if(s.qte){startQte();return;}
     if(s.fight){startFight(s.fight);return;}
-    if(s.choice){G.bick=0;G.nopeMsg=null;CH=typeof s.choice==='function'?s.choice():s.choice;WAIT='choice';LOCK=0.4;render();return;}
+    if(s.choice){G.bick=0;G.nopeMsg=null;G.choiceWho=s.who||'S';CH=typeof s.choice==='function'?s.choice():s.choice;WAIT='choice';LOCK=0.4;render();return;}
   }
 }
 function advance(){if(paused||LOCK>0||WAIT==='qte'||WAIT==='auto')return;if(WAIT==='lamp'){lampOn();return;}if(WAIT==='fight'){swat();return;}if(WAIT==='hold'){holdTap();return;}if(WAIT==='toss'){tossTap();return;}if(WAIT==='stretch'){G.warningSize=G.morko.sT;G.morko.pose=null;run();}else if(WAIT==='click'||(WAIT==='view'&&TIMER<=0))run();}
@@ -43,7 +45,7 @@ function choose(i){
   if(CH[i].off){nope(i);return;}
   clearPreview();var o=CH[i];CH=null;sfx('pick');if(o.f)o.f();
   var then=typeof o.then==='function'?o.then():(o.then||[]);
-  Q=[['S',o.t]].concat(then,Q);run();
+  Q=[[G.choiceWho||'S',o.t]].concat(then,Q);run();
 }
 function setLine(who,text,o){
   var g=G;
@@ -77,17 +79,19 @@ function render(){
   document.getElementById('play-panel').classList.toggle('hidden',!g.started||g.ended);
   document.getElementById('pause').disabled=!g.started||g.ended;
   document.getElementById('journal').disabled=!history.length;
-  document.getElementById('chapter').textContent=g.ended?(g.labEnd?'Scenario lab':g.dayEnd?'End of Monday':'For now'):g.label?g.label:g.w?'The walk home':g.started?'Oh, hi.':'A small social adventure';
-  document.getElementById('perspective').textContent=g.out?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION';
+  document.getElementById('chapter').textContent=g.ended?(g.labEnd?'Scenario lab':g.dayEnd?'End of Monday':'For now'):g.started?(g.lab?'':['','I · ','II · ','III · '][storyPart()])+(g.label|| (g.w?'The walk home':'Oh, hi.')):'A small social adventure';
+  document.getElementById('perspective').textContent=g.chap&&g.chap.part?g.chap.day:g.finalFrame?'FOR NOW':g.out?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION';
   cv.classList.toggle('stretching',WAIT==='stretch');
+  cv.setAttribute('aria-label',g.chap&&g.chap.part?g.chap.day+'. '+g.chap.title:g.finalFrame?'The human is asleep. A lamp stays on. Ekskyysmi makes a bird with its hands.':'An animated human and their shadow');
   if(WAIT==='choice'&&CH){
-    speaker='S';text=g.nopeMsg||'What do we do with this?';
+    speaker=g.choiceWho||'S';text=g.nopeMsg||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':'What do we do with this?');
+    if(g.form&&g.form.i>=0){speaker='N';text=FORM_Q[g.form.i].q;}
     for(var i=0;i<CH.length;i++)html+=CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>';
   }else if(WAIT==='stretch'){
     speaker='S';text='A small warning. Just enough to make my point.';
     html='<div class="stretch-controls"><label for="stretch">Unfurl your warning</label><input id="stretch" type="range" min="1.8" max="3.8" step="0.05" value="'+g.morko.sT+'" aria-label="Size of your warning"><button class="opt cont" type="button" data-i="go">That should do it →</button></div>';
   }else if(WAIT==='auto'&&g.auto){
-    speaker='S';text='—';
+    speaker='H';text='Already decided.';
     for(var ai=0;ai<g.auto.opts.length;ai++)html+='<button class="opt'+(g.auto.done&&ai===g.auto.pick?' picked':'')+'" type="button" disabled><i>'+(ai+1)+'</i>'+esc(g.auto.opts[ai])+'</button>';
   }else if(WAIT==='lamp'){
     speaker='N';text='It is dark. There is a lamp.';
@@ -118,14 +122,20 @@ function render(){
     if(WAIT==='time'&&!cur)text=g.skippable?'The break room, before anyone needs anything.':'…';
     html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">Skip intro →</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+(WAIT==='time'?'A moment…':'Continue →')+'</button>';
   }
+  if(g.chap&&g.chap.part)html='<button class="opt cont" type="button" data-i="go">Begin '+g.chap.day.toLowerCase()+' →</button>';
+  if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">For now →</button>';}
   var icon=speaker==='H'?'human':speaker==='S'?'':speaker==='N'?'narrator':'other';
   elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'"><b>'+(g.skippable&&!cur?'MONDAY, 8:52':NAMES[speaker])+'</b><p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
+  if(g.finalFrame)elLine.innerHTML='';
   elOpts.innerHTML=html;
   if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
     var nextControl=elOpts.querySelector('[data-i=read]');if(nextControl&&!nextControl.disabled)nextControl.focus();
   }
   document.getElementById('hint').textContent=WAIT==='auto'?'Nothing to do. It’s handled.':WAIT==='lamp'?'The lamp.':WAIT==='qte'?'Arrow keys and Space, in this order. Or tap the buttons. Two seconds have been added for reading. Reality did not add them.':lensFree()?'Move the glass over the room. Everything looks worse through it. That is its job.':WAIT==='fight'?'Tap to swat the nearest reply. Waiting lets it come close enough to read.':WAIT==='toss'?'Drag the card and let go of it. Tapping works too, but it needs persuading.':WAIT==='hold'?'Press and hold the button or the scene. A few taps work too. Letting go is allowed.':WAIT==='stretch'?'Drag up on the scene, or use the slider. No rush.':WAIT==='choice'?'Choose a line · keys 1–4 · every choice keeps the story moving.':g.started?'Space / Enter to continue · P to pause · Dialogue to look back.':'Take your time. The coffee can wait.';
   if(WAIT==='fight'&&g.fight.paced)document.getElementById('hint').textContent='No timer. Use the buttons to read or swat. Space / Enter or tapping the scene swats.';
+  if(g.chap&&g.chap.part)document.getElementById('hint').textContent='A place to pause. Continue when you’re ready.';
+  if(g.finalFrame)document.getElementById('hint').textContent='Stay a little, if you like.';
+  if(WAIT==='auto')document.getElementById('hint').textContent='The human can answer without checking with Ekskyysmi.';
   resize();
 }
 function clearPreview(){if(previewSaved){G.morko.pose=previewSaved.pose;G.morko.sT=previewSaved.s;previewSaved=null;}}
@@ -195,7 +205,7 @@ function holdStep(h,on,dt){
   }else if(h.kind==='sit'){
     M.sT=0.62;M.mood='calm';g.anx=0.05;if(on&&h.o.clock)g.clock+=60*dt;
   }else if(h.kind==='sign'){
-    M.dim=1-0.45*f;if(g.form)g.form.sig=f;
+    if(g.form)g.form.sig=f;
   }else if(h.kind==='still'){
     M.pose='hold';Hm.face='stiff';Hm.sweatT=0.8;if(!on&&dt)Hm.flinch=Math.max(Hm.flinch,0.5);
     if(g.day!=='C')g.aFace=(h.p>1&&h.p<2.1)?-1:1;
@@ -212,7 +222,7 @@ function finishHold(){
   else if(h.kind==='pull'){M.pose='pull';Hm.xT=-90;Hm.back=true;g.cupLeft=true;g.lines=[];}
   else if(h.kind==='still'){M.pose='hold';Hm.face='stiff';g.aFace=1;}
   else if(h.kind==='sit'){M.sT=0.62;g.anx=0.05;}
-  else if(h.kind==='sign'){M.dim=0.55;if(g.form)g.form.sig=1;}
+  else if(h.kind==='sign'){if(g.form)g.form.sig=1;}
   else{M.pose='comfort';M.sT=1.1;M.mood='care';g.anx=0.1;}
   sfx('pick');run();
 }
