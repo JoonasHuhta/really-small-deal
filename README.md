@@ -282,6 +282,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 
 ## Lue seuraavassa järjestyksessä
 
+00. [Toinen näytös](TOINEN_NAYTOS.md): seuraavan ison työn toteutusohje (16.11.2026). Työtavat koodaavalle agentille: [AGENTS.md](AGENTS.md).
 0. [Suunta](SUUNTA.md): mihin peli kasvaa viikon jälkeen, seitsemän painopistettä ja kaksi valmiiksi kirjoitettua kohtausta (15.11.2026).
 1. [Seuraavaksi](SEURAAVAKSI.md): työlista tärkeysjärjestyksessä, tutkimuksesta johdetut käsikirjoitusideat, julkaisu ja rahoitus. **Aloita tästä.**
 2. [Käsikirjoitus](KASIKIRJOITUS.md): kaari, tasapaino, Ekskyysmin hahmo ja kaksi kelloa.
