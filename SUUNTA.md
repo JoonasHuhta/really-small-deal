@@ -110,6 +110,51 @@ Puhelin sai 0.32:ssa liioitellut äänet (saapuva viesti tärisee kuin pöytä, 
 - *Monday. Again.* ja *Small deals* -antologia: ne ovat pituutta. Ideat säilyvät tässä tiedostossa, mutta niitä ei toteuteta, ellei tarina niitä vaadi.
 - Valo määrää koon.
 
+## 5b. Ehdotus: toinen näytös, ”hiljaisuus” (16.11., EI PÄÄTETTY)
+
+Sinun ideasi: ihminen romahtaa, saa diagnoosin ja lääkkeen, varjo katoaa, kaikki sujuu mutta jotain puuttuu, ja varjon paluu on tarinan suurin ilo. Ytimessä on asia, joka tarinasta puuttuu: **jakso ilman Ekskyysmiä.** Nyt kaari on loiva (torstai-ilta on pohja, perjantai sovinto). Poissaolo antaa valevoiton, kaipuun ja jälleennäkemisen.
+
+Claude ehdottaa kolmea muutosta toteutustapaan:
+
+1. **Ei sairaalaa.** Pelin nimi on mittakaava. Romahdus on lattia ja pyykkikori (painopiste 3, isku ilman lähettäjää), ja sitä seuraa yksi kortti: ”An appointment. 40 minutes. A form with 18 questions.”
+2. **Lääke ei ole roisto eikä lopettaminen onnellinen loppu.** Pilleriä ei nimetä; se on yksi kuva keittiön pöydällä. Hiljaisuus on aidosti helpotus (kuitti: DAYS LIVED 1.0, ensimmäistä kertaa kellot käyvät samaa aikaa) ja samalla jotain puuttuu. Ratkaisu: vaikutus hiipuu iltaisin, ja varjo palaa silloin. ”I’ve gone part-time. I work evenings.” Ihminen ei valitse lääkkeen ja varjon välillä, vaan sytyttää lampun, koska varjo tarvitsee valon.
+3. **Diagnoosia ei sanota ääneen.** Lomake riittää, ja katsoja päättelee.
+
+Kolme lyhyttä lukua (yhteensä arviolta 12–15 min):
+
+**The form.** Ekskyysmi rakastaa lomakkeita, ja tämä on ensimmäinen, joka kertoo hänestä.
+```
+S: Question four. “Do you often…” Often? CONSTANTLY. Tick it twice.
+H: You can only tick once.
+S: Then tick it hard.
+S: Question eleven. “…as if driven by a motor.” …That’s me. They’ve described ME.
+H: It’s a list of symptoms.
+S: It’s a job description.
+[Viimeinen rivi. Allekirjoitus.]
+S: I’ll sign. I sign everything.
+[Hän allekirjoittaa. Hän ei tiedä, mitä allekirjoittaa.]
+```
+**Quiet.** Aamu. Sama huone, sama kahvi. Seinällä ei ole ketään. Pelaajalla ei ole ketään, jota pelata: valinnat ovat ihmisen omia, ne onnistuvat kaikki, ja kupla on tyhjä siinä kohdassa, jossa vitsi olisi ollut. Sanna sanoo ”oh, hi.”, eikä mitään tapahdu. Lounaalla Sannan varjo katsoo ympärilleen: ”Where’s yours?” Vain varjo huomaa. Ihminen laskee rekkarit: pari löytyy, eikä hän hymyile.
+
+**Evenings.** Ilta. Ihminen sytyttää lampun. Seinälle ilmestyy pieni varjo, joka ei ole varma, saako tulla.
+```
+S: …Am I allowed?
+H: It’s nine. You’re on.
+S: I’ve gone part-time?
+H: Evenings.
+S: What happened today? Without me.
+H: Everything went fine.
+S: …Oh.
+H: Nobody said “for the record”. All day.
+S: That’s terrible.
+H: It was very quiet.
+S: You’re welcome.
+H: I missed it.
+```
+Avoimet kysymykset: tuleeko tämä perjantain jälkeen (kolmas näytös) vai korvaako se osan nykyisestä viikosta, ja kuinka paljon pelaaja saa tehdä luvussa *Quiet.*, kun pelattavaa hahmoa ei ole.
+
+Lähteistä: lääkkeen aiheuttama tunteiden latistuminen on tunnettu ilmiö osalla käyttäjistä ja yleensä merkki liian suuresta annoksesta tai väärästä valmisteesta; luovuustutkimusten katsaus (Hoogman ym. 2020) ei löytänyt psykostimulanteista yleistä haittaa luovuudelle. ”Plus miinus nolla” on siis yhden ihmisen kokemus, ja peli kertoo sen sellaisena.
+
 ## 6. Mitä ei tehdä
 
 - Ei toista sisäistä ääntä. Muut piirteet ovat muiden ihmisten varjoja.
