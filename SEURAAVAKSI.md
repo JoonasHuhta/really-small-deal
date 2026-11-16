@@ -73,6 +73,17 @@ Pelissä on nyt kahdeksan käsin tehtävää asiaa: vastausikkuna, venytys, pito
 
 **Äänet, jotka puuttuvat** (paikat `SAMPLES`-taulukossa): kortin pudotus (paperin läpsähdys), jongleerauksen pehmeä rytmi, kuittikirjoittimen rätinä, röntgenin matala ”thunk”, ja Ekskyysmille oma lyhyt ääni per mieliala (nyt piippaus). Nämä kannattaa äänittää itse suulla ja pöydällä: se sopii pelin käsintehtyyn tyyliin paremmin kuin äänipankki.
 
+## 4d. Idea talteen (16.11.2026, Joonas): ”kaikki tilit pois yhdestä pienestä kommentista”
+
+Alkuperäinen kuvitus on meemi, jossa pieni rakentava palaute johtaa siihen, että ihminen poistaa kaikki sosiaalisen median tilinsä. Ajatus on hyvä, koska se on pelin kaava puhtaimmillaan: **pieni laukaisin, valtava toimenpide, ulkopuolinen kesto vähän.** Kriittinen arvio:
+
+- **Ei pidä toistaa vetäytymistä.** *The posting* kattaa jo ”en lähetä mitään, joten mitään ei voi tapahtua”. Uusi hetki toimii vain, jos se on *mittasuhdevitsi*, ei toinen vetäytymiskohtaus: ihminen ei karkaa, vaan Ekskyysmi hoitaa asian virallisesti ja liian laajasti.
+- **Laukaisin:** ryhmächatin tai julkaisun alla yksi kommentti, esim. ”Nice! Maybe a shorter caption next time?” Ekskyysmin luenta: ”That is a verdict with a smiley.”
+- **Vitsi:** Ekskyysmi avaa lomakkeen *Termination of all public presence*. Pyynnöt kasvavat portaittain: yksi kuva, kaikki kuvat, tilit, sähköposti, ”the name”. Pelaaja valitsee, kuinka pitkälle hän antaa edetä. Ulkopuolinen versio: ”duration: 4 minutes. Posts deleted: 1. Accounts deleted: 0. App reinstalled: 11 minutes later.”
+- **Kuitti:** rivi ”Accounts closed: 0 · Notifications turned off: 1”. Pelin sääntö pysyy: kukaan ei ole vihainen, ja iskun koko on sisäinen.
+- **Rajat (sovitut linjat):** alkuperäisen meemin synkkä rivi jää kokonaan pois. Ei itsetuhoisuutta, ei diagnoosia eikä alkoholia ratkaisuna. Ekskyysmi on ylikiihtynyt virkailija, ei vaaranpaikka.
+- **Mihin:** *The group chat* -hetken (A SUNDAY EVENING) jälkeen tai ennen sitä, tai Scenario labin oma lyhyt kohtaus. Ei lisätä tarinaan ennen pelaajatestiä; tämä on kandidaatti, ei päätös.
+
 ## 5. Ennen julkaisua
 
 1. **Ääni-identiteetti:** kuittikirjoittimen rätinä, matala ”thunk” röntgenissä, toimiston huminaa ja yksi lyhyt teema. Paikat ovat valmiina (`SAMPLES`, `MUSIC`).
