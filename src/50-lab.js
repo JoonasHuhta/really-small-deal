@@ -17,6 +17,7 @@ var LABS={
   library:{title:'A fine.',blurb:'The overdue lighthouse book goes back. The librarian says it’ll be a fine.',script:labLibrary},
   posting:{title:'The posting.',blurb:'A job posting that is SO you. Ekskyysmi has a perfect record of never being rejected. It intends to keep it.',script:labPosting},
   detail:{title:'One small thing.',blurb:'Eero likes the slides. Just one small thing. For a moment everything is an X-ray.',script:labDetail},
+  radiator:{title:'By the radiator.',blurb:'The next Tuesday. Ekskyysmi has a meeting with Sanna’s shadow. Three topics prepared. All of them weather.',script:labRadiator},
   footage:{title:'Footage.',blurb:'A nice chat with Sanna. Ekskyysmi switches to the corner camera. It only points one way.',script:labFootage},
   enhance:{title:'Enhance.',blurb:'One eyebrow. Four levels of zoom. A forensic investigation nobody asked for.',script:labEnhance},
   comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments}

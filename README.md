@@ -14,7 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.42.3 (Claude, 16.11.2026): **tasapaino: ihminen pyytää varjoa, ja varjo on kerran oikeassa.**
+Versio 0.43.0 (Claude, 16.11.2026): **Ekskyysmin luonne: innostus, karkaava huomio, ihastus, yhteinen sanasto ja valheen merkki.** Tämä on toinen alfa kavereille.
+
+- Tiistaina nitoja (turvallinen innostus), torstaina koi kesken hälytyksen, ja torstain ”It’s fine.” -repliikissä varjo pienenee hetkeksi (`fib()`).
+- Perjantaina ihminen käyttää varjon omaa ilmausta ”a no in a coat”, jos pelaaja kuuli sen keskiviikkona (`G.coatNo`, tallentuu).
+- Uusi lab-kohtaus *By the radiator.* (Ekskyysmin oma ihastus, roolit vaihtuvat), ja *Footage.*-kohtaukseen vuotorepliikki ”She has a nice laugh.”
+- Yksityiskohdat: [SYVENNYS.md](SYVENNYS.md) kohta 5c.
+
+ **tasapaino: ihminen pyytää varjoa, ja varjo on kerran oikeassa.**
 
 - Tiistaina ihminen antaa palaverin itse varjolle (”Can you just… handle this one?”), ja myöhemmin myöntää sen (”You asked me to handle it.” – ”…I did.”).
 - Keskiviikkona Eerolla on syy pyynnöilleen (”I hate presenting. You’re good at it.”). Keskiyöllä Ekskyysmi estää sähköpostin, joka olisi lähtenyt ALL STAFF -listalle ja paljastanut Eeron pelon. Hälytin on kerran oikeassa ja ihminen väärässä.

@@ -152,7 +152,7 @@ function reset(day){
      cz:1.025,cx:W/2,cy:H/2,
      lines:[],band:null,out:null,w:null,card:0,
      hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0};
-  G.handout=false;G.afterparty=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.stamp=null;
+  G.handout=false;G.afterparty=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.coatNo=false;G.stamp=null;
   G.choiceWho='S';G.finalFrame=false;G.barStory=null;G.quietDrawing=false;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
   document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
@@ -481,7 +481,7 @@ function checkpoint(g){
     handout:!!g.handout,afterparty:!!g.afterparty,reflected:!!g.reflected,peeked:!!g.peeked,metSannaShadow:!!g.metSannaShadow,
     posting:['archived','rejected','open'].indexOf(g.posting)>=0?g.posting:null,
     nothings:Number.isFinite(g.nothings)?clamp(Math.floor(g.nothings),0,20):0,rehearsal:!!g.rehearsal,
-    barStory:['umbrella','arms','2011'].indexOf(g.barStory)>=0?g.barStory:null,quietDrawing:!!g.quietDrawing};
+    barStory:['umbrella','arms','2011'].indexOf(g.barStory)>=0?g.barStory:null,quietDrawing:!!g.quietDrawing,coatNo:!!g.coatNo};
 }
 function loadProgress(){
   try{
@@ -913,6 +913,8 @@ function begin(n,o){return [scene(o),function(){
   var g=G;g.chapter=n;g.moment=null;newDay();g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
   g.morko.s=1;g.morko.off=-70;g.chap={day:CHAPTERS[n].day,title:CHAPTERS[n].title,t:0};saveProgress(n);stopVoice();sfx('card');
  },function(){return n===5?partCard(3):[{wait:2.8}];},function(){G.chap=null;G.fade=1;}];}
+// Ekskyysmi's tell: whenever it says it is fine and is not, it shrinks a little, then grows back.
+function fib(){var M=G.morko;M.s=Math.max(0.3,M.s-0.07);}
 function shadowHit(){var g=G;trigger();addLived('the one that landed',LIVED.shadowHit);sfx('hit');g.pulse=0.9;g.shake=RM?0:0.8;g.lines=[];g.cur=null;g.flash=0.8;g.morko.sT=0.62;g.morko.mood='scared';g.morko.pose=null;g.anx=0.9;g.cz=1.08;g.cx=W/2-30;g.cy=300;}
 function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);}
 
@@ -1011,7 +1013,14 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['H','That’s the trouble with your filing system.'],
   ['S','It’s not a filing system. It’s a smoke alarm. It doesn’t have a setting for “nice”.'],
   function(){G.pop={text:'Filed: 1 note. Misplaced: 3 compliments.',t:0};},
-  {wait:1.6}
+  {wait:1.6},
+  ['S','…Look at that stapler.',{look:'up'}],
+  ['H','What about it?'],
+  ['S','Reliable. Closed-mouthed. It has never once said “oh, hi.”'],
+  ['S','I’d like it on the team.'],
+  ['H','It’s the office stapler. It’s on everyone’s team.'],
+  ['S','…Anyway. Doom.'],
+  {wait:0.6}
  ]);}
 
 function yesMenu(s,extra,extraKey){return {choice:[
@@ -1057,7 +1066,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   {choice:[
     {t:'A “no” costs us people.',then:[['S','Every no is a door closing.'],['H','Every yes is me doing slides at midnight.']]},
     {t:'We could get ill. Convincingly.',then:[['S','A light flu. Respectable. Nobody rejects the ill.'],['H','I’m not faking flu to avoid a two-letter word.']]},
-    {t:'What if we said… “not this time”?',then:[['S','It’s a no in a coat.'],['H','That’s further than you’ve ever gone.'],['S','I feel sick.']]}
+    {t:'What if we said… “not this time”?',f:function(){G.coatNo=true;},then:[['S','It’s a no in a coat.'],['H','That’s further than you’ve ever gone.'],['S','I feel sick.']]}
   ]},
   set({mood:'worry'}),
   ['S','I only have the one move, you know. Keep everyone pleased. It works.'],
@@ -1105,7 +1114,13 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   function(){G.clock=17*3600+52*60;},
   ['N','17:52.'],
   set({s:1.7,mood:'stern'}),
-  ['S','Twenty-one minutes. I’ve drafted some follow-ups.'],
+  ['S','Twenty-one minutes. Everyone has seen it. Everyone has—'],
+  addTic('(a moth.)',610,170,{life:1.6}),
+  ['S','…is that a moth?',{look:'up'}],
+  {wait:1.1},
+  ['S','WHERE WAS I.',{loud:1}],
+  ['H','Twenty-one minutes.'],
+  ['S','TWENTY-ONE MINUTES. Thank you. I’ve drafted some follow-ups.'],
   {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};});}},
   function(){G.clock=18*3600+40*60;},
   ['N','18:40. Still nothing.'],
@@ -1121,6 +1136,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   function(){return G.metSannaShadow?[['S','With a full stop.']]:[];},
   set({face:'down'}),
   ['H','Sorry.'],
+  fib,
   ['S','No. It’s fine. It’s just— that’s what it’s like.'],
   ['H','What is?'],
   ['S','All of it. Every “oh”. Every “quick chat”. It doesn’t arrive as a note. It arrives as a hit.'],
@@ -1244,7 +1260,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['B','Hey! While you’re both here — could you also take my Monday shift?'],
   ['S','Here we go. I’ll get the “sure”.'],
   {choice:[
-    {t:'No. (I will wobble.)',f:function(){G.no=true;},then:[['H','Not this time, Eero.'],set({s:1.5,mood:'scared'}),['S','He’s going to—'],['B','Oh. Right. I’ll ask Riitta.'],set({s:1.1,mood:'surprised'}),['S','He sounds disappointed.'],['H','I think he is.'],['S','…He survived. WE survived. It was three words.',{look:'stunned'}]]},
+    {t:'No. (I will wobble.)',f:function(){G.no=true;},then:[function(){return G.coatNo?[['H','It’s a no in a coat, Eero. Not this time.'],['B','…What coat?'],aside(['S','My words. Out in the world.'])]:[['H','Not this time, Eero.']];},set({s:1.5,mood:'scared'}),['S','He’s going to—'],['B','Oh. Right. I’ll ask Riitta.'],set({s:1.1,mood:'surprised'}),['S','He sounds disappointed.'],['H','I think he is.'],['S','…He survived. WE survived. It was three words.',{look:'stunned'}]]},
     {t:'Say yes. Old habits.',f:yes,then:[['H','Sure.'],['S','Next time, then.'],['H','Next time.'],['S','I’ll put the “no” in the archive. Under “pending”.']]}
   ]},
   set({aFace:-1,mood:'calm'}),
@@ -2293,6 +2309,7 @@ var LABS={
   library:{title:'A fine.',blurb:'The overdue lighthouse book goes back. The librarian says it’ll be a fine.',script:labLibrary},
   posting:{title:'The posting.',blurb:'A job posting that is SO you. Ekskyysmi has a perfect record of never being rejected. It intends to keep it.',script:labPosting},
   detail:{title:'One small thing.',blurb:'Eero likes the slides. Just one small thing. For a moment everything is an X-ray.',script:labDetail},
+  radiator:{title:'By the radiator.',blurb:'The next Tuesday. Ekskyysmi has a meeting with Sanna’s shadow. Three topics prepared. All of them weather.',script:labRadiator},
   footage:{title:'Footage.',blurb:'A nice chat with Sanna. Ekskyysmi switches to the corner camera. It only points one way.',script:labFootage},
   enhance:{title:'Enhance.',blurb:'One eyebrow. Four levels of zoom. A forensic investigation nobody asked for.',script:labEnhance},
   comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments}
@@ -2810,6 +2827,10 @@ function labFootage(){return labScene({set:'room',title:'Footage.',plan:'Have a 
   calm,
   ['A','Same time tomorrow? I have a worse pigeon story.'],
   ['H','…Yes. Please.'],
+  ['S','She has a nice laugh.'],
+  ['H','Don’t say that OUT LOUD.'],
+  ['S','Nobody can hear me.'],
+  ['H','I can.'],
   ['S','I’ll need the footage from HER camera.'],
   ['H','She doesn’t have a camera.'],
   function(){G.zT=1;},{wait:1.4},
@@ -2941,6 +2962,49 @@ function labGlass(){
     {t:'Explain that the glass is faulty.',then:[['S','It’s been showing things wrong all morning. You said so yourself.'],['H','It showed the room wrong. It’s got you about right.'],['S','…I’d like a second opinion. From a bigger glass.']]}
   ]},
   lensOff,set({mood:'calm',s:1.1})
+ ]);}
+// ---- src/52-radiator.js ----
+/* ================= By the radiator: the rejection expert has something to lose ================= */
+// On Friday the two shadows agree on Tuesdays, by the radiator. This is the next Tuesday.
+// The roles swap: the human coaches, Ekskyysmi gets Eero's advice, and nothing it prepared survives the word "hi".
+function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan:'Make tea. That’s all.',clock:16*3600+50*60}).concat([
+  function(){var g=G;g.cowA=true;g.ax=g.axT=780;g.aFace=-1;},
+  ['N','The next Tuesday, nearly five. The kettle is on. Sanna is waiting for it too.'],
+  set({mood:'alert'}),
+  ['S','Don’t look at the radiator.'],
+  ['H','Why would I look at the radiator?'],
+  ['S','No reason. Tuesdays. Nearly five. Some shadows meet there. Professionally.'],
+  ['H','…You have a date.'],
+  ['S','I have a MEETING. I’ve prepared three topics and a fallback weather.',{look:'pleased'}],
+  ['H','Go on, then. The topics.'],
+  ['S','One. Walls. Two. Other walls. Three—'],
+  ['S','…Three was the weather. I’ve used the fallback already.',{quiet:1}],
+  {choice:[
+    {t:'Have you tried leaving your comfort zone?',then:[['S','Don’t you DARE.',{loud:1}],['H','Eero says it works.'],['S','Eero has never met a radiator in his life.']]},
+    {t:'Just say hi.',then:[['S','“Just say hi.” As if it’s nothing.'],['H','It is nothing.'],['S','It is a WHOLE WORD.']]},
+    {t:'What if she doesn’t come?',then:[['S','Then it’s a radiator. I’ve spent time with worse.'],['H','You’re doing my voice.'],['S','I learned from the best. Unfortunately.']]}
+  ]},
+  function(){G.zT=1;},{wait:1.6},
+  ['Z','Hi.'],
+  set({mood:'surprised',s:1.2}),
+  ['S','I’ve been meaning to— the weather is— I like your—'],
+  ['S','Hi.',{quiet:1}],
+  ['Z','I like your edges.'],
+  ['S','…I like your radiator.'],
+  ['Z','It’s the building’s.'],
+  ['S','I KNOW. Yes. The building has excellent taste.'],
+  {wait:0.9},
+  ['A','Kettle’s done!'],
+  function(){G.zT=0;}
+ ],outside({title:'WHAT THE HUMANS SAW',dur:'duration: 6 seconds',cap:'Two people waiting for a kettle.',anim:'text'}),[
+  calm,
+  ['S','That went terribly.'],
+  ['H','She said she likes your edges.'],
+  ['S','She said it with a FULL STOP.'],
+  ['H','You told her you like her radiator.'],
+  ['S','I panicked. It was the nearest thing.'],
+  ['H','Same time next week?'],
+  ['S','…Tuesday works.',{look:'soft'}]
  ]);}
 // ---- src/53-bar.js ----
 /* ================= the bar: seen from behind the counter, so everyone is half hidden for once ================= */

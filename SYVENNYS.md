@@ -69,7 +69,17 @@ Hyvä kuvallinen keino tekee ajatusvinoumasta esineen, jota Ekskyysmi käyttää
 - **Keskiviikko, 00:12:** väsynyt ihminen on lähettämässä dioja ALL STAFF -listalle viestillä, jossa paljastuu Eeron pelko. Ekskyysmi pysäyttää: ”We don’t post other people’s files.” Tämä on ainoa kohta, jossa hälytin on oikeassa ja ihminen väärässä. ”I do have one useful setting. It is just very rarely this one.”
 - **Perjantai:** Sanna: ”I was going to ask you on Monday. You looked busy.” Ekskyysmi sivuun: ”Looking busy was my idea.”
 
-## 5c. Ekskyysmi: mitä hahmosta saa vielä irti (ehdotuksia, ei toteutettu)
+## 5c. Ekskyysmi: mitä hahmosta saa vielä irti (toteutettu 0.43.0)
+
+**Toteutus 0.43.0:**
+- **1, innostus:** tiistaina arviointipalaverin jälkeen nitoja: ”It has never once said ’oh, hi.’ I’d like it on the team.” → ”…Anyway. Doom.”
+- **2, karkaava huomio:** torstaina Seen-kierteessä koi (”…is that a moth?” → ”WHERE WAS I.”). Ihminen vastaa ”Twenty-one minutes.”, eli auttaa varjon takaisin tuomioon. Hälytys toimii huomion varassa.
+- **3, vuoto:** *Footage.*-kohtauksen lopussa ”She has a nice laugh.” – ”Don’t say that OUT LOUD.” – ”Nobody can hear me.” – ”I can.”
+- **4, ihastus:** uusi lab-kohtaus ***By the radiator.*** (`src/52-radiator.js`) sijoittuu perjantaita seuraavaan tiistaihin. Ihminen valmentaa, ja Ekskyysmi saa Eeron comfort zone -neuvon (”Don’t you DARE.”). Valmistellut aiheet kaatuvat sanaan ”Hi.” Ulkopuolinen versio: *Two people waiting for a kettle.* Loppu: ”She said it with a FULL STOP.” → ”…Tuesday works.”
+- **5, yhteinen sanasto:** jos pelaaja valitsi keskiviikkoyönä ”not this time”, jolloin Ekskyysmi keksii ilmauksen ”a no in a coat”, ihminen sanoo perjantaina Eerolle ”It’s a no in a coat, Eero. Not this time.” Eero kysyy ”…What coat?”, ja Ekskyysmi sanoo sivuun ”My words. Out in the world.” Lippu `G.coatNo` tallentuu.
+- **6, keskenjäävät aloitukset:** patterikohtauksessa (”I’ve been meaning to— the weather is— I like your—”).
+- **7, valheen merkki:** `fib()` pienentää varjoa hetkeksi, ja se kasvaa takaisin. Käytössä torstain ”No. It’s fine.” -repliikissä. Sääntö jatkoon: aina kun Ekskyysmi sanoo olevansa kunnossa eikä ole, eteen `fib`.
+
 
 Hahmo toimii nyt yhdellä tasolla: virkaintoinen turvallisuusasiantuntija. Hätäinen ADHD-hiiri on hyvä toinen taso, mutta satunnaisuus syö hahmon selkeyden, jos sille ei ole sääntöä. Ehdotetut säännöt:
 

@@ -167,7 +167,7 @@ const checkpointFixture={version:2,ch:5,unlocked:5,chapters:{
   1:{day:'A'},
   3:{day:'A',lunch:1,leak:'cover',fear:2,fb:'ask',yes:0},
   4:{day:'B',lunch:2,leak:'grow',yes:5,handout:true,afterparty:true,fb:'explain'},
-  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true}
+  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true,coatNo:true}
 }};
 savedItems.set(saveKey,JSON.stringify(checkpointFixture));
 T.chapter(3);
