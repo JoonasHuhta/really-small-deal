@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.28 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.38 (Claude, 16.11.2026): **uusi välihetki *Rewind.*: muisti muokkaa.**
+
+- Kello 23:40 Ekskyysmi katsoo nauhalta Sannan maanantaisen ”oh, hi.” -tervehdyksen uudestaan. Joka kelauksella muisto pahenee: ”oh, hi.” → ”oh. hi.” → ”Oh. Hi.” → ”OH. HI.”, kulmat painuvat, suu kääntyy alas ja kuva punertaa. ”It’s getting WORSE. Which means it was always bad and I’m only now seeing it clearly.”
+- Valinta: kelaa vielä kerran (Sannalle kasvaa sarvet: ”Memory is a living document.”) tai anna ihmisen katsoa alkuperäinen. Kumpikin päättyy alkuperäiseen nauhaan: Sanna kahvikoneella, vilkuttaa mukilla ja hymyilee. ”I’ll file it next to the other one.” – ”Which other one?” – ”The one with horns.”
+- Paikka tarinassa: tiistain jälkeen, *Enhance.*-hetken ja *The posting* -hetken välissä (`AFTER[2]`). Myös Scenario labissa. Uusi ääni `rewind`.
+
 Versio 0.37 (Claude, 16.11.2026): **rytmi, äänet ja kolme pistettä.**
 
 - **Teksti hengittää.** Kuplan teksti ilmestyy edelleen noin 55 merkkiä sekunnissa, mutta piste, kysymys- ja huutomerkki pitävät pienen tauon, ajatusviiva hieman pidemmän ja kolme pistettä (…) pisimmän. Hiljaiset repliikit (`{quiet:1}`) tulevat hitaasti (30/s), kovat (`{loud:1}`) kerralla (85/s). *Less motion* näyttää tekstin heti.
@@ -315,7 +321,7 @@ Uusin hahmosuunta on haamumainen, pehmeästi muuntuva varjo. Ekskyysmi voi toimi
 3. [Outoudet](OUTOUDET.md): ihmisen pienet omat tavat ja missä ne näkyvät.
 4. [Pelin konsepti](PELIKONSEPTI.md): alkuperäinen ydin ja sen perustelut.
 5. [Android](ANDROID.md) ja [Git](GIT.md): julkaisu puhelimeen ja yhteistyö GitHubissa.
-6. [Peli](index.html): versio 0.37, viisi päivää ja toinen näytös ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
+6. [Peli](index.html): versio 0.38, viisi päivää ja toinen näytös ja yksitoista välihetkeä, läpipeluu noin 38 minuuttia.
 
 Vanhemmat suunnitelmat ([Toteutuksen suunnittelu](TOTEUTUKSEN_SUUNNITTELU.md), [Arvio ja jalostus](ARVIO_JA_JALOSTUS.md), [Tutkimus ja mekaniikat](TUTKIMUS_JA_MEKANIIKAT.md)) säilyvät historiana.
 

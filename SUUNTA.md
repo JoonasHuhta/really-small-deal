@@ -123,7 +123,7 @@ Kaksoiskaari: torstaina Ekskyysmi hyväksyy ihmisen iskut (”I could stay”), 
 Jokainen on yksi laukaisin samaan kaavaan. Ei toteutettu, paitsi ensimmäinen.
 
 1. **Kolme pistettä** (tehty 0.37): joku kirjoittaa ja lakkaa kirjoittamasta. Ekskyysmi lukee keskeytetyn viestin, jota ei ole olemassa.
-2. **Muisti muokkaa:** Ekskyysmi kelaa keskustelun nauhalta uudestaan, ja joka kelauksella toisen ilme on vähän vihaisempi. Ulkopuolinen versio näyttää alkuperäisen: neutraali kasvo. Tämä on RSD:n ja jälkikäsittelyn ydin, eikä sitä ole vielä pelissä kuvana.
+2. **Muisti muokkaa** (tehty 0.38, *Rewind.*): Ekskyysmi kelaa keskustelun nauhalta uudestaan, ja joka kelauksella toisen ilme on vähän vihaisempi. Ulkopuolinen versio näyttää alkuperäisen: neutraali kasvo. Tämä on RSD:n ja jälkikäsittelyn ydin, eikä sitä ole vielä pelissä kuvana.
 3. **Suihkuväittely:** klo 23:40 ihminen voittaa väittelyn ihmisen kanssa, joka nukkuu. Ekskyysmi pitää pisteitä. ”We won. She doesn’t know there was a match.”
 4. **Tauko on sisältöä:** ihminen pitää keskustelussa tauon tarkoituksella. Ekskyysmi ei kestä hiljaisuutta ja ruudulle ilmestyy laskuri ”pause: 1.4 s”. Pelaaja voi vain pitää nappia (”Hold: say nothing”).
 5. **Anteeksipyyntölaskuri:** ”sorry” sanottu ×6, joista yksi tuolille. Kuittiin.

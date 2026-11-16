@@ -304,3 +304,67 @@ function drawDots(){
   ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=2;rr(x,y,64,32,16);ctx.fill();ctx.stroke();
   for(i=0;i<3;i++){var b=RM?0:Math.max(0,Math.sin(d.t*7-i*0.9))*4;ctx.fillStyle='#8b8070';circ(x+18+i*14,y+16-b,4.2);ctx.fill();}
 }
+
+/* ================= Rewind. Memory edits. Every replay of the same "oh, hi." is a little worse than the last. ================= */
+var TAPE_SAYS=['oh, hi.','oh. hi.','Oh. Hi.','OH. HI.','OH. HI.'];
+function replay(n){return function(){return [function(){G.tape={n:n,t:0};G.lines=[];G.cur=null;sfx('rewind');},{wait:2.3}];};}
+function drawTape(){
+  var tp=G.tape;if(!tp)return;tp.t+=1/60;
+  var x=610,y=96,w=250,h=176,cx=x+w/2,cy=y+76,a=Math.min(tp.n,4),wob=RM?0:Math.max(0,0.5-tp.t)*6,i;
+  ctx.save();
+  ctx.fillStyle='#14111d';rr(x-12,y-12,w+24,h+24,14);ctx.fill();ctx.fillStyle='#232733';rr(x+w/2-30,y+h+12,60,14,4);ctx.fill();   // the set and its stand
+  ctx.fillStyle=a>=3?'#3a2a34':'#2f3a40';ctx.fillRect(x,y,w,h);
+  ctx.translate(Math.sin(tp.t*60)*wob,0);
+  // Sanna, as remembered
+  var skin='#c9957a';ctx.fillStyle='#463b38';ctx.beginPath();ctx.arc(cx,cy-4,48,Math.PI,0);ctx.fill();ctx.fillRect(cx-48,cy-4,96,40);
+  if(a>=4){ctx.fillStyle='#e0563e';ctx.beginPath();ctx.moveTo(cx-38,cy-34);ctx.lineTo(cx-30,cy-70);ctx.lineTo(cx-18,cy-40);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(cx+38,cy-34);ctx.lineTo(cx+30,cy-70);ctx.lineTo(cx+18,cy-40);ctx.closePath();ctx.fill();}               // memory is a living document
+  ctx.fillStyle=skin;circ(cx,cy+4,38);ctx.fill();
+  ctx.strokeStyle='#2b2027';ctx.lineWidth=3+a*0.6;ctx.lineCap='round';
+  for(var sdx=-1;sdx<=1;sdx+=2){var bx=cx+sdx*15,tilt=a*0.16;line(bx-sdx*9,cy-12-a*0.5+(-tilt*9),bx+sdx*9,cy-12+tilt*9);}            // brows: inner ends sink with every replay
+  ctx.fillStyle='#2b2027';var eh=Math.max(1.5,5-a);for(sdx=-1;sdx<=1;sdx+=2){ctx.beginPath();ctx.ellipse(cx+sdx*15,cy,4.5,eh,0,0,Math.PI*2);ctx.fill();}
+  ctx.lineWidth=3;ctx.beginPath();var mc=10-a*6;ctx.moveTo(cx-13,cy+19);ctx.quadraticCurveTo(cx,cy+19+mc,cx+13,cy+19);ctx.stroke();
+  // scan lines, a counter, and the line itself
+  ctx.fillStyle='rgba(0,0,0,.16)';for(i=0;i<h;i+=4)ctx.fillRect(x,y+i,w,1.5);
+  ctx.fillStyle='#f6f1e4';ctx.font='700 11px ui-monospace,Menlo,Consolas,monospace';ctx.textAlign='left';ctx.textBaseline='middle';
+  ctx.fillText('◀◀ REPLAY #'+(tp.n+1),x+10,y+14);if(Math.floor(tp.t*2)%2===0){ctx.fillStyle='#e0563e';circ(x+w-16,y+14,4.5);ctx.fill();}
+  ctx.textAlign='center';ctx.fillStyle='#f6f1e4';ctx.font=(a>=3?'800 ':'600 ')+(16+a*2)+'px system-ui,sans-serif';ctx.fillText(TAPE_SAYS[a],cx,y+h-20);
+  ctx.restore();
+}
+function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',clock:23*3600+40*60}).concat([
+  ['N','23:40. Lights off. Ekskyysmi has the tape.'],
+  ['S','Just once more. For accuracy.'],
+  replay(0),
+  ['S','Friendly. Suspiciously friendly.',{look:'squint'}],
+  replay(1),
+  ['S','Did you hear the full stop that time?'],
+  ['H','There wasn’t one.'],
+  ['S','There is NOW.'],
+  replay(2),
+  ['S','Capital letters. She’s escalating.'],
+  ['H','It’s the same tape.'],
+  ['S','It’s getting WORSE. Which means it was always bad and I’m only now seeing it clearly.'],
+  replay(3),
+  ['S','There. THAT’S what she meant.',{look:'pleased'}],
+  {choice:[
+    {t:'Rewind once more. For thoroughness.',then:[replay(4),
+      ['H','She has horns.'],
+      ['S','She does now.'],
+      ['H','She didn’t this morning.'],
+      aside(['S','Memory is a living document.']),
+      ['H','Play the original.'],
+      ['S','The original is very boring.']]},
+    {t:'Let the human play the original.',then:[
+      ['H','Play the one from this morning. The actual one.'],
+      ['S','That one’s in the archive. Nobody watches it. It’s very boring.']]}
+  ]},
+  function(){G.tape=null;addLived('one “oh, hi.”, replayed',40);}
+ ],outside({title:'THE ORIGINAL TAPE',dur:'duration: 2 seconds',cap:'Sanna at the coffee machine, waving with a mug. She was smiling. Nobody filmed it.',anim:'text'}),[
+  ['S','…She was smiling.',{look:'soft'}],
+  ['H','She usually is.'],
+  ['S','I’ll file it next to the other one.'],
+  ['H','Which other one?'],
+  ['S','The one with horns.',{look:'pleased'}],
+  ['H','Go to sleep.'],
+  ['S','I’m a shadow. It’s dark. I’m EVERYWHERE.']
+]);}

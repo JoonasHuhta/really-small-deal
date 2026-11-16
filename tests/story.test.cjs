@@ -307,6 +307,11 @@ function playLab(id,mode){
   assert.ok(T.G.labEnd,'lab scene must end');assert.match(element('ov').innerHTML,/Play it again/);
   return T.history().map(x=>x.who+': '+x.text).join('\n');
 }
+// Rewind: memory edits itself. Both endings reach the original tape.
+{
+  let tr0=playLab('rewind',0);assert.match(tr0,/Memory is a living document/);assert.match(tr0,/The one with horns/);assert.equal(T.G.tape,null);
+  tr0=playLab('rewind',1);assert.match(tr0,/The actual one/);assert.doesNotMatch(tr0,/She has horns/);assert.match(tr0,/I’m EVERYWHERE/);
+}
 // ---- the second act (TOINEN_NAYTOS.md) ----
 {
   let t2=playLab('nothing');

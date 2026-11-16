@@ -486,7 +486,7 @@ function draw(){
     drawDish();
     drawTics(0);
     if(WAIT==='hold'&&g.hold&&!g.human.gone)holdRing();
-    drawToss();drawForm();drawDots();drawPaper();
+    drawTape();drawToss();drawForm();drawDots();drawPaper();
     sannaShadow();eeroShadow();riittaShadow();
     drawCoworkers(1);
     if(g.set==='bar'&&g.bar)barFront();

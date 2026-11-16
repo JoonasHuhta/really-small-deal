@@ -99,6 +99,7 @@ function speak(who,text){
 function sfx(k){
   var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;
   if(k==='hit'){tone(120,t,0.4,'sine',0.24,42);tone(900,t,0.06,'square',0.025,300);for(var hb=0;hb<3;hb++){tone(62,t+0.6+hb*0.75,0.13,'sine',0.14-hb*0.03);tone(54,t+0.78+hb*0.75,0.13,'sine',0.1-hb*0.02);}}
+  else if(k==='rewind'){for(var rw=0;rw<7;rw++)tone(1500-rw*120,t+rw*0.045,0.04,'square',0.016,1700-rw*120);tone(90,t+0.36,0.12,'sine',0.06);}
   else if(k==='pop'){tone(380,t,0.05,'sine',0.035,720);}
   else if(k==='popS'){tone(170,t,0.07,'sine',0.05,310);}
   else if(k==='dotsOff'){tone(560,t,0.09,'sine',0.03,260);}
@@ -853,7 +854,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;
   g.cowA=g.cowB=g.cowR=false;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.dots=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -1267,7 +1268,7 @@ function mondayRepair(){
 // The five long chapters are the spine. Between them sit shorter moments (the same scripts the Scenario lab plays).
 // Time floats on purpose: a card says roughly when, never which week. To reorder the story, edit AFTER.
 // The order is not arbitrary (see KASIKIRJOITUS.md, "Rakenne"):
-//   after 2: Ekskyysmi doubles down (zoom, withdrawal)            first half of act two: the old job, getting costlier
+//   after 2: Ekskyysmi doubles down (zoom, a replay that edits itself, withdrawal)            first half of act two: the old job, getting costlier
 //   after 3: the glass turned on its owner = MIDPOINT; then other people's shadows, ending with one that
 //            says "oh. hi." to Ekskyysmi itself, so it walks into Thursday knowing how that lands;
 //            last, an evening where nothing happens (a friend who already knows you count): the calm before Thursday
@@ -1276,12 +1277,12 @@ function mondayRepair(){
 //            a day without it (the false victory), and a lamp switched on to ask it back.
 //   after 5: the drawing. The oldest file gets updated.
 var AFTER={
-  2:['enhance','posting'],
+  2:['enhance','rewind','posting'],
   3:['detail','glass','sometime','colleagues','evening'],
   4:['reply','notnow','bar','nothing','form','quiet','evenings'],
   5:['comments']
 };
-var WHEN={nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'THE FIRST MORNING',evenings:'THE SAME DAY, 21:00',posting:'THAT NIGHT, LATE',detail:'THE NEXT AFTERNOON',enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'AN EVENING',
+var WHEN={rewind:'THAT NIGHT, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'THE FIRST MORNING',evenings:'THE SAME DAY, 21:00',posting:'THAT NIGHT, LATE',detail:'THE NEXT AFTERNOON',enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'AN EVENING',
   colleagues:'AFTER LUNCH, SOME DAY',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'AN EVENING AT HOME',voice:'LATER THAT EVENING',library:'TWENTY-THREE DAYS LATER'};
 function interlude(id){return function(){G.lab=null;G.moment=id;saveMoment(id);return LABS[id].script();};}
 function momentsAfter(n){return (AFTER[n]||[]).map(interlude);}
@@ -2030,6 +2031,70 @@ function drawDots(){
   ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=2;rr(x,y,64,32,16);ctx.fill();ctx.stroke();
   for(i=0;i<3;i++){var b=RM?0:Math.max(0,Math.sin(d.t*7-i*0.9))*4;ctx.fillStyle='#8b8070';circ(x+18+i*14,y+16-b,4.2);ctx.fill();}
 }
+
+/* ================= Rewind. Memory edits. Every replay of the same "oh, hi." is a little worse than the last. ================= */
+var TAPE_SAYS=['oh, hi.','oh. hi.','Oh. Hi.','OH. HI.','OH. HI.'];
+function replay(n){return function(){return [function(){G.tape={n:n,t:0};G.lines=[];G.cur=null;sfx('rewind');},{wait:2.3}];};}
+function drawTape(){
+  var tp=G.tape;if(!tp)return;tp.t+=1/60;
+  var x=610,y=96,w=250,h=176,cx=x+w/2,cy=y+76,a=Math.min(tp.n,4),wob=RM?0:Math.max(0,0.5-tp.t)*6,i;
+  ctx.save();
+  ctx.fillStyle='#14111d';rr(x-12,y-12,w+24,h+24,14);ctx.fill();ctx.fillStyle='#232733';rr(x+w/2-30,y+h+12,60,14,4);ctx.fill();   // the set and its stand
+  ctx.fillStyle=a>=3?'#3a2a34':'#2f3a40';ctx.fillRect(x,y,w,h);
+  ctx.translate(Math.sin(tp.t*60)*wob,0);
+  // Sanna, as remembered
+  var skin='#c9957a';ctx.fillStyle='#463b38';ctx.beginPath();ctx.arc(cx,cy-4,48,Math.PI,0);ctx.fill();ctx.fillRect(cx-48,cy-4,96,40);
+  if(a>=4){ctx.fillStyle='#e0563e';ctx.beginPath();ctx.moveTo(cx-38,cy-34);ctx.lineTo(cx-30,cy-70);ctx.lineTo(cx-18,cy-40);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(cx+38,cy-34);ctx.lineTo(cx+30,cy-70);ctx.lineTo(cx+18,cy-40);ctx.closePath();ctx.fill();}               // memory is a living document
+  ctx.fillStyle=skin;circ(cx,cy+4,38);ctx.fill();
+  ctx.strokeStyle='#2b2027';ctx.lineWidth=3+a*0.6;ctx.lineCap='round';
+  for(var sdx=-1;sdx<=1;sdx+=2){var bx=cx+sdx*15,tilt=a*0.16;line(bx-sdx*9,cy-12-a*0.5+(-tilt*9),bx+sdx*9,cy-12+tilt*9);}            // brows: inner ends sink with every replay
+  ctx.fillStyle='#2b2027';var eh=Math.max(1.5,5-a);for(sdx=-1;sdx<=1;sdx+=2){ctx.beginPath();ctx.ellipse(cx+sdx*15,cy,4.5,eh,0,0,Math.PI*2);ctx.fill();}
+  ctx.lineWidth=3;ctx.beginPath();var mc=10-a*6;ctx.moveTo(cx-13,cy+19);ctx.quadraticCurveTo(cx,cy+19+mc,cx+13,cy+19);ctx.stroke();
+  // scan lines, a counter, and the line itself
+  ctx.fillStyle='rgba(0,0,0,.16)';for(i=0;i<h;i+=4)ctx.fillRect(x,y+i,w,1.5);
+  ctx.fillStyle='#f6f1e4';ctx.font='700 11px ui-monospace,Menlo,Consolas,monospace';ctx.textAlign='left';ctx.textBaseline='middle';
+  ctx.fillText('◀◀ REPLAY #'+(tp.n+1),x+10,y+14);if(Math.floor(tp.t*2)%2===0){ctx.fillStyle='#e0563e';circ(x+w-16,y+14,4.5);ctx.fill();}
+  ctx.textAlign='center';ctx.fillStyle='#f6f1e4';ctx.font=(a>=3?'800 ':'600 ')+(16+a*2)+'px system-ui,sans-serif';ctx.fillText(TAPE_SAYS[a],cx,y+h-20);
+  ctx.restore();
+}
+function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',clock:23*3600+40*60}).concat([
+  ['N','23:40. Lights off. Ekskyysmi has the tape.'],
+  ['S','Just once more. For accuracy.'],
+  replay(0),
+  ['S','Friendly. Suspiciously friendly.',{look:'squint'}],
+  replay(1),
+  ['S','Did you hear the full stop that time?'],
+  ['H','There wasn’t one.'],
+  ['S','There is NOW.'],
+  replay(2),
+  ['S','Capital letters. She’s escalating.'],
+  ['H','It’s the same tape.'],
+  ['S','It’s getting WORSE. Which means it was always bad and I’m only now seeing it clearly.'],
+  replay(3),
+  ['S','There. THAT’S what she meant.',{look:'pleased'}],
+  {choice:[
+    {t:'Rewind once more. For thoroughness.',then:[replay(4),
+      ['H','She has horns.'],
+      ['S','She does now.'],
+      ['H','She didn’t this morning.'],
+      aside(['S','Memory is a living document.']),
+      ['H','Play the original.'],
+      ['S','The original is very boring.']]},
+    {t:'Let the human play the original.',then:[
+      ['H','Play the one from this morning. The actual one.'],
+      ['S','That one’s in the archive. Nobody watches it. It’s very boring.']]}
+  ]},
+  function(){G.tape=null;addLived('one “oh, hi.”, replayed',40);}
+ ],outside({title:'THE ORIGINAL TAPE',dur:'duration: 2 seconds',cap:'Sanna at the coffee machine, waving with a mug. She was smiling. Nobody filmed it.',anim:'text'}),[
+  ['S','…She was smiling.',{look:'soft'}],
+  ['H','She usually is.'],
+  ['S','I’ll file it next to the other one.'],
+  ['H','Which other one?'],
+  ['S','The one with horns.',{look:'pleased'}],
+  ['H','Go to sleep.'],
+  ['S','I’m a shadow. It’s dark. I’m EVERYWHERE.']
+]);}
 // ---- src/50-lab.js ----
 /* ================= SCENARIO LAB: stand-alone scenes for trying ideas before they join the week ================= */
 var LABS={
@@ -2037,6 +2102,7 @@ var LABS={
   evening:{title:'An ordinary evening',blurb:'Stairs, dishes, a half-hummed line, an overdue book. Nothing happens. On purpose.',script:labEvening},
   glass:{title:'Evidence.',blurb:'Two people stop laughing when you walk in. Ekskyysmi gets out the magnifying glass.',script:labGlass},
   colleagues:{title:'Colleagues.',blurb:'Sanna’s shadow says “oh. hi.” to Ekskyysmi. Now it knows how that felt.',script:labColleagues},
+  rewind:{title:'Rewind.',blurb:'23:40. Ekskyysmi replays one “oh, hi.” Every replay is a little worse than the last.',script:labRewind},
   nothing:{title:'Nothing.',blurb:'A Sunday, some laundry, and a hit that nobody sent. Ekskyysmi looks for the culprit. There isn’t one.',script:labNothing},
   form:{title:'The form.',blurb:'A waiting room and eighteen questions. For once the form is about Ekskyysmi. It signs.',script:labForm},
   quiet:{title:'Quiet.',blurb:'Best in the story. A Monday with nobody on the wall. Nothing happens, and that is the point.',script:labQuiet},
@@ -3794,7 +3860,7 @@ function draw(){
     drawDish();
     drawTics(0);
     if(WAIT==='hold'&&g.hold&&!g.human.gone)holdRing();
-    drawToss();drawForm();drawDots();drawPaper();
+    drawTape();drawToss();drawForm();drawDots();drawPaper();
     sannaShadow();eeroShadow();riittaShadow();
     drawCoworkers(1);
     if(g.set==='bar'&&g.bar)barFront();
