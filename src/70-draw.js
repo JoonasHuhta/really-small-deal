@@ -516,7 +516,7 @@ function draw(){
   if(g.draft)drawDraft();
   if(g.boss)drawBoss();
   if(g.rec)drawRec();
-  if(g.hud&&g.started&&!g.qte)hud(); // the window has the screen for its second
+  if(g.hud&&g.started&&!g.qte&&!g.form&&!g.paper)hud();   // the form and the paper receipt need the top corner // the window has the screen for its second
   if(g.job&&!g.ended)jobCard();
   if(g.w){
         if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText('THE WALK HOME',W/2,74);

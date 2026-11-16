@@ -56,12 +56,11 @@ function update(dt,elapsed){
   C.z=ease(C.z,tz,(bk?1.4:2.5)*dt);C.fx=ease(C.fx,g.cx+(Hm.x-70-g.cx)*0.8*bk,2.5*dt);C.fy=ease(C.fy,g.cy+(300-g.cy)*0.8*bk,2.5*dt);
 }
 
-// The title screen, left alone: every so often the human has a sip, and Ekskyysmi looks politely away,
-// mouth small, the way you do when someone is having a private moment with a coffee. Nothing else. Only before the game starts, and never with Less motion.
+// The title screen, left alone: every so often the human has a sip. Nothing else.
+// Only before the game starts, and never with Less motion.
 function titleIdle(dt){
-  var g=G,Hm=g.human,M=g.morko;
-  if(g.started||RM||Hm.gone||g.lab){g.idleT=0;return;}
+  var g=G,Hm=g.human;
+  if(g.started||RM||Hm.gone||g.lab){if(g.idleT){g.idleT=0;Hm.sipT=0;}return;}
   var t=(g.idleT=(g.idleT||0)+dt)%11;
   Hm.sipT=t>4&&t<5.4?1:0;
-  M.st=t>4.3&&t<6.1?'pokka':(M.st==='pokka'?'free':M.st);
 }

@@ -14,7 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.41.1 (Claude, 16.11.2026): **aloitusruudun hionta ja uusi musiikki.**
+Versio 0.41.2 (Claude, 16.11.2026): **verkko- ja Android-tarkistus.**
+
+- Aloitusruudulla vain ihminen hörppää kahvia; Ekskyysmi ei enää katso sivuun (Joonaksen toive).
+- **Välimuistiongelma korjattu.** `index.html` hakee nyt `game.js?v=0.41.2` ja `game.css?v=0.41.2`. Leiman kirjoittaa `node tools/build.cjs` versionumerosta, ja `npm test` huomauttaa, jos leima on vanha. Ennen palaava pelaaja saattoi saada GitHub Pagesista uuden sivun ja selaimen muistista vanhan pelin.
+- Lomakkeen ja paperikuitin aikana kulman tietorivit (EKSKYYSMI’S JOB, A SMALL PLAN) piilotetaan: pienimmällä puhelimella ne menivät lomakkeen otsikon päälle.
+- Puhelinasettelun tarkastus: 28 tilaa × 5 kokoa, ei virheitä. Tiedossa olevat: Scenario labin lista vierii (kehitystyökalu) ja maanantain loppuruutu vierii 4 px pienimmillä puhelimilla.
+
+ **aloitusruudun hionta ja uusi musiikki.**
 
 - **Lamppupöytä on nyt varjon edessä.** Pöytä seisoo lattialla seinän edessä, joten seinällä oleva varjo jää sen taakse. Pöytä piirretään varjon ja ihmisen väliin (`roomFront()`), joten ihminen kulkee edelleen pöydän edestä.
 - **Posket pysyvät kasvoilla.** Kauempi poskipuna ylitti pään reunan, kun ihminen katsoo sivulle. Nyt posket rajataan kasvojen sisään.
