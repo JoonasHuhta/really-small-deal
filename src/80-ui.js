@@ -59,7 +59,8 @@ function showEnd(){
    receiptHTML(rt,rows,RC_FOOT_DAY+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function startGame(day,skip){
-  reset(day);G.started=true;G.chapter=1;newDay();
+  var snap=null;try{if(cv.width&&document.createElement){snap=document.createElement('canvas');snap.width=cv.width;snap.height=cv.height;var sc=snap.getContext&&snap.getContext('2d');if(sc)sc.drawImage(cv,0,0);else snap=null;}}catch(e){snap=null;}   // the title picture, to fade from
+  reset(day);G.snap=snap;G.started=true;G.chapter=1;newDay();
   saveProgress(1);
   if(skip){G.bx2=G.bxT=880;Q=scSanna();}
   else Q=scPrelude().concat(scIntro(),[function(){return scSanna();}]);

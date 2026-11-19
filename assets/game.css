@@ -155,3 +155,6 @@ html.immersive body.playing .line p.loud{font-size:calc(18px * var(--ts,1))}html
 .opt:disabled{opacity:.42;cursor:default}.opt.picked:disabled{opacity:1;border-color:var(--accent);color:var(--accent)}
 /* The smallest landscape phones: the day-end card and receipt fit without a 4px scroll. */
 @media(max-height:370px){.ov[data-kind=end],html.immersive .ov[data-kind=end]{padding-top:4px;padding-bottom:4px}}
+/* Part cards: the button arrives after the title and caption (PARTWAIT in src/40-backdrops.js). */
+.opt.late{animation:optLate .45s ease 2.3s both}
+@keyframes optLate{from{opacity:0}to{opacity:1}}

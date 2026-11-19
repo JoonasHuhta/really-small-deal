@@ -70,7 +70,23 @@ function riittaShadow(){
   ex=RM?0:Math.cos(t)*1.7;ctx.fillStyle='#14111d';circ(x-6.5+ex,by-155,1.8);ctx.fill();circ(x+6.5+ex,by-155,1.8);ctx.fill();
   ctx.restore();
 }
+// A part card is a breath, not a cut: the last picture darkens, then PART, the title and the caption arrive one at a time.
+// The caption lives on the card itself, so nothing is read twice; the button arrives last (CSS .late, input waits PARTWAIT).
+var PARTWAIT=2.4;
+function partCardDraw(c){
+  var t=c.t,cy=COMPACT?H*0.32:H/2,k=RM?3:1;
+  if(G.snap&&t<0.8){try{var sw=G.snap.width,sh=G.snap.height,f=Math.max(cv.width/sw,cv.height/sh);ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(G.snap,(cv.width-sw*f)/2,(cv.height-sh*f)/2,sw*f,sh*f);ctx.restore();}catch(e){}}
+  else G.snap=null;
+  ctx.fillStyle='rgba(24,42,45,'+clamp(t*k/0.7,0,1)+')';ctx.fillRect(0,0,W,H);
+  var a1=clamp((t*k-0.5)/0.6,0,1),a2=clamp((t*k-0.9)/0.7,0,1),a3=clamp((t*k-1.8)/0.8,0,1);
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.globalAlpha=a1;ctx.font='700 18px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(c.day,W/2,cy-58);
+  ctx.globalAlpha=a2;ctx.font='650 64px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(c.title,W/2,cy+(RM?0:(1-a2)*10));
+  if(c.caption){ctx.globalAlpha=a3;ctx.font='italic 400 23px Fraunces,Georgia,serif';ctx.fillStyle='#c9c2b2';ctx.fillText(c.caption,W/2,cy+64);}
+  ctx.globalAlpha=1;
+}
 function chapCard(){
+  if(G.chap.part){partCardDraw(G.chap);return;}
   var c=G.chap,a=clamp(c.t/0.5,0,1)*(c.part?1:clamp((2.8-c.t)/0.5,0,1)),cy=COMPACT?H*0.32:H/2;
   ctx.fillStyle='#182a2d';ctx.fillRect(0,0,W,H);
   ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';

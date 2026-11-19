@@ -39,7 +39,8 @@ function run(){
     if(s.choice){G.bick=0;G.nopeMsg=null;G.choiceWho=s.who||'S';CH=typeof s.choice==='function'?s.choice():s.choice;WAIT='choice';LOCK=0.4;render();return;}
   }
 }
-function advance(){if(paused||LOCK>0||WAIT==='qte'||WAIT==='auto')return;if(WAIT==='lamp'){lampOn();return;}if(WAIT==='fight'){swat();return;}if(WAIT==='hold'){holdTap();return;}if(WAIT==='toss'){tossTap();return;}if(WAIT==='stretch'){G.warningSize=G.morko.sT;G.morko.pose=null;run();}else if(WAIT==='click'||(WAIT==='view'&&TIMER<=0))run();}
+// advance: on a part card an early click shows the whole card; the next click goes on.
+function advance(){if(paused||LOCK>0||WAIT==='qte'||WAIT==='auto')return;if(G.chap&&G.chap.part&&G.chap.t<PARTWAIT){G.chap.t=PARTWAIT;G.snap=null;render();return;}if(WAIT==='lamp'){lampOn();return;}if(WAIT==='fight'){swat();return;}if(WAIT==='hold'){holdTap();return;}if(WAIT==='toss'){tossTap();return;}if(WAIT==='stretch'){G.warningSize=G.morko.sT;G.morko.pose=null;run();}else if(WAIT==='click'||(WAIT==='view'&&TIMER<=0))run();}
 function choose(i){
   if(paused||WAIT!=='choice'||LOCK>0||!CH||!CH[i])return;
   if(CH[i].off){nope(i);return;}
@@ -122,11 +123,11 @@ function render(){
     if(WAIT==='time'&&!cur)text=g.skippable?'The break room, before anyone needs anything.':'…';
     html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">Skip intro →</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+(WAIT==='time'?'A moment…':'Continue →')+'</button>';
   }
-  if(g.chap&&g.chap.part)html='<button class="opt cont" type="button" data-i="go">Begin '+g.chap.day.toLowerCase()+' →</button>';
+  if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">Begin '+g.chap.day.toLowerCase()+' →</button>';
   if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">For now →</button>';}
   var icon=speaker==='H'?'human':speaker==='S'?'':speaker==='N'?'narrator':'other';
-  elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'"><b>'+(g.skippable&&!cur?'MONDAY, 8:52':NAMES[speaker])+'</b><p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
-  if(g.finalFrame)elLine.innerHTML='';
+  elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'"><b>'+(g.skippable&&!cur?NAMES.N:NAMES[speaker])+'</b><p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
+  if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   elOpts.innerHTML=html;
   if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
     var nextControl=elOpts.querySelector('[data-i=read]');if(nextControl&&!nextControl.disabled)nextControl.focus();

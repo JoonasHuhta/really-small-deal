@@ -2,7 +2,9 @@
 
 19.11.2026 · Claude (Opus) · pohjana versio 0.43.3, päivitetty 0.44.0. **Tämä on ensisijainen suunnitelma.**
 
-> **Tila 0.44.0 (19.11.):** ✔ T1 (Joonas: ”jalosta suunnitelman mukaan”), ✔ T2 (uusi järjestys, kirjasto tarinaan, *The reply* ja muut lisäkohtauksiksi; takapakkirivi ”I’m working out my notice” siirretty *Not now.* -kohtaukseen), ✔ T8 (Toinen laatikko: siemenet ja paljastus), ✔ T11 (*By the radiator.* lopputekstien jälkeen). Seuraavaksi T3, T12 (pelaajatesti), T4, T6, T9. T10 odottaa lopun kappaletta. Se korvaa CODEX_JATKO.md:n työjonon (P1–P8) järjestyksen. Vanhat dokumentit ovat taustaa.
+> **Tila 0.44.0 (19.11.):** ✔ T1 (Joonas: ”jalosta suunnitelman mukaan”), ✔ T2 (uusi järjestys, kirjasto tarinaan, *The reply* ja muut lisäkohtauksiksi; takapakkirivi ”I’m working out my notice” siirretty *Not now.* -kohtaukseen), ✔ T8 (Toinen laatikko: siemenet ja paljastus), ✔ T11 (*By the radiator.* lopputekstien jälkeen). Seuraavaksi T3, T12 (pelaajatesti), T4, T6, T9. T10 odottaa lopun kappaletta.
+
+> **Tila 0.44.1 (19.11.):** ✔ T3 (*Night shift* jatkuu *Evenings*-kohtauksesta ilman korttia, `NOCARD` tiedostossa `33-moments.js`). Lisäksi pelin aloitus: osakortti on rauhallinen siirtymä (aloitusruudun kuva himmenee, PART, otsikko ja kuvateksti tulevat esiin vuorotellen, nappi viimeisenä, sivupaneeli tyhjä), ja lamppupöytä piirretään ennen kuin ihminen saapuu. Seuraavaksi T12 (pelaajatesti), sitten T4, T6 ja T9. Se korvaa CODEX_JATKO.md:n työjonon (P1–P8) järjestyksen. Vanhat dokumentit ovat taustaa.
 
 Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, valmiiksi määriteltyinä tehtävinä, jotka halvempi malli (Sonnet tai Codex) voi tehdä. Opus tarvitaan vain tarinapäätöksiin ja uuteen dialogiin.
 
@@ -147,6 +149,12 @@ Toteutettavissa. Kahdeksasta kahteentoista välähdystä, kukin 5–10 sekuntia,
 
 ---
 
+### Epilogin kappaleen luonne (Joonaksen kysymys 19.11.)
+
+Suositus: **ei puhdas pianobiisi eikä iloinen hitti, vaan sama wonky lo-fi -perhe, joka alkaa hiljaa ja lämpenee.** Peli on tähän asti ollut deadpan-lämmin. Tunteellinen pianokappale kääntyisi tuutulauluksi tai saarnaksi (sama ongelma kuin aiemmissa kokeiluissa), ja täysin iloinen kappale veisi viimeisen hiljaisen kuvan (lamppu ja varjolintu) ja Toisen laatikon herkkyyden. Montaasissa on kuitenkin hauskoja kuvia, joten se tarvitsee liikettä.
+
+Rakenne: noin 10 s pelkkää Wurlitzeria tai pianoa (lamppukuva), sitten bändi tulee mukaan (basso, kitara, kevyt rytmi), ja montaasi alkaa iskusta. Kahden nuotin aihe nousee lopussa ylöspäin, kuten pääteemassa on suunniteltu. Lopetus on pidetty sointu, jonka jälkeen tulee *By the radiator.* -kohtaus.
+
 ## 7. Varjon kiinnitys: kokeilu, ei muutos
 
 **Havainto:** kotimatkalla seinävarjo seuraa ihmistä kuin veturin kampi.
@@ -166,7 +174,7 @@ Jokaisessa tehtävässä: muokkaa vain `src/`-tiedostoja, aja `npm test` (story 
 |---|---|---|---|---|
 | ✔ **T1** | Joonas hyväksyy kohtausvalinnan (kohta 3) | Joonas | – | hyväksytty 19.11. |
 | ✔ **T2** | `AFTER`-järjestys hyväksytyn taulukon mukaan, kirjasto tarinaan, `WHEN`-kortit | S | `33-moments.js` | tehty 0.44.0 |
-| **T3** | *Evenings.* + *Night shift.* yhdeksi hetkeksi | S | `49-second-act.js`, `50-lab.js` | yksi LABS-avain, molempien parhaat rivit säilyvät, testit vihreinä |
+| ✔ **T3** | *Evenings.* + *Night shift.* yhdeksi hetkeksi | S | `33-moments.js` (`NOCARD`), `50-lab.js` | tehty 0.44.1: ei korttia välissä, käsikirjoitukset ennallaan |
 | **T4** | Kamera: `shot()` ja kuusi kuvatyyppiä, `crash`-poseeraus (varjo kuvan reunasta), Less motion = leikkaus | S | uusi `45-camera.js`, `70-draw.js` | lab-kohtaus *Camera test*, jossa jokainen tyyppi kerran, kuvakaappaukset viidellä koolla |
 | **T5** | Kamerakieli tarinaan: kaksi tai kolme kohtaa per päivä ti–pe (`two` + `crash` Sannan kanssa perjantaina) | O suunnittelee, S toteuttaa | tarinatiedostot | Joonas katsoo pelaten |
 | **T6** | Jousiviive varjon vartaloon (kohta 7.1) | S | `70-draw.js`, `60-update.js` | kotimatkan kuvakaappaus: ei kampivaikutelmaa, Less motion ilman keinuntaa |

@@ -184,7 +184,8 @@ function run(){
     if(s.choice){G.bick=0;G.nopeMsg=null;G.choiceWho=s.who||'S';CH=typeof s.choice==='function'?s.choice():s.choice;WAIT='choice';LOCK=0.4;render();return;}
   }
 }
-function advance(){if(paused||LOCK>0||WAIT==='qte'||WAIT==='auto')return;if(WAIT==='lamp'){lampOn();return;}if(WAIT==='fight'){swat();return;}if(WAIT==='hold'){holdTap();return;}if(WAIT==='toss'){tossTap();return;}if(WAIT==='stretch'){G.warningSize=G.morko.sT;G.morko.pose=null;run();}else if(WAIT==='click'||(WAIT==='view'&&TIMER<=0))run();}
+// advance: on a part card an early click shows the whole card; the next click goes on.
+function advance(){if(paused||LOCK>0||WAIT==='qte'||WAIT==='auto')return;if(G.chap&&G.chap.part&&G.chap.t<PARTWAIT){G.chap.t=PARTWAIT;G.snap=null;render();return;}if(WAIT==='lamp'){lampOn();return;}if(WAIT==='fight'){swat();return;}if(WAIT==='hold'){holdTap();return;}if(WAIT==='toss'){tossTap();return;}if(WAIT==='stretch'){G.warningSize=G.morko.sT;G.morko.pose=null;run();}else if(WAIT==='click'||(WAIT==='view'&&TIMER<=0))run();}
 function choose(i){
   if(paused||WAIT!=='choice'||LOCK>0||!CH||!CH[i])return;
   if(CH[i].off){nope(i);return;}
@@ -267,11 +268,11 @@ function render(){
     if(WAIT==='time'&&!cur)text=g.skippable?'The break room, before anyone needs anything.':'…';
     html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">Skip intro →</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+(WAIT==='time'?'A moment…':'Continue →')+'</button>';
   }
-  if(g.chap&&g.chap.part)html='<button class="opt cont" type="button" data-i="go">Begin '+g.chap.day.toLowerCase()+' →</button>';
+  if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">Begin '+g.chap.day.toLowerCase()+' →</button>';
   if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">For now →</button>';}
   var icon=speaker==='H'?'human':speaker==='S'?'':speaker==='N'?'narrator':'other';
-  elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'"><b>'+(g.skippable&&!cur?'MONDAY, 8:52':NAMES[speaker])+'</b><p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
-  if(g.finalFrame)elLine.innerHTML='';
+  elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'"><b>'+(g.skippable&&!cur?NAMES.N:NAMES[speaker])+'</b><p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
+  if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   elOpts.innerHTML=html;
   if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
     var nextControl=elOpts.querySelector('[data-i=read]');if(nextControl&&!nextControl.disabled)nextControl.focus();
@@ -467,7 +468,7 @@ var PARTS=[null,
   {day:'PART THREE',title:'Still here.',caption:'A Friday. Not necessarily that one.'}
 ];
 function partCard(n){return [function(){
-  var p=PARTS[n],g=G;g.chap={day:p.day,title:p.title,t:0,part:n};g.lines=[];g.cur=null;g.band=null;
+  var p=PARTS[n],g=G;g.chap={day:p.day,title:p.title,caption:p.caption,t:0,part:n};g.lines=[];g.cur=null;g.band=null;
   stopVoice();sfx('card');
 },['N',PARTS[n].caption],function(){G.chap=null;G.band=null;G.cur=null;}];}
 function storyPart(){
@@ -1393,6 +1394,8 @@ var AFTER={
 // Extras, not in the story (TYOSUUNNITELMA.md section 4): posting, detail, sometime, reply, voice, footage.
 var WHEN={night:'THAT NIGHT',rewind:'THAT NIGHT, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'THE FIRST MORNING',evenings:'THE SAME DAY, 21:00',posting:'THAT NIGHT, LATE',detail:'THE NEXT AFTERNOON',enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'AN EVENING',
   colleagues:'AFTER LUNCH, SOME DAY',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'AN EVENING AT HOME',voice:'LATER THAT EVENING',library:'TWENTY-THREE DAYS LATER',radiator:'THE NEXT TUESDAY'};
+// Moments that continue the one before them: Night shift is the same evening as Evenings (TYOSUUNNITELMA.md T3).
+var NOCARD={night:1};
 function interlude(id){return function(){G.lab=null;G.moment=id;saveMoment(id);return (id==='nothing'?partCard(2):[]).concat(LABS[id].script());};}
 function momentsAfter(n){return (AFTER[n]||[]).map(interlude);}
 // ---- src/34-response.js ----
@@ -1819,7 +1822,23 @@ function riittaShadow(){
   ex=RM?0:Math.cos(t)*1.7;ctx.fillStyle='#14111d';circ(x-6.5+ex,by-155,1.8);ctx.fill();circ(x+6.5+ex,by-155,1.8);ctx.fill();
   ctx.restore();
 }
+// A part card is a breath, not a cut: the last picture darkens, then PART, the title and the caption arrive one at a time.
+// The caption lives on the card itself, so nothing is read twice; the button arrives last (CSS .late, input waits PARTWAIT).
+var PARTWAIT=2.4;
+function partCardDraw(c){
+  var t=c.t,cy=COMPACT?H*0.32:H/2,k=RM?3:1;
+  if(G.snap&&t<0.8){try{var sw=G.snap.width,sh=G.snap.height,f=Math.max(cv.width/sw,cv.height/sh);ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(G.snap,(cv.width-sw*f)/2,(cv.height-sh*f)/2,sw*f,sh*f);ctx.restore();}catch(e){}}
+  else G.snap=null;
+  ctx.fillStyle='rgba(24,42,45,'+clamp(t*k/0.7,0,1)+')';ctx.fillRect(0,0,W,H);
+  var a1=clamp((t*k-0.5)/0.6,0,1),a2=clamp((t*k-0.9)/0.7,0,1),a3=clamp((t*k-1.8)/0.8,0,1);
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.globalAlpha=a1;ctx.font='700 18px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(c.day,W/2,cy-58);
+  ctx.globalAlpha=a2;ctx.font='650 64px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(c.title,W/2,cy+(RM?0:(1-a2)*10));
+  if(c.caption){ctx.globalAlpha=a3;ctx.font='italic 400 23px Fraunces,Georgia,serif';ctx.fillStyle='#c9c2b2';ctx.fillText(c.caption,W/2,cy+64);}
+  ctx.globalAlpha=1;
+}
 function chapCard(){
+  if(G.chap.part){partCardDraw(G.chap);return;}
   var c=G.chap,a=clamp(c.t/0.5,0,1)*(c.part?1:clamp((2.8-c.t)/0.5,0,1)),cy=COMPACT?H*0.32:H/2;
   ctx.fillStyle='#182a2d';ctx.fillRect(0,0,W,H);
   ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';
@@ -2336,8 +2355,9 @@ function labScene(o){return [scene(o),function(){
   var g=G;g.planText=o.plan;g.hud=true;g.plan=true;g.fade=0;
   if(g.lab){g.label='Scenario lab / '+o.title;newDay();return;}
   // In the story the same scene opens with a card, like any other moment.
-  g.label=o.title;g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0};stopVoice();sfx('card');
- },function(){return G.lab?[]:[{wait:2.8},function(){G.chap=null;G.fade=1;}];}];}
+  g.label=o.title;if(NOCARD[g.moment]){g.fade=1;return;}   // continues the moment before it, without a new card
+  g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0};stopVoice();sfx('card');
+ },function(){return G.lab||NOCARD[G.moment]?[]:[{wait:2.8},function(){G.chap=null;G.fade=1;}];}];}
 function startLab(id){
   reset('B');var g=G;g.started=true;g.lab=id;
   Q=LABS[id].script().concat([function(){showLabEnd(id);}]);run();
@@ -4296,7 +4316,8 @@ function draw(){
       else{var gx=g.gazeFrom==='B'?g.bx2:g.gazeFrom==='R'?g.rx:g.ax;ctx.moveTo(gx-14,FEETY-150);ctx.lineTo(g.human.x+16,FEETY-176);ctx.lineTo(g.human.x+16,FEETY);ctx.closePath();ctx.fill();}
     }
     if(!g.human.gone)drawPair();
-    else if(g.finalFrame){var endQ=geom();morkoBody(endQ);morkoArms(endQ,handTargets(endQ));}
+    else if(g.roomFront!=null&&g.set==='room')roomFront(g.roomFront);   // the lamp table is furniture: it is there before the human arrives
+    if(g.human.gone&&g.finalFrame){var endQ=geom();morkoBody(endQ);morkoArms(endQ,handTargets(endQ));}
     drawFight();
     drawDish();
     drawTics(0);
@@ -4396,7 +4417,8 @@ function showEnd(){
    receiptHTML(rt,rows,RC_FOOT_DAY+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function startGame(day,skip){
-  reset(day);G.started=true;G.chapter=1;newDay();
+  var snap=null;try{if(cv.width&&document.createElement){snap=document.createElement('canvas');snap.width=cv.width;snap.height=cv.height;var sc=snap.getContext&&snap.getContext('2d');if(sc)sc.drawImage(cv,0,0);else snap=null;}}catch(e){snap=null;}   // the title picture, to fade from
+  reset(day);G.snap=snap;G.started=true;G.chapter=1;newDay();
   saveProgress(1);
   if(skip){G.bx2=G.bxT=880;Q=scSanna();}
   else Q=scPrelude().concat(scIntro(),[function(){return scSanna();}]);

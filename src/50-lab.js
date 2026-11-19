@@ -26,8 +26,9 @@ function labScene(o){return [scene(o),function(){
   var g=G;g.planText=o.plan;g.hud=true;g.plan=true;g.fade=0;
   if(g.lab){g.label='Scenario lab / '+o.title;newDay();return;}
   // In the story the same scene opens with a card, like any other moment.
-  g.label=o.title;g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0};stopVoice();sfx('card');
- },function(){return G.lab?[]:[{wait:2.8},function(){G.chap=null;G.fade=1;}];}];}
+  g.label=o.title;if(NOCARD[g.moment]){g.fade=1;return;}   // continues the moment before it, without a new card
+  g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0};stopVoice();sfx('card');
+ },function(){return G.lab||NOCARD[G.moment]?[]:[{wait:2.8},function(){G.chap=null;G.fade=1;}];}];}
 function startLab(id){
   reset('B');var g=G;g.started=true;g.lab=id;
   Q=LABS[id].script().concat([function(){showLabEnd(id);}]);run();

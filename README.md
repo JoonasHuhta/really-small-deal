@@ -14,7 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.44.0 (Claude, 19.11.2026): **uusi kohtausjärjestys ja Toinen laatikko.** Työsuunnitelman tehtävät T1, T2, T8 ja T11.
+Versio 0.44.1 (Claude, 19.11.2026): **pelin alku ja Evenings + Night shift.**
+
+- **Osakortti on siirtymä, ei leikkaus:** New gamen jälkeen aloitusruudun kuva himmenee tummaksi, ja sitten PART ONE, ”Better safe.” ja kuvateksti ”A Monday. One small plan.” tulevat esiin vuorotellen. Kuvateksti on kortilla eikä sivupaneelissa, joten mitään ei lueta kahdesti. Jatkonappi ilmestyy viimeisenä. Varhainen klikkaus näyttää koko kortin heti, ja seuraava jatkaa. Less motion -asetuksella siirtymä on kolme kertaa nopeampi eikä otsikko liiku.
+- **Lamppupöytä** näkyy heti, kun kohtaus alkaa. Ennen se tuli esiin vasta ihmisen mukana.
+- **Ensimmäinen paneelirivi** on merkitty kertojan riviksi. Ennen otsikossa luki ”MONDAY, 8:52”, mikä toisti kuvan tekstin.
+- **Night shift** jatkuu Evenings-kohtauksesta ilman uutta korttia (työsuunnitelman T3).
+
+ **uusi kohtausjärjestys ja Toinen laatikko.** Työsuunnitelman tehtävät T1, T2, T8 ja T11.
 
 - **Järjestys:** tiistain jälkeen *Enhance.* ja *Rewind.*; keskiviikon jälkeen *Evidence.*, *Colleagues.* ja *An ordinary evening*; torstain jälkeen *Not now.*, *A quiet drink.*, *Nothing.*, *The form.*, *Quiet.*, **A fine.** (kirjasto, uusi tarinassa), *Evenings.* ja *Night shift.*; perjantain jälkeen *The group chat* ja lopputekstien jälkeen **By the radiator.** (”THE NEXT TUESDAY”). Lisäkohtauksiksi siirtyivät *The posting.*, *One small thing.*, *Sometime.*, *The reply*, *The voice message* ja *Footage.* (pelattavissa labissa). Takapakki ”I’m working out my notice” siirtyi *The reply* -kohtauksesta *Not now.* -kohtaukseen.
 - **Toinen laatikko:** Ekskyysmi kirjaa viikon hyvät hetket ”merkityksettöminä” (maanantaina uusi rivi ”Slide two: she said hi first. Irrelevant. Filed.”). Lopussa merkitsemätön laatikko aukeaa, ja siitä tulee esiin pelaajan näkemät hetket sekä piirros: ”It’s the one people could take away.”

@@ -5,7 +5,7 @@ var PARTS=[null,
   {day:'PART THREE',title:'Still here.',caption:'A Friday. Not necessarily that one.'}
 ];
 function partCard(n){return [function(){
-  var p=PARTS[n],g=G;g.chap={day:p.day,title:p.title,t:0,part:n};g.lines=[];g.cur=null;g.band=null;
+  var p=PARTS[n],g=G;g.chap={day:p.day,title:p.title,caption:p.caption,t:0,part:n};g.lines=[];g.cur=null;g.band=null;
   stopVoice();sfx('card');
 },['N',PARTS[n].caption],function(){G.chap=null;G.band=null;G.cur=null;}];}
 function storyPart(){
