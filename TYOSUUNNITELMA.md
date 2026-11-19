@@ -204,6 +204,23 @@ Jokaisessa tehtävässä: muokkaa vain `src/`-tiedostoja, aja `npm test` (story 
 
 ---
 
+## 11. Kriittinen luenta 19.11. (koko viikko tekstinä, 929 riviä, versio 0.45.0)
+
+**Lupaus ja lunastus.** Alku lupaa kaksi asiaa: ihminen haluaa pyytää Sannaa lounaalle, ja Ekskyysmi lupaa, ettei torjuntaa tule ”By anyone. Ever.” Molemmat lunastetaan. Torstain käänne (”the loudest thing in the room”) ja uusi työnkuva (”I could stay”), hiljaisen päivän lounas ilman varjoa, perjantain lounas varjon kanssa ja Toinen laatikko vastaavat kumpaankin. Kaari on selvä ja ymmärrettävä.
+
+**Korjattu 0.45.1:**
+- Kirjaston aikajana oli ristiriidassa: tavallisena iltana (osa 1) kirja on 23 päivää myöhässä, ja kirjastossa (osa 2, viikkoja myöhemmin) se oli edelleen 23 päivää myöhässä ja kortissa luki ”23 days later”. Nyt kirja on seitsemän viikkoa myöhässä, ja kortissa lukee ”A SATURDAY, WEEKS LATER”.
+- *Night shift* viittasi *Sometime.*-kohtaukseen, joka on nyt lisäkohtaus. Repliikki on nyt itsenäinen (”we should grab a coffee sometime”).
+- ”There is NOW.” oli kahdesti, *Rewind*-kohtauksessa ja perjantaina. Perjantaina varjo vastaa nyt ”It’s new.” ja pienenee (`fib`), eli valehtelee. Toinen laatikko lunastaa valheen.
+- About lupasi ”one week”, vaikka tarina jatkuu viikon yli, eikä se kertonut ihmisen tavoitetta. Nyt siinä lukee ”one small plan: ask Sanna from work to lunch”, ja yksi epäreilu ajastus selitetään yhdellä lauseella: ”Conversations don’t wait either.”
+
+**Avoimet havainnot (ratkaistaan pelaajatestillä):**
+1. **Lopussa on neljä päätöstä peräkkäin:** Toinen laatikko, ”I’m keeping the headband”, lamppukuva ja *By the radiator*. Tämä voi tuntua siltä, että loppu ei lopu. Jos testaajat herpaantuvat, karsi ensin päänauharivi, sitten patterikohtaus lisäkohtauksiin.
+2. **Haluttu lounas toteutuu kahdesti:** ensin hiljaisena päivänä ilman varjoa, sitten perjantaina varjon kanssa. Tämä on temaattisesti oikein, koska hyväksyminen ei tarkoita varjon poistamista. Pelaaja ei ehkä huomaa eroa, koska perjantai ei sano sitä. Mahdollinen lisärivi perjantain loppuun on harkittava tarkkaan, koska ”Lunch.” on hyvä viimeinen sana.
+3. **Dialogilaatikko leveällä näytöllä:** repliikki näkyy kahdesti, kuplassa ja paneelissa, ja kertojan rivi myös kuvan alanauhassa. Kupla on ensisijainen ja paneeli lokiluonteinen. Ehdotus kokeiltavaksi: kun kupla on näkyvissä, paneelin teksti himmennetään vähän, jolloin silmä tietää, kumpaa lukea. Ei toteutettu ilman testiä, koska Joonas on aiemmin hämmentynyt juuri kuplan ja paneelin suhteesta.
+4. **Eeron varjo Y** laatii yöllä anteeksipyyntöjä etukäteen, eli se on ahdistunut. Kohdan 4 (SYVENNYS.md) ehdotus rennosta Juustsei-varjosta on tämän kanssa ristiriidassa. Päätettävä ennen nimien lisäämistä.
+5. **Vahvimmat vitsit** (säilytä rytmi, älä lisää väliin): maanantain ”Rejection prevented. / That wasn’t a rejection. / And it stays that way.”, *Enhance* (”The eyebrow was HUNGER.”), baarin ”a coat stand with opinions” ja ”the shadow of one”, torstain ”a man shouting ’fire’ in a different building”.
+
 ## 10. Työtavat (kaikille malleille)
 
 - Lue ensin AGENTS.md ja sitten tämä tiedosto.

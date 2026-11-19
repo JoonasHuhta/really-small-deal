@@ -14,7 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.45.0 (Claude, 19.11.2026): **kamerakieli, puheääni loppuun asti ja yön sänky.**
+Versio 0.45.1 (Claude, 19.11.2026): **kriittinen luenta ja korjaukset** (TYOSUUNNITELMA.md kohta 11).
+
+- About: ”one small plan: ask Sanna from work to lunch” ja ”The one thing that is, is unfair on purpose. Conversations don’t wait either.” Mahtuu pystypuhelimeen ilman vieritystä.
+- Kirjaston aikajana korjattu (kirja on seitsemän viikkoa myöhässä, kortissa ”A SATURDAY, WEEKS LATER”). *Night shift* ei enää viittaa lisäkohtaukseen. Perjantain ”There is NOW.” on nyt ”It’s new.”, ja varjo valehtelee (pienenee).
+
+ **kamerakieli, puheääni loppuun asti ja yön sänky.**
 
 - **Kamera (`src/45-camera.js`):** maanantain jälkeen laukaisu kehystää sen, joka laukaisi reaktion (Sanna, Eero, Riitta tai puhelin), ja menee syvemmälle kuin ennen. Maanantai pysyy ennallaan. Uusi askel `shot()` sisältää kuvatyypit `wide`, `two`, `close`, `push` ja `crash`. Keskiviikkona Eeron ”I hate presenting” on lähikuvassa. Perjantaina Sanna ja ihminen ovat kahden hahmon lähikuvassa, Ekskyysmi kutistuu ihmisen selän taakse ja ilmestyy kuvaan repliikillä ”Looking busy was my idea.” Less motion -asetuksella liikkeet ovat leikkauksia.
 - **Puheääni** kestää nyt tekstin loppuun. Piippaukset ajastetaan samalla laskulla kuin tekstin näyttäminen: sama nopeus hiljaisille ja koville repliikeille sekä samat tauot pisteissä ja pilkuissa. Enimmäismäärä nousi 28:sta 90:een.

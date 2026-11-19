@@ -352,7 +352,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   archive('good',[['2026','She told me herself.']]),
   ['S','…Filed. Under the other pile.',{look:'soft'}],
   ['H','There’s another pile?'],
-  fib,['S','There is NOW.'],closeArchive,
+  fib,['S','It’s new.'],closeArchive,
   shot('two',{who:'A',hide:1}),
   ['A','Is that why you used to vanish at lunch? We stopped asking. I thought asking was pressure.'],
   ['H','I thought not being asked was the verdict.'],

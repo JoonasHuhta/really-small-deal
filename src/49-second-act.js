@@ -432,7 +432,7 @@ function labNight(){return labScene({set:'home',title:'Night shift.',plan:'Sleep
   ['S','I was guarding the door.'],
   ['Z','From what?'],
   aside(['S','…It’s a very important door.']),
-  ['Y','Is it true you think “sometime” is a threat?'],
+  ['Y','Is it true you think “we should grab a coffee sometime” is a threat?'],
   ['S','It IS a threat. It has no date.'],
   ['Y','That’s what I SAID.'],
   ['W','What do you do with yours? The things.'],

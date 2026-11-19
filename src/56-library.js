@@ -20,13 +20,13 @@ function library(){
   ctx.fillStyle='#fbf8ef';rr(676,340,54,26,3);ctx.fill();ctx.fillStyle='#5a6559';ctx.font='700 9px system-ui,sans-serif';ctx.fillText('RETURNS',703,353);
   if(L.book){ctx.fillStyle='#55657a';rr(742,354,46,12,2);ctx.fill();ctx.fillStyle='#e2b04a';ctx.fillRect(748,357,20,3);}
 }
-function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Return one book. 23 days late.',clock:15*3600+40*60}).concat([
+function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Return one book. Seven weeks late.',clock:15*3600+40*60}).concat([
   function(){var g=G;g.lib={book:false,smile:false};g.noCup=true;g.human.x=-40;g.human.xT=420;},{wait:3.8},
-  ['N','The library. “A Short History of Lighthouses” is twenty-three days overdue. Today it goes back.'],
+  ['N','The library. “A Short History of Lighthouses” is seven weeks overdue. Today it goes back.'],
   set({mood:'alert',s:1.3}),
   ['S','She’s seen us. Walk normally. Not like that. Like a person who returns things.'],
   ['H','I finished it this morning.'],
-  ['S','Twenty-three days. She has had twenty-three days to form an opinion.'],
+  ['S','Seven weeks. She has had seven weeks to form an opinion.'],
   {choice:[
     {t:'Use the returns slot and run.',then:[['H','The slot is for people who aren’t standing in front of her.'],['S','Then stand somewhere else.']]},
     {t:'Prepare a statement.',then:[['S','“I take full responsibility. The lighthouses were compelling.”'],['H','I’m not reading a statement to a librarian.']]},
@@ -36,10 +36,10 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
   function(){G.lib.book=true;sfx('clink');},
   ['L','Hello! Returning?'],
   ['H','Yes. It’s… a bit late.'],
-  ['L','Let’s see. Twenty-three days. That’ll be a fine.'],
+  ['L','Let’s see. Seven weeks. That’ll be a fine.'],
   set({mood:'care',s:1.05}),
   ['S','She says it’s FINE.'],
-  ['S','Three weeks of dread, and it’s FINE. I’d like to sit down.'],
+  ['S','Seven weeks of dread, and it’s FINE. I’d like to sit down.'],
   ['H','A fine. Four euros sixty.'],
   hit(0.5,'P'),{wait:1.1},
   ['S','…Oh. THAT kind of fine.'],
@@ -52,7 +52,7 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
   {choice:[
     {t:'Say “it was fine.”',then:[['H','I’m not saying “fine” in here again.']]},
     {t:'Say nothing. Nod. Leave.',then:[['H','She asked a question.'],['S','Questions are optional.']]},
-    {t:'Deny having read it.',then:[['H','For twenty-three days?'],['S','We were looking at the cover. Thoroughly.']]}
+    {t:'Deny having read it.',then:[['H','For seven weeks?'],['S','We were looking at the cover. Thoroughly.']]}
   ]},
   ['H','There’s a lighthouse on page 212. I didn’t want to give it back before I’d met it.'],
   {wait:1.2},
