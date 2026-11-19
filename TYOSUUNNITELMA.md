@@ -10,6 +10,8 @@
 
 > **Tila 0.46.0 (19.11.):** ✔ T9: aloitusvalikon *Moments* (Situations + From the story, `showMoments` tiedostossa `50-lab.js`, tallennuksen `done` merkitään loppukuvassa), Scenario lab vain `?lab`. ✔ T6 (ensiversio): jousiviive hartioissa (`M.sp`, `60-update.js`) ja kävelykeinunta (`geom`, `70-draw.js`); Joonas arvioi kotimatkalla. Korjattu: valokeila varjon päälle, pitkät valikot vierivät ylhäältä. Seuraavaksi T5 (kamerakieli ti–to), T7 (lamppuvälit), T12.
 
+> **Tila 0.46.1 (19.11.):** ✔ T5: kamerakieli ti–to (2–3 kuvaa per päivä, ks. README 0.46.1). Joonas katsoo pelaten. Seuraavaksi T7 (lamppuvälit, lab-klooni) ja T12 (pelaajatesti); T10 odottaa kappaletta.
+
 Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, valmiiksi määriteltyinä tehtävinä, jotka halvempi malli (Sonnet tai Codex) voi tehdä. Opus tarvitaan vain tarinapäätöksiin ja uuteen dialogiin.
 
 ---
@@ -180,7 +182,7 @@ Jokaisessa tehtävässä: muokkaa vain `src/`-tiedostoja, aja `npm test` (story 
 | ✔ **T2** | `AFTER`-järjestys hyväksytyn taulukon mukaan, kirjasto tarinaan, `WHEN`-kortit | S | `33-moments.js` | tehty 0.44.0 |
 | ✔ **T3** | *Evenings.* + *Night shift.* yhdeksi hetkeksi | S | `33-moments.js` (`NOCARD`), `50-lab.js` | tehty 0.44.1: ei korttia välissä, käsikirjoitukset ennallaan |
 | ✔ **T4** | Kamera: `shot()` ja kuvatyypit, `crash`, Less motion = leikkaus | S | `45-camera.js`, `60-update.js` (`camRate`), `20-engine.js` (`hitFrame`) | tehty 0.45.0 (`insert` hoidetaan edelleen Enhance-zoomilla) |
-| **T5** | Kamerakieli tarinaan: kaksi tai kolme kohtaa per päivä ti–pe (`two` + `crash` Sannan kanssa perjantaina) | O suunnittelee, S toteuttaa | tarinatiedostot | Joonas katsoo pelaten |
+| ✔ **T5** | Kamerakieli tarinaan: kaksi tai kolme kohtaa per päivä ti–pe (`two` + `crash` Sannan kanssa perjantaina) | O suunnittelee, S toteuttaa | tarinatiedostot | Joonas katsoo pelaten |
 | ✔ **T6** | Jousiviive varjon vartaloon (kohta 7.1) | S | `70-draw.js`, `60-update.js` | kotimatkan kuvakaappaus: ei kampivaikutelmaa, Less motion ilman keinuntaa |
 | **T7** | Lab-klooni: katuvalojen välit (kohta 7.2) | S | uusi `52-lamps.js` | vertailu Joonakselle |
 | ✔ **T8** | Toinen laatikko: siemenrivi maanantaihin ja paljastuskohtaus (kohta 2) | **O** | `keep()`, `KEPT`, `openDrawer()` (`20-engine.js`), `drawerReveal()` (`50-lab.js`) | tehty 0.44.0. Joonas arvioi pelaten. Välähdyskuvat (REPLAY · OTHER ANGLE) ovat jatkoidea: nyt paljastus tehdään korteilla. |

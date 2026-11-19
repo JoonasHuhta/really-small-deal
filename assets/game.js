@@ -456,7 +456,7 @@ function drawReplay(){
   var len=[0,2,9,47][n],sec=Math.min(len,Math.floor(t*(n===1?1:n===2?3:9)));ctx.fillText('00:'+(sec<10?'0':'')+sec+' / 00:'+(len<10?'0':'')+len,W-20,22);
 }
 function look(){G.gazeFrom='A';G.gazeT=0.5;}
-function calm(){var g=G;g.human.sweatT=0;g.gazeT=0;g.darkT=0;g.anx=0.25;g.morko.sT=1.15;g.morko.mood='calm';g.morko.pose=null;g.human.face='neutral';g.cz=1.025;g.cx=W/2;g.cy=H/2;}
+function calm(){var g=G;g.human.sweatT=0;g.gazeT=0;g.darkT=0;g.anx=0.25;g.morko.sT=1.15;g.morko.mood='calm';g.morko.pose=null;g.human.face='neutral';g.cz=1.025;g.cx=W/2;g.cy=H/2;g.camRate=null;g.hidS=null;}
 function prevent(label){return function(){G.prevented++;startStamp('press');return [{wait:0.85}];};}
 function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
 function leave(){G.axT=1120;G.bxT=1200;G.aFace=1;G.bFace=1;}
@@ -995,7 +995,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['H','What time is it?'],
   ['S','Three. The best time. Nobody can reject us at three.'],
   ['H','Nobody can do anything at three. That’s the problem.'],
-  ['S','…I’ll take the first watch.'],
+  shot('push',{who:'H',z:1.3}),['S','…I’ll take the first watch.'],
   ['H','There’s only one watch. It’s you. Every night.'],
   ['S','And yet nobody has ever been rejected in their sleep. You’re welcome.',{look:'pleased'}],
   scene({set:'office',clock:9*3600,cowR:1,s:1.3,mood:'alert'}),set({sweat:1}),
@@ -1003,7 +1003,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['H','Can you just… handle this one?',{quiet:1}],
   ['S','Full authority?'],
   ['S','I have waited my whole life for that sentence.',{look:'pleased'}],
-  ['R','Thanks for coming. I’ll be quick.'],
+  shot('two',{who:'R',z:1.35}),['R','Thanks for coming. I’ll be quick.'],
   ['S','“Quick.” Again. Brace.'],
   ['R','The client report was excellent. Really clear.'],
   ['S','Pleasantries. Don’t get comfortable.',{look:'squint'}],
@@ -1033,8 +1033,8 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','You asked me to handle it.'],
   ['H','…I did.'],
   set({mood:'surprised'}),
-  ['S','…She said nice things?',{look:'stunned'}],
-  ['H','Two. Maybe three.'],
+  shot('close',{who:'S'}),['S','…She said nice things?',{look:'stunned'}],
+  ['H','Two. Maybe three.'],shot('wide'),
   ['S','I don’t have those. I only wrote down “shorter”. In capitals. Twice.'],
   ['H','That’s the trouble with your filing system.'],
   ['S','It’s not a filing system. It’s a smoke alarm. It doesn’t have a setting for “nice”.'],
@@ -1066,12 +1066,12 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   ['S','…He’s afraid of slides.',{quiet:1}],
   shot('wide'),['S','I’m not saying I respect him more. I’m saying I’ve opened a file.'],
   set({cowA:1,ax:780}),{wait:1.4},set({aFace:-1}),
-  ['A','Oh — are you coming on Thursday? Board games, my place. Eero’s in.'],
+  shot('two',{who:'A'}),['A','Oh — are you coming on Thursday? Board games, my place. Eero’s in.'],
   set({mood:'surprised',s:1.5}),
   ['S','An invitation. A real one. With a day on it.'],
   function(){return G.real?[['S','After Monday? I’m not un-noting Monday.'],['H','Noted. I still want to go.']]:[];},
   ['S','Say yes before she comes to her senses.'],
-  ['H','I’d love to.'],yes,
+  ['H','I’d love to.'],yes,shot('wide'),
   set({aFace:1,mood:'calm',s:1.1}),
   ['B','Brilliant. Could you bring the snacks? And maybe drive?'],
   yesMenu(['Snacks AND driving. We are the infrastructure now.','Happy to. HAPPY to. We said it twice in case he missed it.','You offered to host the afterparty of a board game night. There is no afterparty.'],'Sure — I could host an afterparty too?','afterparty'),
@@ -1095,11 +1095,11 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
     {t:'What if we said… “not this time”?',f:function(){G.coatNo=true;},then:[['S','It’s a no in a coat.'],['H','That’s further than you’ve ever gone.'],['S','I feel sick.']]}
   ]},
   set({mood:'worry'}),
-  ['S','I only have the one move, you know. Keep everyone pleased. It works.'],
+  shot('push',{who:'H',z:1.28}),['S','I only have the one move, you know. Keep everyone pleased. It works.'],
   ['H','It works on everyone except me.'],
   {wait:1.2},
   ['N','00:12. The slides are done. The email is written: “Slides for Eero’s talk. He hates presenting, lol. Don’t tell him I said.”'],
-  set({mood:'alert',s:1.35}),
+  set({mood:'alert',s:1.35}),shot('wide',{rate:9}),
   ['S','Stop. That is going to ALL STAFF.',{loud:1}],
   ['H','It’s going to Eero.'],
   ['S','Eero. Riitta. Sanna. The printer man. Someone called “Board”.'],
@@ -1165,7 +1165,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   fib,
   ['S','No. It’s fine. It’s just— that’s what it’s like.'],
   ['H','What is?'],
-  ['S','All of it. Every “oh”. Every “quick chat”. It doesn’t arrive as a note. It arrives as a hit.'],
+  shot('push',{who:'S',z:1.3,rate:0.25}),['S','All of it. Every “oh”. Every “quick chat”. It doesn’t arrive as a note. It arrives as a hit.'],
   ['S','I can’t tell a paper cut from an amputation. They all come in as amputations. So I treat everything as one. It seemed safest.'],
   set({face:'neutral'}),
   ['H','I know. I feel it before you’ve said a word.'],
@@ -1187,7 +1187,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','I’ve been on shift ever since.'],
   ['H','That’s a long shift.'],
   ['S','Nobody came to relieve me.',{look:'soft'}],
-  set({mood:'care',s:1.1,pose:'comfort'}),
+  set({mood:'care',s:1.1,pose:'comfort'}),shot('wide',{rate:0.8}),
   ['S','I’ve been reviewing my job description.'],
   ['H','And?'],
   function(){G.job={t:0};G.lines=[];stopVoice();sfx('turn');},{wait:4.4},
@@ -1871,17 +1871,19 @@ function bigNote(){
 //   close  one face (z≈1.9)
 //   push   a slow creep in, for a spiral (rate ≈0.35)
 //   crash  Ekskyysmi shoves back into the frame (after a two-shot with hide:1)
+// who: 'A' Sanna, 'B' Eero, 'R' Riitta, 'S' Ekskyysmi (framed a little higher, so the human's head stays in), anything else the human.
+// wide takes {rate}: a fast rate is a snap back out, for a line that breaks a quiet moment.
 // One special shot per beat, then back to wide. Monday keeps the old single move: it teaches the language.
 // Less motion: every move is a cut.
-function camX(who){var g=G;return who==='A'?g.ax:who==='B'?g.bx2:who==='R'?g.rx:g.human.x;}
+function camX(who){var g=G;return who==='A'?g.ax:who==='B'?g.bx2:who==='R'?g.rx:who==='S'?g.human.x+g.morko.off:g.human.x;}
 function shot(type,o){o=o||{};return function(){
   var g=G,M=g.morko,x=camX(o.who||'A'),rate=function(r){return RM?40:r;};
-  if(type==='wide'){g.cz=1.025;g.cx=W/2;g.cy=H/2;g.camRate=rate(1.8);if(g.hidS!=null){M.sT=g.hidS;g.hidS=null;}return;}
+  if(type==='wide'){g.cz=1.025;g.cx=W/2;g.cy=H/2;g.camRate=rate(o.rate||1.8);if(g.hidS!=null){M.sT=g.hidS;g.hidS=null;}return;}
   if(typeof x!=='number')x=g.human.x;
   if(type==='two'){g.cz=o.z||1.5;g.cx=(g.human.x+x)/2;g.cy=268;g.camRate=rate(o.rate||1.6);
     if(o.hide&&g.hidS==null){g.hidS=M.sT;M.sT=0.35;}}
-  else if(type==='close'){g.cz=o.z||1.9;g.cx=x;g.cy=248;g.camRate=rate(o.rate||2);}
-  else if(type==='push'){g.cz=o.z||1.22;g.cx=x;g.cy=272;g.camRate=rate(o.rate||0.35);}
+  else if(type==='close'){var cs=o.who==='S';g.cz=o.z||(cs?1.7:1.9);g.cx=x;g.cy=cs?222:248;g.camRate=rate(o.rate||2);}
+  else if(type==='push'){g.cz=o.z||1.22;g.cx=x;g.cy=o.who==='S'?250:272;g.camRate=rate(o.rate||0.35);}
   else if(type==='crash'){var back=Math.max(g.hidS!=null?g.hidS:M.sT,1.15);g.hidS=null;M.sT=back;M.s=back*0.86;g.shake=RM?0:0.25;sfx('cut');}
 };}
 // A hit frames whoever caused it, and goes deeper as the week goes on (Monday keeps the centred move).

@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.46.1 (Claude, 19.11.2026): **kamerakieli tiistaista torstaihin (T5).** Yksi erikoiskuva per tahti, sitten takaisin laajaan.
+- Tiistai: Riitan tapaaminen kahden hengen kuvana (laukaisu kehystää sitten Riitan), kello 3 yöllä hidas työntö ihmiseen (”There’s only one watch”), ”…She said nice things?” lähikuvana Ekskyysmistä.
+- Keskiviikko: Sannan kutsu kahden hengen kuvana, keskiyön ”I only have the one move” hidas työntö, ja ”ALL STAFF” napsauttaa kuvan nopeasti takaisin laajaksi.
+- Torstai: tunnustus (”It arrives as a hit” → ”You were seven”) hyvin hidas työntö Ekskyysmiin; työnkuvan uudelleenkirjoitus palaa huoneeseen.
+- `shot()` osaa nyt kehystää Ekskyysmin (`who:'S'`) ja laajan kuvan nopeudella (`wide`, `{rate}`); `calm` nollaa kameran nopeuden.
+
 Versio 0.46.0 (Claude, 19.11.2026): **valokeila, Moments-valikko (T9) ja jousiviive (T6).**
 - Valokeila piirretään seinävarjon päälle ja ihmisen alle: valo on ilmassa seinän edessä, joten Ekskyysmi jää sen taakse ja vaalenee hieman (Joonaksen havainto).
 - Aloitusvalikossa on *Moments* (T9). *Situations*: kuusi lisäkohtausta tilanteen mukaan nimettynä, avautuvat maanantain jälkeen. *From the story*: tarinan hetket sitä mukaa kuin ne on nähty; viimeisen päivän hetket vasta kun loppu on nähty (tallennukseen `done`). Koko *Scenario lab* vain osoitteella `?lab`.
