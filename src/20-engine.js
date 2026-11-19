@@ -56,7 +56,7 @@ function setLine(who,text,o){
   g.bick=pair&&text.length<=46&&!(o&&o.big)?(g.bick||0)+1:(who==='S'||who==='H')&&pair?Math.max(0,(g.bick||0)-1):0;
   var mute=who==='S'&&g.morko.asleep;
   g.phoneN=who==='P'?3:Math.max(0,(g.phoneN||0)-1);if(who==='P'&&!/^You:/.test(text))g.buzz=0.7;
-  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute){speak(who,text);if(who!=='N'&&!(o&&o.big))sfx(who==='S'?'popS':'pop');}if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
+  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute){speak(who,text,o);if(who!=='N'&&!(o&&o.big))sfx(who==='S'?'popS':'pop');}if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
   history.push({who:who,text:text});
 }
 // How many characters of a line are showing after t seconds. A full stop is a breath, an ellipsis is a longer one.
@@ -248,7 +248,7 @@ function set(o){return function(){
 function hit(k,from){return function(){
   var g=G;g.lines=[];g.band=null;g.cur=null;g.flash=k;g.human.flinch=1;g.human.face='stiff';
   g.morko.sT=1.45+0.55*k;g.morko.mood='scared';g.anx=k;g.pulse=k;g.shake=RM?0:k;g.gazeFrom=from==='A'?'after':(from||'A');g.gazeT=from==='P'?0:0.85*k;sfx('hit');g.darkT=0.95*k;
-  g.cz=1.05+0.06*k;g.cx=W/2+10;g.cy=258;g.human.blush=Math.max(g.human.blush,k);
+  g.camRate=null;if(!hitFrame(k,from)){g.cz=1.05+0.06*k;g.cx=W/2+10;g.cy=258;}g.human.blush=Math.max(g.human.blush,k);
   trigger();addLived('jolts to the chest',Math.round(LIVED.hit*k));
 };}
 function archive(kind,items){return function(){

@@ -14,7 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.44.1 (Claude, 19.11.2026): **pelin alku ja Evenings + Night shift.**
+Versio 0.45.0 (Claude, 19.11.2026): **kamerakieli, puheääni loppuun asti ja yön sänky.**
+
+- **Kamera (`src/45-camera.js`):** maanantain jälkeen laukaisu kehystää sen, joka laukaisi reaktion (Sanna, Eero, Riitta tai puhelin), ja menee syvemmälle kuin ennen. Maanantai pysyy ennallaan. Uusi askel `shot()` sisältää kuvatyypit `wide`, `two`, `close`, `push` ja `crash`. Keskiviikkona Eeron ”I hate presenting” on lähikuvassa. Perjantaina Sanna ja ihminen ovat kahden hahmon lähikuvassa, Ekskyysmi kutistuu ihmisen selän taakse ja ilmestyy kuvaan repliikillä ”Looking busy was my idea.” Less motion -asetuksella liikkeet ovat leikkauksia.
+- **Puheääni** kestää nyt tekstin loppuun. Piippaukset ajastetaan samalla laskulla kuin tekstin näyttäminen: sama nopeus hiljaisille ja koville repliikeille sekä samat tauot pisteissä ja pilkuissa. Enimmäismäärä nousi 28:sta 90:een.
+- **Yö:** sohva piilotetaan, kun sänky on esillä. Aiemmin ne olivat päällekkäin.
+- Perjantain ”There is NOW.” -repliikin edellä varjo pienenee (`fib`): se valehtelee toisesta kasasta, mikä on siemen Toiselle laatikolle.
+
+ **pelin alku ja Evenings + Night shift.**
 
 - **Osakortti on siirtymä, ei leikkaus:** New gamen jälkeen aloitusruudun kuva himmenee tummaksi, ja sitten PART ONE, ”Better safe.” ja kuvateksti ”A Monday. One small plan.” tulevat esiin vuorotellen. Kuvateksti on kortilla eikä sivupaneelissa, joten mitään ei lueta kahdesti. Jatkonappi ilmestyy viimeisenä. Varhainen klikkaus näyttää koko kortin heti, ja seuraava jatkaa. Less motion -asetuksella siirtymä on kolme kertaa nopeampi eikä otsikko liiku.
 - **Lamppupöytä** näkyy heti, kun kohtaus alkaa. Ennen se tuli esiin vasta ihmisen mukana.

@@ -53,7 +53,7 @@ function update(dt,elapsed){
   updHands(dt);
   // When the two of them trade short lines, the camera leans in a little. It lets go at the first long sentence.
   var bk=g.w||g.out||g.lens||g.draft||g.bar||M.asleep?0:clamp(((g.bick||0)-2)/4,0,1),tz=g.cz+(M.st==='frozen'?0.02:0)+0.075*bk;if(RM)tz=1+(tz-1)*0.4;
-  C.z=ease(C.z,tz,(bk?1.4:2.5)*dt);C.fx=ease(C.fx,g.cx+(Hm.x-70-g.cx)*0.8*bk,2.5*dt);C.fy=ease(C.fy,g.cy+(300-g.cy)*0.8*bk,2.5*dt);
+  var cr=g.camRate||2.5;C.z=ease(C.z,tz,(bk?1.4:cr)*dt);C.fx=ease(C.fx,g.cx+(Hm.x-70-g.cx)*0.8*bk,cr*dt);C.fy=ease(C.fy,g.cy+(300-g.cy)*0.8*bk,cr*dt);
 }
 
 // The title screen, left alone: every so often the human has a sip. Nothing else.

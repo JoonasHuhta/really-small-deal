@@ -4,7 +4,9 @@
 
 > **Tila 0.44.0 (19.11.):** ✔ T1 (Joonas: ”jalosta suunnitelman mukaan”), ✔ T2 (uusi järjestys, kirjasto tarinaan, *The reply* ja muut lisäkohtauksiksi; takapakkirivi ”I’m working out my notice” siirretty *Not now.* -kohtaukseen), ✔ T8 (Toinen laatikko: siemenet ja paljastus), ✔ T11 (*By the radiator.* lopputekstien jälkeen). Seuraavaksi T3, T12 (pelaajatesti), T4, T6, T9. T10 odottaa lopun kappaletta.
 
-> **Tila 0.44.1 (19.11.):** ✔ T3 (*Night shift* jatkuu *Evenings*-kohtauksesta ilman korttia, `NOCARD` tiedostossa `33-moments.js`). Lisäksi pelin aloitus: osakortti on rauhallinen siirtymä (aloitusruudun kuva himmenee, PART, otsikko ja kuvateksti tulevat esiin vuorotellen, nappi viimeisenä, sivupaneeli tyhjä), ja lamppupöytä piirretään ennen kuin ihminen saapuu. Seuraavaksi T12 (pelaajatesti), sitten T4, T6 ja T9. Se korvaa CODEX_JATKO.md:n työjonon (P1–P8) järjestyksen. Vanhat dokumentit ovat taustaa.
+> **Tila 0.44.1 (19.11.):** ✔ T3 (*Night shift* jatkuu *Evenings*-kohtauksesta ilman korttia, `NOCARD` tiedostossa `33-moments.js`). Lisäksi pelin aloitus: osakortti on rauhallinen siirtymä (aloitusruudun kuva himmenee, PART, otsikko ja kuvateksti tulevat esiin vuorotellen, nappi viimeisenä, sivupaneeli tyhjä), ja lamppupöytä piirretään ennen kuin ihminen saapuu. Seuraavaksi T12 (pelaajatesti), sitten T4, T6 ja T9.
+
+> **Tila 0.45.0 (19.11.):** ✔ T4 (ydin): `src/45-camera.js` sisältää `shot('wide'|'two'|'close'|'push'|'crash', {who, z, rate, hide})`, ja maanantain jälkeen laukaisut kehystävät laukaisijan ja menevät syvemmälle (`hitFrame`). Less motion -asetuksella liikkeet ovat leikkauksia. T5 aloitettu: keskiviikkona Eeron syy on lähikuvassa, ja perjantaina Sanna ja ihminen ovat kahden hahmon lähikuvassa ilman varjoa, kunnes Ekskyysmi ilmestyy kuvaan repliikillä ”Looking busy was my idea.” Lisäksi Toisen laatikon siemen: perjantain ”There is NOW.” -repliikin edellä on `fib` (varjo valehtelee). Korjattu: yöllä sänky ja sohva olivat päällekkäin (sohva piilotetaan, kun sänky on esillä), ja puheääni loppui pitkissä repliikeissä ennen tekstiä (ääni ajastetaan nyt samalla laskulla kuin tekstin näyttäminen, `speak`). Seuraavaksi T5:n jatko (kaksi tai kolme kuvaa per päivä ti–to), T6 ja T9. Se korvaa CODEX_JATKO.md:n työjonon (P1–P8) järjestyksen. Vanhat dokumentit ovat taustaa.
 
 Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, valmiiksi määriteltyinä tehtävinä, jotka halvempi malli (Sonnet tai Codex) voi tehdä. Opus tarvitaan vain tarinapäätöksiin ja uuteen dialogiin.
 
@@ -175,7 +177,7 @@ Jokaisessa tehtävässä: muokkaa vain `src/`-tiedostoja, aja `npm test` (story 
 | ✔ **T1** | Joonas hyväksyy kohtausvalinnan (kohta 3) | Joonas | – | hyväksytty 19.11. |
 | ✔ **T2** | `AFTER`-järjestys hyväksytyn taulukon mukaan, kirjasto tarinaan, `WHEN`-kortit | S | `33-moments.js` | tehty 0.44.0 |
 | ✔ **T3** | *Evenings.* + *Night shift.* yhdeksi hetkeksi | S | `33-moments.js` (`NOCARD`), `50-lab.js` | tehty 0.44.1: ei korttia välissä, käsikirjoitukset ennallaan |
-| **T4** | Kamera: `shot()` ja kuusi kuvatyyppiä, `crash`-poseeraus (varjo kuvan reunasta), Less motion = leikkaus | S | uusi `45-camera.js`, `70-draw.js` | lab-kohtaus *Camera test*, jossa jokainen tyyppi kerran, kuvakaappaukset viidellä koolla |
+| ✔ **T4** | Kamera: `shot()` ja kuvatyypit, `crash`, Less motion = leikkaus | S | `45-camera.js`, `60-update.js` (`camRate`), `20-engine.js` (`hitFrame`) | tehty 0.45.0 (`insert` hoidetaan edelleen Enhance-zoomilla) |
 | **T5** | Kamerakieli tarinaan: kaksi tai kolme kohtaa per päivä ti–pe (`two` + `crash` Sannan kanssa perjantaina) | O suunnittelee, S toteuttaa | tarinatiedostot | Joonas katsoo pelaten |
 | **T6** | Jousiviive varjon vartaloon (kohta 7.1) | S | `70-draw.js`, `60-update.js` | kotimatkan kuvakaappaus: ei kampivaikutelmaa, Less motion ilman keinuntaa |
 | **T7** | Lab-klooni: katuvalojen välit (kohta 7.2) | S | uusi `52-lamps.js` | vertailu Joonakselle |

@@ -67,7 +67,7 @@ function syncMusic(){
 // One voice per character: waveform, pitch, loudness. The shadow's pitch drops as it grows.
 var VOICE={S:['triangle',185,0.075],H:['sine',330,0.06],A:['sine',494,0.05],B:['triangle',262,0.06],R:['sine',392,0.05],T:['triangle',147,0.06],L:['sine',523,0.05],X:['sine',440,0.05],Z:['triangle',233,0.045]};
 function stopVoice(){for(var i=0;i<voiceNodes.length;i++){try{voiceNodes[i].stop();}catch(e){}}voiceNodes=[];}
-function speak(who,text){
+function speak(who,text,o){
   stopVoice();var a=audio();if(!a)return;var t0=a.currentTime+0.02;
   if(who==='P'){
     if(/^You:/.test(text)){tone(420,t0,0.2,'sine',0.05,1700);tone(1700,t0+0.2,0.07,'sine',0.03);}                 // sent: a whoosh, and no way back
@@ -77,13 +77,17 @@ function speak(who,text){
       tone(880,t0+0.42,0.09,'sine',0.05);tone(1320,t0+0.52,0.18,'sine',0.05);}
     return;}
   var v=VOICE[who];if(!v)return;
-  var base=who==='S'?v[1]/Math.sqrt(Math.max(0.6,G.morko.sT)):v[1],n=0;
-  for(var i=0;i<text.length&&n<28;i+=3){
-    var c=text.charAt(i);if(!/[A-Za-z0-9]/.test(c))continue;
-    var loud=/[A-Z]/.test(c)&&/[A-Z]/.test(text.charAt(i+1)||'')?1.14:1;
-    voiceNodes.push(tone(base*loud*(0.92+((i*37)%17)/100),t0+i/55,0.05,v[0],v[2]));n++;var last=i;
+  // The voice follows the text exactly: same letters per second and the same pauses as revealCount (src/20-engine.js),
+  // so it lasts to the last word. One syllable every third letter, at most 90.
+  var base=who==='S'?v[1]/Math.sqrt(Math.max(0.6,G.morko.sT)):v[1],n=0,cps=o&&o.quiet?30:o&&o.loud?85:55,at=0,last=0;
+  for(var i=0;i<text.length&&n<90;i++){
+    var c=text.charAt(i);at+=1/cps;
+    if(i%3===0&&/[A-Za-z0-9]/.test(c)){
+      var loud=/[A-Z]/.test(c)&&/[A-Z]/.test(text.charAt(i+1)||'')?1.14:1;
+      voiceNodes.push(tone(base*loud*(0.92+((i*37)%17)/100),t0+at,0.05,v[0],v[2]));n++;last=at;}
+    if(c==='…')at+=0.34;else if((c==='.'||c==='?'||c==='!')&&text.charAt(i+1)===' ')at+=0.24;else if(c===','||c===';')at+=0.1;else if(c==='—')at+=0.18;
   }
-  if(n)talkDuck((last||0)/55+0.05);
+  if(n)talkDuck(last+0.05);
 }
 function sfx(k){
   var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;

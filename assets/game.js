@@ -98,7 +98,7 @@ function syncMusic(){
 // One voice per character: waveform, pitch, loudness. The shadow's pitch drops as it grows.
 var VOICE={S:['triangle',185,0.075],H:['sine',330,0.06],A:['sine',494,0.05],B:['triangle',262,0.06],R:['sine',392,0.05],T:['triangle',147,0.06],L:['sine',523,0.05],X:['sine',440,0.05],Z:['triangle',233,0.045]};
 function stopVoice(){for(var i=0;i<voiceNodes.length;i++){try{voiceNodes[i].stop();}catch(e){}}voiceNodes=[];}
-function speak(who,text){
+function speak(who,text,o){
   stopVoice();var a=audio();if(!a)return;var t0=a.currentTime+0.02;
   if(who==='P'){
     if(/^You:/.test(text)){tone(420,t0,0.2,'sine',0.05,1700);tone(1700,t0+0.2,0.07,'sine',0.03);}                 // sent: a whoosh, and no way back
@@ -108,13 +108,17 @@ function speak(who,text){
       tone(880,t0+0.42,0.09,'sine',0.05);tone(1320,t0+0.52,0.18,'sine',0.05);}
     return;}
   var v=VOICE[who];if(!v)return;
-  var base=who==='S'?v[1]/Math.sqrt(Math.max(0.6,G.morko.sT)):v[1],n=0;
-  for(var i=0;i<text.length&&n<28;i+=3){
-    var c=text.charAt(i);if(!/[A-Za-z0-9]/.test(c))continue;
-    var loud=/[A-Z]/.test(c)&&/[A-Z]/.test(text.charAt(i+1)||'')?1.14:1;
-    voiceNodes.push(tone(base*loud*(0.92+((i*37)%17)/100),t0+i/55,0.05,v[0],v[2]));n++;var last=i;
+  // The voice follows the text exactly: same letters per second and the same pauses as revealCount (src/20-engine.js),
+  // so it lasts to the last word. One syllable every third letter, at most 90.
+  var base=who==='S'?v[1]/Math.sqrt(Math.max(0.6,G.morko.sT)):v[1],n=0,cps=o&&o.quiet?30:o&&o.loud?85:55,at=0,last=0;
+  for(var i=0;i<text.length&&n<90;i++){
+    var c=text.charAt(i);at+=1/cps;
+    if(i%3===0&&/[A-Za-z0-9]/.test(c)){
+      var loud=/[A-Z]/.test(c)&&/[A-Z]/.test(text.charAt(i+1)||'')?1.14:1;
+      voiceNodes.push(tone(base*loud*(0.92+((i*37)%17)/100),t0+at,0.05,v[0],v[2]));n++;last=at;}
+    if(c==='…')at+=0.34;else if((c==='.'||c==='?'||c==='!')&&text.charAt(i+1)===' ')at+=0.24;else if(c===','||c===';')at+=0.1;else if(c==='—')at+=0.18;
   }
-  if(n)talkDuck((last||0)/55+0.05);
+  if(n)talkDuck(last+0.05);
 }
 function sfx(k){
   var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;
@@ -201,7 +205,7 @@ function setLine(who,text,o){
   g.bick=pair&&text.length<=46&&!(o&&o.big)?(g.bick||0)+1:(who==='S'||who==='H')&&pair?Math.max(0,(g.bick||0)-1):0;
   var mute=who==='S'&&g.morko.asleep;
   g.phoneN=who==='P'?3:Math.max(0,(g.phoneN||0)-1);if(who==='P'&&!/^You:/.test(text))g.buzz=0.7;
-  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute){speak(who,text);if(who!=='N'&&!(o&&o.big))sfx(who==='S'?'popS':'pop');}if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
+  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute){speak(who,text,o);if(who!=='N'&&!(o&&o.big))sfx(who==='S'?'popS':'pop');}if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
   history.push({who:who,text:text});
 }
 // How many characters of a line are showing after t seconds. A full stop is a breath, an ellipsis is a longer one.
@@ -393,7 +397,7 @@ function set(o){return function(){
 function hit(k,from){return function(){
   var g=G;g.lines=[];g.band=null;g.cur=null;g.flash=k;g.human.flinch=1;g.human.face='stiff';
   g.morko.sT=1.45+0.55*k;g.morko.mood='scared';g.anx=k;g.pulse=k;g.shake=RM?0:k;g.gazeFrom=from==='A'?'after':(from||'A');g.gazeT=from==='P'?0:0.85*k;sfx('hit');g.darkT=0.95*k;
-  g.cz=1.05+0.06*k;g.cx=W/2+10;g.cy=258;g.human.blush=Math.max(g.human.blush,k);
+  g.camRate=null;if(!hitFrame(k,from)){g.cz=1.05+0.06*k;g.cx=W/2+10;g.cy=258;}g.human.blush=Math.max(g.human.blush,k);
   trigger();addLived('jolts to the chest',Math.round(LIVED.hit*k));
 };}
 function archive(kind,items){return function(){
@@ -923,7 +927,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -1054,9 +1058,9 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   ['S','Careful. A “no” is a rejection. Of HIM. Then he rejects us back. It’s a rejection exchange programme.'],
   yesMenu(['Clean. Safe. Nobody is upset.','An exclamation mark. Out loud. Bold.','We volunteered for a second thing to apologise for hesitating on the first. Textbook.'],'Sure — and I can do the handout too.','handout'),
   ['B','Legend.'],
-  ['B','Honestly? I hate presenting. You’re good at it.'],keep('eero'),
+  shot('close',{who:'B'}),['B','Honestly? I hate presenting. You’re good at it.'],keep('eero'),
   ['S','…He’s afraid of slides.',{quiet:1}],
-  ['S','I’m not saying I respect him more. I’m saying I’ve opened a file.'],
+  shot('wide'),['S','I’m not saying I respect him more. I’m saying I’ve opened a file.'],
   set({cowA:1,ax:780}),{wait:1.4},set({aFace:-1}),
   ['A','Oh — are you coming on Thursday? Board games, my place. Eero’s in.'],
   set({mood:'surprised',s:1.5}),
@@ -1266,12 +1270,14 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   archive('good',[['2026','She told me herself.']]),
   ['S','…Filed. Under the other pile.',{look:'soft'}],
   ['H','There’s another pile?'],
-  ['S','There is NOW.'],closeArchive,
+  fib,['S','There is NOW.'],closeArchive,
+  shot('two',{who:'A',hide:1}),
   ['A','Is that why you used to vanish at lunch? We stopped asking. I thought asking was pressure.'],
   ['H','I thought not being asked was the verdict.'],
   ['A','I was going to ask you on Monday. You looked busy.'],keep('asked'),
-  aside(['S','Looking busy was my idea.']),
+  shot('crash'),aside(['S','Looking busy was my idea.']),
   ['A','So we’ve been being polite AT each other. For a year.'],
+  shot('wide'),
   mondayRepair,
   set({bFace:-1,mood:'alert'}),
   function(){return G.handout?[['B','By the way, thanks for the handout. You didn’t have to do that.'],['S','He says that NOW.'],['H','He didn’t actually ask for it.'],aside(['S','I may have supplied the asking.'])]:[];},
@@ -1765,9 +1771,10 @@ function home(){
   if(G.basket){var bx=G.human.x+64;ctx.fillStyle='#b99b6b';ctx.beginPath();ctx.moveTo(bx-30,FEETY-34);ctx.lineTo(bx+30,FEETY-34);ctx.lineTo(bx+24,FEETY);ctx.lineTo(bx-24,FEETY);ctx.closePath();ctx.fill();
     ctx.fillStyle='#e9e2cf';ctx.beginPath();ctx.ellipse(bx-6,FEETY-36,22,9,0,Math.PI,0);ctx.fill();ctx.fillStyle='#9fb6c9';ctx.beginPath();ctx.ellipse(bx+12,FEETY-36,14,7,0,Math.PI,0);ctx.fill();}
   drawTable();drawBed();
+  if(!G.bed){   // at night the bed takes the floor: no sofa on top of it
   ctx.fillStyle='#57486a';rr(600,292,300,70,16);ctx.fill();ctx.fillStyle='#655479';rr(588,338,324,84,14);ctx.fill();
   ctx.fillStyle='#4b3e5b';rr(588,330,30,92,10);ctx.fill();rr(882,330,30,92,10);ctx.fill();
-  ctx.fillStyle='#c98f2e';rr(700,322,60,34,8);ctx.fill();
+  ctx.fillStyle='#c98f2e';rr(700,322,60,34,8);ctx.fill();}
   if(G.snacks){var cols=['#c9553f','#e2b04a','#62887f'];for(var k=0;k<11;k++){var b=bagPos(k);ctx.fillStyle=cols[k%3];rr(b.x,b.y,26,34,5);ctx.fill();}}
 }
 function bagPos(k){var row=k<6?0:1,col=row?k-6:k;return {x:628+col*40+(row?20:0),y:row?372:346};}
@@ -1851,6 +1858,34 @@ function bigNote(){
   ctx.save();ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 150px Fraunces,Georgia,serif';
   ctx.fillStyle='rgba(18,14,30,.55)';ctx.fillText(n.text,W/2+sh+5,H/2-34);
   ctx.fillStyle='#e0563e';ctx.fillText(n.text,W/2+sh,H/2-40);ctx.restore();
+}
+// ---- src/45-camera.js ----
+/* ================= the camera has a grammar, not one move ================= */
+// TYOSUUNNITELMA.md section 5. A step: shot(type, {who, z, rate, hide}).
+//   wide   the default room (1.025)
+//   two    the human and one other person, close (z≈1.5). hide:1 sends Ekskyysmi down behind the human's back
+//   close  one face (z≈1.9)
+//   push   a slow creep in, for a spiral (rate ≈0.35)
+//   crash  Ekskyysmi shoves back into the frame (after a two-shot with hide:1)
+// One special shot per beat, then back to wide. Monday keeps the old single move: it teaches the language.
+// Less motion: every move is a cut.
+function camX(who){var g=G;return who==='A'?g.ax:who==='B'?g.bx2:who==='R'?g.rx:g.human.x;}
+function shot(type,o){o=o||{};return function(){
+  var g=G,M=g.morko,x=camX(o.who||'A'),rate=function(r){return RM?40:r;};
+  if(type==='wide'){g.cz=1.025;g.cx=W/2;g.cy=H/2;g.camRate=rate(1.8);if(g.hidS!=null){M.sT=g.hidS;g.hidS=null;}return;}
+  if(typeof x!=='number')x=g.human.x;
+  if(type==='two'){g.cz=o.z||1.5;g.cx=(g.human.x+x)/2;g.cy=268;g.camRate=rate(o.rate||1.6);
+    if(o.hide&&g.hidS==null){g.hidS=M.sT;M.sT=0.35;}}
+  else if(type==='close'){g.cz=o.z||1.9;g.cx=x;g.cy=248;g.camRate=rate(o.rate||2);}
+  else if(type==='push'){g.cz=o.z||1.22;g.cx=x;g.cy=272;g.camRate=rate(o.rate||0.35);}
+  else if(type==='crash'){var back=Math.max(g.hidS!=null?g.hidS:M.sT,1.15);g.hidS=null;M.sT=back;M.s=back*0.86;g.shake=RM?0:0.25;sfx('cut');}
+};}
+// A hit frames whoever caused it, and goes deeper as the week goes on (Monday keeps the centred move).
+function hitFrame(k,from){
+  var g=G;if(g.chapter<=1||g.lab&&!from)return false;
+  if(from==='P'){g.cz=1.16+0.1*k;g.cx=g.human.x+20;g.cy=272;return true;}
+  var sx=camX(from||'A');if(typeof sx!=='number')return false;
+  g.cz=1.1+0.1*k;g.cx=g.human.x+(sx-g.human.x)*0.62;g.cy=262;return true;
 }
 // ---- src/49-second-act.js ----
 /* ================= the second act: a hit with no sender, a form, a quiet day, and a lamp ================= */
@@ -3806,7 +3841,7 @@ function update(dt,elapsed){
   updHands(dt);
   // When the two of them trade short lines, the camera leans in a little. It lets go at the first long sentence.
   var bk=g.w||g.out||g.lens||g.draft||g.bar||M.asleep?0:clamp(((g.bick||0)-2)/4,0,1),tz=g.cz+(M.st==='frozen'?0.02:0)+0.075*bk;if(RM)tz=1+(tz-1)*0.4;
-  C.z=ease(C.z,tz,(bk?1.4:2.5)*dt);C.fx=ease(C.fx,g.cx+(Hm.x-70-g.cx)*0.8*bk,2.5*dt);C.fy=ease(C.fy,g.cy+(300-g.cy)*0.8*bk,2.5*dt);
+  var cr=g.camRate||2.5;C.z=ease(C.z,tz,(bk?1.4:cr)*dt);C.fx=ease(C.fx,g.cx+(Hm.x-70-g.cx)*0.8*bk,cr*dt);C.fy=ease(C.fy,g.cy+(300-g.cy)*0.8*bk,cr*dt);
 }
 
 // The title screen, left alone: every so often the human has a sip. Nothing else.
