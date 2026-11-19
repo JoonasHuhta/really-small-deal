@@ -14,7 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.43.2 (Claude, 16.11.2026): **ensimmäisen kohtauksen musiikki hiljaisemmaksi.**
+Versio 0.43.3 (Claude, 19.11.2026): **työsuunnitelma ja hetkitesti.**
+
+- **[TYOSUUNNITELMA.md](TYOSUUNNITELMA.md)** on nyt ensisijainen suunnitelma: tarinan kaari v2 (”Toinen laatikko”), kohtausvalinta mitatuilla kestoilla, lisäkohtausten avautuminen, kamerakieli, epilogianimaatio, varjon kiinnityskokeilut sekä tehtävät T1–T12 ja kullekin riittävä malli. AGENTS.md ohjaa sinne.
+- **Uusi testi `tests/moments.test.cjs`** (osa `npm test`-ajoa): jokainen hetki ajetaan loppuun kolmella valintapolulla piirtäen. Testi tarkistaa, ettei mikään kaadu tai jumitu ja ettei mikään luettava repliikki ole tyhjä, rikki tai tuntemattoman puhujan. Tulos: 21 hetkeä, 63 ajoa, 2089 eri repliikkiä.
+- Pelin sisältöön ei muutoksia.
+
+ **ensimmäisen kohtauksen musiikki hiljaisemmaksi.**
 
 - Musiikki peitti puheäänet. `monday.mp3` on nyt masteroitu tasolle −24 LUFS (aiemmin −14,6), ja elementin voimakkuus on 0,22. Musiikki on hiljainen myös laitteilla, jotka eivät noudata elementin voimakkuutta. Lopputaso on noin −37 LUFS, kun aiemmin se oli noin −30.
 - **Puheväistö:** aina kun joku puhuu, musiikki laskee 40 %:iin ja palaa noin puoli sekuntia viimeisen tavun jälkeen (`talkDuck`). Puheen aikana taso on noin −45 LUFS. Testattu selaimessa: tauoilla 0,22, puheen aikana 0,09.

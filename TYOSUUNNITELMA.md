@@ -1,0 +1,195 @@
+# Työsuunnitelma: tarinan kaari, kohtausvalinta ja työnjako
+
+19.11.2026 · Claude (Opus) · pohjana versio 0.43.3. **Tämä on ensisijainen suunnitelma.** Se korvaa CODEX_JATKO.md:n työjonon (P1–P8) järjestyksen. Vanhat dokumentit ovat taustaa.
+
+Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, valmiiksi määriteltyinä tehtävinä, jotka halvempi malli (Sonnet tai Codex) voi tehdä. Opus tarvitaan vain tarinapäätöksiin ja uuteen dialogiin.
+
+---
+
+## 1. Missä ollaan (mitattu)
+
+`npm run pace` 19.11.: koko tarina **45:14**, 6048 sanaa, viisi päivää ja 17 välikohtausta. Lisäksi neljä kohtausta on vain labissa (voice, library, radiator, footage).
+
+| Osa | Kesto | Huomio |
+|---|---|---|
+| Ma → To | ~25:30 (56 %) | Torstain käänne osuu 56 %:iin. Hyvä. |
+| To → Pe (kahdeksan välikohtausta) | ~15:00 | **Rakenteen suurin ongelma.** Käänteen jälkeen kahdeksan hetkeä peräkkäin, ja perjantai alkaa vasta 91 %:ssa. |
+| Pe + epilogi | ~5:00 | Ratkaisu jää lyhyeksi ja nopeaksi. |
+
+Joonaksen arvio: maanantai ja baari ovat hulvattomia. Kaikkien kohtausten ei tarvitse olla, koska osa rakentaa huippukohtia.
+
+---
+
+## 2. Tarinan kaari v2: ”Toinen laatikko”
+
+### Joonaksen idea (19.11.)
+
+Ekskyysmi ei ole vain ylisuojelija. Lopussa paljastuu, että se on koko ajan myös rakentanut jotain: säilyttänyt, järjestellyt ja kasvattanut herkkyyttä, joka auttaa ymmärtämään muita. Kyse on *Vantage Point* -tyyppisestä paljastuksesta: pelaaja luuli näkevänsä yhden asian, mutta tapahtui muutakin. Tarina on matka kohti minuutta, jonka ihminen lopulta hyväksyy.
+
+### Arvio
+
+Idea on hyvä ja sopii peliin, mutta siinä on yksi vaara. Jos paljastus kertoo, että varjo oli salaa hyvä koko ajan, se mitätöi kaiken aiemman: ylisuojelusta tulisi jälkikäteen oikeutettua, ja viesti muuttuisi muotoon ”kipu oli kasvun hinta”. Peli on luvannut olla neuvomatta, eikä tämä ole totta RSD:stä.
+
+**Ratkaisu: paljastus ei muuta sitä, mitä varjo teki. Se muuttaa sen, mitä varjo *säilytti*.** Ekskyysmi ei osaa heittää mitään pois, koska se on sen työ. Pelaaja näkee koko pelin ajan torjuntojen laatikon. Varjo on kuitenkin koko ajan pannut toiseen, merkitsemättömään laatikkoon kaiken hyvän, minkä se oli ”hukannut”. Samassa laatikossa on myös se, mitä se on huomannut muista ihmisistä. Sama herkkyys, joka satuttaa, on herkkyys, joka huomaa toiset. Tämä vastaa Joonaksen kirjettä: *”näet värähdykset muiden sanojen takana… kun et opi jotain, opit tietämättäsi aina jotain muuta.”*
+
+### Siemenet ovat jo pelissä
+
+Paljastus toimii vain, jos se on istutettu. Suurin osa siemenistä on jo valmiina:
+
+| Päivä | Siemen | Tila |
+|---|---|---|
+| Ma | Kotimatkan debriefissä yksi kohta ohitetaan nopeasti: ”Item four: she waved. Irrelevant. Filed.” | **uusi rivi** |
+| Ti | ”Filed: 1 note. **Misplaced: 3 compliments.**” | on jo |
+| Ke | Eero: ”I hate presenting.” → Ekskyysmi: ”I’ve opened a file.” Keskiyöllä tieto suojaa Eeroa. | on jo (ensimmäinen kerta, kun toista laatikkoa käytetään) |
+| To | Piirros: ”Since a Tuesday. You were seven.” | on jo |
+| Osa 2 | *Quiet.* Kun varjo vaikenee, ihminen saa piirroksen valmiiksi (`quietDrawing`). | on jo |
+| Osa 2 | *A fine.* (kirjasto, majakat, sivu 212): odottamaton yhteys | **siirretään tarinaan** (kohta 3) |
+| Pe | Sanna: ”I was going to ask you on Monday.” | on jo |
+
+### Paljastus (uusi kohtaus perjantain jälkeen, ennen *The group chat* -kohtausta tai sen sisällä)
+
+Luonnos. Lopullinen teksti tehdään Opuksella ja Joonaksen hyväksynnällä.
+
+1. Arkistossa Ekskyysmi on päivittämässä vanhinta korttia (tämä on jo pelissä). Ihminen huomaa toisen laatikon, jossa ei ole nimilappua.
+2. H: ”What’s in that one?” – S: ”Nothing. Admin.” `fib()` (varjo pienenee, eli se valehtelee).
+3. Laatikko aukeaa. **REPLAY · OTHER ANGLE**: neljästä kuuteen kolmen sekunnin välähdystä aiemmista kohtauksista samasta kuvasta, mutta nyt näkyy, mitä varjo teki kuvan reunalla. Se nostaa kortin, sujauttaa sen laatikkoon ja katsoo, ettei kukaan huomaa. Välähdykset: Sannan vilkutus, kolme kehua, Eeron ”you’re good at it”, sivu 212, ”she has a nice laugh” ja piirros.
+4. H: ”You kept these?” – S: ”I keep everything. It’s the job.” – tauko – S: ”I just never opened this one in front of you.” – H: ”Why?” – S: **”It’s the one they could take away.”**
+5. Viimeinen rivi on se, joka on jo pelissä: vanhin kortti päivitetään (”…I’ll update the file.”).
+
+Repliikki ”It’s the one they could take away.” on RSD:n ydin: hyvää on vaikein näyttää, koska sen menettäminen sattuu eniten. Se ei ole neuvo. Se on havainto.
+
+### Kirjeestä kuviksi (ei tekstiä peliin)
+
+Kirjettä ei lainata peliin, koska peli ei saarnaa. Kolme sen kuvaa kelpaa kuvallisiksi keinoiksi:
+
+- **Tyhjä kori:** muut poimivat sanoja ilmasta kuin omenoita, ihmisen kori on tyhjä. Tästä tulee keskustelun nopeuden kuva: sanat leijuvat, ja ihminen ehtii aina myöhässä.
+- **Nauru kaikuna:** ihmisen nauru tulee puoli sekuntia muiden jälkeen. Pieni ääniefekti, ei repliikkiä.
+- **Radio:** Ekskyysmi etsii oikeaa taajuutta kohinan keskeltä. Tämä sopii *Night shift* -kohtaukseen.
+
+---
+
+## 3. Kohtausvalinta (ehdotus pelaajatestiin)
+
+Säännöt: pääpolku kestää noin 45 minuuttia, toinen näytös on enintään noin 14 minuuttia, ja jokaisella kohtauksella on rooli kaaressa. Pois jäävät kohtaukset eivät katoa, vaan siirtyvät **lisäkohtauksiksi** (kohta 4).
+
+| Kohta | Kohtaukset | Kesto | Rooli |
+|---|---|---|---|
+| **Osa 1 *Better safe.*** | Ma (+ uusi siemen) | 5:15 | esittely, ”oh, hi.” |
+| | Ti → *Enhance.* → *Rewind.* | 6:00 | palaute, kulmakarva, jälkipuinti |
+| | Ke → *Evidence.* (midpoint) → *Colleagues.* → *An ordinary evening* | 6:50 | lasi käännetään omistajaansa, varjojen oma ”oh. hi.”, tyyntä |
+| | To | 3:12 | käänne |
+| **Osa 2 *A little room.*** | *Not now.* → *A quiet drink.* | 6:00 | oikea torjunta, baari (huippu) |
+| | *Nothing.* → *The form.* → *Quiet.* | 4:00 | lähettäjätön isku, avun pyytäminen, hiljaisuus |
+| | ***A fine.*** (kirjasto, **siirto labista**) | ~1:30 | odottamaton yhteys, kaksoisempatia |
+| | *Evenings.* + *Night shift.* **yhdistettynä** | ~2:30 | lamppu, ja pimeässä kaikki varjot ovat samaa varjoa |
+| **Osa 3 *Still here.*** | Pe | 2:51 | ratkaisu |
+| | **Toinen laatikko** (uusi) | ~1:30 | paljastus |
+| | *The group chat* | 2:04 | piirros jaetaan, boss-taistelu |
+| | **Epilogianimaatio** (kohta 6) | ~1:30 | Safe at last |
+| | *By the radiator.* | ~1:30 | **lopputekstien jälkeinen kohtaus** (”the next Tuesday”) |
+
+**Lisäkohtauksiksi:** *The posting.*, *One small thing.* (toistaa tiistain palauteteeman), *Sometime.*, *The reply* (sama teema kuin ääniviestissä), *The voice message*, *Footage.* (paikka ratkaistaan testissä: se kilpailee *Evidence.*-kohtauksen kanssa samasta ”todisteteemasta”).
+
+Toisessa näytöksessä on kahdeksan hetken sijaan seitsemän, ja *The reply* korvautuu kirjastolla, joka tuo puuttuvan odottamattoman yhteyden. Ennen kuin `AFTER`-järjestystä muutetaan, Joonas hyväksyy taulukon (tehtävä **T1**).
+
+---
+
+## 4. Lisäkohtaukset ja niiden avautuminen
+
+Kysymys: avautuvatko lisäkohtaukset vasta, kun pääpeli on pelattu? Entä pelaaja, jota kiinnostaa juuri se, mikä hänen elämässään nyt sattuu?
+
+**Ehdotus:**
+- **Tarinan omat hetket** avautuvat valikkoon sitä mukaa kuin ne on nähty. Kaari suojataan: kukaan ei näe paljastusta ennen tarinaa.
+- **Lisäkohtaukset** avautuvat heti maanantain jälkeen. Maanantai opettaa pelin kielen (kaksi kelloa, ulkopuolinen versio, kuitti), eikä sitä ilman muu toimi.
+- Valikko nimetään tilanteen mukaan, ei kohtauksen nimen mukaan: ”The message that wasn’t answered”, ”Feedback at work”, ”When nobody did anything”. Silloin RSD:n kanssa elävä löytää oman kipukohtansa.
+- **Scenario lab** pysyy kehitystyökaluna. Julkaisuversiossa se aukeaa vain osoitteella `?lab`.
+
+---
+
+## 5. Kamera: kuvakieli, ei yksi kaava
+
+**Havainto (Joonas, pitää paikkansa):** jokainen laukaisu zoomaa samalla tavalla (`trigger()`: `cz=1.05+0.06k`, aina kuvan keskelle). Ensimmäisessä kohtauksessa toisto ei haittaa, myöhemmin se tylsistyy.
+
+**Kuvatyypit** (uusi tiedosto `src/45-camera.js` ja askelfunktio `shot(type, opts)`):
+
+| Tyyppi | Mitä | Milloin |
+|---|---|---|
+| `wide` | nykyinen perus (1.025) | oletus |
+| `two` | kaksi hahmoa lähikuvassa (z≈1.55), Ekskyysmi rajautuu pois | kahdenkeskinen hetki, esim. Sanna ja ihminen |
+| `close` | yhden hahmon kasvot (z≈2.0) | reaktio, joka kantaa yksin |
+| `insert` | esine: puhelin, muki, kulmakarva | Enhance-tyylinen yksityiskohta |
+| `push` | hidas zoomaus (1.0→1.25) yhden repliikin ajan | kierre, kun Ekskyysmi paisuttelee |
+| `crash` | `two`- tai `close`-kuvassa Ekskyysmi ahtautuu kuvan reunasta ja kuiskaa ihmisen korvaan (pieni kupla, `quiet`) | **Joonaksen idea**: ihminen ja Sanna juttelevat lähikuvassa, varjo ei näy hetkeen, sitten se änkeää kuvaan |
+
+**Säännöt:**
+- Laukaisun zoomaus kohdistuu laukaisijaan (kuka sanoi), ei kuvan keskelle.
+- Yksi erikoiskuva per tahti, sitten takaisin `wide`-kuvaan.
+- Maanantai pysyy nykyisellään, koska se opettaa kielen.
+- Less motion -asetuksella liikkeet korvataan leikkauksilla.
+
+---
+
+## 6. Epilogianimaatio lopputekstien tilalle
+
+Toteutettavissa. Kahdeksasta kahteentoista välähdystä, kukin 5–10 sekuntia, piirretään pelin omilla hahmoilla aloitusruudun tyylillä: pehmeä liukuväri, osin läpinäkyvä, ei täysin tarkka. Kuvat vaihtuvat ristihäivytyksellä kappaleen iskujen tahdissa. Esimerkkejä: ihminen ja Ekskyysmi kippistävät (inkivääriolut ja varjon oma juoma), lounas Sannan kanssa, sivu 212, piirros ryhmächatissa, päänauha, patteri ja lamppu.
+
+- **Tekstit:** ei RSD-neuvoja eikä tilastoja. Tilalle kuittirivejä takaisinviittauksina: ”Lunches: 1 · Accounts closed: 0 · Files updated: 1”. Viimeisenä yksi rivi: Made by Joonas Huhta (MoshBitSurfers).
+- **Joonakselta tarvitaan:** kappaleen tiedosto ja tempo (BPM) tai iskujen ajat. Jos *Cosmic Loneliness* on tämä kappale, lähetä se.
+- **Tekniikka:** aikajana `[{t, draw, caption}]` synkronoidaan `audio.currentTime`-arvoon. Less motion -asetuksella häivytykset ovat hitaampia.
+
+---
+
+## 7. Varjon kiinnitys: kokeilu, ei muutos
+
+**Havainto:** kotimatkalla seinävarjo seuraa ihmistä kuin veturin kampi.
+
+Kaksi erillistä kokeilua kloonikohtauksina labissa. Mitään olemassa olevaa ei muuteta ennen vertailua.
+
+1. **Jousiviive (halpa, todennäköisesti parannus kaikkialle):** varjon vartalo seuraa ihmistä pienellä viiveellä ja keinunnalla, jalat pysyvät kiinni. Mekaaninen kampi poistuu.
+2. **Katuvalojen välit (lab-klooni kotimatkasta):** lamppujen välissä seinävarjo haalistuu ja jää jälkeen, ja Ekskyysmi juoksee kiinni seuraavan lampun alla: ”Wait. WAIT. Lamp gap.” Tämä ei ole sääntö ”valo päättää koon” (Joonas hylkäsi sen), vaan yksi vitsi yhdessä paikassa.
+
+---
+
+## 8. Tehtävät
+
+Jokaisessa tehtävässä: muokkaa vain `src/`-tiedostoja, aja `npm test` (story ja moments) ja `audit_layout.py` niille tiloille, joihin muutos vaikuttaa, sekä päivitä README:n versiomerkintä. **Malli** kertoo, mikä riittää: *S* = Sonnet tai Codex (määritelty toteutus), *O* = Opus (tarina- tai suunnittelupäätös, uusi dialogi).
+
+| ID | Tehtävä | Malli | Tiedostot | Valmis kun |
+|---|---|---|---|---|
+| **T1** | Joonas hyväksyy kohtausvalinnan (kohta 3) | Joonas | – | taulukko merkitty hyväksytyksi tähän |
+| **T2** | `AFTER`-järjestys hyväksytyn taulukon mukaan, kirjasto tarinaan, `WHEN`-kortit | S | `33-moments.js` | `npm test` vihreä, `npm run pace` noin 45 min |
+| **T3** | *Evenings.* + *Night shift.* yhdeksi hetkeksi | S | `49-second-act.js`, `50-lab.js` | yksi LABS-avain, molempien parhaat rivit säilyvät, testit vihreinä |
+| **T4** | Kamera: `shot()` ja kuusi kuvatyyppiä, `crash`-poseeraus (varjo kuvan reunasta), Less motion = leikkaus | S | uusi `45-camera.js`, `70-draw.js` | lab-kohtaus *Camera test*, jossa jokainen tyyppi kerran, kuvakaappaukset viidellä koolla |
+| **T5** | Kamerakieli tarinaan: kaksi tai kolme kohtaa per päivä ti–pe (`two` + `crash` Sannan kanssa perjantaina) | O suunnittelee, S toteuttaa | tarinatiedostot | Joonas katsoo pelaten |
+| **T6** | Jousiviive varjon vartaloon (kohta 7.1) | S | `70-draw.js`, `60-update.js` | kotimatkan kuvakaappaus: ei kampivaikutelmaa, Less motion ilman keinuntaa |
+| **T7** | Lab-klooni: katuvalojen välit (kohta 7.2) | S | uusi `52-lamps.js` | vertailu Joonakselle |
+| **T8** | Toinen laatikko: siemenrivi maanantaihin ja paljastuskohtaus (kohta 2) | **O** (teksti), S (välähdykset) | `30-story-monday.js`, uusi `36-drawer.js` | Joonas hyväksyy tekstin, testit vihreinä |
+| **T9** | Lisäkohtausvalikko tilanteen mukaan nimettynä, avautuu maanantain jälkeen, lab vain `?lab` (kohta 4) | S | `80-ui.js`, `28-progress.js` | tallennustesti: avautuminen säilyy |
+| **T10** | Epilogianimaatio (kohta 6) | S (moottori), O (välähdysten valinta) | uusi `37-epilogue.js` | Joonaksen kappale, tahdistus testattu selaimessa |
+| **T11** | *By the radiator.* lopputekstien jälkeen | S | `33-moments.js` | näkyy vain tarinan lopussa |
+| **T12** | Pelaajatesti 2 (kohta 9) | Joonas | – | vastaukset kirjattu tähän |
+
+**Järjestys:** T1 → T2 → T3 → T12 (testi) → T8 → T4 → T5 → T6 → T9 → T10 → T11. T7 voidaan tehdä milloin tahansa. Tarina ennen kameraa: kamerakieli valitaan kohtauksiin, jotka jäävät peliin.
+
+---
+
+## 9. Muuta tärkeää, mitä ei ole vielä ajateltu
+
+1. **Sisältöhuomautus.** Aihe voi osua kipeästi. Yksi hiljainen rivi About-sivulle tai ennen New gamea: ”This is a comedy about rejection sensitivity. Some moments may land close.” Ei neuvoja.
+2. **Tallennusten yhteensopivuus.** Kun `AFTER` muuttuu (T2), vanhat tallennukset voivat osoittaa hetkeen, jota ei enää ole tarinassa. Tallennus käyttää hetkien tunnisteita, mikä on hyvä, mutta T2:een kuuluu testi: vanha tallennus, josta hetki on poistettu, jatkaa seuraavasta olemassa olevasta.
+3. **Dokumenttien määrä.** Juuressa on 18 markdown-tiedostoa. Halvempi malli lukee väärän. Siksi tämä tiedosto on ensisijainen, ja AGENTS.md ohjaa tänne. Vanhat dokumentit voi myöhemmin siirtää kansioon `docs/arkisto/` (oma tehtävä, ei kiireellinen).
+4. **Kohtausten metatiedot.** LABS-merkintöihin lisätään `act`, `role` ja `situation` (T9 tarvitsee ne valikkoon), jolloin järjestys ja valikko pysyvät samassa paikassa.
+5. **Musiikkirekisteri.** Kohtausmusiikki lisätään `MUSIC`- ja `MUSICVOLS`-taulukoihin (`src/10-audio.js`). Kappale masteroidaan tasolle −24 LUFS (`ffmpeg -af loudnorm=I=-24:TP=-3`), jolloin puheväistö toimii automaattisesti.
+6. **Lokalisointi myöhemmin.** Uudessa koodissa repliikkejä ei rakenneta yhdistelemällä merkkijonoja. Muuten suomenkielinen versio vaatisi uudelleenkirjoitusta.
+7. **Pelaajatestin kysymykset (T12):** missä nauroit, missä tunnistit itsesi, mikä tuntui saarnalta, missä kohdassa halusit lopettaa ja yllättikö loppu. Kesto mitataan: kirjaa jokaisen testaajan aika per osa.
+8. **Laitetesti jokaisesta APK:sta:** näyttö ei sammu, musiikki ei peitä puhetta, ääni toimii ensimmäisestä kosketuksesta ja vaakanäkymässä ei ole reunaa.
+
+---
+
+## 10. Työtavat (kaikille malleille)
+
+- Lue ensin AGENTS.md ja sitten tämä tiedosto.
+- `npm test` ajaa nyt kaksi testiä: koko tarinan kaikki reitit (`story.test.cjs`) ja **jokaisen hetken kolmella valintapolulla piirtäen** (`moments.test.cjs`). Molempien pitää olla vihreinä ennen committia.
+- Uusi `G.`-kenttä, joka piirtää jotain, nollataan `scene()`-funktiossa.
+- C:\RSD ja git pidetään samassa tilassa. Codex voi muokata C:\RSD:tä ilman gittiä, joten tarkista muutosajat ennen päälle kirjoittamista.
+- Kun tehtävä on valmis, merkitse se tähän tiedostoon (✔ ja versio) ja kerro, mitä ei testattu oikealla laitteella.
