@@ -33,7 +33,10 @@ while(!(T.G.ended&&!T.G.dayEnd)&&steps++<200000){
 }
 assert.ok(T.G.ended&&!T.G.dayEnd,'pace route reaches the end');
 assert.equal([...rows.keys()].filter(k=>k.startsWith('chapter')).length,5);
-assert.equal([...rows.keys()].filter(k=>!k.startsWith('chapter')&&!k.startsWith('part')).length,17);
+// every moment listed in AFTER is reached once (counted from the source, so reordering does not break the tool)
+const afterSrc=require('node:fs').readFileSync(require('node:path').join(__dirname,'..','src','33-moments.js'),'utf8').split('var AFTER={')[1].split('};')[0];
+const listed=[...afterSrc.matchAll(/'(\w+)'/g)].length;
+assert.equal([...rows.keys()].filter(k=>!k.startsWith('chapter')&&!k.startsWith('part')).length,listed);
 const list=[...rows.values()],total=list.reduce((s,r)=>s+r.seconds,0);
 const stamp=s=>Math.floor(Math.round(s)/60)+':'+String(Math.round(s)%60).padStart(2,'0');
 if(process.argv.includes('--json'))console.log(JSON.stringify({route:'Monday B, first available choices, automatic replies',wpm:WPM,seconds:total,rows:list},null,2));
