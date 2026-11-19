@@ -97,6 +97,8 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   ['R','Not now. Can we stay on topic?'],
   hit(0.7,'R'),{wait:1.3},
   ['S','THERE. That one was real. I didn’t even need the glass.'],
+  // the relapse after Thursday (moved here from The reply, which is an extra now)
+  function(){return G.jobDone?[['H','New job description. Remember?'],['S','This is the OLD job. I’m working out my notice.'],['H','How long is the notice?'],['S','Unclear. I wrote the contract.']]:[];},
   {choice:[
     {t:'Apologise for having ideas.',then:[['H','I’m not apologising for a sentence.'],['S','It was a LONG sentence. It had a Thursday in it.']]},
     {t:'New policy: never suggest anything again.',then:[['S','Effective immediately. No ideas. No deadlines. No Thursdays.'],['H','You can’t ban Thursdays.']]},

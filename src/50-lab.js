@@ -295,10 +295,29 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   },
   function(){G.boss.friendly=true;G.boss.name='THE GROUP CHAT';sfx('turn');},
   ['N','BOSS DEFEATED. Correction: there was no boss.'],
-  function(){return G.lab?[]:[['S','Year two. Somebody laughed.'],['H','This time I left it up.'],['S','…I’ll update the file.'],function(){var g=G;g.cards.push({kind:'good',year:'TODAY',text:'Shared a drawing. Left it up.',t:0,life:null,x:790,y:178,rot:-0.03});sfx('card');},{wait:2.2},closeArchive];},
+  function(){return G.lab?[]:[['S','Year two. Somebody laughed.'],['H','This time I left it up.'],['S','…I’ll update the file.'],function(){var g=G;g.cards.push({kind:'good',year:'TODAY',text:'Shared a drawing. Left it up.',t:0,life:null,x:790,y:178,rot:-0.03});sfx('card');},{wait:2.2},closeArchive].concat(drawerReveal());},
   ['S','I’m keeping the headband.'],
   nightlightEnding   // the lamp and the bird share the final image; the reader decides when to leave
  ]);}
+// The other drawer (TYOSUUNNITELMA.md, section 2). It does not change what Ekskyysmi did. It changes what it kept.
+function drawerReveal(){return [
+  ['H','There’s a drawer with no label.'],
+  fib,
+  ['S','Nothing. Admin.'],
+  ['H','You just got smaller.'],
+  {wait:0.9},
+  openDrawer,{wait:5.2},
+  ['H','You kept these?'],
+  ['S','I keep everything. It’s the job.'],
+  {wait:0.8},
+  ['S','I just never opened this one in front of you.'],
+  ['H','Why not?'],
+  ['S','It’s the one people could take away.',{quiet:1}],
+  {wait:1.4},closeArchive,
+  ['H','Can we leave it open?'],
+  ['S','…Draught risk.'],
+  ['S','A crack. Leave it open a crack.',{look:'soft'}]
+ ];}
 function drawChatlog(o){
   var log=G.fightLog||[],x=W/2-330,y=72,w=440;
   ctx.fillStyle='#141a1c';ctx.fillRect(0,0,W,H);ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);

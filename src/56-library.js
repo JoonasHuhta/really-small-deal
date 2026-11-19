@@ -57,7 +57,7 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
   ['H','There’s a lighthouse on page 212. I didn’t want to give it back before I’d met it.'],
   {wait:1.2},
   function(){G.lib.smile=true;},
-  ['L','Bengtskär! Page 212 is the best page. I kept that book for six weeks.'],
+  ['L','Bengtskär! Page 212 is the best page. I kept that book for six weeks.'],keep('library'),
   set({mood:'surprised'}),
   ['S','…SHE kept it for six weeks?'],
   ['L','I work here. I just kept renewing it to myself.'],

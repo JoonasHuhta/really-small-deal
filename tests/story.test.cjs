@@ -131,9 +131,11 @@ for(const day of ['A','B','C'])for(let v=0;v<4;v++){
    assert.match(element('ov').innerHTML,/DAYS ON THE CALENDAR/);assert.match(T.inside.receipt(),/DAYS ON THE CALENDAR\s+5/);
    assert.match(days[4].ledger[0].label,/1\.4 times/);}
   // The short moments are part of the story now, in order, each behind its own card and never labelled as lab scenes.
-  for(const must of [/You showed someone a drawing/,/Last time you showed someone a drawing/,/This time I left it up/,/The eyebrow was HUNGER/,/falls off a printer/,/I rounded up/,/Nothing in it can be rejected/,/I always thought that was the bad outcome/,/busy near each other/,/I’m keeping the headband/])assert.match(tr,must);
+  for(const must of [/You showed someone a drawing/,/Last time you showed someone a drawing/,/This time I left it up/,/The eyebrow was HUNGER/,/falls off a printer/,/I rounded up/,/Bengtskär/,/she said hi first/,/It’s the one people could take away/,/A crack\. Leave it open a crack/,/I always thought that was the bad outcome/,/busy near each other/,/I’m keeping the headband/])assert.match(tr,must);
   assert.ok(tr.indexOf('The eyebrow was HUNGER')<tr.indexOf('rejection exchange programme'),'the eyebrow comes before the favours');
-  assert.ok(tr.indexOf('Seen 17:31')<tr.indexOf('Nothing in it can be rejected'),'the reply comes after board game night');
+  assert.ok(tr.indexOf('Seen 17:31')<tr.indexOf('Bengtskär'),'the library comes after board game night');
+  assert.ok(tr.indexOf('…I’ll update the file')<tr.indexOf('It’s the one people could take away'),'the other drawer opens after the oldest file is updated');
+  assert.ok(T.G.kept.includes('hi')&&T.G.kept.includes('compliments')&&T.G.kept.includes('eero')&&T.G.kept.includes('library'),'the week fills the other drawer');
   // Structure: the shadow that says "oh. hi." to Ekskyysmi comes before Thursday, so Thursday's line lands on something;
   // everything after Thursday is the new job being tried out, starting with a relapse that knows it is one.
   assert.ok(tr.indexOf('busy near each other')<tr.indexOf('Seen 17:31'),'Colleagues. comes before board game night');
@@ -144,8 +146,8 @@ for(const day of ['A','B','C'])for(let v=0;v<4;v++){
   assert.ok(tr.indexOf('That one landed')<tr.lastIndexOf('With a full stop.')&&tr.lastIndexOf('With a full stop.')<tr.indexOf('You showed someone a drawing'),'Thursday’s hit remembers the full stop');
   assert.ok(tr.indexOf('Same hours. Fewer exits')<tr.indexOf('I’m working out my notice'),'the relapse comes after the new job');
   assert.ok(tr.indexOf('I’m working out my notice')<tr.indexOf('This is the staying part')&&tr.indexOf('This is the staying part')<tr.indexOf('I always thought that was the bad outcome'));
-  assert.ok(tr.indexOf('You look smaller')>tr.indexOf('I had the whole skeleton out')&&tr.indexOf('You look smaller')<tr.indexOf('Half past four WHEN'),'the glass turns inward between the slides and Sometime; pace is reported separately');
-  assert.equal(T.G.moment,'comments');assert.equal(T.G.lab,null);
+  assert.ok(tr.indexOf('You look smaller')>tr.indexOf('rejection exchange programme')&&tr.indexOf('You look smaller')<tr.indexOf('Her shadow greeted me'),'the glass turns inward after Wednesday and before the shadows meet; pace is reported separately');
+  assert.equal(T.G.moment,'radiator','the week ends on the next Tuesday, after the final image');assert.equal(T.G.lab,null);
   assert.ok(['sorry','explain','quiet','ask'].includes(T.G.fb));assert.ok(['worries','cancel','freezer','bite'].includes(T.G.txt));
   if(T.G.txt==='cancel')assert.match(tr,/Ignore that\. I panicked/);
   if(day==='C')assert.match(tr,/That was lazy of us/);else assert.doesNotMatch(tr,/That was lazy of us/);
@@ -167,7 +169,7 @@ const checkpointFixture={version:2,ch:5,unlocked:5,chapters:{
   1:{day:'A'},
   3:{day:'A',lunch:1,leak:'cover',fear:2,fb:'ask',yes:0},
   4:{day:'B',lunch:2,leak:'grow',yes:5,handout:true,afterparty:true,fb:'explain'},
-  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true,coatNo:true}
+  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true,coatNo:true,kept:['hi','eero']}
 }};
 savedItems.set(saveKey,JSON.stringify(checkpointFixture));
 T.chapter(3);
@@ -209,16 +211,16 @@ function stepUntil(done){let n=0;while(!done()&&n++<6000){T.unlock();T.draw();co
   if(st==='click')T.advance();else if(st==='view'){T.advance();T.tick(6);T.advance();}else if(st==='stretch'||st==='hold')T.advance();
   else if(st==='toss'){T.advance();T.tick(.4);}
   else if(st==='choice')T.choose(T.options().findIndex(o=>!o.off));else T.tick(1);}assert.ok(done(),'reached');}
-T.chapter(3);stepUntil(()=>T.G.moment==='sometime'&&T.state()==='click');
+T.chapter(3);stepUntil(()=>T.G.moment==='colleagues'&&T.state()==='click');
 {const yes=T.G.yes;assert.ok(yes>=3);saved=JSON.parse(savedItems.get(saveKey));
- assert.equal(saved.ch,3);assert.equal(saved.at.moment,'sometime');assert.equal(saved.at.state.yes,yes);
- T.reset();T.title();assert.match(element('ov').innerHTML,/Continue · Sometime\./);
+ assert.equal(saved.ch,3);assert.equal(saved.at.moment,'colleagues');assert.equal(saved.at.state.yes,yes);
+ T.reset();T.title();assert.match(element('ov').innerHTML,/Continue · Colleagues\./);
  fire(element('ov'),'click',{target:{getAttribute(k){return k==='data-go'?'cont':null}}});
  assert.equal(T.G.chapter,3);assert.equal(T.G.yes,yes,'the week so far comes back');assert.equal(T.G.jobDone,false);
- stepUntil(()=>T.G.moment==='sometime'&&T.state()==='click');
+ stepUntil(()=>T.G.moment==='colleagues'&&T.state()==='click');
  playOn(()=>0);const rt=T.history().map(x=>x.text).join('\n');
  assert.doesNotMatch(rt,/rejection exchange programme|falls off a printer/,'nothing before the moment is replayed');
- assert.match(rt,/Half past four WHEN/);assert.match(rt,/busy near each other/);assert.match(rt,/Seen 17:31/);assert.match(rt,/I’ll update the file/);
+ assert.match(rt,/Her shadow greeted me/);assert.match(rt,/busy near each other/);assert.match(rt,/Seen 17:31/);assert.match(rt,/I’ll update the file/);
  // A resume point from a different chapter, or for a moment that no longer exists, is ignored rather than trusted.
  const raw=JSON.parse(savedItems.get(saveKey));raw.at.moment='deleted-scene';savedItems.set(saveKey,JSON.stringify(raw));
  T.reset();T.title();assert.match(element('ov').innerHTML,/Continue · For now|Continue · /);assert.doesNotMatch(element('ov').innerHTML,/undefined/);
@@ -309,7 +311,7 @@ function playLab(id,mode){
   assert.match(t2,/Am I allowed\?/);assert.match(t2,/I missed you/);assert.equal(T.G.morko.asleep,false,'the lamp brings it back');assert.equal(T.G.lampOff,false);
 }
 // The second act sits between Thursday's moments and Friday, in this order.
-assert.match(require('fs').readFileSync(require('path').join(__dirname,'..','src','33-moments.js'),'utf8'),/4:\['reply','notnow','bar','nothing','form','quiet','evenings','night'\]/);
+assert.match(require('fs').readFileSync(require('path').join(__dirname,'..','src','33-moments.js'),'utf8'),/4:\['notnow','bar','nothing','form','quiet','library','evenings','night'\]/);
 // Nothing in the game names a condition, a drug or a profession. The player works it out, or does not.
 {
   const fs2=require('fs'),path2=require('path'),dir=path2.join(__dirname,'..','src');
@@ -613,6 +615,7 @@ assert.equal(T.G.chap.part,2);assert.equal(T.G.barStory,'2011');playOn(()=>0);
 const revised=T.history().map(l=>l.text).join('\n');
 assert.match(revised,/I waved at the wrong person yesterday/);assert.match(revised,/Finished it on Monday. I still like it/);
 assert.match(revised,/I missed you. I’m keeping the easier day/);assert.doesNotMatch(revised,/It wears off about now|Mm. Not quite|Eleven people liked it/);
-assert.equal(T.G.finalFrame,true);assert.equal(T.G.bed,true);assert.equal(T.G.lampOff,false);assert.equal(T.G.morko.pose,'puppet');assert.equal(T.G.zShow,0);
+assert.equal(T.G.endSeen,true,'the lamp-and-bird image was reached');assert.ok(revised.indexOf('Tuesday works')>revised.lastIndexOf('I’m keeping the headband'),'the radiator comes after the final image');
+playLab('comments');assert.equal(T.G.finalFrame,true);assert.equal(T.G.bed,true);assert.equal(T.G.lampOff,false);assert.equal(T.G.morko.pose,'puppet');assert.equal(T.G.zShow,0);
 T.chapter(2);assert.equal(T.G.finalFrame,false);assert.equal(T.G.bed,false);assert.equal(T.G.morko.pose,null);
 console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment resumes; all three bar stories; part cards; distinct replays; form signature; quiet-day payoff; nightlight ending; paused animations; phone controls, audio and local assets. Cutaways: ${views}; size interactions: ${stretches}.`);

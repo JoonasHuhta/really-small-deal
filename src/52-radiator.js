@@ -3,7 +3,7 @@
 // The roles swap: the human coaches, Ekskyysmi gets Eero's advice, and nothing it prepared survives the word "hi".
 function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan:'Make tea. That’s all.',clock:16*3600+50*60}).concat([
   function(){var g=G;g.cowA=true;g.ax=g.axT=780;g.aFace=-1;},
-  ['N','The next Tuesday, nearly five. The kettle is on. Sanna is waiting for it too.'],
+  ['N','Nearly five. The kettle is on. Sanna is waiting for it too.'],
   set({mood:'alert'}),
   ['S','Don’t look at the radiator.'],
   ['H','Why would I look at the radiator?'],

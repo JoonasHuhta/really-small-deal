@@ -14,7 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
-Versio 0.43.3 (Claude, 19.11.2026): **työsuunnitelma ja hetkitesti.**
+Versio 0.44.0 (Claude, 19.11.2026): **uusi kohtausjärjestys ja Toinen laatikko.** Työsuunnitelman tehtävät T1, T2, T8 ja T11.
+
+- **Järjestys:** tiistain jälkeen *Enhance.* ja *Rewind.*; keskiviikon jälkeen *Evidence.*, *Colleagues.* ja *An ordinary evening*; torstain jälkeen *Not now.*, *A quiet drink.*, *Nothing.*, *The form.*, *Quiet.*, **A fine.** (kirjasto, uusi tarinassa), *Evenings.* ja *Night shift.*; perjantain jälkeen *The group chat* ja lopputekstien jälkeen **By the radiator.** (”THE NEXT TUESDAY”). Lisäkohtauksiksi siirtyivät *The posting.*, *One small thing.*, *Sometime.*, *The reply*, *The voice message* ja *Footage.* (pelattavissa labissa). Takapakki ”I’m working out my notice” siirtyi *The reply* -kohtauksesta *Not now.* -kohtaukseen.
+- **Toinen laatikko:** Ekskyysmi kirjaa viikon hyvät hetket ”merkityksettöminä” (maanantaina uusi rivi ”Slide two: she said hi first. Irrelevant. Filed.”). Lopussa merkitsemätön laatikko aukeaa, ja siitä tulee esiin pelaajan näkemät hetket sekä piirros: ”It’s the one people could take away.”
+- **They pois:** ihmiseen ei enää viitata sanalla they. Sanna sanoo maanantaina ”Looks busy. Maybe another day.”, mikä on samalla siemen perjantain repliikille ”You looked busy”. About-sivulla lukee ”a perfectly ordinary human. The human has small plans.”, ja ohjetekstit ovat ilman pronomineja.
+- Testit päivitetty uuteen järjestykseen. Uusina tarkistuksina laatikon täyttyminen ja paljastuksen paikka sekä se, että patterikohtaus tulee loppukuvan jälkeen.
+
+ **työsuunnitelma ja hetkitesti.**
 
 - **[TYOSUUNNITELMA.md](TYOSUUNNITELMA.md)** on nyt ensisijainen suunnitelma: tarinan kaari v2 (”Toinen laatikko”), kohtausvalinta mitatuilla kestoilla, lisäkohtausten avautuminen, kamerakieli, epilogianimaatio, varjon kiinnityskokeilut sekä tehtävät T1–T12 ja kullekin riittävä malli. AGENTS.md ohjaa sinne.
 - **Uusi testi `tests/moments.test.cjs`** (osa `npm test`-ajoa): jokainen hetki ajetaan loppuun kolmella valintapolulla piirtäen. Testi tarkistaa, ettei mikään kaadu tai jumitu ja ettei mikään luettava repliikki ole tyhjä, rikki tai tuntemattoman puhujan. Tulos: 21 hetkeä, 63 ajoa, 2089 eri repliikkiä.

@@ -11,7 +11,7 @@ function reset(day){
      cz:1.025,cx:W/2,cy:H/2,
      lines:[],band:null,out:null,w:null,card:0,
      hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0};
-  G.handout=false;G.afterparty=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.coatNo=false;G.stamp=null;
+  G.handout=false;G.afterparty=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.coatNo=false;G.kept=[];G.endSeen=false;G.stamp=null;
   G.choiceWho='S';G.finalFrame=false;G.barStory=null;G.quietDrawing=false;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
   document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
@@ -82,7 +82,7 @@ function render(){
   document.getElementById('chapter').textContent=g.ended?(g.labEnd?'Scenario lab':g.dayEnd?'End of Monday':'For now'):g.started?(g.lab?'':['','I · ','II · ','III · '][storyPart()])+(g.label|| (g.w?'The walk home':'Oh, hi.')):'A small social adventure';
   document.getElementById('perspective').textContent=g.chap&&g.chap.part?g.chap.day:g.finalFrame?'FOR NOW':g.out?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION';
   cv.classList.toggle('stretching',WAIT==='stretch');
-  cv.setAttribute('aria-label',g.chap&&g.chap.part?g.chap.day+'. '+g.chap.title:g.finalFrame?'The human is asleep. A lamp stays on. Ekskyysmi makes a bird with its hands.':'An animated human and their shadow');
+  cv.setAttribute('aria-label',g.chap&&g.chap.part?g.chap.day+'. '+g.chap.title:g.finalFrame?'The human is asleep. A lamp stays on. Ekskyysmi makes a bird with its hands.':'A human and a very large shadow');
   if(WAIT==='choice'&&CH){
     speaker=g.choiceWho||'S';text=g.nopeMsg||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':'What do we do with this?');
     if(g.form&&g.form.i>=0){speaker='N';text=FORM_Q[g.form.i].q;}
@@ -175,16 +175,16 @@ elOpts.addEventListener('pointerdown',function(e){var t=e.target&&e.target.close
 window.addEventListener('pointerup',holdUp);window.addEventListener('pointercancel',holdUp);window.addEventListener('blur',holdUp);
 
 /* ================= hands-on moments: used sparingly, about one a day ================= */
-var HOLD_LABEL={cover:'Hold: hands over their eyes',pull:'Hold: walk them out',still:'Hold: keep them perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign'};
+var HOLD_LABEL={cover:'Hold: cover the eyes',pull:'Hold: walk out',still:'Hold: keep perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign'};
 var NOPE=['That one isn’t available. I’m sitting on it.','Still sitting on it.','It’s very comfortable, actually.','Press it all day. I have nowhere to be.'];
 function nope(i){var o=CH[i];o.tried=(o.tried||0)+1;G.nopeMsg=NOPE[Math.min(o.tried-1,NOPE.length-1)];G.morko.mood='stern';sfx('nope');render();}
 function holdText(){
   var h=G.hold,on=h.on||h.tap>0;
   if(h.kind==='sit')return on?h.o.text:'Hold to sit down. Do nothing else.';
   if(h.kind==='sign')return on?h.o.text:'Hold to sign.';
-  if(h.kind==='cover')return h.wave?'Sanna is waving. Your human can’t see it.':on?'Hands over their eyes. Nothing gets in.':'Hold to keep their eyes covered.';
-  if(h.kind==='pull')return on?'This way. Briskly. Don’t look back.':'Hold to walk them out of the room.';
-  if(h.kind==='still')return on?'Nobody move. We are a lamp.':'Hold to keep them perfectly still.';
+  if(h.kind==='cover')return h.wave?'Sanna is waving. Your human can’t see it.':on?'Hands over the eyes. Nothing gets in.':'Hold to keep the eyes covered.';
+  if(h.kind==='pull')return on?'This way. Briskly. Don’t look back.':'Hold to walk out of the room.';
+  if(h.kind==='still')return on?'Nobody move. We are a lamp.':'Hold to keep perfectly still.';
   return on?(h.o.text||'Staying. This is me staying.'):'Hold to stay. Do nothing else.';
 }
 function holdDown(){if(WAIT!=='hold'||paused||!G.hold)return;G.hold.on=true;G.hold.downAt=Date.now();}
@@ -256,7 +256,15 @@ function archive(kind,items){return function(){
   if(kind==='bad')addLived('archive visits',LIVED.archive);
   sfx('card');
 };}
-function closeArchive(){var g=G;for(var i=0;i<g.cards.length;i++)if(g.cards[i].life==null)g.cards[i].life=Math.max(0,g.cards[i].t)+0.35;}
+// The other drawer. All week Ekskyysmi files the good things it calls irrelevant. Nobody sees where. (TYOSUUNNITELMA.md, section 2)
+function keep(id){return function(){var k=G.kept||(G.kept=[]);if(k.indexOf(id)<0)k.push(id);};}
+var KEPT={hi:['MONDAY','She said hi first.'],compliments:['TUESDAY','Three compliments. Not misplaced. Filed here.'],
+  eero:['WEDNESDAY','Eero hates presenting. Kept. Not posted.'],library:['PAGE 212','Someone else loves lighthouses too.'],
+  asked:['FRIDAY','She was going to ask on Monday.'],drawing:['YEAR 2','The drawing. Before anyone laughed.']};
+function openDrawer(){var g=G,ids=(g.kept||[]).filter(function(k){return KEPT[k];}).concat(['drawing']).slice(0,6);g.cards=[];
+  for(var i=0;i<ids.length;i++){var c=KEPT[ids[i]];g.cards.push({kind:'good',year:c[0],text:c[1],t:-0.4-i*0.75,life:null,x:i%2?795:165,y:115+Math.floor(i/2)*125,rot:(i%2?1:-1)*0.025});}   // two side columns: the middle stays free for the two of them
+  g.drawer=true;sfx('card');}
+function closeArchive(){var g=G;g.drawer=false;for(var i=0;i<g.cards.length;i++)if(g.cards[i].life==null)g.cards[i].life=Math.max(0,g.cards[i].t)+0.35;}
 function drawCards(){
   var g=G,sticky=g.cards.some(function(c){return c.kind==='bad'&&c.life==null;});
   if(sticky){ctx.fillStyle='rgba(14,12,20,.45)';ctx.fillRect(0,0,W,H);}

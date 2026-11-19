@@ -1,6 +1,8 @@
 # Työsuunnitelma: tarinan kaari, kohtausvalinta ja työnjako
 
-19.11.2026 · Claude (Opus) · pohjana versio 0.43.3. **Tämä on ensisijainen suunnitelma.** Se korvaa CODEX_JATKO.md:n työjonon (P1–P8) järjestyksen. Vanhat dokumentit ovat taustaa.
+19.11.2026 · Claude (Opus) · pohjana versio 0.43.3, päivitetty 0.44.0. **Tämä on ensisijainen suunnitelma.**
+
+> **Tila 0.44.0 (19.11.):** ✔ T1 (Joonas: ”jalosta suunnitelman mukaan”), ✔ T2 (uusi järjestys, kirjasto tarinaan, *The reply* ja muut lisäkohtauksiksi; takapakkirivi ”I’m working out my notice” siirretty *Not now.* -kohtaukseen), ✔ T8 (Toinen laatikko: siemenet ja paljastus), ✔ T11 (*By the radiator.* lopputekstien jälkeen). Seuraavaksi T3, T12 (pelaajatesti), T4, T6, T9. T10 odottaa lopun kappaletta. Se korvaa CODEX_JATKO.md:n työjonon (P1–P8) järjestyksen. Vanhat dokumentit ovat taustaa.
 
 Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, valmiiksi määriteltyinä tehtävinä, jotka halvempi malli (Sonnet tai Codex) voi tehdä. Opus tarvitaan vain tarinapäätöksiin ja uuteen dialogiin.
 
@@ -46,7 +48,13 @@ Paljastus toimii vain, jos se on istutettu. Suurin osa siemenistä on jo valmiin
 | Osa 2 | *A fine.* (kirjasto, majakat, sivu 212): odottamaton yhteys | **siirretään tarinaan** (kohta 3) |
 | Pe | Sanna: ”I was going to ask you on Monday.” | on jo |
 
-### Paljastus (uusi kohtaus perjantain jälkeen, ennen *The group chat* -kohtausta tai sen sisällä)
+### Toteutus 0.44.0
+
+- `keep(id)` kirjaa hyvän hetken `G.kept`-listaan (tallentuu). Kohdat: maanantain kotimatkan ”Slide two: she said hi first. Irrelevant. Filed.” (`hi`), tiistain ”Misplaced: 3 compliments” (`compliments`), Eeron ”I hate presenting” (`eero`), kirjaston sivu 212 (`library`) ja Sannan ”I was going to ask you on Monday” (`asked`).
+- *The group chat* -kohtauksessa vanhimman kortin päivityksen jälkeen ihminen huomaa merkitsemättömän laatikon. Ekskyysmi valehtelee (`fib`), ja laatikko aukeaa. Kortit tulevat esiin vain niistä hetkistä, jotka pelaaja näki, ja viimeisenä tulee aina piirros. Kortit ovat kahdessa sivupalstassa, ja puhekuplat piirretään niiden päälle (`g.drawer`).
+- Loppurepliikit: ”It’s the one people could take away.” → ”Can we leave it open?” → ”…Draught risk. A crack. Leave it open a crack.”
+
+### Paljastus, alkuperäinen luonnos (uusi kohtaus perjantain jälkeen, ennen *The group chat* -kohtausta tai sen sisällä)
 
 Luonnos. Lopullinen teksti tehdään Opuksella ja Joonaksen hyväksynnällä.
 
@@ -156,17 +164,17 @@ Jokaisessa tehtävässä: muokkaa vain `src/`-tiedostoja, aja `npm test` (story 
 
 | ID | Tehtävä | Malli | Tiedostot | Valmis kun |
 |---|---|---|---|---|
-| **T1** | Joonas hyväksyy kohtausvalinnan (kohta 3) | Joonas | – | taulukko merkitty hyväksytyksi tähän |
-| **T2** | `AFTER`-järjestys hyväksytyn taulukon mukaan, kirjasto tarinaan, `WHEN`-kortit | S | `33-moments.js` | `npm test` vihreä, `npm run pace` noin 45 min |
+| ✔ **T1** | Joonas hyväksyy kohtausvalinnan (kohta 3) | Joonas | – | hyväksytty 19.11. |
+| ✔ **T2** | `AFTER`-järjestys hyväksytyn taulukon mukaan, kirjasto tarinaan, `WHEN`-kortit | S | `33-moments.js` | tehty 0.44.0 |
 | **T3** | *Evenings.* + *Night shift.* yhdeksi hetkeksi | S | `49-second-act.js`, `50-lab.js` | yksi LABS-avain, molempien parhaat rivit säilyvät, testit vihreinä |
 | **T4** | Kamera: `shot()` ja kuusi kuvatyyppiä, `crash`-poseeraus (varjo kuvan reunasta), Less motion = leikkaus | S | uusi `45-camera.js`, `70-draw.js` | lab-kohtaus *Camera test*, jossa jokainen tyyppi kerran, kuvakaappaukset viidellä koolla |
 | **T5** | Kamerakieli tarinaan: kaksi tai kolme kohtaa per päivä ti–pe (`two` + `crash` Sannan kanssa perjantaina) | O suunnittelee, S toteuttaa | tarinatiedostot | Joonas katsoo pelaten |
 | **T6** | Jousiviive varjon vartaloon (kohta 7.1) | S | `70-draw.js`, `60-update.js` | kotimatkan kuvakaappaus: ei kampivaikutelmaa, Less motion ilman keinuntaa |
 | **T7** | Lab-klooni: katuvalojen välit (kohta 7.2) | S | uusi `52-lamps.js` | vertailu Joonakselle |
-| **T8** | Toinen laatikko: siemenrivi maanantaihin ja paljastuskohtaus (kohta 2) | **O** (teksti), S (välähdykset) | `30-story-monday.js`, uusi `36-drawer.js` | Joonas hyväksyy tekstin, testit vihreinä |
+| ✔ **T8** | Toinen laatikko: siemenrivi maanantaihin ja paljastuskohtaus (kohta 2) | **O** | `keep()`, `KEPT`, `openDrawer()` (`20-engine.js`), `drawerReveal()` (`50-lab.js`) | tehty 0.44.0. Joonas arvioi pelaten. Välähdyskuvat (REPLAY · OTHER ANGLE) ovat jatkoidea: nyt paljastus tehdään korteilla. |
 | **T9** | Lisäkohtausvalikko tilanteen mukaan nimettynä, avautuu maanantain jälkeen, lab vain `?lab` (kohta 4) | S | `80-ui.js`, `28-progress.js` | tallennustesti: avautuminen säilyy |
 | **T10** | Epilogianimaatio (kohta 6) | S (moottori), O (välähdysten valinta) | uusi `37-epilogue.js` | Joonaksen kappale, tahdistus testattu selaimessa |
-| **T11** | *By the radiator.* lopputekstien jälkeen | S | `33-moments.js` | näkyy vain tarinan lopussa |
+| ✔ **T11** | *By the radiator.* lopputekstien jälkeen | S | `33-moments.js` | tehty 0.44.0 (kortti ”THE NEXT TUESDAY”) |
 | **T12** | Pelaajatesti 2 (kohta 9) | Joonas | – | vastaukset kirjattu tähän |
 
 **Järjestys:** T1 → T2 → T3 → T12 (testi) → T8 → T4 → T5 → T6 → T9 → T10 → T11. T7 voidaan tehdä milloin tahansa. Tarina ennen kameraa: kamerakieli valitaan kohtauksiin, jotka jäävät peliin.
