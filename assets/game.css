@@ -158,3 +158,5 @@ html.immersive body.playing .line p.loud{font-size:calc(18px * var(--ts,1))}html
 /* Part cards: the button arrives after the title and caption (PARTWAIT in src/40-backdrops.js). */
 .opt.late{animation:optLate .45s ease 2.3s both}
 @keyframes optLate{from{opacity:0}to{opacity:1}}
+/* A long menu (Moments, Scenario lab) must scroll from its top: centring with align-items cut the first rows off. Auto margins centre short cards and let tall ones scroll. */
+.ov{align-items:flex-start}.ov>.card{margin-top:auto;margin-bottom:auto}

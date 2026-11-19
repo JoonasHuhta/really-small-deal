@@ -22,7 +22,7 @@ DRIVE='''([target,pick])=>{const T=__T;window.requestAnimationFrame=()=>0;window
 CHECK='''()=>{const vw=innerWidth,vh=innerHeight,out=[];const de=document.documentElement;
  if(de.scrollHeight>vh+1||de.scrollWidth>vw+1)out.push('page scrolls '+de.scrollWidth+'x'+de.scrollHeight);
  const pp=document.querySelector('#play-panel');if(pp&&getComputedStyle(pp).display!=='none'&&pp.scrollHeight>pp.clientHeight+1)out.push('panel overflows by '+(pp.scrollHeight-pp.clientHeight));
- const ov=document.querySelector('#ov');if(ov.classList.contains('on')&&ov.scrollHeight>ov.clientHeight+1)out.push('overlay scrolls by '+(ov.scrollHeight-ov.clientHeight));
+ const ov=document.querySelector('#ov');/* long lists (Moments, Scenario lab) are meant to scroll; it must start at the top */if(ov.classList.contains('on')&&ov.scrollTop>1)out.push('overlay opens scrolled');if(ov.classList.contains('on')&&!ov.querySelector('.lab-list .lab:nth-child(7)')&&ov.scrollHeight>ov.clientHeight+1)out.push('overlay scrolls by '+(ov.scrollHeight-ov.clientHeight));
  const vis=e=>{const r=e.getBoundingClientRect(),cs=getComputedStyle(e);return r.width>0&&r.height>0&&cs.visibility!=='hidden'&&cs.display!=='none';};
  document.querySelectorAll('button').forEach(b=>{if(!vis(b))return;let p=b;while(p){if(p.tagName==='DIALOG'&&!p.open)return;p=p.parentElement;}const r=b.getBoundingClientRect();const name=(b.textContent||b.id).trim().slice(0,22);
    const inScroll=b.closest('#ov')||b.closest('.chat-transcript')||b.closest('dialog');
@@ -33,7 +33,7 @@ CHECK='''()=>{const vw=innerWidth,vh=innerHeight,out=[];const de=document.docume
  for(let i=1;i<nav.length;i++){const a=nav[i-1],b=nav[i];const sameRow=b.top<a.bottom-1&&b.bottom>a.top+1;if(sameRow&&b.left<a.right-1)out.push('nav buttons overlap');}
  return out;}'''
 STATES=[
- ('title',None,None,0),('title-save',None,None,0),('about',"__T.about()",None,0),('chapters',"__T.chapters()",None,0),('lab-list',"document.querySelector('[data-go=lab]').click()",None,0),
+ ('title',None,None,0),('title-save',None,None,0),('about',"__T.about()",None,0),('chapters',"__T.chapters()",None,0),('lab-list',"__T.labList()",None,0),('moments',"localStorage.setItem('ekskyysmi.save',JSON.stringify({version:2,ch:5,unlocked:5,chapters:{1:{},2:{},3:{},4:{},5:{}}}));__T.moments()",None,0),
  ('intro-skip',"__T.start()",'time',0),('longline',"__T.start('B',true)",'longline',0),('choice',"__T.start('B',true)",'choice',0),('stretch',"__T.start('B',true)",'stretch',0),('hold',"__T.start('B',true)",'hold',1),
  ('choice4',"__T.chapter(3)",'choice4',0),('fight-flow',"__T.lab('comments')",'flow',0),('fight-paced',"__T.lab('comments')",'paced',1),('chatlog',"__T.lab('comments')",'chatlog',1),
  ('glass',"__T.lab('glass')",'choice',0),('bar',"__T.lab('bar')",'choice',0),('lab-end',"__T.lab('enhance')",'ended',0),('monday-end',"__T.start('B',true)",'ended',0),

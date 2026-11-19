@@ -8,6 +8,8 @@
 
 > **Tila 0.45.0 (19.11.):** ✔ T4 (ydin): `src/45-camera.js` sisältää `shot('wide'|'two'|'close'|'push'|'crash', {who, z, rate, hide})`, ja maanantain jälkeen laukaisut kehystävät laukaisijan ja menevät syvemmälle (`hitFrame`). Less motion -asetuksella liikkeet ovat leikkauksia. T5 aloitettu: keskiviikkona Eeron syy on lähikuvassa, ja perjantaina Sanna ja ihminen ovat kahden hahmon lähikuvassa ilman varjoa, kunnes Ekskyysmi ilmestyy kuvaan repliikillä ”Looking busy was my idea.” Lisäksi Toisen laatikon siemen: perjantain ”There is NOW.” -repliikin edellä on `fib` (varjo valehtelee). Korjattu: yöllä sänky ja sohva olivat päällekkäin (sohva piilotetaan, kun sänky on esillä), ja puheääni loppui pitkissä repliikeissä ennen tekstiä (ääni ajastetaan nyt samalla laskulla kuin tekstin näyttäminen, `speak`). Seuraavaksi T5:n jatko (kaksi tai kolme kuvaa per päivä ti–to), T6 ja T9. Se korvaa CODEX_JATKO.md:n työjonon (P1–P8) järjestyksen. Vanhat dokumentit ovat taustaa.
 
+> **Tila 0.46.0 (19.11.):** ✔ T9: aloitusvalikon *Moments* (Situations + From the story, `showMoments` tiedostossa `50-lab.js`, tallennuksen `done` merkitään loppukuvassa), Scenario lab vain `?lab`. ✔ T6 (ensiversio): jousiviive hartioissa (`M.sp`, `60-update.js`) ja kävelykeinunta (`geom`, `70-draw.js`); Joonas arvioi kotimatkalla. Korjattu: valokeila varjon päälle, pitkät valikot vierivät ylhäältä. Seuraavaksi T5 (kamerakieli ti–to), T7 (lamppuvälit), T12.
+
 Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, valmiiksi määriteltyinä tehtävinä, jotka halvempi malli (Sonnet tai Codex) voi tehdä. Opus tarvitaan vain tarinapäätöksiin ja uuteen dialogiin.
 
 ---
@@ -179,10 +181,10 @@ Jokaisessa tehtävässä: muokkaa vain `src/`-tiedostoja, aja `npm test` (story 
 | ✔ **T3** | *Evenings.* + *Night shift.* yhdeksi hetkeksi | S | `33-moments.js` (`NOCARD`), `50-lab.js` | tehty 0.44.1: ei korttia välissä, käsikirjoitukset ennallaan |
 | ✔ **T4** | Kamera: `shot()` ja kuvatyypit, `crash`, Less motion = leikkaus | S | `45-camera.js`, `60-update.js` (`camRate`), `20-engine.js` (`hitFrame`) | tehty 0.45.0 (`insert` hoidetaan edelleen Enhance-zoomilla) |
 | **T5** | Kamerakieli tarinaan: kaksi tai kolme kohtaa per päivä ti–pe (`two` + `crash` Sannan kanssa perjantaina) | O suunnittelee, S toteuttaa | tarinatiedostot | Joonas katsoo pelaten |
-| **T6** | Jousiviive varjon vartaloon (kohta 7.1) | S | `70-draw.js`, `60-update.js` | kotimatkan kuvakaappaus: ei kampivaikutelmaa, Less motion ilman keinuntaa |
+| ✔ **T6** | Jousiviive varjon vartaloon (kohta 7.1) | S | `70-draw.js`, `60-update.js` | kotimatkan kuvakaappaus: ei kampivaikutelmaa, Less motion ilman keinuntaa |
 | **T7** | Lab-klooni: katuvalojen välit (kohta 7.2) | S | uusi `52-lamps.js` | vertailu Joonakselle |
 | ✔ **T8** | Toinen laatikko: siemenrivi maanantaihin ja paljastuskohtaus (kohta 2) | **O** | `keep()`, `KEPT`, `openDrawer()` (`20-engine.js`), `drawerReveal()` (`50-lab.js`) | tehty 0.44.0. Joonas arvioi pelaten. Välähdyskuvat (REPLAY · OTHER ANGLE) ovat jatkoidea: nyt paljastus tehdään korteilla. |
-| **T9** | Lisäkohtausvalikko tilanteen mukaan nimettynä, avautuu maanantain jälkeen, lab vain `?lab` (kohta 4) | S | `80-ui.js`, `28-progress.js` | tallennustesti: avautuminen säilyy |
+| ✔ **T9** | Lisäkohtausvalikko tilanteen mukaan nimettynä, avautuu maanantain jälkeen, lab vain `?lab` (kohta 4) | S | `80-ui.js`, `28-progress.js` | tallennustesti: avautuminen säilyy |
 | **T10** | Epilogianimaatio (kohta 6) | S (moottori), O (välähdysten valinta) | uusi `37-epilogue.js` | Joonaksen kappale, tahdistus testattu selaimessa |
 | ✔ **T11** | *By the radiator.* lopputekstien jälkeen | S | `33-moments.js` | tehty 0.44.0 (kortti ”THE NEXT TUESDAY”) |
 | **T12** | Pelaajatesti 2 (kohta 9) | Joonas | – | vastaukset kirjattu tähän |

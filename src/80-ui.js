@@ -37,7 +37,7 @@ function showTitle(){
    (sv?'<button class="go" type="button" data-go="cont">Continue · '+(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">New game</button>'
       :'<button class="go" type="button" data-go="start">New game <span aria-hidden="true">→</span></button>')+
    '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">Chapters</button>':'')+
-   '<button class="link" type="button" data-go="lab">Scenario lab</button><button class="link" type="button" data-go="settings">Settings</button><button class="link" type="button" data-go="about">About</button></div>');
+   '<button class="link" type="button" data-go="moments">Moments</button>'+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">Settings</button><button class="link" type="button" data-go="about">About</button></div>');
   render();
 }
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
@@ -75,6 +75,7 @@ ov.addEventListener('click',function(e){
   if(go==='copyrcpt'){copyReceipt(t);return;}
   if(go==='sharercpt'){shareReceipt(t);return;}
   if(go==='lab'){reset(null);showLab();return;}
+  if(go==='moments'){reset(null);showMoments();return;}
   if(go==='chapters'){showChapters();return;}
   if(go==='about'){showAbout();return;}
   if(go==='start')startGame(null,false);

@@ -50,6 +50,11 @@ function update(dt,elapsed){
   if(M.st==='free'||M.st==='pokka')M.s=approach(M.s,base,(M.s<base?1.5:1.1)*dt);
   else if(M.st==='hide')M.s=ease(M.s,1.25,5*dt);
   M.off=ease(M.off,M.st==='hide'?0:offT,6*dt);
+  // Spring lag (TYOSUUNNITELMA 7.1): the feet stay on the human, the shoulders trail a little and settle with one small sway.
+  // It takes away the crank look on the walk home. Less motion: no lag, no sway. A jump (new scene) snaps.
+  var spT=Hm.x+M.off,sdt=Math.min(dt,0.05);
+  if(!M.sp||RM||Math.abs(M.sp.x-spT)>160)M.sp={x:spT,v:0};
+  else{M.sp.v+=((spT-M.sp.x)*38-M.sp.v*7)*sdt;M.sp.x+=M.sp.v*sdt;}
   updHands(dt);
   // When the two of them trade short lines, the camera leans in a little. It lets go at the first long sentence.
   var bk=g.w||g.out||g.lens||g.draft||g.bar||M.asleep?0:clamp(((g.bick||0)-2)/4,0,1),tz=g.cz+(M.st==='frozen'?0.02:0)+0.075*bk;if(RM)tz=1+(tz-1)*0.4;

@@ -159,6 +159,7 @@ for(const day of ['A','B','C'])for(let v=0;v<4;v++){
   assert.equal(tr.includes('The board games might need somewhere to unwind.'),T.G.afterparty);
   assert.equal(tr.includes('By the way, thanks for the handout.'),T.G.handout);
   assert.match(element('ov').innerHTML,/Still here\. Both of you/);
+  assert.equal(JSON.parse(savedItems.get('ekskyysmi.save')).done,true,'the ending is remembered for the Moments menu');
   weeks++;
 }
 // Chapter select starts mid-week and still reaches the end; Friday can be started with the new job in place.
@@ -179,6 +180,14 @@ assert.equal(saved.ch,3,'continue follows the chapter actually selected');assert
 assert.deepEqual(saved.chapters[5],checkpointFixture.chapters[5],'replaying an earlier chapter must preserve later histories');
 T.title();assert.match(element('ov').innerHTML,/Continue · Could you just…/);assert.match(element('ov').innerHTML,/data-go="chapters"/);assert.doesNotMatch(element('ov').innerHTML,/data-ch=/,'the title screen stays small');
 T.chapters();assert.match(element('ov').innerHTML,/data-ch="5"/);assert.match(element('ov').innerHTML,/Oh, hi\. Again\./);assert.match(element('ov').innerHTML,/Not necessarily that one/i);T.about();assert.match(element('ov').innerHTML,/You play Ekskyysmi/);T.title();
+// Moments menu: extras by situation after Monday, story moments once seen, the last day's only after the ending. The full lab is ?lab only.
+{const keep=savedItems.get(saveKey);
+ T.title();assert.match(element('ov').innerHTML,/data-go="moments"/);assert.doesNotMatch(element('ov').innerHTML,/data-go="lab"/);
+ T.moments();let h=element('ov').innerHTML;assert.match(h,/data-lab="sometime"/);assert.match(h,/data-lab="glass"/);assert.match(h,/data-lab="library"/);
+ assert.doesNotMatch(h,/data-lab="radiator"|data-lab="comments"/,'the ending stays hidden until it has been played');
+ const done=JSON.parse(keep);done.done=true;savedItems.set(saveKey,JSON.stringify(done));T.moments();assert.match(element('ov').innerHTML,/data-lab="radiator"/);
+ savedItems.set(saveKey,JSON.stringify({version:2,ch:1,unlocked:1,chapters:{1:{}}}));T.moments();assert.match(element('ov').innerHTML,/Not yet\./);
+ savedItems.set(saveKey,keep);}
 T.chapter(4);assert.equal(T.G.day,'B');assert.equal(T.G.yes,5);assert.equal(T.G.afterparty,true);
 T.chapter(5);assert.equal(T.G.leak,'exit');assert.equal(T.G.real,1);assert.equal(T.G.txt,'cancel');assert.equal(T.G.handout,true);
 assert.equal(T.G.metSannaShadow,true,'Friday restores the earlier meeting');assert.equal(T.G.posting,'open');assert.equal(T.G.nothings,2);

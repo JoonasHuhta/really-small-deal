@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.46.0 (Claude, 19.11.2026): **valokeila, Moments-valikko (T9) ja jousiviive (T6).**
+- Valokeila piirretään seinävarjon päälle ja ihmisen alle: valo on ilmassa seinän edessä, joten Ekskyysmi jää sen taakse ja vaalenee hieman (Joonaksen havainto).
+- Aloitusvalikossa on *Moments* (T9). *Situations*: kuusi lisäkohtausta tilanteen mukaan nimettynä, avautuvat maanantain jälkeen. *From the story*: tarinan hetket sitä mukaa kuin ne on nähty; viimeisen päivän hetket vasta kun loppu on nähty (tallennukseen `done`). Koko *Scenario lab* vain osoitteella `?lab`.
+- Pitkä valikko vierii nyt ylhäältä: keskitys leikkasi aiemmin listan alun pois (koski myös Scenario labia).
+- Varjon hartiat seuraavat ihmistä jousella (jalat kiinni) ja kotimatkalla vartalo keinuu hitaasti puoli askelta myöhässä. Less motion: ei viivettä eikä keinuntaa.
+
 Versio 0.45.1 (Claude, 19.11.2026): **kriittinen luenta ja korjaukset** (TYOSUUNNITELMA.md kohta 11).
 
 - About: ”one small plan: ask Sanna from work to lunch” ja ”The one thing that is, is unfair on purpose. Conversations don’t wait either.” Mahtuu pystypuhelimeen ilman vieritystä.

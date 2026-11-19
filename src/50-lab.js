@@ -24,7 +24,7 @@ var LABS={
 };
 function labScene(o){return [scene(o),function(){
   var g=G;g.planText=o.plan;g.hud=true;g.plan=true;g.fade=0;
-  if(g.lab){g.label='Scenario lab / '+o.title;newDay();return;}
+  if(g.lab){g.label=(DEVLAB?'Scenario lab / ':'Moments / ')+o.title;newDay();return;}
   // In the story the same scene opens with a card, like any other moment.
   g.label=o.title;if(NOCARD[g.moment]){g.fade=1;return;}   // continues the moment before it, without a new card
   g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0};stopVoice();sfx('card');
@@ -33,6 +33,24 @@ function startLab(id){
   reset('B');var g=G;g.started=true;g.lab=id;
   Q=LABS[id].script().concat([function(){showLabEnd(id);}]);run();
 }
+// Moments (TYOSUUNNITELMA.md section 4): for players. Extras are named by the situation, so someone can find the one that
+// hurts right now; they open after the first day, because Monday teaches the language. Story moments appear once played,
+// so the ending is never spoiled. The full Scenario lab is a development tool: index.html?lab.
+var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}catch(e){return false;}})();
+var EXTRAS=['detail','sometime','reply','voice','posting','footage'];
+var SITUATION={detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
+  voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
+function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
+function showMoments(){
+  var sv=loadProgress(),top=sv?sv.unlocked||1:1,h='<div class="eyebrow">Moments</div>';
+  if(top<2){showOv(h+'<h2>Not yet.</h2><p>More moments open after the first day.</p><button class="go alt" type="button" data-go="menu">Back to title</button>','menu');return;}
+  h+='<h2>Play a moment.</h2><p>On its own, outside the story.</p><div class="eyebrow">Situations</div><div class="lab-list">';
+  for(var i=0;i<EXTRAS.length;i++)if(LABS[EXTRAS[i]])h+=momentButton(EXTRAS[i],SITUATION[EXTRAS[i]]);
+  h+='</div><div class="eyebrow">From the story</div><div class="lab-list">';
+  var last=sv.done?5:top-1;
+  for(var c=1;c<=last;c++)for(var j=0;AFTER[c]&&j<AFTER[c].length;j++){var id=AFTER[c][j];if(LABS[id])h+=momentButton(id,LABS[id].blurb);}
+  showOv(h+'</div><button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
+}
 function showLab(){
   var h='<div class="eyebrow">Scenario lab</div><h2>Try a scene.</h2><p>Every short scene on its own, including the ones not in the story yet.</p><div class="lab-list">';
   for(var k in LABS)h+='<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+LABS[k].blurb+'</span></button>';
@@ -40,8 +58,8 @@ function showLab(){
 }
 function showLabEnd(id){
   var g=G;g.ended=true;g.labEnd=true;WAIT=null;Q=[];render();
-  showOv('<div class="eyebrow">Scenario lab</div><h2>'+LABS[id].title+'</h2><p>That was the whole scene. Was it funny? Did it land?</p>'+
-   '<button class="go" type="button" data-lab="'+id+'">Play it again →</button><button class="go alt" type="button" data-go="lab">Other scenes</button><button class="go alt" type="button" data-go="menu">Title screen</button>','end');
+  showOv('<div class="eyebrow">'+(DEVLAB?'Scenario lab':'Moments')+'</div><h2>'+LABS[id].title+'</h2><p>'+(DEVLAB?'That was the whole scene. Was it funny? Did it land?':'That was the whole moment.')+'</p>'+
+   '<button class="go" type="button" data-lab="'+id+'">Play it again →</button><button class="go alt" type="button" data-go="'+(DEVLAB?'lab':'moments')+'">Other moments</button><button class="go alt" type="button" data-go="menu">Title screen</button>','end');
 }
 
 /* ---------- Enhance: the eyebrow ---------- */

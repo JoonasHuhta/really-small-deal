@@ -26,20 +26,24 @@ function loadProgress(){
     var at=null,a=raw.at;
     if(a&&a.ch===raw.ch&&typeof a.moment==='string'&&(AFTER[a.ch]||[]).indexOf(a.moment)>=0&&a.state&&typeof a.state==='object')
       at={ch:a.ch,moment:a.moment,state:checkpoint(a.state),jobDone:!!a.jobDone};
-    return {version:2,ch:raw.ch,unlocked:top,chapters:chapters,at:at};
+    return {version:2,ch:raw.ch,unlocked:top,chapters:chapters,at:at,done:raw.done===true};
   }catch(e){return null;}
 }
 function saveProgress(n){
   try{
     var old=loadProgress(),chapters=old?old.chapters:{};
     chapters[n]=checkpoint(G);
-    window.localStorage.setItem(SAVE_KEY,JSON.stringify({version:2,ch:n,unlocked:Math.max(n,old?old.unlocked:1),chapters:chapters}));
+    window.localStorage.setItem(SAVE_KEY,JSON.stringify({version:2,ch:n,unlocked:Math.max(n,old?old.unlocked:1),chapters:chapters,done:!!(old&&old.done)}));
   }catch(e){/* Storage is optional: private/offline play must still work. */}
+}
+// The whole story has been seen once: the Moments menu may then show the last day's moments too.
+function saveDone(){
+  try{var raw=JSON.parse(window.localStorage.getItem(SAVE_KEY)||'null');if(!raw||typeof raw!=='object')return;raw.done=true;window.localStorage.setItem(SAVE_KEY,JSON.stringify(raw));}catch(e){}
 }
 function saveMoment(id){
   try{
     var old=loadProgress();if(!old||old.ch!==G.chapter)return;
-    window.localStorage.setItem(SAVE_KEY,JSON.stringify({version:2,ch:old.ch,unlocked:old.unlocked,chapters:old.chapters,
+    window.localStorage.setItem(SAVE_KEY,JSON.stringify({version:2,ch:old.ch,unlocked:old.unlocked,chapters:old.chapters,done:old.done,
       at:{ch:G.chapter,moment:id,state:checkpoint(G),jobDone:!!G.jobDone}}));
   }catch(e){}
 }
