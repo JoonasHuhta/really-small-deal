@@ -14,6 +14,10 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.50.1 (Claude, 20.11.2026): **epilogi löytyy ja on parempi.**
+- *Moments*-valikossa on alfan ajan osio *Work in progress*, josta keskeneräiset luonnokset (nyt epilogi) aukeavat ilman `?lab`-osoitetta, myös artifaktissa ja sovelluksessa.
+- Epilogi: kuittirivit erillisinä otsikkona ja arvona (pisteet piirretään, käännettävissä), Sanna vilkuttaa lounaskuvassa, oma kuva muiden varjoille (”OTHER PEOPLE’S SHADOWS … ALSO ON SHIFT”), pelaajan omat menetelmät kuittina (esim. ”EXITS, TAKEN ×6”), ja viimeisenä ”DAYS LIVED TODAY … 1.0 – inside and outside, the same day. first time this week.” Noin 66 s.
+
 Versio 0.50.0 (Claude, 20.11.2026): **maanantain kappale pois, epilogin ensimmäinen luonnos labiin.**
 - Maanantain taustakappale (`monday.mp3`) on poistettu pelistä: ei soittoa, ei `MUSIC`-merkintää, ei tiedostoa repossa. `tools/www.cjs` ottaa sovellukseen vain ne äänitiedostot, jotka `game.js` mainitsee, joten vaikka tiedosto jäisi kansioon, se ei päädy APK:hon.
 - **Epilogue, first sketch.** (vain `?lab`, T10 ilman musiikkia): yhdeksän pehmeää välähdystä viikosta (lounas, Eeron diat, puoli sivua, pahimmat skenaariot 0 *, kirjaston €4.60, piirros ja 0 suljettua tiliä, kehut oikeassa laatikossa), kuittirivi kussakin, ristihäivytys ja hidas työntö, lopuksi tekijärivi. Noin 52 s. Ajoitus on arvaus, kunnes kappale on olemassa (`EPI` tiedostossa `37-epilogue.js`).

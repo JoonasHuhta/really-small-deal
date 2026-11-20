@@ -44,15 +44,18 @@ var EXTRAS=['detail','sometime','reply','voice','posting','footage'];
 var SITUATION={detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
+// Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
+var WIP=['epilogue'];
+function wipList(){var h='<div class="eyebrow">Work in progress</div><div class="lab-list">';for(var i=0;i<WIP.length;i++)if(LABS[WIP[i]])h+=momentButton(WIP[i],LABS[WIP[i]].blurb);return h+'</div>';}
 function showMoments(){
   var sv=loadProgress(),top=sv?sv.unlocked||1:1,h='<div class="eyebrow">Moments</div>';
-  if(top<2){showOv(h+'<h2>Not yet.</h2><p>More moments open after the first day.</p><button class="go alt" type="button" data-go="menu">Back to title</button>','menu');return;}
+  if(top<2){showOv(h+'<h2>Not yet.</h2><p>More moments open after the first day.</p>'+wipList()+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');return;}
   h+='<h2>Play a moment.</h2><p>On its own, outside the story.</p><div class="eyebrow">Situations</div><div class="lab-list">';
   for(var i=0;i<EXTRAS.length;i++)if(LABS[EXTRAS[i]])h+=momentButton(EXTRAS[i],SITUATION[EXTRAS[i]]);
   h+='</div><div class="eyebrow">From the story</div><div class="lab-list">';
   var last=sv.done?5:top-1;
   for(var c=1;c<=last;c++)for(var j=0;AFTER[c]&&j<AFTER[c].length;j++){var id=AFTER[c][j];if(LABS[id])h+=momentButton(id,LABS[id].blurb);}
-  showOv(h+'</div><button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
+  showOv(h+'</div>'+wipList()+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
 }
 function showLab(){
   var h='<div class="eyebrow">Scenario lab</div><h2>Try a scene.</h2><p>Every short scene on its own, including the ones not in the story yet.</p><div class="lab-list">';
