@@ -4,7 +4,8 @@
 // The human turns on the shadow. The explosion is shown from outside (the neighbour), never from inside.
 // Comedy before and after, none during. Ekskyysmi never agrees with the self-hatred, and offers no fix.
 // “(Say nothing.)” is on the menu and still greyed out: this is before Thursday rewrites the job.
-function spill(){var g=G;g.torn=true;sfx('hit');for(var k=0;k<16;k++)g.tics.push(tic('•',560+Math.random()*240,FEETY-4+Math.random()*12,{at:k*0.03,life:60,size:9+Math.random()*5,col:k%3?'#e2b04a':'#c9553f'}));}
+function spill(){crumbs();sfx('hit');}
+function crumbs(){var g=G;g.torn=true;for(var k=0;k<16;k++)g.tics.push(tic('•',560+Math.random()*240,FEETY-4+Math.random()*12,{at:k*0.03,life:60,size:9+Math.random()*5,col:k%3?'#e2b04a':'#c9553f'}));}
 function labBag(){return labScene({set:'home',title:'The bag.',plan:'Eat something. Then the evening.',clock:18*3600+39*60,snacks:1}).concat([
   function(){var g=G;g.torn=false;g.human.grin=3;g.human.x=g.human.xT=560;g.morko.sT=1.2;},
   ['N','18:39. Home. The face from work is still on.'],

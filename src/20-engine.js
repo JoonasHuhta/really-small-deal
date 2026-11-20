@@ -44,8 +44,9 @@ function advance(){if(paused||LOCK>0||WAIT==='qte'||WAIT==='auto')return;if(G.ch
 function choose(i){
   if(paused||WAIT!=='choice'||LOCK>0||!CH||!CH[i])return;
   if(CH[i].off){nope(i);return;}
-  clearPreview();var o=CH[i];CH=null;sfx('pick');if(o.f)o.f();
-  if(o.m){var mm=G.methods||(G.methods={});mm[o.m]=(mm[o.m]||0)+1;}   // Ekskyysmi’s methods, for the week’s receipt
+  clearPreview();var o=CH[i];CH=null;sfx('pick');if(o.f)o.f();if((G.choiceWho||'S')==='S')G.firstPick=true;
+  if(o.m){var mm=G.methods||(G.methods={});mm[o.m]=(mm[o.m]||0)+1;}
+  if(o.filed)G.pop={text:'Ekskyysmi filed that.',t:0};   // only on choices that come back later: the parody of “X will remember that”   // Ekskyysmi’s methods, for the week’s receipt
   var then=typeof o.then==='function'?o.then():(o.then||[]);
   Q=(o.hush?[]:[[G.choiceWho||'S',o.t]]).concat(then,Q);run();
 }
@@ -86,7 +87,7 @@ function render(){
   cv.classList.toggle('stretching',WAIT==='stretch');
   cv.setAttribute('aria-label',g.chap&&g.chap.part?g.chap.day+'. '+g.chap.title:g.finalFrame?'The human is asleep. A lamp stays on. Ekskyysmi makes a bird with its hands.':'A human and a very large shadow');
   if(WAIT==='choice'&&CH){
-    speaker=g.choiceWho||'S';text=g.nopeMsg||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':'What do we do with this?');
+    speaker=g.choiceWho||'S';text=g.nopeMsg||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':g.chapter===1&&!g.lab&&!g.firstPick?'You’re Ekskyysmi. Pick what I say.':'What do we do with this?');   // the very first choice says who the player is
     if(g.form&&g.form.i>=0){speaker='N';text=FORM_Q[g.form.i].q;}
     for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(CH[i].t)+' <em>Not a setting. Yet.</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>';
   }else if(WAIT==='stretch'){
@@ -133,6 +134,7 @@ function render(){
   // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
   elLine.classList.toggle('echo',!textBelow&&WAIT==='click'&&(g.out?true:!!cur&&lineInBubble(cur)));
   elOpts.innerHTML=html;
+  elOpts.classList.toggle('who-S',WAIT==='choice'&&(g.choiceWho||'S')==='S');elOpts.classList.toggle('who-H',WAIT==='choice'&&g.choiceWho==='H');   // whose words these are, in their colour
   if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
     var nextControl=elOpts.querySelector('[data-i=read]');if(nextControl&&!nextControl.disabled)nextControl.focus();
   }
@@ -140,7 +142,7 @@ function render(){
   if(WAIT==='fight'&&g.fight.paced)document.getElementById('hint').textContent='No timer. Use the buttons to read or swat. Space / Enter or tapping the scene swats.';
   if(g.chap&&g.chap.part)document.getElementById('hint').textContent='A place to pause. Continue when you’re ready.';
   if(g.finalFrame)document.getElementById('hint').textContent='Stay a little, if you like.';
-  else if(WAIT==='click'&&hotOn())document.getElementById('hint').textContent+=' · Things in the room can be tapped.';
+  else if(WAIT==='click'&&hotOn())document.getElementById('hint').textContent='Space / Enter to continue · P to pause · Dialogue to look back · Things in the room can be tapped.';   // a whole line, not a joined one: it has to translate
   if(WAIT==='auto')document.getElementById('hint').textContent='The human can answer without checking with Ekskyysmi.';
   resize();
 }
@@ -192,6 +194,7 @@ function lineInBubble(l){var g=G;
   if(!WIDE||(cv.clientWidth||0)<740)return false;                 // bubble text under ~13 px: the panel stays
   if(textStep>1)return false;   // the player asked for large text: the panel reads better than a bubble
   if(l.big&&l.who==='S')return true;
+  if(l.who==='N')return !!g.band;   // the narrator is printed in the scene's bottom band
   if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)return false;if(l.who==='S'&&g.morko.asleep)return false;
   if(l.who==='T'||l.who==='X')return !!g.bar;
   return 'SHABPRLZYW'.indexOf(l.who)>=0;}

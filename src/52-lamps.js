@@ -3,15 +3,18 @@
 // between street lamps the wall shadow fades and falls behind, then sprints to catch up under the next lamp.
 // Underneath it is an RSD thing said once and lightly: losing sight of someone feels like losing them.
 function until(fn){return function step(){return fn()?[]:[{wait:0.3},step];};}
+// Monday’s walk home gets exactly one lamp gap (TYOSUUNNITELMA §12: a joke once, not a rule).
+function oneLampGap(){var g=G;g.gapWalk=true;g.gapOnce=true;g.gapLag=0;g.gapA=1;g.gapCaught=0;g.gapArmed=false;}
 function gapStep(dt){
   var g=G,M=g.morko;if(!g.gapWalk||!g.w)return 0;
+  if(g.gapOnce&&g.gapCaught>=1&&(g.gapLag||0)<1&&g.gapA>0.97){g.gapWalk=false;g.gapLag=0;return 0;}
   var dmin=1e9;for(var i=0;i<LAMPS.length;i++)dmin=Math.min(dmin,Math.abs(LAMPS[i]-g.w.x));
   var gap=clamp((dmin-90)/110,0,1);
   g.gapA=approach(g.gapA==null?1:g.gapA,1-0.62*gap,1.6*dt);
   if(gap>0.6&&g.walking){g.gapLag=approach(g.gapLag||0,150,(RM?150:20)*dt);g.gapArmed=true;}
   else if(gap<0.3){
     if(g.gapArmed&&(g.gapLag||0)>50){g.gapArmed=false;g.gapCaught=(g.gapCaught||0)+1;
-      var q=geom();g.tics.push(tic(g.gapCaught===1?'Wait. WAIT. Lamp gap.':'Coming. COMING.',clamp(q.bx,150,W-150),Math.max(70,q.hdY-q.hdR-26),{life:2.2,size:17}));sfx('pick');}
+      var q=geom();g.tics.push(tic(g.gapCaught===1?'Wait. WAIT. Lamp gap.':'Coming. COMING.',clamp(q.bx+170,150,W-150),Math.max(80,q.hdY),{life:2.2,size:17}));sfx('pick');}
     g.gapLag=approach(g.gapLag||0,0,(RM?400:240)*dt);
   }
   return g.gapLag||0;

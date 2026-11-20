@@ -19,18 +19,18 @@ function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Rea
   ['S','Old AND relevant. Very rare. Very valuable.'],
   closeArchive,
   {choice:[
-    {t:'Archive it. For safety.',f:function(){G.posting='archived';},then:[
+    {t:'Archive it. For safety.',filed:1,f:function(){G.posting='archived';},then:[
       ['S','Done. Filed under “later”.'],
       ['N','The “later” drawer does not close properly. It has not closed properly for years.'],
       ['H','I hadn’t decided anything.'],
       ['S','I decided for both of us. It’s quicker.']]},
-    {t:'Pre-write their rejection. Save everyone time.',f:function(){G.posting='rejected';},then:[
+    {t:'Pre-write their rejection. Save everyone time.',filed:1,f:function(){G.posting='rejected';},then:[
       ['P','Draft: “Dear applicant. Thank you for your interest. You are too long.”'],
       ['H','They haven’t read anything.'],
       ['S','Neither have I. That’s how confident I am.'],
       ['H','You wrote a rejection. To me. From them.'],
       ['S','In their voice. I did research.']]},
-    {t:'…Ask what the human wants.',f:function(){G.posting='open';},then:[
+    {t:'…Ask what the human wants.',filed:1,f:function(){G.posting='open';},then:[
       set({mood:'surprised',s:1.05}),
       ['S','What do you… want?'],
       ['H','I want to read it again tomorrow.'],

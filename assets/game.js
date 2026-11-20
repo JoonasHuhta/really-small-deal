@@ -193,8 +193,9 @@ function advance(){if(paused||LOCK>0||WAIT==='qte'||WAIT==='auto')return;if(G.ch
 function choose(i){
   if(paused||WAIT!=='choice'||LOCK>0||!CH||!CH[i])return;
   if(CH[i].off){nope(i);return;}
-  clearPreview();var o=CH[i];CH=null;sfx('pick');if(o.f)o.f();
-  if(o.m){var mm=G.methods||(G.methods={});mm[o.m]=(mm[o.m]||0)+1;}   // Ekskyysmi’s methods, for the week’s receipt
+  clearPreview();var o=CH[i];CH=null;sfx('pick');if(o.f)o.f();if((G.choiceWho||'S')==='S')G.firstPick=true;
+  if(o.m){var mm=G.methods||(G.methods={});mm[o.m]=(mm[o.m]||0)+1;}
+  if(o.filed)G.pop={text:'Ekskyysmi filed that.',t:0};   // only on choices that come back later: the parody of “X will remember that”   // Ekskyysmi’s methods, for the week’s receipt
   var then=typeof o.then==='function'?o.then():(o.then||[]);
   Q=(o.hush?[]:[[G.choiceWho||'S',o.t]]).concat(then,Q);run();
 }
@@ -235,7 +236,7 @@ function render(){
   cv.classList.toggle('stretching',WAIT==='stretch');
   cv.setAttribute('aria-label',g.chap&&g.chap.part?g.chap.day+'. '+g.chap.title:g.finalFrame?'The human is asleep. A lamp stays on. Ekskyysmi makes a bird with its hands.':'A human and a very large shadow');
   if(WAIT==='choice'&&CH){
-    speaker=g.choiceWho||'S';text=g.nopeMsg||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':'What do we do with this?');
+    speaker=g.choiceWho||'S';text=g.nopeMsg||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':g.chapter===1&&!g.lab&&!g.firstPick?'You’re Ekskyysmi. Pick what I say.':'What do we do with this?');   // the very first choice says who the player is
     if(g.form&&g.form.i>=0){speaker='N';text=FORM_Q[g.form.i].q;}
     for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(CH[i].t)+' <em>Not a setting. Yet.</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>';
   }else if(WAIT==='stretch'){
@@ -282,6 +283,7 @@ function render(){
   // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
   elLine.classList.toggle('echo',!textBelow&&WAIT==='click'&&(g.out?true:!!cur&&lineInBubble(cur)));
   elOpts.innerHTML=html;
+  elOpts.classList.toggle('who-S',WAIT==='choice'&&(g.choiceWho||'S')==='S');elOpts.classList.toggle('who-H',WAIT==='choice'&&g.choiceWho==='H');   // whose words these are, in their colour
   if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
     var nextControl=elOpts.querySelector('[data-i=read]');if(nextControl&&!nextControl.disabled)nextControl.focus();
   }
@@ -289,7 +291,7 @@ function render(){
   if(WAIT==='fight'&&g.fight.paced)document.getElementById('hint').textContent='No timer. Use the buttons to read or swat. Space / Enter or tapping the scene swats.';
   if(g.chap&&g.chap.part)document.getElementById('hint').textContent='A place to pause. Continue when you’re ready.';
   if(g.finalFrame)document.getElementById('hint').textContent='Stay a little, if you like.';
-  else if(WAIT==='click'&&hotOn())document.getElementById('hint').textContent+=' · Things in the room can be tapped.';
+  else if(WAIT==='click'&&hotOn())document.getElementById('hint').textContent='Space / Enter to continue · P to pause · Dialogue to look back · Things in the room can be tapped.';   // a whole line, not a joined one: it has to translate
   if(WAIT==='auto')document.getElementById('hint').textContent='The human can answer without checking with Ekskyysmi.';
   resize();
 }
@@ -341,6 +343,7 @@ function lineInBubble(l){var g=G;
   if(!WIDE||(cv.clientWidth||0)<740)return false;                 // bubble text under ~13 px: the panel stays
   if(textStep>1)return false;   // the player asked for large text: the panel reads better than a bubble
   if(l.big&&l.who==='S')return true;
+  if(l.who==='N')return !!g.band;   // the narrator is printed in the scene's bottom band
   if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)return false;if(l.who==='S'&&g.morko.asleep)return false;
   if(l.who==='T'||l.who==='X')return !!g.bar;
   return 'SHABPRLZYW'.indexOf(l.who)>=0;}
@@ -735,7 +738,7 @@ var FEAR={
 };
 function fearChoice(){
   var out=[];[1,2,3].forEach(function(k){var F=FEAR[k];
-    out.push({t:F.t,m:'worst',f:function(){G.fear=k;G.morko.sT=2.1;G.morko.mood='stern';},
+    out.push({t:F.t,m:'worst',filed:1,f:function(){G.fear=k;G.morko.sT=2.1;G.morko.mood='stern';},
       then:F.a.concat([set({s:2.2}),['S',F.b],{stretch:true}])});});
   return out;
 }
@@ -778,8 +781,15 @@ function scIntro(){return [
   ]},
   set({clr:1}),
   function(){return G.advice===4?scBite():[
-    ['H','…Thanks. I’ll look into it.']
-  ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'4 seconds',cap:'Two nods. One sip. A perfectly ordinary pause.',anim:'nod'},4.4),[
+    ['H','…Thanks. I’ll look into it.'],
+    // The human’s own clumsiness, with no help from the wall: not everything is Ekskyysmi. Friday catches it (scFri).
+    ['B','Enjoy the coffee!'],
+    ['H','You too.'],
+    {wait:0.7},
+    ['S','He doesn’t HAVE a coffee.'],
+    ['H','I know.'],
+    ['S','I didn’t do that one. That was all you.',{look:'squint'}]
+  ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'4 seconds',cap:'Two nods. One sip. One “you too”. A perfectly ordinary pause.',anim:'nod'},4.4),[
     calm,
     ['S','Rejection prevented.'],prevent('nodded'),
     ['H','That wasn’t a rejection.'],
@@ -833,10 +843,10 @@ function scSpiral(){return [
   ['S','A lot can happen in two seconds. I just did all of it.'],
   ['S','Recommendation.'],
   {choice:[
-    {t:'Become furniture. Very convincing furniture.',m:'hide',preview:'hold',f:function(){G.leak='grow';},then:[['H','For how long?'],['S','Until retirement.'],prevent('furniture',1)]},
-    {t:'Study the cup. It has excellent manners.',m:'hide',preview:'cover',f:function(){G.leak='cover';},then:[['H','It’s a cup.'],['S','Not one personal remark.'],prevent('cup',1)]},
-    {t:'A strategic exit. We can come back.',m:'hide',preview:'pull',f:function(){G.leak='exit';},then:[['H','My coffee’s still here.'],['S','A convincing alibi.'],prevent('door',1)]},
-    {t:'…Say “hi” back. I’ll stay right here.',m:'stay',preview:'comfort',f:function(){G.leak='none';},then:[['S','I reserve the right to wobble.'],['H','You can wobble.']]}
+    {t:'Become furniture. Very convincing furniture.',filed:1,m:'hide',preview:'hold',f:function(){G.leak='grow';},then:[['H','For how long?'],['S','Until retirement.'],prevent('furniture',1)]},
+    {t:'Study the cup. It has excellent manners.',filed:1,m:'hide',preview:'cover',f:function(){G.leak='cover';},then:[['H','It’s a cup.'],['S','Not one personal remark.'],prevent('cup',1)]},
+    {t:'A strategic exit. We can come back.',filed:1,m:'hide',preview:'pull',f:function(){G.leak='exit';},then:[['H','My coffee’s still here.'],['S','A convincing alibi.'],prevent('door',1)]},
+    {t:'…Say “hi” back. I’ll stay right here.',filed:1,m:'stay',preview:'comfort',f:function(){G.leak='none';},then:[['S','I reserve the right to wobble.'],['H','You can wobble.']]}
   ]},
   function(){var l=G.leak;G.lines=[];return l==='grow'?[{hold:{kind:'still',secs:2.6}}]:l==='cover'?[{hold:{kind:'cover',secs:3}}]:l==='exit'?[{hold:{kind:'pull',secs:3}}]:[];},
   {wait:0.9},
@@ -914,7 +924,7 @@ function walkMenu(done){return function(){
 function scWalk(){
   var done={};
   function moreWalk(){return done.stop?[]:[{choice:walkMenu(done)},moreWalk];}
-  return [startWalk,{wait:2.6},
+  return [startWalk,oneLampGap,{wait:2.6},
     ['S','Right. Debrief. I’ve prepared slides.'],
     ['H','Please don’t have slides.'],
     ['S','Two. Slide one: the full stop.'],
@@ -955,7 +965,7 @@ function scene(o){return function(){
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
-  if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;
+  if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
 function begin(n,o){return [scene(o),function(){
@@ -1076,7 +1086,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
 function yesMenu(s,extra,extraKey){return {choice:[
   {t:'Say yes.',m:'please',f:yes,then:[['H','Sure.'],['S',s[0]]]},
   {t:'Say yes. Enthusiastically.',m:'please',f:yes,then:[['H','Sure! Happy to!'],['S',s[1]]]},
-  {t:'Say yes, and offer something extra.',m:'please',f:function(){yes();yes();if(extraKey)G[extraKey]=true;},then:[['H',extra],['S',s[2]]]},
+  {t:'Say yes, and offer something extra.',m:'please',filed:1,f:function(){yes();yes();if(extraKey)G[extraKey]=true;},then:[['H',extra],['S',s[2]]]},
   {t:'No.',off:true}
 ]};}
 function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600+20*60}).concat([
@@ -1116,7 +1126,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   {choice:[
     {t:'A “no” costs us people.',m:'worst',then:[['S','Every no is a door closing.'],['H','Every yes is me doing slides at midnight.']]},
     {t:'We could get ill. Convincingly.',m:'hide',then:[['S','A light flu. Respectable. Nobody rejects the ill.'],['H','I’m not faking flu to avoid a two-letter word.']]},
-    {t:'What if we said… “not this time”?',m:'stay',f:function(){G.coatNo=true;},then:[['S','It’s a no in a coat.'],['H','That’s further than you’ve ever gone.'],['S','I feel sick.']]},
+    {t:'What if we said… “not this time”?',filed:1,m:'stay',f:function(){G.coatNo=true;},then:[['S','It’s a no in a coat.'],['H','That’s further than you’ve ever gone.'],['S','I feel sick.']]},
     hush()
   ]},
   set({mood:'worry'}),
@@ -1172,15 +1182,22 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','WHERE WAS I.',{loud:1}],
   ['H','Twenty-one minutes.'],
   ['S','TWENTY-ONE MINUTES. Thank you. I’ve drafted some follow-ups.'],
-  {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,m:SEEN[k].m,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};});}},
+  {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,m:SEEN[k].m,filed:1,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};});}},
   function(){G.clock=18*3600+40*60;},
   ['N','18:40. Still nothing.'],
   set({s:2.5,mood:'stern',anx:0.8}),
   ['S','She hates us. Eero hates us. Riitta wants a shorter you. I’ve run the numbers. It’s unanimous.'],
-  ['H','Stop.'],
+  // The turn has a physical trigger (lab clone “The bag.”, 0.47): a whole week of holding the face, then a bag that won’t open.
+  ['H','I’m going to eat something.',{quiet:1}],
+  ['S','Good. Fuel. We’ll need it for the list.'],
+  {wait:0.9},crumbs,hit(0.9,'P'),
+  ['N','EASY OPEN. All of it. Everywhere.'],
+  ['S','Floor crisps are still crisps, if we—'],
+  ['H','Stop.',{loud:1}],
   ['S','I’m PROTECTING you.',{loud:1}],
   ['H','From what? Board games?'],
-  ['H','You’ve had me apologising to furniture all week. I’m at home with eleven bags of snacks.'],
+  weekBill,
+  ['H','I’m at home with ten bags of snacks and one on the floor.'],
   ['H','You’re not protecting me. You’re just the loudest thing in the room.'],
   shadowHit,set({sweat:0}),{wait:2.2},
   ['S','…That one landed.'],
@@ -1240,6 +1257,14 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   {wait:0.8}
  ]);}
 
+// Thursday reads the player’s own week back: the method chosen most often, as one whole sentence (translators get whole lines).
+var BILL={worst:'You’ve prepared {n} worst cases this week. None of them happened.',
+  draft:'You’ve written {n} scripts this week. I didn’t say one of them.',
+  please:'You’ve said yes for me {n} times this week. I meant maybe one.',
+  hide:'You’ve taken me out of {n} rooms this week. I wanted to stay in most of them.'};
+function fmtN(t,n){return t.replace('{n}',String(n));}
+function weekBill(){var m=G.methods||{},best=null;['hide','please','worst','draft'].forEach(function(k){if((m[k]||0)>=3&&(!best||m[k]>m[best]))best=k;});
+  return [['H',best?fmtN(BILL[best],m[best]):'You’ve had me apologising to furniture all week.']];}
 function wobbleOn(){var m=G.morko;m.wobble={t:0};m.pose='balance';m.mood='worry';G.anx=0.2;}
 function wobbleOff(){var m=G.morko;m.wobble=null;m.pose=null;if(RM)updHands(1);}
 function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).concat([
@@ -1323,6 +1348,10 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['S','…No. It’s lunch.',{look:'soft'}],
   set({face:'smile'}),
   ['H','Lunch.'],
+  ['B','Enjoy your lunch!'],
+  ['H','You t—'],{wait:0.5},
+  ['H','…Thanks, Eero.'],
+  aside(['S','Caught it. Mid-air.',{look:'pleased'}]),
   postingPayoff
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 seconds',cap:'Two colleagues going to lunch.',anim:'none'}),[
   ['S','For the record, I intend to go off again on Monday.',{look:'soft'}],
@@ -3114,15 +3143,18 @@ function labGlass(){
 // between street lamps the wall shadow fades and falls behind, then sprints to catch up under the next lamp.
 // Underneath it is an RSD thing said once and lightly: losing sight of someone feels like losing them.
 function until(fn){return function step(){return fn()?[]:[{wait:0.3},step];};}
+// Monday’s walk home gets exactly one lamp gap (TYOSUUNNITELMA §12: a joke once, not a rule).
+function oneLampGap(){var g=G;g.gapWalk=true;g.gapOnce=true;g.gapLag=0;g.gapA=1;g.gapCaught=0;g.gapArmed=false;}
 function gapStep(dt){
   var g=G,M=g.morko;if(!g.gapWalk||!g.w)return 0;
+  if(g.gapOnce&&g.gapCaught>=1&&(g.gapLag||0)<1&&g.gapA>0.97){g.gapWalk=false;g.gapLag=0;return 0;}
   var dmin=1e9;for(var i=0;i<LAMPS.length;i++)dmin=Math.min(dmin,Math.abs(LAMPS[i]-g.w.x));
   var gap=clamp((dmin-90)/110,0,1);
   g.gapA=approach(g.gapA==null?1:g.gapA,1-0.62*gap,1.6*dt);
   if(gap>0.6&&g.walking){g.gapLag=approach(g.gapLag||0,150,(RM?150:20)*dt);g.gapArmed=true;}
   else if(gap<0.3){
     if(g.gapArmed&&(g.gapLag||0)>50){g.gapArmed=false;g.gapCaught=(g.gapCaught||0)+1;
-      var q=geom();g.tics.push(tic(g.gapCaught===1?'Wait. WAIT. Lamp gap.':'Coming. COMING.',clamp(q.bx,150,W-150),Math.max(70,q.hdY-q.hdR-26),{life:2.2,size:17}));sfx('pick');}
+      var q=geom();g.tics.push(tic(g.gapCaught===1?'Wait. WAIT. Lamp gap.':'Coming. COMING.',clamp(q.bx+170,150,W-150),Math.max(80,q.hdY),{life:2.2,size:17}));sfx('pick');}
     g.gapLag=approach(g.gapLag||0,0,(RM?400:240)*dt);
   }
   return g.gapLag||0;
@@ -3667,7 +3699,8 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
 // The human turns on the shadow. The explosion is shown from outside (the neighbour), never from inside.
 // Comedy before and after, none during. Ekskyysmi never agrees with the self-hatred, and offers no fix.
 // “(Say nothing.)” is on the menu and still greyed out: this is before Thursday rewrites the job.
-function spill(){var g=G;g.torn=true;sfx('hit');for(var k=0;k<16;k++)g.tics.push(tic('•',560+Math.random()*240,FEETY-4+Math.random()*12,{at:k*0.03,life:60,size:9+Math.random()*5,col:k%3?'#e2b04a':'#c9553f'}));}
+function spill(){crumbs();sfx('hit');}
+function crumbs(){var g=G;g.torn=true;for(var k=0;k<16;k++)g.tics.push(tic('•',560+Math.random()*240,FEETY-4+Math.random()*12,{at:k*0.03,life:60,size:9+Math.random()*5,col:k%3?'#e2b04a':'#c9553f'}));}
 function labBag(){return labScene({set:'home',title:'The bag.',plan:'Eat something. Then the evening.',clock:18*3600+39*60,snacks:1}).concat([
   function(){var g=G;g.torn=false;g.human.grin=3;g.human.x=g.human.xT=560;g.morko.sT=1.2;},
   ['N','18:39. Home. The face from work is still on.'],
@@ -3745,18 +3778,18 @@ function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Rea
   ['S','Old AND relevant. Very rare. Very valuable.'],
   closeArchive,
   {choice:[
-    {t:'Archive it. For safety.',f:function(){G.posting='archived';},then:[
+    {t:'Archive it. For safety.',filed:1,f:function(){G.posting='archived';},then:[
       ['S','Done. Filed under “later”.'],
       ['N','The “later” drawer does not close properly. It has not closed properly for years.'],
       ['H','I hadn’t decided anything.'],
       ['S','I decided for both of us. It’s quicker.']]},
-    {t:'Pre-write their rejection. Save everyone time.',f:function(){G.posting='rejected';},then:[
+    {t:'Pre-write their rejection. Save everyone time.',filed:1,f:function(){G.posting='rejected';},then:[
       ['P','Draft: “Dear applicant. Thank you for your interest. You are too long.”'],
       ['H','They haven’t read anything.'],
       ['S','Neither have I. That’s how confident I am.'],
       ['H','You wrote a rejection. To me. From them.'],
       ['S','In their voice. I did research.']]},
-    {t:'…Ask what the human wants.',f:function(){G.posting='open';},then:[
+    {t:'…Ask what the human wants.',filed:1,f:function(){G.posting='open';},then:[
       set({mood:'surprised',s:1.05}),
       ['S','What do you… want?'],
       ['H','I want to read it again tomorrow.'],

@@ -14,6 +14,15 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.49.0 (Claude, 20.11.2026): **valinnoilla on seuraus, ja torstai lukee pelaajan viikon.**
+- *Ekskyysmi filed that.* välähtää vain valinnoissa, jotka palaavat myöhemmin (ma pelot ja pakotapa, ke ”not this time” ja ylimääräinen kyllä, to ”Seen”-luonnos, työpaikkailmoitus). Parodia ”X will remember that” -ilmoituksesta.
+- Torstain käänne: pussi repeää (”EASY OPEN. All of it. Everywhere.”), ja ihminen lukee pelaajan eniten käyttämän menetelmän kokonaisena lauseena, esim. ”You’ve taken me out of 6 rooms this week. I wanted to stay in most of them.” Jos mikään menetelmä ei ole toistunut kolmesti, vanha rivi jää.
+- Maanantain ensimmäinen valinta kertoo pelaajan roolin: ”You’re Ekskyysmi. Pick what I say.” Valinnoilla on puhujan väri (Ekskyysmi violetti, ihminen keltainen).
+- Ihmisen oma kömpelyys: maanantaina ”You too.” Eerolle, jolla ei ole kahvia (”I didn’t do that one. That was all you.”). Perjantaina: ”You t— …Thanks, Eero.” – ”Caught it. Mid-air.”
+- Maanantain kotimatkalla yksi lamppuväli: varjo haalistuu, jää jälkeen ja juoksee kiinni (”Wait. WAIT. Lamp gap.”), sitten ei enää.
+- Kertojan rivi piilotetaan paneelista samalla säännöllä kuin kuplat, koska se näkyy kohtauksen alareunassa.
+- Käännettävyys: vihjerivi on nyt kokonainen lause, ja sanaleikit on listattu tiedostoon `KAANNOS.md`.
+
 Versio 0.48.1 (Claude, 20.11.2026): **repliikki sanotaan kerran, ja esittely on aamurituaali.**
 - Kun repliikki näkyy luettavassa puhekuplassa (kohtaus vähintään 740 px leveä, tekstikoko ei ”large”), alapaneelin kopio piilotetaan näkyvistä ja jätetään vain ruudunlukijalle. Sama koskee ulkopuolista korttia. Kertojan rivit, valinnat ja kapea ruutu pitävät paneelitekstin. Asetus *Text below* tuo sen aina takaisin.
 - Puhelimella paneelin teksti alkaa muutaman pikselin sisempää.

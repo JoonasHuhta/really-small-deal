@@ -228,6 +228,8 @@ function stepUntil(done){let n=0;while(!done()&&n++<6000){T.unlock();T.draw();co
  T.chapter(5);stepUntil(hushAt);i=T.options().findIndex(o=>o.hush);assert.ok(!T.options()[i].off,'open on Friday');
  T.unlock();T.choose(i);stepUntil(()=>T.G.cur&&/printer/.test(T.G.cur.text));
  assert.ok(!T.G.lines.some(l=>/Say nothing/.test(l.text||'')),'the label is not spoken');}
+// Thursday reads the player’s week back as one whole line, and the bag is torn on the way.
+{T.chapter(4);T.G.methods={hide:5,please:2};stepUntil(()=>T.G.cur&&/5 rooms this week/.test(T.G.cur.text));assert.ok(T.G.torn,'the bag went first');}
 T.chapter(3);stepUntil(()=>T.G.moment==='colleagues'&&T.state()==='click');
 {const yes=T.G.yes;assert.ok(yes>=3);saved=JSON.parse(savedItems.get(saveKey));
  assert.equal(saved.ch,3);assert.equal(saved.at.moment,'colleagues');assert.equal(saved.at.state.yes,yes);

@@ -15,7 +15,7 @@ var FEAR={
 };
 function fearChoice(){
   var out=[];[1,2,3].forEach(function(k){var F=FEAR[k];
-    out.push({t:F.t,m:'worst',f:function(){G.fear=k;G.morko.sT=2.1;G.morko.mood='stern';},
+    out.push({t:F.t,m:'worst',filed:1,f:function(){G.fear=k;G.morko.sT=2.1;G.morko.mood='stern';},
       then:F.a.concat([set({s:2.2}),['S',F.b],{stretch:true}])});});
   return out;
 }
@@ -58,8 +58,15 @@ function scIntro(){return [
   ]},
   set({clr:1}),
   function(){return G.advice===4?scBite():[
-    ['H','…Thanks. I’ll look into it.']
-  ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'4 seconds',cap:'Two nods. One sip. A perfectly ordinary pause.',anim:'nod'},4.4),[
+    ['H','…Thanks. I’ll look into it.'],
+    // The human’s own clumsiness, with no help from the wall: not everything is Ekskyysmi. Friday catches it (scFri).
+    ['B','Enjoy the coffee!'],
+    ['H','You too.'],
+    {wait:0.7},
+    ['S','He doesn’t HAVE a coffee.'],
+    ['H','I know.'],
+    ['S','I didn’t do that one. That was all you.',{look:'squint'}]
+  ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'4 seconds',cap:'Two nods. One sip. One “you too”. A perfectly ordinary pause.',anim:'nod'},4.4),[
     calm,
     ['S','Rejection prevented.'],prevent('nodded'),
     ['H','That wasn’t a rejection.'],
@@ -113,10 +120,10 @@ function scSpiral(){return [
   ['S','A lot can happen in two seconds. I just did all of it.'],
   ['S','Recommendation.'],
   {choice:[
-    {t:'Become furniture. Very convincing furniture.',m:'hide',preview:'hold',f:function(){G.leak='grow';},then:[['H','For how long?'],['S','Until retirement.'],prevent('furniture',1)]},
-    {t:'Study the cup. It has excellent manners.',m:'hide',preview:'cover',f:function(){G.leak='cover';},then:[['H','It’s a cup.'],['S','Not one personal remark.'],prevent('cup',1)]},
-    {t:'A strategic exit. We can come back.',m:'hide',preview:'pull',f:function(){G.leak='exit';},then:[['H','My coffee’s still here.'],['S','A convincing alibi.'],prevent('door',1)]},
-    {t:'…Say “hi” back. I’ll stay right here.',m:'stay',preview:'comfort',f:function(){G.leak='none';},then:[['S','I reserve the right to wobble.'],['H','You can wobble.']]}
+    {t:'Become furniture. Very convincing furniture.',filed:1,m:'hide',preview:'hold',f:function(){G.leak='grow';},then:[['H','For how long?'],['S','Until retirement.'],prevent('furniture',1)]},
+    {t:'Study the cup. It has excellent manners.',filed:1,m:'hide',preview:'cover',f:function(){G.leak='cover';},then:[['H','It’s a cup.'],['S','Not one personal remark.'],prevent('cup',1)]},
+    {t:'A strategic exit. We can come back.',filed:1,m:'hide',preview:'pull',f:function(){G.leak='exit';},then:[['H','My coffee’s still here.'],['S','A convincing alibi.'],prevent('door',1)]},
+    {t:'…Say “hi” back. I’ll stay right here.',filed:1,m:'stay',preview:'comfort',f:function(){G.leak='none';},then:[['S','I reserve the right to wobble.'],['H','You can wobble.']]}
   ]},
   function(){var l=G.leak;G.lines=[];return l==='grow'?[{hold:{kind:'still',secs:2.6}}]:l==='cover'?[{hold:{kind:'cover',secs:3}}]:l==='exit'?[{hold:{kind:'pull',secs:3}}]:[];},
   {wait:0.9},
@@ -194,7 +201,7 @@ function walkMenu(done){return function(){
 function scWalk(){
   var done={};
   function moreWalk(){return done.stop?[]:[{choice:walkMenu(done)},moreWalk];}
-  return [startWalk,{wait:2.6},
+  return [startWalk,oneLampGap,{wait:2.6},
     ['S','Right. Debrief. I’ve prepared slides.'],
     ['H','Please don’t have slides.'],
     ['S','Two. Slide one: the full stop.'],

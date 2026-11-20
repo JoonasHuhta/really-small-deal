@@ -10,7 +10,7 @@ function scene(o){return function(){
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
-  if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;
+  if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
 function begin(n,o){return [scene(o),function(){
@@ -131,7 +131,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
 function yesMenu(s,extra,extraKey){return {choice:[
   {t:'Say yes.',m:'please',f:yes,then:[['H','Sure.'],['S',s[0]]]},
   {t:'Say yes. Enthusiastically.',m:'please',f:yes,then:[['H','Sure! Happy to!'],['S',s[1]]]},
-  {t:'Say yes, and offer something extra.',m:'please',f:function(){yes();yes();if(extraKey)G[extraKey]=true;},then:[['H',extra],['S',s[2]]]},
+  {t:'Say yes, and offer something extra.',m:'please',filed:1,f:function(){yes();yes();if(extraKey)G[extraKey]=true;},then:[['H',extra],['S',s[2]]]},
   {t:'No.',off:true}
 ]};}
 function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600+20*60}).concat([
@@ -171,7 +171,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   {choice:[
     {t:'A “no” costs us people.',m:'worst',then:[['S','Every no is a door closing.'],['H','Every yes is me doing slides at midnight.']]},
     {t:'We could get ill. Convincingly.',m:'hide',then:[['S','A light flu. Respectable. Nobody rejects the ill.'],['H','I’m not faking flu to avoid a two-letter word.']]},
-    {t:'What if we said… “not this time”?',m:'stay',f:function(){G.coatNo=true;},then:[['S','It’s a no in a coat.'],['H','That’s further than you’ve ever gone.'],['S','I feel sick.']]},
+    {t:'What if we said… “not this time”?',filed:1,m:'stay',f:function(){G.coatNo=true;},then:[['S','It’s a no in a coat.'],['H','That’s further than you’ve ever gone.'],['S','I feel sick.']]},
     hush()
   ]},
   set({mood:'worry'}),
@@ -227,15 +227,22 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','WHERE WAS I.',{loud:1}],
   ['H','Twenty-one minutes.'],
   ['S','TWENTY-ONE MINUTES. Thank you. I’ve drafted some follow-ups.'],
-  {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,m:SEEN[k].m,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};});}},
+  {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,m:SEEN[k].m,filed:1,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};});}},
   function(){G.clock=18*3600+40*60;},
   ['N','18:40. Still nothing.'],
   set({s:2.5,mood:'stern',anx:0.8}),
   ['S','She hates us. Eero hates us. Riitta wants a shorter you. I’ve run the numbers. It’s unanimous.'],
-  ['H','Stop.'],
+  // The turn has a physical trigger (lab clone “The bag.”, 0.47): a whole week of holding the face, then a bag that won’t open.
+  ['H','I’m going to eat something.',{quiet:1}],
+  ['S','Good. Fuel. We’ll need it for the list.'],
+  {wait:0.9},crumbs,hit(0.9,'P'),
+  ['N','EASY OPEN. All of it. Everywhere.'],
+  ['S','Floor crisps are still crisps, if we—'],
+  ['H','Stop.',{loud:1}],
   ['S','I’m PROTECTING you.',{loud:1}],
   ['H','From what? Board games?'],
-  ['H','You’ve had me apologising to furniture all week. I’m at home with eleven bags of snacks.'],
+  weekBill,
+  ['H','I’m at home with ten bags of snacks and one on the floor.'],
   ['H','You’re not protecting me. You’re just the loudest thing in the room.'],
   shadowHit,set({sweat:0}),{wait:2.2},
   ['S','…That one landed.'],
@@ -295,6 +302,14 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   {wait:0.8}
  ]);}
 
+// Thursday reads the player’s own week back: the method chosen most often, as one whole sentence (translators get whole lines).
+var BILL={worst:'You’ve prepared {n} worst cases this week. None of them happened.',
+  draft:'You’ve written {n} scripts this week. I didn’t say one of them.',
+  please:'You’ve said yes for me {n} times this week. I meant maybe one.',
+  hide:'You’ve taken me out of {n} rooms this week. I wanted to stay in most of them.'};
+function fmtN(t,n){return t.replace('{n}',String(n));}
+function weekBill(){var m=G.methods||{},best=null;['hide','please','worst','draft'].forEach(function(k){if((m[k]||0)>=3&&(!best||m[k]>m[best]))best=k;});
+  return [['H',best?fmtN(BILL[best],m[best]):'You’ve had me apologising to furniture all week.']];}
 function wobbleOn(){var m=G.morko;m.wobble={t:0};m.pose='balance';m.mood='worry';G.anx=0.2;}
 function wobbleOff(){var m=G.morko;m.wobble=null;m.pose=null;if(RM)updHands(1);}
 function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).concat([
@@ -378,6 +393,10 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['S','…No. It’s lunch.',{look:'soft'}],
   set({face:'smile'}),
   ['H','Lunch.'],
+  ['B','Enjoy your lunch!'],
+  ['H','You t—'],{wait:0.5},
+  ['H','…Thanks, Eero.'],
+  aside(['S','Caught it. Mid-air.',{look:'pleased'}]),
   postingPayoff
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 seconds',cap:'Two colleagues going to lunch.',anim:'none'}),[
   ['S','For the record, I intend to go off again on Monday.',{look:'soft'}],

@@ -16,6 +16,8 @@
 
 > **Tila 0.48.0 (20.11.):** ✔ T7: *Lamp gap.* lab-kloonina (`52-lamps.js`). ✔ Työkalujen tasapaino (§12). 🧪 Joonas päättää: *The bag.* torstaihin, *Lamp gap.* maanantain kotimatkaan (yksi lamppuväli, ei kolmea). Seuraavaksi T12 (pelaajatesti), sitten T10 kun kappale on valmis.
 
+> **Tila 0.49.0 (20.11.):** ✔ Pussi torstain laukaisijana ja viikon menetelmät käänteessä. ✔ Yksi lamppuväli maanantaihin. ✔ ”Filed.”-merkintä, ensimmäisen valinnan selkeys, ihmisen oma ”You too.” ja perjantain vastapari. Seuraavaksi T12 (pelaajatesti) ja APK:n tarkistus; sitten neljän lopun rakenne ja sisältöhuomautus (§9.1).
+
 Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, valmiiksi määriteltyinä tehtävinä, jotka halvempi malli (Sonnet tai Codex) voi tehdä. Opus tarvitaan vain tarinapäätöksiin ja uuteen dialogiin.
 
 ---
