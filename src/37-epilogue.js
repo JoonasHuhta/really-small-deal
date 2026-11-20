@@ -71,9 +71,10 @@ var EPI=[
     l:'UMBRELLAS, HELD',v:'1',note:'effective: no. appreciated: yes.'},
   {cut:'fade',set:'bar',clock:21*3600+30*60,s:1.0,mood:'calm',hx:430,bar:1,cam:[1.75,420,250, 1.75,420,250],secs:3.4,
     l:'UMBRELLA STORIES, TOLD',v:'1',note:'classified: not any more'},
-  // invented: the ride home. The human drives; Ekskyysmi runs along the walls behind, sweating, keeping up. Barely.
-  {cut:'hard',walk:1,drive:1,s:0.5,mood:'alert',off:-300,cam:[1.15,450,300, 1.15,450,300],secs:4,
-    at:[[0.6,epiSweat()],[1.2,epiSweat()],[1.8,epiSweat()],[2.4,epiSweat()],[3.0,epiSweat()]],
+  // invented: the ride home, in two close-ups (a wide shot stretched the floor shadow between them): the driver, then the runner.
+  {cut:'hard',walk:1,drive:1,s:0.5,mood:'alert',off:-300,cam:[2.3,470,362, 2.3,470,362]},
+  {cut:'hard',walk:1,drive:1,s:0.5,mood:'alert',off:-300,follow:'S',cam:[2.5,200,220, 2.5,200,220],
+    at:[[0.3,epiSweat()],[0.7,epiSweat()],[1.1,epiSweat()],[1.5,epiSweat()],[1.9,epiSweat()]],
     l:'RIDES HOME',v:'1',note:'one in the car. one running behind.'},
   // a flash, no caption: the story again at home, and they cannot stop laughing
   {cut:'hard',set:'home',clock:22*3600+20*60,s:1.05,mood:'pleased',hx:500,face:'laugh',facing:-1,cam:[1.85,455,250, 1.85,455,250],secs:1.6,
@@ -139,6 +140,7 @@ function epiShot(o){return function(){
   else if(!snap){g.fade=1;g.fadeRate=0.8;}
 };}
 function stepEpi(dt){var e=G.epi;if(!e)return;e.ct+=dt;
+  if(e.o&&e.o.follow==='S'){var q=geom();G.cx=q.bx;G.cy=q.hdY+60;G.camRate=RM?40:6;}   // keep the running shadow in frame
   var el=musicEl;e.clock=el&&musicName==='epilogue'&&!el.paused&&el.currentTime>0?el.currentTime:(e.clock||0)+dt;e.dark=approach(e.dark||0,e.darkT||0,(RM?3:2.4)*dt);
   while(e.at&&e.at.length&&e.at[0][0]<=e.ct)e.at.shift()[1]();if(e.x>0)e.x=Math.max(0,e.x-dt/(RM?2.2:1.3));}
 // No canvas blur filter: it is slow on phones and in software rendering (the montage ran at a fifth of its speed).
@@ -182,7 +184,7 @@ function epiClock(){var e=G.epi;return e?e.clock||0:0;}
 function epiAt(t){return function step(){return epiClock()>=t-0.03?[]:[{wait:0.04},step];};}
 // Part A: the montage (31 bars). B: the receipt rolls while they sit on the floor (the song's quieter middle).
 // C: the last chorus: one bar each, no captions, faster. D: the bird and the credit, held to the last note.
-var EPIA=[2,2,1,2,2,2,1,2,1,2,1,2,2,1,2,2,1,3];
+var EPIA=[2,2,1,2,2,2,1,1,1,1,2,1,2,2,1,2,2,1,3];
 var EPIC=['LUNCHES','NOS, SAID OUT LOUD','UMBRELLAS, HELD','RIDES HOME','laugh','LIFTS, SHARED','REJECTIONS, SELF-ISSUED','DRAFTS, DELETED','GROUP PHOTOS','POWER CUTS','DRAWINGS SHARED','DAYS LIVED TODAY'];
 function epiCopy(o,extra){var c={},k;for(k in o)c[k]=o[k];for(k in extra)c[k]=extra[k];return c;}
 function epiFind(l){for(var i=0;i<EPI.length;i++)if(l==='laugh'?EPI[i].face==='laugh':EPI[i].l===l)return EPI[i];return null;}

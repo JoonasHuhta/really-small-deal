@@ -133,7 +133,7 @@ function render(){
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
   // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
-  elLine.classList.toggle('echo',!textBelow&&WAIT==='click'&&(g.out?true:!!cur&&lineInBubble(cur)));
+  elLine.classList.toggle('echo',!textBelow&&(g.out?(g.out.anim==='text'||!COMPACT):WAIT==='click'&&!!cur&&lineInBubble(cur)));
   elOpts.innerHTML=html;
   elOpts.classList.toggle('who-S',WAIT==='choice'&&(g.choiceWho||'S')==='S');elOpts.classList.toggle('who-H',WAIT==='choice'&&g.choiceWho==='H');   // whose words these are, in their colour
   if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
@@ -195,7 +195,7 @@ function lineInBubble(l){var g=G;
   if(!WIDE||(cv.clientWidth||0)<740)return false;                 // bubble text under ~13 px: the panel stays
   if(textStep>1)return false;   // the player asked for large text: the panel reads better than a bubble
   if(l.big&&l.who==='S')return true;
-  if(l.who==='N')return !!g.band;   // the narrator is printed in the scene's bottom band
+  if(l.who==='N')return !!g.band&&!COMPACT;   // the narrator is printed in the scene's bottom band
   if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)return false;if(l.who==='S'&&g.morko.asleep)return false;
   if(l.who==='T'||l.who==='X')return !!g.bar;
   return 'SHABPRLZYW'.indexOf(l.who)>=0;}

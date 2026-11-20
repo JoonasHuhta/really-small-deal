@@ -201,7 +201,8 @@ function walkMenu(done){return function(){
 function scWalk(){
   var done={};
   function moreWalk(){return done.stop?[]:[{choice:walkMenu(done)},moreWalk];}
-  return [startWalk,oneLampGap,{wait:2.6},
+  return [{wait:0.7},function(){var g=G;g.fade=0;g.fadeRate=-0.8;},{wait:1.5},   // a breath: the office fades out before the walk home
+    startWalk,oneLampGap,function(){var g=G;g.fade=1;g.fadeRate=0.55;},{wait:3.2},
     ['S','Right. Debrief. I’ve prepared slides.'],
     ['H','Please don’t have slides.'],
     ['S','Two. Slide one: the full stop.'],

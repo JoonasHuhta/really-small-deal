@@ -128,7 +128,7 @@ function person(x,o){
     ctx.strokeStyle='#34413e';ctx.lineWidth=1.2;
     if(o.brow){ctx.strokeStyle='#34413e';ctx.lineWidth=2.2;line(ex+1,ey-8,ex+10,ey-14);line(ex-11,ey-8,ex-3,ey-8);}
     if(o.body===MIKA.body){circ(ex-7,ey,6);ctx.stroke();circ(ex+7,ey,6);ctx.stroke();line(ex-1,ey,ex+1,ey);}
-    line(ex+1,ey+3,ex+3,ey+6);
+    line(ex+f,ey+3,ex+f*3,ey+6);   // the nose points the way the face does
     ctx.save();ctx.beginPath();ctx.arc(hx,hy,20,0,Math.PI*2);ctx.clip();   // cheeks stay on the face, even the far one
     ctx.fillStyle='#c77f7055';circ(ex-13,ey+6,4);ctx.fill();circ(ex+13,ey+6,4);ctx.fill();ctx.restore();
     ctx.lineWidth=2;ctx.lineCap='round';
@@ -249,7 +249,8 @@ function morkoBody(q){
   if(wk<0.98){ctx.fillStyle='rgba(20,16,30,'+(0.26*(1-wk))+')';ctx.beginPath();ctx.ellipse(Hm.x-12,FEETY+3,44,9,0,0,Math.PI*2);ctx.fill();}
   if(wk<0.02)return;
   ctx.fillStyle=mcol();
-  ctx.globalAlpha=0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.baseX-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
+  var noLink=G.epi&&G.epi.o&&G.epi.o.drive;   // montage drive: no floor shadow stretched from the car to the runner
+  ctx.globalAlpha=noLink?0:0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.baseX-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
   ctx.beginPath();ctx.moveTo(q.baseX-26*q.s,q.by);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.bx+q.shW*0.8,q.shY+6);ctx.lineTo(q.bx-q.shW*0.8,q.shY+6);ctx.closePath();ctx.fill();
   ctx.beginPath();ctx.ellipse(q.bx,q.shY+4,q.shW,Math.max(14,26*q.s),0,0,Math.PI*2);ctx.fill();
   circ(q.bx,q.hdY,q.hdR);ctx.fill();
@@ -393,7 +394,7 @@ function drawOutside(){
   if(an==='chatlog'){drawChatlog(o);return;}
   if(an==='text'){
     ctx.fillStyle='#141a1c';ctx.fillRect(0,0,W,H);ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);
-    ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,28,29);
+    ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,COMPACT?72:28,29);
     ctx.textAlign='right';ctx.font='500 16px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText(o.dur,W-28,29);
     ctx.globalAlpha=clamp((t-0.5)/0.6,0,1);ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='500 30px Fraunces,Georgia,serif';
     var ls=wrap(o.cap,720);for(var li=0;li<ls.length;li++)ctx.fillText(ls[li],W/2,H/2+10-(ls.length-1)*20+li*40);ctx.globalAlpha=1;return;
@@ -418,10 +419,11 @@ function drawOutside(){
   if(an==='bite'&&t>2.4&&t<3.8)bubble(g.bx2,FEETY-172,'…ha.');
   if(an==='none'&&t>0.6&&t<1.9)bubble(hx,FEETY-172,'hi');
   if(an==='grow'&&t>1.9&&t<3.3)bubble(hx,FEETY-172,'HI.');
-  ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);ctx.fillRect(0,H-64,W,64);
-  ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,28,29);
+  var capY=H-32;   // immersive: the words panel along the bottom carries the caption, so the scene doesn't print it underneath
+  ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);if(!COMPACT)ctx.fillRect(0,capY-32,W,64);
+  ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,COMPACT?72:28,29);
   ctx.textAlign='right';ctx.font='500 16px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText(o.dur,W-28,29);
-  if(t>2.2){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='500 20px system-ui,sans-serif';ctx.fillText(o.cap,W/2,H-32);}
+  if(t>2.2&&!COMPACT){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='500 20px system-ui,sans-serif';ctx.fillText(o.cap,W/2,capY);}
 }
 function drawWalk(){
   var g=G,w=g.w,cam=w.x-400,i,sx;g.roomFront=null;
@@ -556,6 +558,6 @@ function draw(){
         if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText('THE WALK HOME',W/2,74);
       ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('Nine minutes, usually.',W/2,106);}
   }
-  if(g.band)band(g.band,H-18);
+  if(g.band&&!COMPACT)band(g.band,H-18);
   if(paused)pausedNote();
 }

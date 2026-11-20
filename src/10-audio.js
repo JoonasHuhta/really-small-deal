@@ -85,7 +85,9 @@ function speak(who,text,o){
     var c=text.charAt(i);at+=1/cps;
     if(i%3===0&&/[A-Za-z0-9]/.test(c)){
       var loud=/[A-Z]/.test(c)&&/[A-Z]/.test(text.charAt(i+1)||'')?1.14:1;
-      voiceNodes.push(tone(base*loud*(0.92+((i*37)%17)/100),t0+at,0.05,v[0],v[2]));n++;last=at;}
+      var f=base*loud*(0.92+((i*37)%17)/100);
+      if(who==='S'){voiceNodes.push(tone(f,t0+at,0.06,'triangle',0.1,f*0.94));voiceNodes.push(tone(f*2,t0+at,0.045,'square',0.02,f*1.9));}   // low and warm, plus an octave a phone speaker can actually play
+      else voiceNodes.push(tone(f,t0+at,0.05,v[0],v[2]));n++;last=at;}
     if(c==='…')at+=0.34;else if((c==='.'||c==='?'||c==='!')&&text.charAt(i+1)===' ')at+=0.24;else if(c===','||c===';')at+=0.1;else if(c==='—')at+=0.18;
   }
   if(n)talkDuck(last+0.05);

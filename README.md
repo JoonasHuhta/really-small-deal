@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.57.0 (Claude, 20.11.2026): **Joonaksen havainnot: nenä, kortit koko näytöllä, ääni, siirtymä, ajokohtaus.**
+- Ihmisten nenä osoittaa nyt katseen suuntaan (ennen aina oikealle).
+- Ulkopuoliset kortit koko näytön / puhelimen vaakatilassa: otsikko ei jää valikkonapin alle, eikä kuvateksti jää paneelin alle (paneeli kantaa sen). Kertojan nauha piirretään vain, kun paneeli ei peitä sitä.
+- Ekskyysmin puheääni: lämmin matala blippi ja oktaavia korkeampi osasävel, jonka puhelimen kaiutin pystyy toistamaan (oli hiljaisempi kuin ihmisen).
+- Maanantai: toimisto häivytetään mustaan ja kotimatka nousee esiin (noin 2 s hengähdys) eikä hyppää suoraan.
+- Epilogin ajo kahtena lähikuvana: kuski, sitten hikoileva juoksija; lattiavarjo ei veny auton ja varjon välille.
+
 Versio 0.56.0 (Claude, 20.11.2026): **epilogi: vain kappale, ei palkkia, ja kotimatka autolla.**
 - Epilogin aikana ei kuulu pelin ääniefektejä, eikä musiikki vaimene (`sfx`, `talkDuck`, `duckMusic` vaikenevat, kun `G.epi`).
 - Alapaneeli ja vihjerivi piilotetaan epilogin ajaksi (`body.epi-on`): puhelimella se oli lukukelvoton palkki. Kesken poistuminen palauttaa ne ja pysäyttää kappaleen.

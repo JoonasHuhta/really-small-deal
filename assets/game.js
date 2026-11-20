@@ -116,7 +116,9 @@ function speak(who,text,o){
     var c=text.charAt(i);at+=1/cps;
     if(i%3===0&&/[A-Za-z0-9]/.test(c)){
       var loud=/[A-Z]/.test(c)&&/[A-Z]/.test(text.charAt(i+1)||'')?1.14:1;
-      voiceNodes.push(tone(base*loud*(0.92+((i*37)%17)/100),t0+at,0.05,v[0],v[2]));n++;last=at;}
+      var f=base*loud*(0.92+((i*37)%17)/100);
+      if(who==='S'){voiceNodes.push(tone(f,t0+at,0.06,'triangle',0.1,f*0.94));voiceNodes.push(tone(f*2,t0+at,0.045,'square',0.02,f*1.9));}   // low and warm, plus an octave a phone speaker can actually play
+      else voiceNodes.push(tone(f,t0+at,0.05,v[0],v[2]));n++;last=at;}
     if(c==='…')at+=0.34;else if((c==='.'||c==='?'||c==='!')&&text.charAt(i+1)===' ')at+=0.24;else if(c===','||c===';')at+=0.1;else if(c==='—')at+=0.18;
   }
   if(n)talkDuck(last+0.05);
@@ -286,7 +288,7 @@ function render(){
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
   // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
-  elLine.classList.toggle('echo',!textBelow&&WAIT==='click'&&(g.out?true:!!cur&&lineInBubble(cur)));
+  elLine.classList.toggle('echo',!textBelow&&(g.out?(g.out.anim==='text'||!COMPACT):WAIT==='click'&&!!cur&&lineInBubble(cur)));
   elOpts.innerHTML=html;
   elOpts.classList.toggle('who-S',WAIT==='choice'&&(g.choiceWho||'S')==='S');elOpts.classList.toggle('who-H',WAIT==='choice'&&g.choiceWho==='H');   // whose words these are, in their colour
   if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
@@ -348,7 +350,7 @@ function lineInBubble(l){var g=G;
   if(!WIDE||(cv.clientWidth||0)<740)return false;                 // bubble text under ~13 px: the panel stays
   if(textStep>1)return false;   // the player asked for large text: the panel reads better than a bubble
   if(l.big&&l.who==='S')return true;
-  if(l.who==='N')return !!g.band;   // the narrator is printed in the scene's bottom band
+  if(l.who==='N')return !!g.band&&!COMPACT;   // the narrator is printed in the scene's bottom band
   if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)return false;if(l.who==='S'&&g.morko.asleep)return false;
   if(l.who==='T'||l.who==='X')return !!g.bar;
   return 'SHABPRLZYW'.indexOf(l.who)>=0;}
@@ -928,7 +930,8 @@ function walkMenu(done){return function(){
 function scWalk(){
   var done={};
   function moreWalk(){return done.stop?[]:[{choice:walkMenu(done)},moreWalk];}
-  return [startWalk,oneLampGap,{wait:2.6},
+  return [{wait:0.7},function(){var g=G;g.fade=0;g.fadeRate=-0.8;},{wait:1.5},   // a breath: the office fades out before the walk home
+    startWalk,oneLampGap,function(){var g=G;g.fade=1;g.fadeRate=0.55;},{wait:3.2},
     ['S','Right. Debrief. I’ve prepared slides.'],
     ['H','Please don’t have slides.'],
     ['S','Two. Slide one: the full stop.'],
@@ -1892,9 +1895,10 @@ var EPI=[
     l:'UMBRELLAS, HELD',v:'1',note:'effective: no. appreciated: yes.'},
   {cut:'fade',set:'bar',clock:21*3600+30*60,s:1.0,mood:'calm',hx:430,bar:1,cam:[1.75,420,250, 1.75,420,250],secs:3.4,
     l:'UMBRELLA STORIES, TOLD',v:'1',note:'classified: not any more'},
-  // invented: the ride home. The human drives; Ekskyysmi runs along the walls behind, sweating, keeping up. Barely.
-  {cut:'hard',walk:1,drive:1,s:0.5,mood:'alert',off:-300,cam:[1.15,450,300, 1.15,450,300],secs:4,
-    at:[[0.6,epiSweat()],[1.2,epiSweat()],[1.8,epiSweat()],[2.4,epiSweat()],[3.0,epiSweat()]],
+  // invented: the ride home, in two close-ups (a wide shot stretched the floor shadow between them): the driver, then the runner.
+  {cut:'hard',walk:1,drive:1,s:0.5,mood:'alert',off:-300,cam:[2.3,470,362, 2.3,470,362]},
+  {cut:'hard',walk:1,drive:1,s:0.5,mood:'alert',off:-300,follow:'S',cam:[2.5,200,220, 2.5,200,220],
+    at:[[0.3,epiSweat()],[0.7,epiSweat()],[1.1,epiSweat()],[1.5,epiSweat()],[1.9,epiSweat()]],
     l:'RIDES HOME',v:'1',note:'one in the car. one running behind.'},
   // a flash, no caption: the story again at home, and they cannot stop laughing
   {cut:'hard',set:'home',clock:22*3600+20*60,s:1.05,mood:'pleased',hx:500,face:'laugh',facing:-1,cam:[1.85,455,250, 1.85,455,250],secs:1.6,
@@ -1960,6 +1964,7 @@ function epiShot(o){return function(){
   else if(!snap){g.fade=1;g.fadeRate=0.8;}
 };}
 function stepEpi(dt){var e=G.epi;if(!e)return;e.ct+=dt;
+  if(e.o&&e.o.follow==='S'){var q=geom();G.cx=q.bx;G.cy=q.hdY+60;G.camRate=RM?40:6;}   // keep the running shadow in frame
   var el=musicEl;e.clock=el&&musicName==='epilogue'&&!el.paused&&el.currentTime>0?el.currentTime:(e.clock||0)+dt;e.dark=approach(e.dark||0,e.darkT||0,(RM?3:2.4)*dt);
   while(e.at&&e.at.length&&e.at[0][0]<=e.ct)e.at.shift()[1]();if(e.x>0)e.x=Math.max(0,e.x-dt/(RM?2.2:1.3));}
 // No canvas blur filter: it is slow on phones and in software rendering (the montage ran at a fifth of its speed).
@@ -2003,7 +2008,7 @@ function epiClock(){var e=G.epi;return e?e.clock||0:0;}
 function epiAt(t){return function step(){return epiClock()>=t-0.03?[]:[{wait:0.04},step];};}
 // Part A: the montage (31 bars). B: the receipt rolls while they sit on the floor (the song's quieter middle).
 // C: the last chorus: one bar each, no captions, faster. D: the bird and the credit, held to the last note.
-var EPIA=[2,2,1,2,2,2,1,2,1,2,1,2,2,1,2,2,1,3];
+var EPIA=[2,2,1,2,2,2,1,1,1,1,2,1,2,2,1,2,2,1,3];
 var EPIC=['LUNCHES','NOS, SAID OUT LOUD','UMBRELLAS, HELD','RIDES HOME','laugh','LIFTS, SHARED','REJECTIONS, SELF-ISSUED','DRAFTS, DELETED','GROUP PHOTOS','POWER CUTS','DRAWINGS SHARED','DAYS LIVED TODAY'];
 function epiCopy(o,extra){var c={},k;for(k in o)c[k]=o[k];for(k in extra)c[k]=extra[k];return c;}
 function epiFind(l){for(var i=0;i<EPI.length;i++)if(l==='laugh'?EPI[i].face==='laugh':EPI[i].l===l)return EPI[i];return null;}
@@ -4470,7 +4475,7 @@ function person(x,o){
     ctx.strokeStyle='#34413e';ctx.lineWidth=1.2;
     if(o.brow){ctx.strokeStyle='#34413e';ctx.lineWidth=2.2;line(ex+1,ey-8,ex+10,ey-14);line(ex-11,ey-8,ex-3,ey-8);}
     if(o.body===MIKA.body){circ(ex-7,ey,6);ctx.stroke();circ(ex+7,ey,6);ctx.stroke();line(ex-1,ey,ex+1,ey);}
-    line(ex+1,ey+3,ex+3,ey+6);
+    line(ex+f,ey+3,ex+f*3,ey+6);   // the nose points the way the face does
     ctx.save();ctx.beginPath();ctx.arc(hx,hy,20,0,Math.PI*2);ctx.clip();   // cheeks stay on the face, even the far one
     ctx.fillStyle='#c77f7055';circ(ex-13,ey+6,4);ctx.fill();circ(ex+13,ey+6,4);ctx.fill();ctx.restore();
     ctx.lineWidth=2;ctx.lineCap='round';
@@ -4591,7 +4596,8 @@ function morkoBody(q){
   if(wk<0.98){ctx.fillStyle='rgba(20,16,30,'+(0.26*(1-wk))+')';ctx.beginPath();ctx.ellipse(Hm.x-12,FEETY+3,44,9,0,0,Math.PI*2);ctx.fill();}
   if(wk<0.02)return;
   ctx.fillStyle=mcol();
-  ctx.globalAlpha=0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.baseX-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
+  var noLink=G.epi&&G.epi.o&&G.epi.o.drive;   // montage drive: no floor shadow stretched from the car to the runner
+  ctx.globalAlpha=noLink?0:0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.baseX-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
   ctx.beginPath();ctx.moveTo(q.baseX-26*q.s,q.by);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.bx+q.shW*0.8,q.shY+6);ctx.lineTo(q.bx-q.shW*0.8,q.shY+6);ctx.closePath();ctx.fill();
   ctx.beginPath();ctx.ellipse(q.bx,q.shY+4,q.shW,Math.max(14,26*q.s),0,0,Math.PI*2);ctx.fill();
   circ(q.bx,q.hdY,q.hdR);ctx.fill();
@@ -4735,7 +4741,7 @@ function drawOutside(){
   if(an==='chatlog'){drawChatlog(o);return;}
   if(an==='text'){
     ctx.fillStyle='#141a1c';ctx.fillRect(0,0,W,H);ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);
-    ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,28,29);
+    ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,COMPACT?72:28,29);
     ctx.textAlign='right';ctx.font='500 16px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText(o.dur,W-28,29);
     ctx.globalAlpha=clamp((t-0.5)/0.6,0,1);ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='500 30px Fraunces,Georgia,serif';
     var ls=wrap(o.cap,720);for(var li=0;li<ls.length;li++)ctx.fillText(ls[li],W/2,H/2+10-(ls.length-1)*20+li*40);ctx.globalAlpha=1;return;
@@ -4760,10 +4766,11 @@ function drawOutside(){
   if(an==='bite'&&t>2.4&&t<3.8)bubble(g.bx2,FEETY-172,'…ha.');
   if(an==='none'&&t>0.6&&t<1.9)bubble(hx,FEETY-172,'hi');
   if(an==='grow'&&t>1.9&&t<3.3)bubble(hx,FEETY-172,'HI.');
-  ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);ctx.fillRect(0,H-64,W,64);
-  ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,28,29);
+  var capY=H-32;   // immersive: the words panel along the bottom carries the caption, so the scene doesn't print it underneath
+  ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);if(!COMPACT)ctx.fillRect(0,capY-32,W,64);
+  ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,COMPACT?72:28,29);
   ctx.textAlign='right';ctx.font='500 16px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText(o.dur,W-28,29);
-  if(t>2.2){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='500 20px system-ui,sans-serif';ctx.fillText(o.cap,W/2,H-32);}
+  if(t>2.2&&!COMPACT){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='500 20px system-ui,sans-serif';ctx.fillText(o.cap,W/2,capY);}
 }
 function drawWalk(){
   var g=G,w=g.w,cam=w.x-400,i,sx;g.roomFront=null;
@@ -4898,7 +4905,7 @@ function draw(){
         if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText('THE WALK HOME',W/2,74);
       ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('Nine minutes, usually.',W/2,106);}
   }
-  if(g.band)band(g.band,H-18);
+  if(g.band&&!COMPACT)band(g.band,H-18);
   if(paused)pausedNote();
 }
 // ---- src/80-ui.js ----
