@@ -12,7 +12,7 @@ var LOOKS=[
   {x:725,y:420,tag:'BENCH: WHERE THEY SIT. WITHOUT US.'},
   {x:HOME,y:FEETY-120,tag:'SUBJECT: FINE. (UNVERIFIED.)'}
 ];
-function lensOn(){var g=G,q=geom();g.lens={x:q.bx+40,y:q.hdY+60,xT:g.human.x+130,yT:FEETY-200,mode:'look',spot:null,done:{},t:0};g.morko.pose='lens';sfx('enhance');}
+function lensOn(){var g=G,q=geom();g.lens={x:q.bx+40,y:q.hdY+60,xT:g.human.x+120,yT:FEETY-300,mode:'look',spot:null,done:{},t:0};g.morko.pose='lens';sfx('enhance');}
 function lensTo(k){return function(){addLived('exhibits examined',30);var L=G.lens,s=SPOTS[k];L.xT=s.x;L.yT=s.y;L.spot=k;L.done[k]=1;sfx('card');};}
 function lensSelf(){var L=G.lens,q=geom();L.mode='self';L.spot=null;L.xT=q.bx+6;L.yT=q.hdY+14;G.morko.pose=null;G.morko.mood='worry';sfx('card');}
 // A quick look through the glass, anywhere. The glass is Ekskyysmi's signature tool, so it keeps coming back.
@@ -39,8 +39,12 @@ function lensTag(){
 function drawLens(){
   var g=G,L=g.lens;if(!L)return;var r=LENSR,k,h;
   // unexamined spots pulse quietly while the glass is free
-  if(lensFree())for(k in SPOTS){if(L.done[k])continue;var s=SPOTS[k],pu=RM?0.5:0.5+0.5*Math.sin(g.time*4);
-    ctx.strokeStyle='rgba(224,86,62,'+(0.45+0.4*pu)+')';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(s.x,s.y,11+pu*5,0,Math.PI*2);ctx.stroke();}
+  // Each spot carries the same number and name as its option in the list (Joonas 20.11.: it was unclear where to tap).
+  if(lensFree())for(var ci=0;CH&&ci<CH.length;ci++){k=CH[ci].spot;if(!k||L.done[k])continue;var s=SPOTS[k],pu=RM?0.5:0.5+0.5*Math.sin(g.time*4);
+    ctx.strokeStyle='rgba(224,86,62,'+(0.55+0.4*pu)+')';ctx.lineWidth=3;ctx.beginPath();ctx.arc(s.x,s.y,17+pu*6,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#c9553f';circ(s.x,s.y,12);ctx.fill();ctx.fillStyle='#fff';ctx.font='800 14px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(ci+1),s.x,s.y+1);
+    var nm=k==='laugh'?'the laugh':k==='mug'?'the mug':'the silence';ctx.font='700 12px system-ui,sans-serif';var nw=ctx.measureText(nm).width+12;
+    ctx.fillStyle='rgba(120,20,28,.88)';rr(s.x-nw/2,s.y+26,nw,18,4);ctx.fill();ctx.fillStyle='#fff';ctx.fillText(nm,s.x,s.y+35);}
   ctx.save();ctx.beginPath();ctx.arc(L.x,L.y,r,0,Math.PI*2);ctx.clip();
   if(L.mode==='self'){
     // The glass turned on its owner: the wall, and something much smaller than advertised.
@@ -96,7 +100,7 @@ function labGlass(){
   ['H','People stop laughing. It’s how laughing ends.'],
   ['S','I’ll need the glass.'],
   lensOn,{wait:0.8},
-  ['N','Move the glass around the room. Tap a marked spot to examine it.'],
+  ['N','Move the glass around the room. Tap a numbered circle, or pick from the list.'],
   {choice:glassMenu},more,
   function(){var g=G;g.lens.xT=g.human.x+120;g.lens.yT=FEETY-210;g.lens.spot=null;g.aWave=true;},
   ['A','Oh, hi! Come here, you have to see this.'],

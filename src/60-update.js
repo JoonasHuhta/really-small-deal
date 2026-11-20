@@ -34,7 +34,7 @@ function update(dt,elapsed){
   if(g.zoom)g.zoom.t+=dt;
   stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);stepToss(dt);stepAuto(dt);if(g.buzz>0)g.buzz=Math.max(0,g.buzz-dt);
   var hk=(g.planText||'')+'|'+g.jobDone+'|'+g.hud+'|'+g.chapter+'|'+g.lab+'|'+g.yes+'|'+(g.w?1:0);if(hk!==g.hudKey){g.hudKey=hk;g.hudAge=0;}g.hudAge=(g.hudAge||0)+dt;
-  stepTics(dt);stepHot(dt);stepEpi(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
+  stepFeet();  stepTics(dt);stepHot(dt);stepEpi(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
   if(WAIT==='fight'&&g.fight&&!paused)stepFight(elapsed);
   if(WAIT==='hold'&&g.hold){
     var hh=g.hold,hon=hh.on||hh.tap>0;hh.tap=Math.max(0,hh.tap-elapsed);if(hh.on)hh.p+=elapsed;holdStep(hh,hon,elapsed);
@@ -72,3 +72,8 @@ function titleIdle(dt){
   var t=(g.idleT=(g.idleT||0)+dt)%11;
   Hm.sipT=t>4&&t<5.4?1:0;
 }
+
+// Footsteps follow the legs: one step each time the leg swing (sin(time*8) in person()) changes sides.
+function stepFeet(){var g=G,Hm=g.human;if(!Hm||g.epi||g.out)return;
+  var walking=g.w?!!g.walking:(!Hm.gone&&Math.abs(Hm.x-Hm.xT)>1&&Hm.pose!=='floor');
+  var side=Math.sin(g.time*8)>0;if(walking&&g.stepSide!=null&&side!==g.stepSide)sfx(side?'step':'step2');g.stepSide=side;}

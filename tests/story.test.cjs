@@ -57,11 +57,10 @@ for(const day of ['A','B','C'])for(let fear=0;fear<3;fear++)for(let route=0;rout
   const transcript=T.history().map(x=>x.text).join('\n');
   assert.match(transcript,/We missed the window/);assert.doesNotMatch(transcript,/Nobody has ever done it/);
   if(walk===4){
-    assert.match(transcript,/Exhibit A/);
-    assert.match(transcript,/Director’s cut/);assert.match(transcript,/shorter than I remember/);assert.equal(T.G.rep,null,'the replay must close');
-    assert.match(transcript,/Eero took the lift/);
-    assert.equal(T.G.reflected,true,'all three walk topics must remain reachable');
-    assert.match(transcript,/Keep walking with me/);
+    // Two topics on the way home, the real observation first; after a snap at Eero, the apology comes second.
+    if(route!==3){assert.match(transcript,/Exhibit A/);
+    assert.match(transcript,/Director’s cut/);assert.match(transcript,/shorter than I remember/);}assert.equal(T.G.rep,null,'the replay must close');
+    assert.equal(T.G.reflected,true,'the real observation stays reachable');
   }
   // The name explains itself; the shadow can bite; the job description does NOT turn on Monday.
   assert.doesNotMatch(transcript,/named after/,'the name is not explained');

@@ -181,8 +181,9 @@ function drawHuman(extra){
   if(extra)for(var k in extra)o[k]=extra[k];
   if(Hm.pose==='floor'){   // sitting on the floor, legs out
     var f=o.facing||1;o.walk=false;o.cup=false;o.shadow=0;
-    ctx.fillStyle='rgba(20,16,30,.2)';ctx.beginPath();ctx.ellipse(Hm.x+f*22,FEETY+3,58,8,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#3a3944';rr(f>0?Hm.x-4:Hm.x-62,FEETY-13,66,13,5);ctx.fill();ctx.fillStyle='#263639';rr(f>0?Hm.x+56:Hm.x-72,FEETY-20,14,20,4);ctx.fill();
+    var inCar=!!(G.epi&&G.epi.o&&G.epi.o.drive);   // in the car the legs are under the dashboard, not under the car
+    if(!inCar){ctx.fillStyle='rgba(20,16,30,.2)';ctx.beginPath();ctx.ellipse(Hm.x+f*22,FEETY+3,58,8,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#3a3944';rr(f>0?Hm.x-4:Hm.x-62,FEETY-13,66,13,5);ctx.fill();ctx.fillStyle='#263639';rr(f>0?Hm.x+56:Hm.x-72,FEETY-20,14,20,4);ctx.fill();}
     ctx.save();ctx.beginPath();ctx.rect(-40,-40,W+80,FEETY-6+40);ctx.clip();ctx.translate(0,46);person(Hm.x,o);ctx.restore();
     return;
   }
@@ -385,6 +386,7 @@ function drawLines(){
     else if(l.who==='T'&&g.bar)bubble(g.bar.tx-196,0,l.text,{noTail:true,maxW:mw||240,reveal:rv,top:BARY+26});
     else if(l.who==='X'&&g.bar)bubble(g.bar.sx,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='L')bubble(760,FEETY-172,l.text,{maxW:mw,reveal:rv});
+    else if(g.night&&NIGHT_EYES[l.who])bubble(NIGHT_EYES[l.who].x,NIGHT_EYES[l.who].y-16,l.text,{dark:true,maxW:mw||250,reveal:rv});   // in the dark, a tail points at the eyes that spoke
     else if(l.who==='Z')bubble(g.ax+62,WALLY-178,l.text,{dark:true,noTail:true,reveal:rv});
     else if(l.who==='Y')bubble(g.yx,WALLY-200,l.text,{dark:true,noTail:true,maxW:mw||250,reveal:rv});
     else if(l.who==='W')bubble(g.rx+92,WALLY-246,l.text,{dark:true,noTail:true,maxW:mw||230,reveal:rv});

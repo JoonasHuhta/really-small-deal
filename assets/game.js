@@ -129,6 +129,7 @@ function sfx(k){if(G&&G.epi)return;   // the epilogue is the song alone: no effe
   if(k==='hit'){duckMusic();tone(120,t,0.4,'sine',0.24,42);tone(900,t,0.06,'square',0.025,300);for(var hb=0;hb<3;hb++){tone(62,t+0.6+hb*0.75,0.13,'sine',0.14-hb*0.03);tone(54,t+0.78+hb*0.75,0.13,'sine',0.1-hb*0.02);}}
   else if(k==='rewind'){for(var rw=0;rw<7;rw++)tone(1500-rw*120,t+rw*0.045,0.04,'square',0.016,1700-rw*120);tone(90,t+0.36,0.12,'sine',0.06);}
   else if(k==='car'){tone(70,t,1.6,'sawtooth',0.02,140);tone(140,t+0.7,0.9,'sine',0.03,60);}
+  else if(k==='step'||k==='step2'){var sf=k==='step'?1:0.9;tone(105*sf,t,0.08,'sine',0.045,58*sf);tone(1500*sf,t,0.014,'triangle',0.005,900);}   // soft shoes on a hard floor, left and right a little different
   else if(k==='pop'){tone(380,t,0.05,'sine',0.035,720);}
   else if(k==='popS'){tone(170,t,0.07,'sine',0.05,310);}
   else if(k==='dotsOff'){tone(560,t,0.09,'sine',0.03,260);}
@@ -176,11 +177,17 @@ function reset(day){
 }
 
 /* ================= script engine ================= */
+// A message from someone else is typed before it arrives: three dots, a breath, then the words (Joonas 20.11.).
+// Not for your own messages, notifications, or right after scripted dots (Thursday's “seen” has its own).
+function incoming(s){if(s[0]!=='P'||s.typed||G.lab==='epilogue')return false;var t=s[1]||'';
+  if(G.dotsAt!=null&&G.time-G.dotsAt<1.2)return false;
+  return /^(?!You\b)(?!Library\b)[A-Z][A-Za-z’ ]{0,20}: “/.test(t)||/^Reply: /.test(t);}
 function run(){
   for(;;){
     if(!Q.length){WAIT=null;render();return;}
     var s=Q.shift();
     if(typeof s==='function'){var r=s();if(r&&r.length)Q=r.concat(Q);continue;}
+    if(Array.isArray(s)&&incoming(s)){var c=s.slice();c.typed=1;Q=[function(){G.dots={t:0};G.lines=G.lines.filter(function(l){return l.who!=='P';});sfx('pop');},{wait:RM?0.9:1.4},function(){G.dots=null;G.dotsAt=G.time;},c].concat(Q);continue;}
     if(Array.isArray(s)){setLine(s[0],s[1],s[2]);WAIT='click';LOCK=0.3;render();return;}
     if(s.wait!=null){if(s.wait>1)G.bick=0;WAIT='time';TIMER=s.wait;render();return;}
     if(s.view){WAIT='view';TIMER=2.4;render();return;}
@@ -925,13 +932,19 @@ function walkMenu(done){return function(){
     ['P','Eero: “Ha, no, fair. I take the lift for a reason.”'],
     set({mood:'surprised'}),['S','…Eero takes the lift for a REASON?'],['H','Everyone’s got something.'],
     ['S','Does Eero have one of me?'],['H','Probably. A smaller one. In a cardigan.'],set({mood:'calm'})]});
+  // At most three options at a time and two topics on the way home (Joonas 20.11.: four in a row was too many).
+  // Keep what the story needs: the real observation (it brings Sanna's reply) and the apology after a snap.
+  var real=o.filter(function(x){return x.t.indexOf('Mention')===0;}),rest=o.filter(function(x){return x.t.indexOf('Mention')!==0;});
+  rest.sort(function(a,b){return (b.m==='draft')-(a.m==='draft');});
+  o=real.concat(rest).slice(0,2);
   o.push({t:'We can walk while I’m still worried.',m:'stay',f:function(){done.stop=1;},then:[{wait:0.8},['S','I may bring up the comma again.'],['H','I know. Keep walking with me.']]});
   done.n=(done.n||0)+1;
   return o;
 };}
 function scWalk(){
   var done={};
-  function moreWalk(){return done.stop?[]:[{choice:walkMenu(done)},moreWalk];}
+  function topics(){return (done.oh?1:0)+(done.real?1:0)+(done.zone?1:0)+(done.mika?1:0);}
+  function moreWalk(){return done.stop||topics()>=2&&done.real||topics()>=3?[]:[{choice:walkMenu(done)},moreWalk];}
   return [{wait:0.7},function(){var g=G;g.fade=0;g.fadeRate=-0.8;},{wait:1.5},   // a breath: the office fades out before the walk home
     startWalk,oneLampGap,function(){var g=G;g.fade=1;g.fadeRate=0.55;},{wait:3.2},
     ['S','Right. Debrief. I’ve prepared slides.'],
@@ -973,7 +986,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -1315,10 +1328,14 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ]},
   calm,set({aFace:-1,near:1}),
   ['A','You okay?'],
+  {choice:[   // Friday ran 37 lines without the player: Ekskyysmi gets a say in the answer (the human still decides)
+    {t:'Say “nothing”. We have a folder for it.',m:'hide',f:function(){G.friSmall=0;}},
+    {t:'Say it’s something. A small something.',m:'stay',f:function(){G.friSmall=1;}}
+  ]},
   ['H','It’s something. Small. Give me a minute.'],
   set({mood:'surprised'}),
-  ['S','…That’s not what we say.'],
-  function(){var n=G.nothings||0;return [['S',n>1?'We say “nothing”. We’ve said it '+(n===2?'twice':n===3?'three times':n+' times')+' this week. I keep them in a folder.':'We say “nothing”. There’s a folder.']];},
+  function(){var n=G.nothings||0;return G.friSmall?[['S','…I suggested that. Out loud. On purpose.',{look:'stunned'}],['S','Don’t tell the folder.']]:
+    [['S','…That’s not what we say.'],['S',n>1?'We say “nothing”. We’ve said it '+(n===2?'twice':n===3?'three times':n+' times')+' this week. I keep them in a folder.':'We say “nothing”. There’s a folder.']];},
   ['A','Take your minute.'],
   {wait:1.4},
   set({mood:'calm'}),
@@ -1861,9 +1878,9 @@ function epiLift(){
 }
 function epiDraft(t){return function(){var g=G;g.lines=[{who:'P',text:t}];g.cur={who:'P',text:t};g.curT=99;};}
 function epiWorld(o,e){   // things drawn in the room, under the camera: the shadow umbrella, the dark with four eyes
-  if(!o.umbrella&&!o.drive&&!e.dark)return;
+  if(!o.umbrella&&!o.drive&&!o.zone&&!e.dark)return;
   ctx.save();applyCamera();var Hm=G.human,q=geom();
-  if(o.drive){var cx0=Hm.x+20,cy0=FEETY+8,bob=RM?0:Math.sin(G.time*22)*1.2;ctx.translate(0,bob);
+  if(o.drive){var cx0=Hm.x-16,cy0=FEETY+8,bob=RM?0:Math.sin(G.time*22)*1.2;ctx.translate(0,bob);
     ctx.fillStyle='#14111d';circ(cx0-62,cy0-6,15);ctx.fill();circ(cx0+66,cy0-6,15);ctx.fill();ctx.fillStyle='#55657a';circ(cx0-62,cy0-6,6);ctx.fill();circ(cx0+66,cy0-6,6);ctx.fill();
     ctx.fillStyle='#62887f';rr(cx0-104,cy0-62,208,48,12);ctx.fill();
     ctx.beginPath();ctx.moveTo(cx0-66,cy0-60);ctx.lineTo(cx0-46,cy0-150);ctx.lineTo(cx0+46,cy0-150);ctx.lineTo(cx0+76,cy0-60);ctx.closePath();
@@ -1872,6 +1889,7 @@ function epiWorld(o,e){   // things drawn in the room, under the camera: the sha
     ctx.fillStyle='#fbf3c8';circ(cx0+98,cy0-44,6);ctx.fill();ctx.fillStyle='#c9553f';rr(cx0-106,cy0-50,6,10,2);ctx.fill();
     if(!RM){ctx.strokeStyle='rgba(240,236,226,.35)';ctx.lineWidth=2;for(var sl=0;sl<4;sl++){var sy=cy0-80+sl*16,sx=cx0-130-((G.time*300+sl*40)%60);line(sx,sy,sx-30,sy);}}   // speed lines
     ctx.translate(0,-bob);}
+  if(o.zone){ctx.strokeStyle='rgba(246,241,228,.8)';ctx.lineWidth=3;ctx.setLineDash([10,8]);ctx.beginPath();ctx.ellipse(o.hx||470,FEETY+8,90,18,0,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);}   // a chalk circle, drawn by the shadow, for the shadow
   if(o.umbrella){var ux=Hm.x,uy=FEETY-238;ctx.fillStyle=mcol();ctx.beginPath();ctx.moveTo(ux-62,uy+14);ctx.quadraticCurveTo(ux,uy-46,ux+62,uy+14);
     for(var k=0;k<4;k++)ctx.quadraticCurveTo(ux+62-k*31-15.5,uy+4,ux+62-(k+1)*31,uy+14);ctx.fill();ctx.strokeStyle=mcol();ctx.lineWidth=4;line(ux,uy+10,ux,uy+52);}
   if(e.dark>0.01){ctx.restore();ctx.save();ctx.fillStyle='rgba(6,6,10,'+(0.96*e.dark)+')';ctx.fillRect(0,0,W,H);}
@@ -1958,6 +1976,7 @@ function epiShot(o){return function(){
   if(o.a){g.cowA=true;g.ax=g.axT=o.a;g.aFace=-1;g.aWave=!!o.wave;if(o.z){g.zT=1;g.zShow=0.2;}}
   if(o.b){g.cowB=true;g.bx2=g.bxT=o.b;g.bFace=o.r?1:-1;}
   if(o.bFace)g.bFace=o.bFace;if(o.eeroShadow){g.yx=g.yxT=o.eeroShadow;g.yShow=g.yT=1;}
+  g.ninja=!!o.ninja;
   g.epi.dark=0;g.epi.darkT=0;
   if(o.r){g.cowR=true;g.rx=o.r;}
   // composed framing: start, and drift to the end over the shot. Less motion: the end framing, no drift.
@@ -2020,7 +2039,26 @@ function epiAt(t){return function step(){return epiClock()>=t-0.03?[]:[{wait:0.0
 // Part A: the montage (31 bars). B: the receipt rolls while they sit on the floor (the song's quieter middle).
 // C: the last chorus: one bar each, no captions, faster. D: the bird and the credit, held to the last note.
 var EPIA=[2,2,2,2,2,2,1,1,1,1,2,1,2,2,1,2,2,1,3];
-var EPIC=['LUNCHES','NOS, SAID OUT LOUD','UMBRELLAS, HELD','RIDES HOME','laugh','LIFTS, SHARED','REJECTIONS, SELF-ISSUED','DRAFTS, DELETED','GROUP PHOTOS','POWER CUTS','DRAWINGS SHARED','DAYS LIVED TODAY'];
+// Twelve bars after the receipt, all new: Ekskyysmi in its headband, and two places from part two seen from another angle.
+function epiTic(t,x,y,o){return function(){G.tics.push(tic(t,x,y,o||{life:1.6,size:18}));};}
+var EPIN=[
+  {bars:1,cut:'smash',set:'home',clock:20*3600,s:1.25,mood:'stern',hx:560,ninja:1,pose:'five',five:{dx:20,dy:-60},cam:[1.5,420,250, 1.6,410,245],
+    at:[[0.5,epiTic('HI-YA.',300,150)]]},
+  {bars:2,cut:'hard',set:'clinic',clock:14*3600+10*60,s:1.45,mood:'worry',hx:480,cam:[1.3,470,260, 1.4,460,255],
+    at:[[0.3,epiTic('NOW SERVING: 12',620,140,{life:4,size:18})],[1.4,epiTic('YOUR NUMBER: 47',330,200,{life:3,size:18})],[2.6,function(){G.morko.sT=1.7;}]]},
+  {bars:1,cut:'hard',set:'home',clock:22*3600,s:0.42,mood:'alert',hx:330,ninja:1,off:190,cam:[1.7,520,240, 1.7,520,240],
+    at:[[0.6,epiTic('(stealth.)',560,150,{life:1.4,size:15})]]},
+  {bars:2,cut:'hard',set:'clinic',clock:9*3600+5*60,s:1.2,mood:'scared',hx:470,face:'stiff',cam:[1.45,450,250, 1.45,450,250],
+    at:[[0.6,epiTic('SMALL SCRATCH.',520,170,{life:1.8,size:18})],[1.7,function(){var g=G,M=g.morko;M.sT=0.32;M.mood='surprised';g.human.face='smile';g.tics.push(tic('thud.',g.human.x-80,FEETY-60,{life:1.6,size:15}));}],
+        [2.8,epiTic('brave things nobody saw: +1',300,120,{life:1.8,size:15})]]},
+  {bars:2,cut:'hard',set:'home',clock:9*3600,s:1.3,mood:'stern',hx:470,ninja:1,pose:'five',five:{dx:60,dy:-30},cam:[1.35,470,255, 1.45,480,250],
+    at:[[0.2,epiDraft('Riitta: “Quick chat?”')],[1.2,epiTic('CHOP.',560,210)],[1.5,epiDraft('Riitta: “Quick chat? Good news, actually.”')],[2.4,function(){var M=G.morko;M.mood='surprised';M.sT=0.9;}]]},
+  {bars:2,cut:'hard',set:'room',clock:16*3600,s:0.95,mood:'worry',hx:430,zone:1,cam:[1.3,480,290, 1.3,480,290],
+    at:[[0.4,epiTic('COMFORT ZONE',430,440,{life:3.6,size:15})],[1.3,function(){G.human.xT=G.human.x+120;G.morko.sT=1.25;G.morko.mood='alert';}],[2.6,function(){G.morko.sT=0.95;G.morko.mood='pleased';G.tics.push(tic('one step out. filed.',300,190,{life:1.8,size:15}));}]]},
+  {bars:2,cut:'fade',set:'home',clock:21*3600,s:1.0,mood:'pleased',hx:470,face:'smile',ninja:1,pose:'shoulder',cam:[1.6,460,280, 1.45,465,285],
+    at:[[1.0,epiTic('TEAM.',560,170,{life:2.4,size:18})]]}
+];
+var EPIC=['LUNCHES'];   // kept for older saves of the lab; the chorus is now EPIN
 function epiCopy(o,extra){var c={},k;for(k in o)c[k]=o[k];for(k in extra)c[k]=extra[k];return c;}
 function epiFind(l){for(var i=0;i<EPI.length;i++)if(l==='laugh'?EPI[i].face==='laugh':EPI[i].l===l)return EPI[i];return null;}
 // The whole receipt, rolling up like credits: every row of the week, the player's methods, the total, the maker.
@@ -2077,9 +2115,10 @@ function labEpilogue(){
   steps.push(epiAt(barT(rollStart)),epiShot({cut:'fade',set:'home',clock:23*3600+20*60,s:0.95,mood:'calm',hx:330,sitting:1,roll:1,
     cam:[1.3,360,300, 1.1,430,285],secs:barT(rollEnd)-barT(rollStart),
     at:[[barT(49)-barT(rollStart),function(){var M=G.morko;M.pose='puppet';G.morko.sT=0.9;G.human.pose=null;}],[barT(55)-barT(rollStart),function(){G.morko.pose='sit';G.human.pose='floor';}]]}));
-  EPIC.forEach(function(l,i){var o=epiFind(l);if(!o)return;var b0=rollEnd+i;
-    steps.push(epiAt(barT(b0)),epiShot(epiCopy(o,{cut:'hard',noCap:1,secs:barT(b0+1)-barT(b0),cam:[o.cam[3],o.cam[4],o.cam[5],o.cam[3],o.cam[4],o.cam[5]]})));});
-  var last=epiFind('DAYS LIVED TODAY'),cred=EPI[EPI.length-1],cb=rollEnd+EPIC.length;
+  // After the receipt: things nobody has seen yet (Joonas 20.11.: no repeats). The headband years, the waiting room, the small scratch.
+  var nb=rollEnd;EPIN.forEach(function(o){var b0=nb,n=o.bars||1;nb+=n;
+    steps.push(epiAt(barT(b0)),epiShot(epiCopy(o,{noCap:1,secs:barT(b0+n)-barT(b0)})));});
+  var cred=EPI[EPI.length-1],cb=nb;
   // the band stops at 169.4 s (onset analysis); the fade starts on that last hit and is black before the ring-out ends.
   steps.push(epiAt(barT(cb)),epiShot(epiCopy(cred,{secs:EPILAST-barT(cb)})),epiAt(EPILAST),function(){G.fade=0;G.fadeRate=-1/2.8;},epiAt(EPISONG),
     function(){G.epi=null;G.lines=[];G.cur=null;G.band=null;G.fade=1;G.fadeRate=0.0001;music(null);},{wait:0.8});
@@ -2089,7 +2128,7 @@ function labEpilogue(){
 /* ================= extra backdrops ================= */
 function home(){
   ctx.fillStyle='#2c3242';ctx.fillRect(-20,-20,W+40,WALLY+20);
-  var gr=ctx.createRadialGradient(520,300,10,520,300,330);gr.addColorStop(0,'rgba(255,214,140,'+(G.lampOff?0:.42)+')');gr.addColorStop(1,'rgba(255,214,140,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);
+  var glx=G.bed?690:520,gr=ctx.createRadialGradient(glx,300,10,glx,300,330);gr.addColorStop(0,'rgba(255,214,140,'+(G.lampOff?0:.42)+')');gr.addColorStop(1,'rgba(255,214,140,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);
   ctx.fillStyle='#232733';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);ctx.fillStyle='#1c202b';ctx.fillRect(-20,WALLY-6,W+40,6);
   ctx.fillStyle='#e9e2cf';rr(112,96,170,150,4);ctx.fill();ctx.fillStyle='#12152a';ctx.fillRect(120,104,154,134);
   ctx.fillStyle='#f6f1e4';circ(236,134,13);ctx.fill();ctx.fillStyle='#12152a';circ(242,130,11);ctx.fill();
@@ -2107,8 +2146,9 @@ function home(){
 }
 function homeLamp(){
   if(G.set!=='home'||G.kitchen||G.w)return;
-  ctx.strokeStyle='#15171f';ctx.lineWidth=4;ctx.lineCap='round';line(520,WALLY+62,520,292);
-  ctx.fillStyle=G.lampOff?'#6f6857':'#f3d27a';ctx.beginPath();ctx.moveTo(500,262);ctx.lineTo(540,262);ctx.lineTo(552,296);ctx.lineTo(488,296);ctx.closePath();ctx.fill();
+  var lx=G.bed?690:520;   // at night the bed takes the middle of the room: the lamp stands at its foot, not on it
+  ctx.strokeStyle='#15171f';ctx.lineWidth=4;ctx.lineCap='round';line(lx,WALLY+62,lx,292);
+  ctx.fillStyle=G.lampOff?'#6f6857':'#f3d27a';ctx.beginPath();ctx.moveTo(lx-20,262);ctx.lineTo(lx+20,262);ctx.lineTo(lx+32,296);ctx.lineTo(lx-32,296);ctx.closePath();ctx.fill();
 }
 function bagPos(k){var row=k<6?0:1,col=row?k-6:k;return {x:628+col*40+(row?20:0),y:row?372:346};}
 function countBags(){var g=G;for(var k=0;k<11;k++){var b=bagPos(k);g.tics.push(tic(String(k+1),b.x+13,b.y-16,{at:k*0.2,life:k===10?2.4:1.1,size:k===10?20:15,col:k===10?'#9fd3a8':'#f1ebdd'}));}}
@@ -2530,9 +2570,9 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
 ]);}
 
 /* ---- three dots: someone is typing. Then they are not. ---- */
-function typingDots(secs){return function(){return [function(){G.dots={t:0};sfx('pop');},{wait:secs},function(){G.dots=null;sfx('dotsOff');},{wait:0.7}];};}
+function typingDots(secs){return function(){return [function(){G.dots={t:0};sfx('pop');},{wait:secs},function(){G.dots=null;G.dotsAt=G.time;sfx('dotsOff');},{wait:0.7}];};}
 function drawDots(){
-  var d=G.dots;if(!d)return;var x=G.human.x+182,y=346,i;
+  var d=G.dots;if(!d)return;var x=(G.w||!G.human.gone?G.human.x+178:138),y=G.w?324:346,i;
   ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=2;rr(x,y,64,32,16);ctx.fill();ctx.stroke();
   for(i=0;i<3;i++){var b=RM?0:Math.max(0,Math.sin(d.t*7-i*0.9))*4;ctx.fillStyle='#8b8070';circ(x+18+i*14,y+16-b,4.2);ctx.fill();}
 }
@@ -2616,8 +2656,10 @@ function drawBed(){
   if(!G.bed)return;var x=330,y=FEETY-44;
   ctx.fillStyle='#4a3d52';rr(x,y,300,44,8);ctx.fill();ctx.fillStyle='#3a3044';rr(x-8,y-52,22,96,6);ctx.fill();
   ctx.fillStyle='#e9e2cf';rr(x+20,y-16,70,22,10);ctx.fill();                                                        // pillow
-  ctx.fillStyle='#e4bba2';circ(x+58,y-20,15);ctx.fill();ctx.fillStyle='#4a3b32';ctx.beginPath();ctx.arc(x+58,y-24,15,Math.PI*0.95,Math.PI*2.05);ctx.fill();
-  ctx.strokeStyle='#2b2027';ctx.lineWidth=1.6;line(x+50,y-18,x+56,y-18);line(x+61,y-18,x+67,y-18);                  // eyes shut
+  // The head lies on the pillow: turned on its side, crown towards the headboard (it used to sit up like a passport photo)
+  ctx.save();ctx.translate(x+52,y-12);ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='#e4bba2';circ(0,0,14);ctx.fill();ctx.fillStyle='#4a3b32';ctx.beginPath();ctx.arc(0,-4,14,Math.PI*0.95,Math.PI*2.05);ctx.fill();
+  ctx.strokeStyle='#2b2027';ctx.lineWidth=1.6;line(-7,2,-2,2);line(3,2,8,2);ctx.restore();                           // eyes shut
   var br=RM?0:Math.sin(G.time*1.5)*2.5;ctx.fillStyle='#c98f2e';rr(x+74,y-26-br,236,34+br,12);ctx.fill();             // blanket, breathing
 }
 function drawNight(){
@@ -2654,9 +2696,10 @@ function labNight(){return labScene({set:'home',title:'Night shift.',plan:'Sleep
   ['W','Eleven things. I put them down at night. Don’t tell anyone.'],
   ['S','…You ALL do this?'],
   ['Z','Every night. You never came.'],
-  ['S','I was guarding the door.'],
-  ['Z','From what?'],
-  aside(['S','…It’s a very important door.']),
+  {choice:[   // the longest stretch without the player (50 lines): one small decision in the dark
+    {t:'Explain about the door.',m:'hide',then:[['S','I was guarding the door.'],['Z','From what?'],aside(['S','…It’s a very important door.'])]},
+    {t:'Admit it: I didn’t know I was allowed out.',m:'stay',then:[['S','I didn’t know shadows were allowed out.'],['Z','We’re not. We just go.'],['S','…That’s a very loose policy.',{look:'pleased'}]]}
+  ]},
   ['Y','Is it true you think “we should grab a coffee sometime” is a threat?'],
   ['S','It IS a threat. It has no date.'],
   ['Y','That’s what I SAID.'],
@@ -3306,7 +3349,7 @@ var LOOKS=[
   {x:725,y:420,tag:'BENCH: WHERE THEY SIT. WITHOUT US.'},
   {x:HOME,y:FEETY-120,tag:'SUBJECT: FINE. (UNVERIFIED.)'}
 ];
-function lensOn(){var g=G,q=geom();g.lens={x:q.bx+40,y:q.hdY+60,xT:g.human.x+130,yT:FEETY-200,mode:'look',spot:null,done:{},t:0};g.morko.pose='lens';sfx('enhance');}
+function lensOn(){var g=G,q=geom();g.lens={x:q.bx+40,y:q.hdY+60,xT:g.human.x+120,yT:FEETY-300,mode:'look',spot:null,done:{},t:0};g.morko.pose='lens';sfx('enhance');}
 function lensTo(k){return function(){addLived('exhibits examined',30);var L=G.lens,s=SPOTS[k];L.xT=s.x;L.yT=s.y;L.spot=k;L.done[k]=1;sfx('card');};}
 function lensSelf(){var L=G.lens,q=geom();L.mode='self';L.spot=null;L.xT=q.bx+6;L.yT=q.hdY+14;G.morko.pose=null;G.morko.mood='worry';sfx('card');}
 // A quick look through the glass, anywhere. The glass is Ekskyysmi's signature tool, so it keeps coming back.
@@ -3333,8 +3376,12 @@ function lensTag(){
 function drawLens(){
   var g=G,L=g.lens;if(!L)return;var r=LENSR,k,h;
   // unexamined spots pulse quietly while the glass is free
-  if(lensFree())for(k in SPOTS){if(L.done[k])continue;var s=SPOTS[k],pu=RM?0.5:0.5+0.5*Math.sin(g.time*4);
-    ctx.strokeStyle='rgba(224,86,62,'+(0.45+0.4*pu)+')';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(s.x,s.y,11+pu*5,0,Math.PI*2);ctx.stroke();}
+  // Each spot carries the same number and name as its option in the list (Joonas 20.11.: it was unclear where to tap).
+  if(lensFree())for(var ci=0;CH&&ci<CH.length;ci++){k=CH[ci].spot;if(!k||L.done[k])continue;var s=SPOTS[k],pu=RM?0.5:0.5+0.5*Math.sin(g.time*4);
+    ctx.strokeStyle='rgba(224,86,62,'+(0.55+0.4*pu)+')';ctx.lineWidth=3;ctx.beginPath();ctx.arc(s.x,s.y,17+pu*6,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#c9553f';circ(s.x,s.y,12);ctx.fill();ctx.fillStyle='#fff';ctx.font='800 14px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(ci+1),s.x,s.y+1);
+    var nm=k==='laugh'?'the laugh':k==='mug'?'the mug':'the silence';ctx.font='700 12px system-ui,sans-serif';var nw=ctx.measureText(nm).width+12;
+    ctx.fillStyle='rgba(120,20,28,.88)';rr(s.x-nw/2,s.y+26,nw,18,4);ctx.fill();ctx.fillStyle='#fff';ctx.fillText(nm,s.x,s.y+35);}
   ctx.save();ctx.beginPath();ctx.arc(L.x,L.y,r,0,Math.PI*2);ctx.clip();
   if(L.mode==='self'){
     // The glass turned on its owner: the wall, and something much smaller than advertised.
@@ -3390,7 +3437,7 @@ function labGlass(){
   ['H','People stop laughing. It’s how laughing ends.'],
   ['S','I’ll need the glass.'],
   lensOn,{wait:0.8},
-  ['N','Move the glass around the room. Tap a marked spot to examine it.'],
+  ['N','Move the glass around the room. Tap a numbered circle, or pick from the list.'],
   {choice:glassMenu},more,
   function(){var g=G;g.lens.xT=g.human.x+120;g.lens.yT=FEETY-210;g.lens.spot=null;g.aWave=true;},
   ['A','Oh, hi! Come here, you have to see this.'],
@@ -4345,7 +4392,7 @@ function update(dt,elapsed){
   if(g.zoom)g.zoom.t+=dt;
   stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);stepToss(dt);stepAuto(dt);if(g.buzz>0)g.buzz=Math.max(0,g.buzz-dt);
   var hk=(g.planText||'')+'|'+g.jobDone+'|'+g.hud+'|'+g.chapter+'|'+g.lab+'|'+g.yes+'|'+(g.w?1:0);if(hk!==g.hudKey){g.hudKey=hk;g.hudAge=0;}g.hudAge=(g.hudAge||0)+dt;
-  stepTics(dt);stepHot(dt);stepEpi(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
+  stepFeet();  stepTics(dt);stepHot(dt);stepEpi(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
   if(WAIT==='fight'&&g.fight&&!paused)stepFight(elapsed);
   if(WAIT==='hold'&&g.hold){
     var hh=g.hold,hon=hh.on||hh.tap>0;hh.tap=Math.max(0,hh.tap-elapsed);if(hh.on)hh.p+=elapsed;holdStep(hh,hon,elapsed);
@@ -4383,6 +4430,11 @@ function titleIdle(dt){
   var t=(g.idleT=(g.idleT||0)+dt)%11;
   Hm.sipT=t>4&&t<5.4?1:0;
 }
+
+// Footsteps follow the legs: one step each time the leg swing (sin(time*8) in person()) changes sides.
+function stepFeet(){var g=G,Hm=g.human;if(!Hm||g.epi||g.out)return;
+  var walking=g.w?!!g.walking:(!Hm.gone&&Math.abs(Hm.x-Hm.xT)>1&&Hm.pose!=='floor');
+  var side=Math.sin(g.time*8)>0;if(walking&&g.stepSide!=null&&side!==g.stepSide)sfx(side?'step':'step2');g.stepSide=side;}
 // ---- src/70-draw.js ----
 /* ================= drawing helpers ================= */
 function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
@@ -4567,8 +4619,9 @@ function drawHuman(extra){
   if(extra)for(var k in extra)o[k]=extra[k];
   if(Hm.pose==='floor'){   // sitting on the floor, legs out
     var f=o.facing||1;o.walk=false;o.cup=false;o.shadow=0;
-    ctx.fillStyle='rgba(20,16,30,.2)';ctx.beginPath();ctx.ellipse(Hm.x+f*22,FEETY+3,58,8,0,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='#3a3944';rr(f>0?Hm.x-4:Hm.x-62,FEETY-13,66,13,5);ctx.fill();ctx.fillStyle='#263639';rr(f>0?Hm.x+56:Hm.x-72,FEETY-20,14,20,4);ctx.fill();
+    var inCar=!!(G.epi&&G.epi.o&&G.epi.o.drive);   // in the car the legs are under the dashboard, not under the car
+    if(!inCar){ctx.fillStyle='rgba(20,16,30,.2)';ctx.beginPath();ctx.ellipse(Hm.x+f*22,FEETY+3,58,8,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#3a3944';rr(f>0?Hm.x-4:Hm.x-62,FEETY-13,66,13,5);ctx.fill();ctx.fillStyle='#263639';rr(f>0?Hm.x+56:Hm.x-72,FEETY-20,14,20,4);ctx.fill();}
     ctx.save();ctx.beginPath();ctx.rect(-40,-40,W+80,FEETY-6+40);ctx.clip();ctx.translate(0,46);person(Hm.x,o);ctx.restore();
     return;
   }
@@ -4771,6 +4824,7 @@ function drawLines(){
     else if(l.who==='T'&&g.bar)bubble(g.bar.tx-196,0,l.text,{noTail:true,maxW:mw||240,reveal:rv,top:BARY+26});
     else if(l.who==='X'&&g.bar)bubble(g.bar.sx,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='L')bubble(760,FEETY-172,l.text,{maxW:mw,reveal:rv});
+    else if(g.night&&NIGHT_EYES[l.who])bubble(NIGHT_EYES[l.who].x,NIGHT_EYES[l.who].y-16,l.text,{dark:true,maxW:mw||250,reveal:rv});   // in the dark, a tail points at the eyes that spoke
     else if(l.who==='Z')bubble(g.ax+62,WALLY-178,l.text,{dark:true,noTail:true,reveal:rv});
     else if(l.who==='Y')bubble(g.yx,WALLY-200,l.text,{dark:true,noTail:true,maxW:mw||250,reveal:rv});
     else if(l.who==='W')bubble(g.rx+92,WALLY-246,l.text,{dark:true,noTail:true,maxW:mw||230,reveal:rv});
@@ -5192,6 +5246,11 @@ if(document.addEventListener)document.addEventListener('click',function(e){
   var b=e&&e.target&&e.target.closest&&e.target.closest('button');
   if(!b||b.id==='menu'||b.id==='sound'||b.classList.contains('opt')||b.disabled)return;sfx('ui');
 },true);
+
+// Language setting: stored now, used when the string table exists (K12). Until then everything is English.
+var LANG='en';
+(function(){var el=document.getElementById('lang');if(!el)return;try{var v=window.localStorage.getItem('ekskyysmi.lang');if(v&&el.querySelector('option[value="'+v+'"]:not([disabled])'))el.value=LANG=v;}catch(e){}
+  el.addEventListener('change',function(){LANG=el.value;try{window.localStorage.setItem('ekskyysmi.lang',LANG);}catch(e){}sfx('pick');});})();
 // ---- src/90-loop.js ----
 /* ================= loop ================= */
 var last=0;

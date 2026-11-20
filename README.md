@@ -14,6 +14,17 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.62.0 (Claude, 20.11.2026): **kampaus, osa 1.**
+- Kotimatka: enintään kolme vaihtoehtoa kerrallaan ja kaksi aihetta. Todellinen havainto (tuo Sannan vastauksen) on aina tarjolla; Eeron näykkäisyn jälkeen anteeksipyyntö tulee toisena.
+- Pisimmät pelkät klikkausjaksot saivat valinnan: *Night shift* (50 riviä → valinta ”Explain about the door.” / ”Admit it: I didn’t know I was allowed out.”) ja perjantai (37 riviä → Sannan ”You okay?” -kohtaan: ”Say ’nothing’.” / ”Say it’s something. A small something.”; ihminen päättää silti itse).
+- Puhelin: muiden viestit tulevat kolmen pisteen ja 1,4 s odotuksen jälkeen (ei omille viesteille, ilmoituksille eikä torstain käsikirjoitettujen pisteiden perään).
+- Askeläänet: pehmeä askel aina kun jalka vaihtaa puolta (ihminen, myös kotimatkalla). Ei epilogissa.
+- Suurennuslasi: merkit ovat numeroituja ja nimettyjä samoin kuin listan vaihtoehdot, lasi aloittaa merkkien ulkopuolelta, ohje: ”Tap a numbered circle, or pick from the list.”
+- Yö: lamppu seisoo sängyn jalkopäässä (ei sängyn päällä), pää lepää tyynyllä kyljellään, varjojen kuplilla on häntä niitä silmiä kohti, jotka puhuvat.
+- Epilogi: kuljettaja istuu auton etupuoliskolla, jalat eivät näy auton alta. Kuitin jälkeen 12 tahtia uutta (ei toistoja): ninja-Ekskyysmi (HI-YA, hiippailu lampun takana, ”Quick chat?” → CHOP), odotushuone (NOW SERVING 12 / YOUR NUMBER 47), labra (”SMALL SCRATCH.”, varjo pyörtyy, ihminen hymyilee), mukavuusalueen liitupiiri, TEAM. Varjolintu ennallaan.
+- Asetuksissa kielivalikko: English; Suomi ja Svenska näkyvät, mutta eivät ole vielä valittavissa (K12).
+- Päänauha nollautuu kohtausten välillä (ei enää patterilla).
+
 Versio 0.61.0 (Claude, 20.11.2026): **kertoja ja kuplat.**
 - Kertojan rivit ovat nimettömiä ja kursiivisia, ilman kuvaketta (ruudunlukija kuulee yhä ”Narrator”). Alun hetki ei enää näytä kertojan riviä paneelissa samaan aikaan kuin kuvateksti ”Monday, 8:52. Nobody here yet.”
 - Puhekupla pysyy näkyvän kuva-alan sisällä myös zoomatessa (vähintään 18 px reunasta). Eeron ensimmäinen kupla osui reunaan.

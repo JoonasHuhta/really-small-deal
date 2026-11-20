@@ -305,9 +305,9 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
 ]);}
 
 /* ---- three dots: someone is typing. Then they are not. ---- */
-function typingDots(secs){return function(){return [function(){G.dots={t:0};sfx('pop');},{wait:secs},function(){G.dots=null;sfx('dotsOff');},{wait:0.7}];};}
+function typingDots(secs){return function(){return [function(){G.dots={t:0};sfx('pop');},{wait:secs},function(){G.dots=null;G.dotsAt=G.time;sfx('dotsOff');},{wait:0.7}];};}
 function drawDots(){
-  var d=G.dots;if(!d)return;var x=G.human.x+182,y=346,i;
+  var d=G.dots;if(!d)return;var x=(G.w||!G.human.gone?G.human.x+178:138),y=G.w?324:346,i;
   ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=2;rr(x,y,64,32,16);ctx.fill();ctx.stroke();
   for(i=0;i<3;i++){var b=RM?0:Math.max(0,Math.sin(d.t*7-i*0.9))*4;ctx.fillStyle='#8b8070';circ(x+18+i*14,y+16-b,4.2);ctx.fill();}
 }
@@ -391,8 +391,10 @@ function drawBed(){
   if(!G.bed)return;var x=330,y=FEETY-44;
   ctx.fillStyle='#4a3d52';rr(x,y,300,44,8);ctx.fill();ctx.fillStyle='#3a3044';rr(x-8,y-52,22,96,6);ctx.fill();
   ctx.fillStyle='#e9e2cf';rr(x+20,y-16,70,22,10);ctx.fill();                                                        // pillow
-  ctx.fillStyle='#e4bba2';circ(x+58,y-20,15);ctx.fill();ctx.fillStyle='#4a3b32';ctx.beginPath();ctx.arc(x+58,y-24,15,Math.PI*0.95,Math.PI*2.05);ctx.fill();
-  ctx.strokeStyle='#2b2027';ctx.lineWidth=1.6;line(x+50,y-18,x+56,y-18);line(x+61,y-18,x+67,y-18);                  // eyes shut
+  // The head lies on the pillow: turned on its side, crown towards the headboard (it used to sit up like a passport photo)
+  ctx.save();ctx.translate(x+52,y-12);ctx.rotate(-Math.PI/2);
+  ctx.fillStyle='#e4bba2';circ(0,0,14);ctx.fill();ctx.fillStyle='#4a3b32';ctx.beginPath();ctx.arc(0,-4,14,Math.PI*0.95,Math.PI*2.05);ctx.fill();
+  ctx.strokeStyle='#2b2027';ctx.lineWidth=1.6;line(-7,2,-2,2);line(3,2,8,2);ctx.restore();                           // eyes shut
   var br=RM?0:Math.sin(G.time*1.5)*2.5;ctx.fillStyle='#c98f2e';rr(x+74,y-26-br,236,34+br,12);ctx.fill();             // blanket, breathing
 }
 function drawNight(){
@@ -429,9 +431,10 @@ function labNight(){return labScene({set:'home',title:'Night shift.',plan:'Sleep
   ['W','Eleven things. I put them down at night. Don’t tell anyone.'],
   ['S','…You ALL do this?'],
   ['Z','Every night. You never came.'],
-  ['S','I was guarding the door.'],
-  ['Z','From what?'],
-  aside(['S','…It’s a very important door.']),
+  {choice:[   // the longest stretch without the player (50 lines): one small decision in the dark
+    {t:'Explain about the door.',m:'hide',then:[['S','I was guarding the door.'],['Z','From what?'],aside(['S','…It’s a very important door.'])]},
+    {t:'Admit it: I didn’t know I was allowed out.',m:'stay',then:[['S','I didn’t know shadows were allowed out.'],['Z','We’re not. We just go.'],['S','…That’s a very loose policy.',{look:'pleased'}]]}
+  ]},
   ['Y','Is it true you think “we should grab a coffee sometime” is a threat?'],
   ['S','It IS a threat. It has no date.'],
   ['Y','That’s what I SAID.'],

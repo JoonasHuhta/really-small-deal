@@ -237,3 +237,8 @@ if(document.addEventListener)document.addEventListener('click',function(e){
   var b=e&&e.target&&e.target.closest&&e.target.closest('button');
   if(!b||b.id==='menu'||b.id==='sound'||b.classList.contains('opt')||b.disabled)return;sfx('ui');
 },true);
+
+// Language setting: stored now, used when the string table exists (K12). Until then everything is English.
+var LANG='en';
+(function(){var el=document.getElementById('lang');if(!el)return;try{var v=window.localStorage.getItem('ekskyysmi.lang');if(v&&el.querySelector('option[value="'+v+'"]:not([disabled])'))el.value=LANG=v;}catch(e){}
+  el.addEventListener('change',function(){LANG=el.value;try{window.localStorage.setItem('ekskyysmi.lang',LANG);}catch(e){}sfx('pick');});})();

@@ -194,13 +194,19 @@ function walkMenu(done){return function(){
     ['P','Eero: “Ha, no, fair. I take the lift for a reason.”'],
     set({mood:'surprised'}),['S','…Eero takes the lift for a REASON?'],['H','Everyone’s got something.'],
     ['S','Does Eero have one of me?'],['H','Probably. A smaller one. In a cardigan.'],set({mood:'calm'})]});
+  // At most three options at a time and two topics on the way home (Joonas 20.11.: four in a row was too many).
+  // Keep what the story needs: the real observation (it brings Sanna's reply) and the apology after a snap.
+  var real=o.filter(function(x){return x.t.indexOf('Mention')===0;}),rest=o.filter(function(x){return x.t.indexOf('Mention')!==0;});
+  rest.sort(function(a,b){return (b.m==='draft')-(a.m==='draft');});
+  o=real.concat(rest).slice(0,2);
   o.push({t:'We can walk while I’m still worried.',m:'stay',f:function(){done.stop=1;},then:[{wait:0.8},['S','I may bring up the comma again.'],['H','I know. Keep walking with me.']]});
   done.n=(done.n||0)+1;
   return o;
 };}
 function scWalk(){
   var done={};
-  function moreWalk(){return done.stop?[]:[{choice:walkMenu(done)},moreWalk];}
+  function topics(){return (done.oh?1:0)+(done.real?1:0)+(done.zone?1:0)+(done.mika?1:0);}
+  function moreWalk(){return done.stop||topics()>=2&&done.real||topics()>=3?[]:[{choice:walkMenu(done)},moreWalk];}
   return [{wait:0.7},function(){var g=G;g.fade=0;g.fadeRate=-0.8;},{wait:1.5},   // a breath: the office fades out before the walk home
     startWalk,oneLampGap,function(){var g=G;g.fade=1;g.fadeRate=0.55;},{wait:3.2},
     ['S','Right. Debrief. I’ve prepared slides.'],

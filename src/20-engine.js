@@ -21,11 +21,17 @@ function reset(day){
 }
 
 /* ================= script engine ================= */
+// A message from someone else is typed before it arrives: three dots, a breath, then the words (Joonas 20.11.).
+// Not for your own messages, notifications, or right after scripted dots (Thursday's “seen” has its own).
+function incoming(s){if(s[0]!=='P'||s.typed||G.lab==='epilogue')return false;var t=s[1]||'';
+  if(G.dotsAt!=null&&G.time-G.dotsAt<1.2)return false;
+  return /^(?!You\b)(?!Library\b)[A-Z][A-Za-z’ ]{0,20}: “/.test(t)||/^Reply: /.test(t);}
 function run(){
   for(;;){
     if(!Q.length){WAIT=null;render();return;}
     var s=Q.shift();
     if(typeof s==='function'){var r=s();if(r&&r.length)Q=r.concat(Q);continue;}
+    if(Array.isArray(s)&&incoming(s)){var c=s.slice();c.typed=1;Q=[function(){G.dots={t:0};G.lines=G.lines.filter(function(l){return l.who!=='P';});sfx('pop');},{wait:RM?0.9:1.4},function(){G.dots=null;G.dotsAt=G.time;},c].concat(Q);continue;}
     if(Array.isArray(s)){setLine(s[0],s[1],s[2]);WAIT='click';LOCK=0.3;render();return;}
     if(s.wait!=null){if(s.wait>1)G.bick=0;WAIT='time';TIMER=s.wait;render();return;}
     if(s.view){WAIT='view';TIMER=2.4;render();return;}

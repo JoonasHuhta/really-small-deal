@@ -29,9 +29,9 @@ function epiLift(){
 }
 function epiDraft(t){return function(){var g=G;g.lines=[{who:'P',text:t}];g.cur={who:'P',text:t};g.curT=99;};}
 function epiWorld(o,e){   // things drawn in the room, under the camera: the shadow umbrella, the dark with four eyes
-  if(!o.umbrella&&!o.drive&&!e.dark)return;
+  if(!o.umbrella&&!o.drive&&!o.zone&&!e.dark)return;
   ctx.save();applyCamera();var Hm=G.human,q=geom();
-  if(o.drive){var cx0=Hm.x+20,cy0=FEETY+8,bob=RM?0:Math.sin(G.time*22)*1.2;ctx.translate(0,bob);
+  if(o.drive){var cx0=Hm.x-16,cy0=FEETY+8,bob=RM?0:Math.sin(G.time*22)*1.2;ctx.translate(0,bob);
     ctx.fillStyle='#14111d';circ(cx0-62,cy0-6,15);ctx.fill();circ(cx0+66,cy0-6,15);ctx.fill();ctx.fillStyle='#55657a';circ(cx0-62,cy0-6,6);ctx.fill();circ(cx0+66,cy0-6,6);ctx.fill();
     ctx.fillStyle='#62887f';rr(cx0-104,cy0-62,208,48,12);ctx.fill();
     ctx.beginPath();ctx.moveTo(cx0-66,cy0-60);ctx.lineTo(cx0-46,cy0-150);ctx.lineTo(cx0+46,cy0-150);ctx.lineTo(cx0+76,cy0-60);ctx.closePath();
@@ -40,6 +40,7 @@ function epiWorld(o,e){   // things drawn in the room, under the camera: the sha
     ctx.fillStyle='#fbf3c8';circ(cx0+98,cy0-44,6);ctx.fill();ctx.fillStyle='#c9553f';rr(cx0-106,cy0-50,6,10,2);ctx.fill();
     if(!RM){ctx.strokeStyle='rgba(240,236,226,.35)';ctx.lineWidth=2;for(var sl=0;sl<4;sl++){var sy=cy0-80+sl*16,sx=cx0-130-((G.time*300+sl*40)%60);line(sx,sy,sx-30,sy);}}   // speed lines
     ctx.translate(0,-bob);}
+  if(o.zone){ctx.strokeStyle='rgba(246,241,228,.8)';ctx.lineWidth=3;ctx.setLineDash([10,8]);ctx.beginPath();ctx.ellipse(o.hx||470,FEETY+8,90,18,0,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);}   // a chalk circle, drawn by the shadow, for the shadow
   if(o.umbrella){var ux=Hm.x,uy=FEETY-238;ctx.fillStyle=mcol();ctx.beginPath();ctx.moveTo(ux-62,uy+14);ctx.quadraticCurveTo(ux,uy-46,ux+62,uy+14);
     for(var k=0;k<4;k++)ctx.quadraticCurveTo(ux+62-k*31-15.5,uy+4,ux+62-(k+1)*31,uy+14);ctx.fill();ctx.strokeStyle=mcol();ctx.lineWidth=4;line(ux,uy+10,ux,uy+52);}
   if(e.dark>0.01){ctx.restore();ctx.save();ctx.fillStyle='rgba(6,6,10,'+(0.96*e.dark)+')';ctx.fillRect(0,0,W,H);}
@@ -126,6 +127,7 @@ function epiShot(o){return function(){
   if(o.a){g.cowA=true;g.ax=g.axT=o.a;g.aFace=-1;g.aWave=!!o.wave;if(o.z){g.zT=1;g.zShow=0.2;}}
   if(o.b){g.cowB=true;g.bx2=g.bxT=o.b;g.bFace=o.r?1:-1;}
   if(o.bFace)g.bFace=o.bFace;if(o.eeroShadow){g.yx=g.yxT=o.eeroShadow;g.yShow=g.yT=1;}
+  g.ninja=!!o.ninja;
   g.epi.dark=0;g.epi.darkT=0;
   if(o.r){g.cowR=true;g.rx=o.r;}
   // composed framing: start, and drift to the end over the shot. Less motion: the end framing, no drift.
@@ -188,7 +190,26 @@ function epiAt(t){return function step(){return epiClock()>=t-0.03?[]:[{wait:0.0
 // Part A: the montage (31 bars). B: the receipt rolls while they sit on the floor (the song's quieter middle).
 // C: the last chorus: one bar each, no captions, faster. D: the bird and the credit, held to the last note.
 var EPIA=[2,2,2,2,2,2,1,1,1,1,2,1,2,2,1,2,2,1,3];
-var EPIC=['LUNCHES','NOS, SAID OUT LOUD','UMBRELLAS, HELD','RIDES HOME','laugh','LIFTS, SHARED','REJECTIONS, SELF-ISSUED','DRAFTS, DELETED','GROUP PHOTOS','POWER CUTS','DRAWINGS SHARED','DAYS LIVED TODAY'];
+// Twelve bars after the receipt, all new: Ekskyysmi in its headband, and two places from part two seen from another angle.
+function epiTic(t,x,y,o){return function(){G.tics.push(tic(t,x,y,o||{life:1.6,size:18}));};}
+var EPIN=[
+  {bars:1,cut:'smash',set:'home',clock:20*3600,s:1.25,mood:'stern',hx:560,ninja:1,pose:'five',five:{dx:20,dy:-60},cam:[1.5,420,250, 1.6,410,245],
+    at:[[0.5,epiTic('HI-YA.',300,150)]]},
+  {bars:2,cut:'hard',set:'clinic',clock:14*3600+10*60,s:1.45,mood:'worry',hx:480,cam:[1.3,470,260, 1.4,460,255],
+    at:[[0.3,epiTic('NOW SERVING: 12',620,140,{life:4,size:18})],[1.4,epiTic('YOUR NUMBER: 47',330,200,{life:3,size:18})],[2.6,function(){G.morko.sT=1.7;}]]},
+  {bars:1,cut:'hard',set:'home',clock:22*3600,s:0.42,mood:'alert',hx:330,ninja:1,off:190,cam:[1.7,520,240, 1.7,520,240],
+    at:[[0.6,epiTic('(stealth.)',560,150,{life:1.4,size:15})]]},
+  {bars:2,cut:'hard',set:'clinic',clock:9*3600+5*60,s:1.2,mood:'scared',hx:470,face:'stiff',cam:[1.45,450,250, 1.45,450,250],
+    at:[[0.6,epiTic('SMALL SCRATCH.',520,170,{life:1.8,size:18})],[1.7,function(){var g=G,M=g.morko;M.sT=0.32;M.mood='surprised';g.human.face='smile';g.tics.push(tic('thud.',g.human.x-80,FEETY-60,{life:1.6,size:15}));}],
+        [2.8,epiTic('brave things nobody saw: +1',300,120,{life:1.8,size:15})]]},
+  {bars:2,cut:'hard',set:'home',clock:9*3600,s:1.3,mood:'stern',hx:470,ninja:1,pose:'five',five:{dx:60,dy:-30},cam:[1.35,470,255, 1.45,480,250],
+    at:[[0.2,epiDraft('Riitta: “Quick chat?”')],[1.2,epiTic('CHOP.',560,210)],[1.5,epiDraft('Riitta: “Quick chat? Good news, actually.”')],[2.4,function(){var M=G.morko;M.mood='surprised';M.sT=0.9;}]]},
+  {bars:2,cut:'hard',set:'room',clock:16*3600,s:0.95,mood:'worry',hx:430,zone:1,cam:[1.3,480,290, 1.3,480,290],
+    at:[[0.4,epiTic('COMFORT ZONE',430,440,{life:3.6,size:15})],[1.3,function(){G.human.xT=G.human.x+120;G.morko.sT=1.25;G.morko.mood='alert';}],[2.6,function(){G.morko.sT=0.95;G.morko.mood='pleased';G.tics.push(tic('one step out. filed.',300,190,{life:1.8,size:15}));}]]},
+  {bars:2,cut:'fade',set:'home',clock:21*3600,s:1.0,mood:'pleased',hx:470,face:'smile',ninja:1,pose:'shoulder',cam:[1.6,460,280, 1.45,465,285],
+    at:[[1.0,epiTic('TEAM.',560,170,{life:2.4,size:18})]]}
+];
+var EPIC=['LUNCHES'];   // kept for older saves of the lab; the chorus is now EPIN
 function epiCopy(o,extra){var c={},k;for(k in o)c[k]=o[k];for(k in extra)c[k]=extra[k];return c;}
 function epiFind(l){for(var i=0;i<EPI.length;i++)if(l==='laugh'?EPI[i].face==='laugh':EPI[i].l===l)return EPI[i];return null;}
 // The whole receipt, rolling up like credits: every row of the week, the player's methods, the total, the maker.
@@ -245,9 +266,10 @@ function labEpilogue(){
   steps.push(epiAt(barT(rollStart)),epiShot({cut:'fade',set:'home',clock:23*3600+20*60,s:0.95,mood:'calm',hx:330,sitting:1,roll:1,
     cam:[1.3,360,300, 1.1,430,285],secs:barT(rollEnd)-barT(rollStart),
     at:[[barT(49)-barT(rollStart),function(){var M=G.morko;M.pose='puppet';G.morko.sT=0.9;G.human.pose=null;}],[barT(55)-barT(rollStart),function(){G.morko.pose='sit';G.human.pose='floor';}]]}));
-  EPIC.forEach(function(l,i){var o=epiFind(l);if(!o)return;var b0=rollEnd+i;
-    steps.push(epiAt(barT(b0)),epiShot(epiCopy(o,{cut:'hard',noCap:1,secs:barT(b0+1)-barT(b0),cam:[o.cam[3],o.cam[4],o.cam[5],o.cam[3],o.cam[4],o.cam[5]]})));});
-  var last=epiFind('DAYS LIVED TODAY'),cred=EPI[EPI.length-1],cb=rollEnd+EPIC.length;
+  // After the receipt: things nobody has seen yet (Joonas 20.11.: no repeats). The headband years, the waiting room, the small scratch.
+  var nb=rollEnd;EPIN.forEach(function(o){var b0=nb,n=o.bars||1;nb+=n;
+    steps.push(epiAt(barT(b0)),epiShot(epiCopy(o,{noCap:1,secs:barT(b0+n)-barT(b0)})));});
+  var cred=EPI[EPI.length-1],cb=nb;
   // the band stops at 169.4 s (onset analysis); the fade starts on that last hit and is black before the ring-out ends.
   steps.push(epiAt(barT(cb)),epiShot(epiCopy(cred,{secs:EPILAST-barT(cb)})),epiAt(EPILAST),function(){G.fade=0;G.fadeRate=-1/2.8;},epiAt(EPISONG),
     function(){G.epi=null;G.lines=[];G.cur=null;G.band=null;G.fade=1;G.fadeRate=0.0001;music(null);},{wait:0.8});

@@ -18,10 +18,10 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/game.css?v=0.61.0">
+  <link rel="stylesheet" href="assets/game.css?v=0.62.0">
   <script>/* the immersive layout, before first paint, so a phone held sideways never flashes the wide one */
     try{if(matchMedia('(orientation:landscape) and (max-height:540px)').matches)document.documentElement.classList.add('immersive');}catch(e){}</script>
-  <script src="assets/game.js?v=0.61.0" defer></script>
+  <script src="assets/game.js?v=0.62.0" defer></script>
 </head>
 <body>
 <main class="wrap">
@@ -38,6 +38,7 @@
       <button id="journal" type="button" disabled>Dialogue</button>
       <button id="pause" type="button" disabled>Pause</button>
       <button id="restart" type="button">Restart</button>
+      <label class="lang-row" for="lang"><span>Language</span><select id="lang"><option value="en" selected>English</option><option value="fi" disabled>Suomi (later)</option><option value="sv" disabled>Svenska (later)</option></select></label>
     </nav>
   </header>
   <section class="game-frame" aria-label="Interactive story">

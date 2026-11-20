@@ -175,3 +175,8 @@ html.immersive body.playing .line p.loud{font-size:calc(18px * var(--ts,1))}html
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .line:has(.w-N) .speaker-icon{visibility:hidden}
 .line .w-N p{font-style:italic;color:#d9d3c4}
+
+/* Language: only English for now; Finnish and Swedish are listed so the menu is ready (TYOSUUNNITELMA K12) */
+.lang-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;padding:6px 12px;color:var(--ink)}
+.lang-row select{font:inherit;background:transparent;color:inherit;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:5px 8px}
+.lang-row option{color:#14111d}
