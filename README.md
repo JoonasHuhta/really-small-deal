@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.53.0 (Claude, 20.11.2026): **istuva varjo korjattu pelissä, ja epilogiin kolme uutta välähdystä.**
+- Istuva Ekskyysmi (*Nothing.*-hetki ja epilogin loppu): lyhyempi vartalo, reisi lattiaa pitkin, polvi koholla ja kädet polvella. Ennen se näytti seisovalta varjolta, jonka vieressä on möykky.
+- Suurennuslasi epilogissa näyttää totuuden: Sanna hymyilee (”FACE: FRIENDLY. RE-CHECKING.”). Tarinassa lasi tekee yhä kaikesta pahemman näköistä; epilogissa lasi on rehellinen (`honest`).
+- Uudet keksityt välähdykset: kotimatka baarin jälkeen – reunakivi, molemmat kaatuvat ja nauravat (”KERBS, SURVIVED … 0 OF 2, falls: one each. verdicts: none.”); Ekskyysmi on leimannut itseensä kymmenen REJECTED-leimaa (”REJECTIONS, SELF-ISSUED … 10, all of them overturned on appeal.”); ryhmäkuva salamalla, ja takana valtava kutsumaton varjo (”GROUP PHOTOS … 1, shadows in shot: 1 (uninvited)”).
+- Montaasin kävelyssä ei rekisterikilpilaskuja. Kesto noin 70 s; karsitaan kappaleen pituuteen.
+
 Versio 0.52.0 (Claude, 20.11.2026): **epilogin leikkauskieli: ei diaesityksen zoomia.**
 - Kuvien pituudet vaihtelevat (1,6 s välähdys – 7 s viipyvä kuva), ja tahti kiihtyy keskellä ja hidastuu lopussa.
 - Leikkaukset: ristihäivytys herkille kuville, kova leikkaus komiikalle, *smash cut* kontrastille. Useimmat kuvat ovat paikallaan; liike tarkoittaa jotain (hidas vetäytyminen lopussa, äkillinen zoomi gagiin).

@@ -16,7 +16,8 @@ function drawTics(cam){
 }
 // Monday's walk home: cars parked nose to the pavement, and a human quietly adding up number plates, looking for a pair.
 var CARS=[{x:150,plate:'KIV-304',sum:'KIV-304 …  3+0+4 = 7',col:'#6f8aa8'},{x:560,plate:'ROS-151',sum:'ROS-151 …  1+5+1 = 7.  a pair ✓',col:'#a8746f',match:true},{x:1000,plate:'APU-999',sum:'APU-999 …  27.  no.',col:'#8a9a72'}];
-function carTics(){
+function carTics(){if(G.epi)return;   // the montage walk has no number-plate maths
+
   var g=G,w=g.w;if(!w)return;
   for(var i=0;i<CARS.length;i++){var c=CARS[i];
     if(!g.carsSeen[i]&&w.x>=c.x-190){g.carsSeen[i]=1;g.tics.push(tic(c.sum,c.x+24,WALLY-58,{world:true,life:3,col:c.match?'#9fd3a8':'#f1ebdd'}));

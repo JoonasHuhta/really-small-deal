@@ -965,7 +965,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;g.five=null;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;g.five=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -1832,13 +1832,14 @@ function labDetail(){return labScene({set:'office',title:'One small thing.',plan
 //  - one in-shot reversal (alarm → nothing happened), one fumble (the high five misses), one flash (the laughing)
 // cam: [z, x, y] start and end; equal = still. at: [seconds, function] beats inside a shot.
 function epiHa(dx,dy){return function(){var g=G,q=geom();g.tics.push(tic(Math.random()<0.5?'ha':'HA',(g.human.x+q.bx)/2+dx,q.hdY+20+dy,{life:1.2,size:15+Math.random()*5}));};}
-function epiLens(x,y,tag){return function(){var q=geom();G.lens={x:q.bx+40,y:q.hdY+60,xT:x,yT:y,mode:'peek',tag:tag,spot:null,done:{},t:0};G.morko.pose='lens';};}
+function epiLens(x,y,tag,honest){return function(){var q=geom();G.lens={x:q.bx+40,y:q.hdY+60,xT:x,yT:y,mode:'peek',tag:tag,spot:null,done:{},t:0,honest:!!honest};G.morko.pose='lens';};}
+function epiStamp(){return function(){var g=G;g.selfStamps=(g.selfStamps||0)+1;sfx('stamp');g.shake=RM?0:0.06;};}
 function epiPunch(z,x,y){return function(){if(RM)return;C.z=z;C.fx=x;C.fy=y;var g=G;g.cz=z;g.cx=x;g.cy=y;sfx('cut');};}   // a snap zoom: the comedy kind
 function epiShake(k){return function(){G.shake=RM?0:k;};}
 var EPI=[
   {cut:'fade',set:'home',clock:21*3600,s:0.9,mood:'calm',hx:470,cam:[1.45,200,190, 1.08,470,280],secs:5,title:'THE WEEK, ITEMISED'},
   {cut:'hard',set:'room',clock:12*3600,s:0.8,mood:'calm',hx:420,a:560,wave:1,face:'smile',cam:[1.45,490,262, 1.45,490,262],secs:4.2,
-    at:[[0.9,epiLens(555,330,'FACE: FRIENDLY. RE-CHECKING.')],[2.6,epiPunch(2.4,560,300)]],l:'LUNCHES',v:'1'},
+    at:[[0.9,epiLens(555,330,'FACE: FRIENDLY. RE-CHECKING.',1)],[2.6,epiPunch(2.4,560,300)]],l:'LUNCHES',v:'1'},
   {cut:'hard',set:'office',clock:10*3600,s:0.75,mood:'worry',hx:250,b:560,pose:'selfeyes',cam:[1.2,410,268, 1.2,410,268],secs:3,
     l:'SLIDES, PRESENTED',v:'1 (EERO)',note:'he was good. he still hates it.'},
   {cut:'fade',set:'office',clock:9*3600+15*60,s:0.85,mood:'calm',hx:420,r:600,pose:'shoulder',cam:[1.6,450,290, 1.6,450,290],secs:3.6,
@@ -1852,17 +1853,31 @@ var EPI=[
     l:'NOS, SAID OUT LOUD',v:function(){return G.endSeen&&!G.no?'0':'1';},note:function(){return G.endSeen&&!G.no?'next time, then.':'wobbling: allowed';}},
   {cut:'fade',set:'bar',clock:21*3600+30*60,s:1.0,mood:'calm',hx:430,bar:1,cam:[1.75,420,250, 1.75,420,250],secs:3.4,
     l:'UMBRELLA STORIES, TOLD',v:'1',note:'classified: not any more'},
+  // invented: the walk home after the bar. One kerb, two falls. Neither of them makes it a verdict.
+  {cut:'hard',walk:1,s:1.0,mood:'calm',cam:[1.35,430,335, 1.35,430,335],secs:3.8,
+    at:[[1.0,function(){var g=G;g.w.speed=0;g.human.pose='floor';g.human.face='surprised';g.shake=RM?0:0.3;sfx('hit');g.tics.push(tic('oof.',g.human.x+40,FEETY-90,{life:1.4,size:15}));}],
+        [1.35,function(){var g=G,M=g.morko;M.pose='sit';M.mood='surprised';g.tics.push(tic('OOF.',g.human.x-90,FEETY-170,{life:1.4,size:17}));sfx('drip');}],
+        [2.4,function(){G.human.face='laugh';G.morko.mood='pleased';}]],
+    l:'KERBS, SURVIVED',v:'0 OF 2',note:'falls: one each. verdicts: none.'},
   // a flash, no caption: the story again at home, and they cannot stop laughing
   {cut:'hard',set:'home',clock:22*3600+20*60,s:1.05,mood:'pleased',hx:500,face:'laugh',facing:-1,cam:[1.85,455,250, 1.85,455,250],secs:1.6,
     at:[[0.2,epiHa(-60,0)],[0.6,epiHa(40,-20)],[1.0,epiHa(-90,-30)]]},
   {cut:'hard',set:'library',clock:15*3600,s:0.8,mood:'calm',hx:430,cam:[1.25,460,266, 1.25,460,266],secs:4,
     at:[[0.8,epiLens(560,300,'PAGE 212. NOBODY HAS DIED YET.')]],l:'LATE FEES',v:'€4.60',note:'lighthouses: a shared interest'},
+  // invented: Ekskyysmi has been stamping itself. Ten times. The human looks; it looks back.
+  {cut:'hard',set:'home',clock:19*3600,s:1.15,mood:'surprised',hx:520,facing:-1,face:'stiff',cam:[1.45,440,250, 1.45,440,250],secs:3.6,
+    at:[[0.2,epiStamp()],[0.42,epiStamp()],[0.62,epiStamp()],[0.8,epiStamp()],[0.96,epiStamp()],[1.1,epiStamp()],[1.22,epiStamp()],[1.33,epiStamp()],[1.43,epiStamp()],[1.52,epiStamp()],
+        [2.2,function(){G.morko.mood='worry';G.human.face='smile';}]],
+    l:'REJECTIONS, SELF-ISSUED',v:'10',note:'all of them overturned on appeal.'},
+  // smash: the group photo. A flash, everyone smiling, and one enormous shadow that was not invited.
+  {cut:'smash',set:'room',clock:17*3600,s:1.9,mood:'pleased',hx:360,a:460,b:560,r:660,pose:'grow',flash:1,cam:[1.15,500,265, 1.15,500,265],secs:2.4,
+    l:'GROUP PHOTOS',v:'1',note:'shadows in shot: 1 (uninvited)'},
   {cut:'fade',set:'room',clock:12*3600+5*60,s:0.85,mood:'calm',hx:400,a:540,z:1,pose:'toast',cam:[1.1,470,270, 1.22,470,264],secs:4,
     l:'OTHER PEOPLE’S SHADOWS',v:'ALSO ON SHIFT'},
   {cut:'fade',set:'home',clock:20*3600,s:1.0,mood:'calm',hx:470,face:'smile',pose:'hug',off:0,cam:[1.9,470,320, 1.55,470,305],secs:5,
     l:'DRAWINGS SHARED',v:'1',note:'accounts closed: 0'},
   {cut:'hard',set:'home',clock:22*3600,s:0.95,mood:'calm',hx:470,mine:1,pose:'selfmouth',cam:[1.55,450,250, 1.55,450,250],secs:3.4},
-  {cut:'fade',set:'home',clock:23*3600,s:0.62,mood:'calm',hx:470,sitting:1,cam:[1.8,450,380, 1.05,475,290],secs:7,
+  {cut:'fade',set:'home',clock:23*3600,s:0.95,mood:'calm',hx:520,sitting:1,cam:[1.8,450,380, 1.05,475,290],secs:7,
     l:'DAYS LIVED TODAY',v:'1.0',note:'inside and outside, the same day. first time this week.'},
   {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,pose:'puppet',cam:[1.05,475,290, 1.05,475,290],secs:6,credit:'Made by Joonas Huhta (MoshBitSurfers)'}
 ];
@@ -1872,14 +1887,15 @@ function mineRows(){var m=G.methods||{};return Object.keys(MINE).filter(function
 function epiSnap(){try{var c=document.createElement('canvas');c.width=cv.width;c.height=cv.height;c.getContext('2d').drawImage(cv,0,0);return c;}catch(e){return null;}}
 function epiShot(o){return function(){
   var snap=G.epi&&G.epi.started&&(o.cut||'fade')==='fade'?epiSnap():null;   // hard and smash cuts have no crossfade
-  scene({set:o.set,clock:o.clock})();
+  if(o.walk){scene({set:'room',clock:23*3600})();startWalk();G.card=0;G.w.x=520;G.w.speed=34;G.clock=23*3600+40*60;}
+  else scene({set:o.set,clock:o.clock})();
   var g=G,M=g.morko,Hm=g.human;g.fade=0;g.hud=false;g.plan=false;
   if(o.bar){barSetup();var b=g.bar;b.sdrink=true;b.shelter=true;b.umbrella=1;}
   Hm.x=Hm.xT=o.hx||HOME;if(o.face)Hm.face=o.face;if(o.sitting)Hm.pose='floor';
   if(o.facing)Hm.facing=o.facing;if(o.reach)Hm.reach={x:Hm.x-34,y:FEETY-196};if(o.five)g.five={dx:o.five.dx,dy:o.five.dy};
-  M.s=M.sT=o.s||1;M.mood=o.mood||'calm';M.pose=o.bar?'shelter':o.pose||null;   // sitting: a lower shadow beside the seated human, not the sit pose (it read oddly)
+  M.s=M.sT=o.s||1;M.mood=o.mood||'calm';M.pose=o.bar?'shelter':o.sitting?'sit':o.pose||null;
   if(o.a){g.cowA=true;g.ax=g.axT=o.a;g.aFace=-1;g.aWave=!!o.wave;if(o.z){g.zT=1;g.zShow=0.2;}}
-  if(o.b){g.cowB=true;g.bx2=g.bxT=o.b;g.bFace=-1;}
+  if(o.b){g.cowB=true;g.bx2=g.bxT=o.b;g.bFace=o.r?1:-1;}
   if(o.r){g.cowR=true;g.rx=o.r;}
   // composed framing: start, and drift to the end over the shot. Less motion: the end framing, no drift.
   var c=o.cam||[1.025,W/2,H/2,1.06,W/2,H/2];
@@ -1887,6 +1903,7 @@ function epiShot(o){return function(){
   g.cz=c[3];g.cx=c[4];g.cy=c[5];g.camRate=RM?40:1.4/(o.secs||5.5);
   g.epi.rows=o.mine?mineRows():null;g.epi.at=(o.at||[]).slice();
   g.epi.started=true;g.epi.snap=snap;g.epi.x=snap?1:0;g.epi.o=o;g.epi.ct=0;
+  if(o.flash){g.flash=1;sfx('clap');}
   if(o.alarm){g.pulse=RM?0.5:0.95;g.shake=RM?0:0.45;sfx('siren');}
   if(o.cut==='smash'||o.cut==='hard'){g.fade=0;if(o.cut==='smash'){g.flash=1;sfx('cut');}}
   else if(!snap){g.fade=1;g.fadeRate=0.8;}
@@ -2917,7 +2934,8 @@ function drawTics(cam){
 }
 // Monday's walk home: cars parked nose to the pavement, and a human quietly adding up number plates, looking for a pair.
 var CARS=[{x:150,plate:'KIV-304',sum:'KIV-304 …  3+0+4 = 7',col:'#6f8aa8'},{x:560,plate:'ROS-151',sum:'ROS-151 …  1+5+1 = 7.  a pair ✓',col:'#a8746f',match:true},{x:1000,plate:'APU-999',sum:'APU-999 …  27.  no.',col:'#8a9a72'}];
-function carTics(){
+function carTics(){if(G.epi)return;   // the montage walk has no number-plate maths
+
   var g=G,w=g.w;if(!w)return;
   for(var i=0;i<CARS.length;i++){var c=CARS[i];
     if(!g.carsSeen[i]&&w.x>=c.x-190){g.carsSeen[i]=1;g.tics.push(tic(c.sum,c.x+24,WALLY-58,{world:true,life:3,col:c.match?'#9fd3a8':'#f1ebdd'}));
@@ -4407,7 +4425,7 @@ function drawHuman(extra){
 }
 function drawCoworkers(alpha){
   var g=G;
-  var lf=g.lensView?'frown':undefined;
+  var lf=g.lensView?(g.lens&&g.lens.honest?'smile':'frown'):undefined;   // the glass makes faces worse; an honest glass (epilogue) shows the smile that was there
   if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:Math.abs(g.ax-g.axT)>1?(g.axT>g.ax?1:-1):g.aFace,face:lf,wave:g.aWave,alpha:alpha,walk:Math.abs(g.ax-g.axT)>1,sweat:g.aSweat});
   if(g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:Math.abs(g.bx2-g.bxT)>1?(g.bxT>g.bx2?1:-1):g.bFace,face:lf,alpha:alpha,cup:Math.abs(g.bx2-g.bxT)<1&&g.bxT<1000,walk:Math.abs(g.bx2-g.bxT)>1});
   if(g.cowR)person(g.rx,{body:RIITTA.body,hair:RIITTA.hair,facing:-1,alpha:alpha,brow:g.rBrow});
@@ -4420,7 +4438,7 @@ function geom(){
   var bx=G.human.x+M.off+(Math.sin(G.time*23)+0.5*Math.sin(G.time*37))*2.2*tr*j,by=WALLY;
   var baseX=bx,lean=M.wobble?(RM?8:Math.sin(M.wobble.t*4.2)*16*(1-M.wobble.t/3.2)):0,lag=M.sp&&!RM?clamp(M.sp.x-(G.human.x+M.off),-28,28)*Math.min(1,s):0;
   var sway=G.walking&&!RM?Math.sin(G.time*4-1.1)*6*Math.min(1,s):0;bx+=lean+lag+sway;   // walking: a big, slightly late side-to-side, half the human's step
-  var hgt=190*s*(RM||M.coat?1:1+0.012*Math.sin(G.time*1.7)),shW=58*s,hdR=20*Math.pow(s,0.45);
+  var hgt=190*s*(RM||M.coat?1:1+0.012*Math.sin(G.time*1.7))*(M.pose==='sit'?0.6:1),shW=58*s,hdR=20*Math.pow(s,0.45);   // seated: a shorter torso, or it reads as standing with a lump
   var shY=by-hgt*0.7+Math.sin(G.time*29)*1.6*tr*j-(sway?Math.abs(Math.sin(G.time*4-1.1))*3*s:0),hdY=shY-11*s-hdR*0.8;
   if(hdY<hdR+34)hdY=hdR+34;if(shY<hdY+hdR*0.7)shY=hdY+hdR*0.7;
   return{bx:bx,baseX:baseX,lean:lean,by:by,shY:shY,shW:shW,hdY:hdY,hdR:hdR,s:s};
@@ -4437,6 +4455,7 @@ function handTargets(q){
     case 'pull':a={x:Hm.x+24,y:FEETY-96};b={x:Hm.x+22,y:FEETY-72};front=true;break;
     case 'hold':a={x:Hm.x-24,y:FEETY-112};b={x:Hm.x+24,y:FEETY-112};front=true;break;
     case 'shoulder':a={x:L.x-4,y:q.shY+80*q.s};b={x:Hm.x-16,y:FEETY-114};front=true;break;   // one hand on the near shoulder, never across the head
+    case 'sit':a={x:q.baseX-96*q.s,y:q.by-46*q.s};b={x:q.baseX-70*q.s,y:q.by-30*q.s};break;   // arms resting on the knee
     case 'hug':a={x:Hm.x-27,y:FEETY-100};b={x:Hm.x+27,y:FEETY-100};front=true;break;   // from behind, around the shoulders (keep the shadow centred: off 0)
     case 'five':var fv=G.five||{dx:0,dy:0};a={x:L.x-4,y:q.shY+70*q.s};b={x:Hm.x-34+fv.dx,y:FEETY-196+fv.dy};front=true;break;
     case 'comfort':a={x:L.x-6,y:q.shY+85*q.s};b={x:Hm.x+25,y:FEETY-106};front=true;break;
@@ -4456,6 +4475,13 @@ function handTargets(q){
   return{a:a,b:b,front:front,L:L,R:R};
 }
 function mcol(){return G.w||G.set==='home'||G.set==='bar'?'#0d0f18':G.dark>0.5?'#14111d':'#28243a';}
+function selfStamps(q,n){
+  ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 '+Math.round(11*q.s)+'px system-ui,sans-serif';
+  for(var i=0;i<n;i++){var h1=(Math.sin(i*12.9898)*43758.5453)%1,h2=(Math.sin(i*78.233)*12543.17)%1,h3=(Math.sin(i*3.7)*9187.3)%1;h1=Math.abs(h1);h2=Math.abs(h2);h3=Math.abs(h3);
+    var x=q.bx+(h1-0.5)*q.shW*1.7,y=q.shY-6+h2*(q.by-q.shY-20),w=74*q.s,hh=22*q.s;
+    ctx.save();ctx.translate(x,y);ctx.rotate((h3-0.5)*0.7);ctx.globalAlpha=0.9;ctx.strokeStyle='#d24a3c';ctx.lineWidth=2.4*q.s;ctx.strokeRect(-w/2,-hh/2,w,hh);ctx.fillStyle='#d24a3c';ctx.fillText('REJECTED',0,1);ctx.restore();}
+  ctx.restore();
+}
 function morkoBody(q){
   var Hm=G.human,wk=G.morko.wake==null?1:G.morko.wake,al=wk*(G.gapWalk&&G.w&&G.gapA!=null?G.gapA:1);   // Lamp gap.: thinner between lamps; the eyes stay
   if(wk<0.98){ctx.fillStyle='rgba(20,16,30,'+(0.26*(1-wk))+')';ctx.beginPath();ctx.ellipse(Hm.x-12,FEETY+3,44,9,0,0,Math.PI*2);ctx.fill();}
@@ -4466,9 +4492,10 @@ function morkoBody(q){
   ctx.beginPath();ctx.ellipse(q.bx,q.shY+4,q.shW,Math.max(14,26*q.s),0,0,Math.PI*2);ctx.fill();
   circ(q.bx,q.hdY,q.hdR);ctx.fill();
   if(G.morko.pose==='sit'){   // sitting on the floor of the wall: thighs out, knees up, and much less of it than usual
-    var s=q.s;ctx.beginPath();ctx.ellipse(q.bx-40*s,q.by-16*s,56*s,17*s,0,0,Math.PI*2);ctx.fill();
-    circ(q.bx-84*s,q.by-38*s,20*s);ctx.fill();ctx.fillRect(q.bx-98*s,q.by-38*s,28*s,38*s);}
+    var s=q.s;ctx.beginPath();ctx.ellipse(q.baseX-44*s,q.by-15*s,58*s,16*s,-0.12,0,Math.PI*2);ctx.fill();   // thigh, along the floor
+    circ(q.baseX-92*s,q.by-34*s,19*s);ctx.fill();rr(q.baseX-108*s,q.by-36*s,30*s,36*s,8*s);ctx.fill();}   // knee up, shin down
   ctx.globalAlpha=1;
+  if(G.selfStamps>0)selfStamps(q,G.selfStamps);   // epilogue: stamped REJECTED by its own hand
   if(wk>0.4)morkoFace(q);
   if(G.ninja)drawHeadband(q);
 }

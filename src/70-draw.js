@@ -185,7 +185,7 @@ function drawHuman(extra){
 }
 function drawCoworkers(alpha){
   var g=G;
-  var lf=g.lensView?'frown':undefined;
+  var lf=g.lensView?(g.lens&&g.lens.honest?'smile':'frown'):undefined;   // the glass makes faces worse; an honest glass (epilogue) shows the smile that was there
   if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:Math.abs(g.ax-g.axT)>1?(g.axT>g.ax?1:-1):g.aFace,face:lf,wave:g.aWave,alpha:alpha,walk:Math.abs(g.ax-g.axT)>1,sweat:g.aSweat});
   if(g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:Math.abs(g.bx2-g.bxT)>1?(g.bxT>g.bx2?1:-1):g.bFace,face:lf,alpha:alpha,cup:Math.abs(g.bx2-g.bxT)<1&&g.bxT<1000,walk:Math.abs(g.bx2-g.bxT)>1});
   if(g.cowR)person(g.rx,{body:RIITTA.body,hair:RIITTA.hair,facing:-1,alpha:alpha,brow:g.rBrow});
@@ -198,7 +198,7 @@ function geom(){
   var bx=G.human.x+M.off+(Math.sin(G.time*23)+0.5*Math.sin(G.time*37))*2.2*tr*j,by=WALLY;
   var baseX=bx,lean=M.wobble?(RM?8:Math.sin(M.wobble.t*4.2)*16*(1-M.wobble.t/3.2)):0,lag=M.sp&&!RM?clamp(M.sp.x-(G.human.x+M.off),-28,28)*Math.min(1,s):0;
   var sway=G.walking&&!RM?Math.sin(G.time*4-1.1)*6*Math.min(1,s):0;bx+=lean+lag+sway;   // walking: a big, slightly late side-to-side, half the human's step
-  var hgt=190*s*(RM||M.coat?1:1+0.012*Math.sin(G.time*1.7)),shW=58*s,hdR=20*Math.pow(s,0.45);
+  var hgt=190*s*(RM||M.coat?1:1+0.012*Math.sin(G.time*1.7))*(M.pose==='sit'?0.6:1),shW=58*s,hdR=20*Math.pow(s,0.45);   // seated: a shorter torso, or it reads as standing with a lump
   var shY=by-hgt*0.7+Math.sin(G.time*29)*1.6*tr*j-(sway?Math.abs(Math.sin(G.time*4-1.1))*3*s:0),hdY=shY-11*s-hdR*0.8;
   if(hdY<hdR+34)hdY=hdR+34;if(shY<hdY+hdR*0.7)shY=hdY+hdR*0.7;
   return{bx:bx,baseX:baseX,lean:lean,by:by,shY:shY,shW:shW,hdY:hdY,hdR:hdR,s:s};
@@ -215,6 +215,7 @@ function handTargets(q){
     case 'pull':a={x:Hm.x+24,y:FEETY-96};b={x:Hm.x+22,y:FEETY-72};front=true;break;
     case 'hold':a={x:Hm.x-24,y:FEETY-112};b={x:Hm.x+24,y:FEETY-112};front=true;break;
     case 'shoulder':a={x:L.x-4,y:q.shY+80*q.s};b={x:Hm.x-16,y:FEETY-114};front=true;break;   // one hand on the near shoulder, never across the head
+    case 'sit':a={x:q.baseX-96*q.s,y:q.by-46*q.s};b={x:q.baseX-70*q.s,y:q.by-30*q.s};break;   // arms resting on the knee
     case 'hug':a={x:Hm.x-27,y:FEETY-100};b={x:Hm.x+27,y:FEETY-100};front=true;break;   // from behind, around the shoulders (keep the shadow centred: off 0)
     case 'five':var fv=G.five||{dx:0,dy:0};a={x:L.x-4,y:q.shY+70*q.s};b={x:Hm.x-34+fv.dx,y:FEETY-196+fv.dy};front=true;break;
     case 'comfort':a={x:L.x-6,y:q.shY+85*q.s};b={x:Hm.x+25,y:FEETY-106};front=true;break;
@@ -234,6 +235,13 @@ function handTargets(q){
   return{a:a,b:b,front:front,L:L,R:R};
 }
 function mcol(){return G.w||G.set==='home'||G.set==='bar'?'#0d0f18':G.dark>0.5?'#14111d':'#28243a';}
+function selfStamps(q,n){
+  ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 '+Math.round(11*q.s)+'px system-ui,sans-serif';
+  for(var i=0;i<n;i++){var h1=(Math.sin(i*12.9898)*43758.5453)%1,h2=(Math.sin(i*78.233)*12543.17)%1,h3=(Math.sin(i*3.7)*9187.3)%1;h1=Math.abs(h1);h2=Math.abs(h2);h3=Math.abs(h3);
+    var x=q.bx+(h1-0.5)*q.shW*1.7,y=q.shY-6+h2*(q.by-q.shY-20),w=74*q.s,hh=22*q.s;
+    ctx.save();ctx.translate(x,y);ctx.rotate((h3-0.5)*0.7);ctx.globalAlpha=0.9;ctx.strokeStyle='#d24a3c';ctx.lineWidth=2.4*q.s;ctx.strokeRect(-w/2,-hh/2,w,hh);ctx.fillStyle='#d24a3c';ctx.fillText('REJECTED',0,1);ctx.restore();}
+  ctx.restore();
+}
 function morkoBody(q){
   var Hm=G.human,wk=G.morko.wake==null?1:G.morko.wake,al=wk*(G.gapWalk&&G.w&&G.gapA!=null?G.gapA:1);   // Lamp gap.: thinner between lamps; the eyes stay
   if(wk<0.98){ctx.fillStyle='rgba(20,16,30,'+(0.26*(1-wk))+')';ctx.beginPath();ctx.ellipse(Hm.x-12,FEETY+3,44,9,0,0,Math.PI*2);ctx.fill();}
@@ -244,9 +252,10 @@ function morkoBody(q){
   ctx.beginPath();ctx.ellipse(q.bx,q.shY+4,q.shW,Math.max(14,26*q.s),0,0,Math.PI*2);ctx.fill();
   circ(q.bx,q.hdY,q.hdR);ctx.fill();
   if(G.morko.pose==='sit'){   // sitting on the floor of the wall: thighs out, knees up, and much less of it than usual
-    var s=q.s;ctx.beginPath();ctx.ellipse(q.bx-40*s,q.by-16*s,56*s,17*s,0,0,Math.PI*2);ctx.fill();
-    circ(q.bx-84*s,q.by-38*s,20*s);ctx.fill();ctx.fillRect(q.bx-98*s,q.by-38*s,28*s,38*s);}
+    var s=q.s;ctx.beginPath();ctx.ellipse(q.baseX-44*s,q.by-15*s,58*s,16*s,-0.12,0,Math.PI*2);ctx.fill();   // thigh, along the floor
+    circ(q.baseX-92*s,q.by-34*s,19*s);ctx.fill();rr(q.baseX-108*s,q.by-36*s,30*s,36*s,8*s);ctx.fill();}   // knee up, shin down
   ctx.globalAlpha=1;
+  if(G.selfStamps>0)selfStamps(q,G.selfStamps);   // epilogue: stamped REJECTED by its own hand
   if(wk>0.4)morkoFace(q);
   if(G.ninja)drawHeadband(q);
 }
