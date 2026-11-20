@@ -356,6 +356,19 @@ Jos nämä ovat ristiriidassa §13:n kanssa, nämä voittavat. Korvautuneet §13
 | ✔ **V19** | Hatut (siluetti + reunus, kupla väistää): etsivä, kokki, bile, merirosvo. | S | 0.65.0 |
 | ✔ **V20** | Piikit vain kohtauksen pyynnöstä (`mugSpiky`). | S | 0.65.0 |
 | **V21** | **Muki vai ovi**: diilien kysymys ”Is that the mug talking, or the door?”; kumpikin vastaus on sallittu; kuitissa erittely. Korvaa V6:n sävyn (diili ei ole kauppa vaan perustelu, jonka takaa kuunnellaan). | M | |
-| **V22** | Muki maanantaista keskiviikkoon (täysi aamulla, ”oh, hi.” osuu täydellä mukilla: tämä on argumentti, ettei RSD ole väsymystä) ja kultasaumat perjantaihin ja ryhmächattiin. | M–L | |
+| ✔ **V22** (0.66.0; perjantain ja ryhmächatin kultasaumat mukana) | Muki maanantaista keskiviikkoon (täysi aamulla, ”oh, hi.” osuu täydellä mukilla: tämä on argumentti, ettei RSD ole väsymystä) ja kultasaumat perjantaihin ja ryhmächattiin. | M–L | |
 | **V23** | Tiuskaisu tyhjällä mukilla viikkoon (Riitta tai Eero; Sanna avoin kysymys). | S–M | |
 | **V24** | Lisää hattuja vain ansaituille hetkille (pipo, kypärä, syntymäpäivä), enintään 5–6 koko pelissä. | S | |
+
+**Mukin tasapaino (0.66.0, testattu kaikilla reiteillä, tests/mug.test.cjs):**
+
+| Päivä | Alku | Mikä vie / tuo | Pohja |
+|---|---|---|---|
+| Maanantai | 5 (täysi) | Eeron mukavuusaluepuhe −1, ”oh, hi.” −1, Sannan ”YES.” +1 | 3 |
+| Tiistai | 4 | ”quick chat?” −1, uni +1, pesulappu −1, ”shorter” −1 | 2 |
+| Keskiviikko | 4 | jokainen myöntävä vastaus −1 (ei alle yhden) | 1 |
+| Torstai | 3 | ”Seen” −1, tunti hiljaisuutta −1, pussi → **särkyy**; kultaliima → 1, Sannan viesti +1 | 0 |
+| Perjantai | 4 (kultasaumat) | ”oh, hi.” laukeaa silti −1 | 2–3 |
+| Ryhmächatti | 3 (kultasaumat, taustalla) | – | 3 |
+
+Säännöt: vain torstai saa tyhjentää ja rikkoa mukin. Välihetket eivät peri vanhaa mukia (ne tuovat omansa tarvittaessa). Muki ei koskaan muuta Ekskyysmin kokoa.

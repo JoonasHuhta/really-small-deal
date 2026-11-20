@@ -30,6 +30,7 @@ function scIntro(){return [
   set({hud:1}),
   ['H','And my job?'],
   ['S','Coffee. I’ll handle the catastrophes.'],
+  mugOn(),['N','The mug is how much of you there is today. It starts full.'],
   ['H','Then handle lunch. I’m asking her out loud.'],
   set({plan:1,mood:'alert',s:1.3}),
   ['S','…Out LOUD?'],
@@ -45,7 +46,7 @@ function scIntro(){return [
   ['B','Morning! You’re quiet today.'],
   ['H','Morning.'],
   ['B','You know what you need? To push yourself out of your comfort zone more!'],
-  hit(0.55,'B'),{wait:1.1},
+  hit(0.55,'B'),drain(1,'comfort-zone advice'),{wait:1.1},
   ['S','…Out of the WHAT?'],
   ['S','We haven’t SEEN the comfort zone since 2016.'],
   ['H','I think he’s being nice.'],
@@ -97,7 +98,7 @@ function scSanna(){return [
   function(){return G.qteWon?scResponded():scSpiral();}
 ];}
 function scSpiral(){return [
-  set({aFace:1}),hit(1,'A'),archive('bad',[['2011','Waved back at someone who was waving at someone else.'],['2016','Said “you too” when the waiter said “enjoy your meal”.'],['2019','Signed an email “Love,”. To Facilities.']]),{wait:1.4},['N','Ekskyysmi opens the archive. All of it. At once.'],closeArchive,
+  set({aFace:1}),hit(1,'A'),drain(1,'“oh, hi.”'),archive('bad',[['2011','Waved back at someone who was waving at someone else.'],['2016','Said “you too” when the waiter said “enjoy your meal”.'],['2019','Signed an email “Love,”. To Facilities.']]),{wait:1.4},['N','Ekskyysmi opens the archive. All of it. At once.'],closeArchive,
   set({rate:0.03}),
   ['S','Okay. We missed the window. Nobody panic. I’ve reviewed the “oh”.'],
   ['H','It was a greeting.'],
@@ -165,7 +166,7 @@ function realObs(){
       g.leak==='none'?
       [['S','You asked. Out loud. To a doorway.'],['H','I could ask again. Somewhere with a person in it.'],['S','Risky. People are in it.']]:
       [['S','Her hand went up. I saw that much.'],['H','While I was studying the cup.'],['S','The cup has declined to comment.']];
-    return opening.concat([['P','You: “Lunch tomorrow?”'],['P','Sanna: “YES. I never know if you want company.”'],set({mood:'surprised'}),['S','…She thought WE didn’t want HER?'],function(){G.lunch=2;}]);
+    return opening.concat([['P','You: “Lunch tomorrow?”'],['P','Sanna: “YES. I never know if you want company.”'],refill(1,'“YES.”'),set({mood:'surprised'}),['S','…She thought WE didn’t want HER?'],function(){G.lunch=2;}]);
   }
   if(g.leak==='exit')return [['S','We left. I don’t know what happened after that.'],['H','I still felt left out.'],['S','I’d like to fill in the missing bits.'],['H','Let’s call someone first.'],['P','You: “Rough day. Call?”'],['P','Reply: “Calling.”'],set({pose:'comfort'}),['S','Can I come?'],['H','You’re attached to my feet.']];
   return [['S','They said: no need to ask the others. That happened. I’m not doing a bit.'],['H','I know.'],['P','You: “Rough day. Call?”'],['P','Reply: “Calling.”'],['S','…Who is that?'],['H','Someone who asks.'],['S','I’d like to vet them.'],['H','You’ve met. You hid.']];

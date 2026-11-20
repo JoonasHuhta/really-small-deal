@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.66.0 (Claude, 20.11.2026): **muki kulkee koko viikon (V22).**
+- Maanantai: muki ilmestyy työnkuvapuheen jälkeen (”Coffee. I’ll handle the catastrophes.”), kertoja selittää sen kerran. Ensimmäinen ”oh, hi.” osuu lähes täydellä mukilla: RSD ei ole väsymystä.
+- Tiistai: ”quick chat?”, pesulappu ja ”shorter” vievät, yöuni tuo siemauksen. Keskiviikko: jokainen myöntävä vastaus maksaa siemauksen, mutta ei koskaan viimeistä. Torstai: muki särkyy. Perjantai ja ryhmächatti: kultasaumainen muki.
+- Välihetket eivät enää peri edellisen luvun mukia.
+- Uusi testi tests/mug.test.cjs: yhdeksällä reitillä maanantai alkaa täydellä mukilla, vain torstai tyhjentää ja rikkoo sen, ja kultasaumat muistetaan.
+
 Versio 0.65.0 (Claude, 20.11.2026): **muki saa luonteen: haamu, äänet, romahdus, kintsugi ja hatut.**
 - Muki: menetetty osa välkkyy punertavana haamuna ja sammuu, täyttö nousee hitaasti. Muki näkyy kun sillä on merkitystä ja vetäytyy tunnelmakohtauksissa (`mugQuiet`).
 - Äänet (syntetisoidut): punaiset arkistokortit paukahtavat seinään yksi kerrallaan, muki kolahtaa ja loiskahtaa tyhjentyessään, lorisee täyttyessään, säröilee ja räsähtää rikki, kilahtaa liimautuessa.

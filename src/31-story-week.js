@@ -20,13 +20,14 @@ function begin(n,o){return [scene(o),function(){
 // Ekskyysmi's tell: whenever it says it is fine and is not, it shrinks a little, then grows back.
 function fib(){var M=G.morko;M.s=Math.max(0.3,M.s-0.07);}
 function shadowHit(){var g=G;trigger();addLived('the one that landed',LIVED.shadowHit);sfx('hit');g.pulse=0.9;g.shake=RM?0:0.8;g.lines=[];g.cur=null;g.flash=0.8;g.morko.sT=0.62;g.morko.mood='scared';g.morko.pose=null;g.anx=0.9;g.cz=1.08;g.cx=W/2-30;g.cy=300;}
-function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);}
+function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);if(G.mug&&G.mug.v>1)drain(1,'saying yes')();}   // every yes costs a sip, down to the last one: only Thursday gets to empty the mug (VISIO V22)
 
 function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60}).concat([
+  mugOn(4),
   tuesdayOpening,
   {wait:0.6},
   ['P','Riitta: “Quick chat tomorrow at 9?”'],
-  hit(0.9,'P'),set({sweat:0.7}),{wait:1.2},
+  hit(0.9,'P'),drain(1,'“quick chat?”'),set({sweat:0.7}),{wait:1.2},
   ['S','“Quick.”',{look:'squint'}],
   ['S','Nobody says “quick” about good news. Good news takes its time. Good news has cake.'],
   ['H','It’s probably nothing.'],
@@ -79,7 +80,8 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','And yet nobody has ever been rejected in their sleep. You’re welcome.',{look:'pleased'}],
   scene({set:'office',clock:9*3600,cowR:1,s:1.3,mood:'alert'}),set({sweat:1}),
   addTic('The next morning, 9:00. The quick chat.',230,62,{life:3.4,size:19}),{wait:1.6},
-  ['H','This label has been scratching my neck since eight.',{quiet:1}],
+  refill(1,'some sleep'),
+  ['H','This label has been scratching my neck since eight.',{quiet:1}],drain(1,'the label'),
   ['S','One crisis at a time. …Two crises.'],
   ['H','Can you just… handle this one?',{quiet:1}],
   ['S','Full authority?'],
@@ -91,7 +93,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['R','And people like working with you. Sanna said so, actually.'],
   ['S','Padding.',{look:'squint'}],
   ['R','One small thing: the summary could be shorter next time.'],
-  hit(0.95,'R'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.'],['YEAR 4','“Neat handwriting. Could be neater.”'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
+  hit(0.95,'R'),drain(1,'“shorter”'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.'],['YEAR 4','“Neat handwriting. Could be neater.”'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
   ['S','THERE it is.',{loud:1}],
   ['S','“Shorter.” The summary is too long. YOU are too long. Your whole deal is too long.'],
   ['R','Otherwise, great work. Keep it up.'],
@@ -137,6 +139,7 @@ function yesMenu(s,extra,extraKey){return {choice:[
   {t:'No.',off:true}
 ]};}
 function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600+20*60}).concat([
+  mugOn(4),
   set({cowB:1,bx:880}),{wait:1.6},
   ['B','Hey! Quick favour. Could you take my slides for Friday? I’m swamped.'],
   ['H','I’ve got my own—'],
@@ -321,6 +324,7 @@ function weekBill(){var m=G.methods||{},best=null;['hide','please','worst','draf
 function wobbleOn(){var m=G.morko;m.wobble={t:0};m.pose='balance';m.mood='worry';G.anx=0.2;}
 function wobbleOff(){var m=G.morko;m.wobble=null;m.pose=null;if(RM)updHands(1);}
 function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).concat([
+  function(){G.mugMended=true;},mugOn(4),
   set({cowB:1,bx:880}),
   set({sweat:0.45}),
   ['S','Friday. Same room. Same coffee. I’d like to flag that I’m calm.'],
@@ -337,7 +341,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   function(){return G.barStory?[['A',G.barStory==='2011'?'I waved at the wrong person yesterday. Thought of you.':G.barStory==='arms'?'I tried to tell Eero the umbrella story. I needed more arms.':'I saw a tiny umbrella yesterday. Thought of you.'],['H','Oh no.'],['A','In a good way.']]:[];},
   ['S','…That’s not the procedure.',{look:'squint'}],
   ['H','It came out before yours.'],
-  set({aFace:1}),hit(0.8,'A'),{wait:1.3},
+  set({aFace:1}),hit(0.8,'A'),drain(1,'it still went off'),{wait:1.3},
   ['S','…It still went off. Even though we got it right.'],
   ['H','I felt it.'],
   fridayReflex,

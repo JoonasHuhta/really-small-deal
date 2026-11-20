@@ -27,7 +27,8 @@ var LABS={
   comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments}
 };
 function labScene(o){return [scene(o),function(){
-  var g=G;g.planText=o.plan;g.hud=true;g.plan=true;g.fade=0;
+  var g=G;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
+  g.planText=o.plan;g.hud=true;g.plan=true;g.fade=0;
   if(g.lab){g.label=(DEVLAB?'Scenario lab / ':'Moments / ')+o.title;newDay();return;}
   // In the story the same scene opens with a card, like any other moment.
   g.label=o.title;if(NOCARD[g.moment]){g.fade=1;return;}   // continues the moment before it, without a new card
@@ -275,6 +276,7 @@ function drawHeadband(q){
     ctx.bezierCurveTo(kx-r*0.8,y+Math.sin(tw+k)*r*0.4+k*r*0.2,kx-r*1.4,y+Math.cos(tw*1.3+k)*r*0.5+k*r*0.3,kx-r*2.1,y+Math.sin(tw*0.9+k*2)*r*0.6+k*r*0.5);ctx.stroke();}
 }
 function labComments(){return labScene({set:'home',title:'The group chat',plan:'Share the drawing.',clock:20*3600+14*60}).concat([
+  function(){if(!G.lab){G.mugMended=true;mugOn(3)();G.mugQuiet=true;}},   // in the story: the mended mug, half full, in the background until something happens
   ['N','Sunday evening. One drawing. One group chat with eleven people in it.'],
   ['H','I’m going to share the drawing.'],
   function(){return G.quietDrawing?[['S','The five-legged cat.'],['H','Finished it on Monday. I still like it.']]:[];},
