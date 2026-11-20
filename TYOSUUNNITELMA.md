@@ -24,6 +24,8 @@ Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, v
 
 ---
 
+> **20.11.2026:** syväluotaava katsaus (rytmi, kaari, uskottavuus, tutkimus, kielet) on tiedostossa **KATSAUS.md**. Sen kohta 12 on ehdotettu työjärjestys; Joonas päättää isot sisältömuutokset (8 ja 10).
+
 ## 1. Missä ollaan (mitattu)
 
 `npm run pace` 19.11.: koko tarina **45:14**, 6048 sanaa, viisi päivää ja 17 välikohtausta. Lisäksi neljä kohtausta on vain labissa (voice, library, radiator, footage).
