@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.55.0 (Claude, 20.11.2026): **epilogi kappaleen kanssa (Safe At Last, 2:55).**
+- Kappale `assets/audio/epilogue.mp3` (kansikuva poistettu, ääni koskematon). Soi kerran, ei silmukkana; voimakkuus 0.36 (masteroitu −13 LUFS, n. 3 dB otsikkokappaletta kovempi).
+- Leikkaukset osuvat tahteihin: tahtien alut haettiin rytmintunnistuksella (n. 108 BPM) ja ovat koodissa (`EPIBARS`). Kello seuraa kappaleen `currentTime`-arvoa; ilman ääntä sama aikataulu kulkee ajan mukaan.
+- Rakenne: A) montaasi 31 tahtia (~71 s); B) kappaleen hiljaisempi keskiosa: he istuvat lattialla ja koko kuitti rullaa kuin lopputekstit (kaikki rivit, pelaajan menetelmät, SUBTOTAL ONE WEEK · TOTAL LIVED ONCE, tekijä, ”thank you. come again. (not in a weird way.)”), välissä varjolintu; C) viimeinen kertosäe: 12 välähdystä, yksi tahti kukin, ilman kuitteja; D) varjolintu ja tekijärivi viimeiseen säveleen, häivytys mustaan.
+- Montaasin kohtaukset ja kävelyt eivät enää voi vaihtaa sen kappaletta.
+
 Versio 0.54.0 (Claude, 20.11.2026): **neljä uutta välähdystä epilogiin.**
 - Sade: Ekskyysmi pitää sateenvarjoa ihmisen yllä, mutta se on varjon sateenvarjo ja sade menee läpi (”UMBRELLAS, HELD … 1, effective: no. appreciated: yes.”).
 - Hissi: Eero, ihminen, Eeron varjo ja ahtautunut Ekskyysmi, ”(sorry.)” (”LIFTS, SHARED … 1, shadows touching: 0 (narrowly)”). Uusi tausta `epiLift`.

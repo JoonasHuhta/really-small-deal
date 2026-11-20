@@ -54,10 +54,10 @@ function tone(f,t0,dur,type,vol,f2){
 var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
 // Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
 // A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
-var MUSIC={title:'assets/audio/title.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
+var MUSIC={title:'assets/audio/title.mp3',epilogue:'assets/audio/epilogue.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
 var firstTouch=false,BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 // Scene music is background: well under the voices. It fades in, and steps aside for a moment when something lands.
-var MUSICVOLS={},MUSICFADEIN={},musicLvl=1,talkLvl=1,talkT=null,rampId=null;   // monday.mp3 is mastered at -24 LUFS, ~10 dB under the title track
+var MUSICVOLS={epilogue:0.36},MUSICFADEIN={},MUSICONCE={epilogue:true},musicLvl=1,talkLvl=1,talkT=null,rampId=null;   // monday.mp3 is mastered at -24 LUFS, ~10 dB under the title track
 function musicTarget(){return (MUSICVOLS[musicName]!=null?MUSICVOLS[musicName]:MUSICVOL)*musicLvl*talkLvl;}
 // While anyone talks, the music steps back, and returns a moment after the last syllable.
 function talkDuck(secs){if(!musicEl||typeof setTimeout!=='function')return;talkLvl=0.4;rampMusic(0.25);
@@ -85,9 +85,10 @@ function fadeOut(el){
 }
 function music(name){
   name=name||null;if(name===musicName&&(musicEl||!MUSIC[name]))return;
+  if(G&&G.epi&&musicName==='epilogue'&&name)return;   // the montage's scenes and walks don't get to change its song
   musicName=name;if(musicEl){fadeOut(musicEl);musicEl=null;}
   if(!name||!MUSIC[name]||typeof window.Audio!=='function')return;
-  var el=new window.Audio(MUSIC[name]);el.loop=true;el.preload=firstTouch?'auto':'none';musicLvl=1;musicEl=el;
+  var el=new window.Audio(MUSIC[name]);el.loop=!MUSICONCE[name];el.preload=firstTouch?'auto':'none';musicLvl=1;musicEl=el;
   var fin=MUSICFADEIN[name];el.volume=fin?0:musicTarget();syncMusic();if(fin)rampMusic(fin);
 }
 function syncMusic(){
@@ -1948,7 +1949,8 @@ function epiShot(o){return function(){
   if(o.cut==='smash'||o.cut==='hard'){g.fade=0;if(o.cut==='smash'){g.flash=1;sfx('cut');}}
   else if(!snap){g.fade=1;g.fadeRate=0.8;}
 };}
-function stepEpi(dt){var e=G.epi;if(!e)return;e.ct+=dt;e.dark=approach(e.dark||0,e.darkT||0,(RM?3:2.4)*dt);
+function stepEpi(dt){var e=G.epi;if(!e)return;e.ct+=dt;
+  var el=musicEl;e.clock=el&&musicName==='epilogue'&&!el.paused&&el.currentTime>0?el.currentTime:(e.clock||0)+dt;e.dark=approach(e.dark||0,e.darkT||0,(RM?3:2.4)*dt);
   while(e.at&&e.at.length&&e.at[0][0]<=e.ct)e.at.shift()[1]();if(e.x>0)e.x=Math.max(0,e.x-dt/(RM?2.2:1.3));}
 // No canvas blur filter: it is slow on phones and in software rendering (the montage ran at a fifth of its speed).
 // The softness comes from a haze layer in drawEpi instead.
@@ -1962,6 +1964,8 @@ function drawEpi(){
   epiEyes(e);
   if(e.snap&&e.x>0){ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=e.x;ctx.drawImage(e.snap,0,0);ctx.restore();ctx.setTransform(SC,0,0,SC,0,0);}
   var o=e.o;if(!o)return;
+  if(o.roll){epiRoll(e);return;}
+  if(o.noCap)return;
   var rows=o.mine?(e.rows||[]):o.l?[{l:o.l,v:o.v}]:[];
   if(!rows.length&&!o.title&&!o.credit)return;
   var a=clamp((e.ct-0.8)/0.6,0,1)*clamp(((o.secs||5.5)-0.3-e.ct)/0.5,0,1);if(a<=0)return;
@@ -1980,10 +1984,54 @@ function drawEpi(){
   if(note){ctx.font='500 12px '+mono;ctx.textAlign='left';ctx.fillStyle='#6b6470';ctx.fillText(note,x+18,y+h-14);}
   ctx.restore();
 }
+// ---------- timed to the song (Safe At Last, 2:55, ~108 BPM) ----------
+// Bar starts found by beat tracking (librosa) and kept here, so cuts land on bars. Without sound the same clock runs on time.
+var EPIBARS=[0.12,2.37,4.62,6.97,9.31,11.56,13.82,16.04,18.30,20.55,22.99,25.24,27.68,30.12,32.37,34.62,36.87,39.13,41.54,43.79,46.05,48.30,50.55,52.80,55.05,57.28,59.54,61.97,64.23,66.48,68.73,70.96,73.21,75.46,77.72,79.95,82.20,84.45,86.70,88.96,91.18,93.25,95.50,97.76,100.01,102.26,104.49,106.74,108.99,111.22,113.45,115.73,117.96,120.19,122.46,124.71,127.13,129.38,131.63,133.86,136.12,138.37,140.60,142.85,145.08,147.33,149.58,151.81,154.06,156.32,158.55,160.80,163.03];
+var EPISONG=175.2;
+function barT(n){return n<EPIBARS.length?EPIBARS[n]:EPIBARS[EPIBARS.length-1]+(n-EPIBARS.length+1)*2.25;}
+function epiClock(){var e=G.epi;return e?e.clock||0:0;}
+function epiAt(t){return function step(){return epiClock()>=t-0.03?[]:[{wait:0.04},step];};}
+// Part A: the montage (31 bars). B: the receipt rolls while they sit on the floor (the song's quieter middle).
+// C: the last chorus: one bar each, no captions, faster. D: the bird and the credit, held to the last note.
+var EPIA=[2,2,1,2,2,2,1,2,1,2,1,2,2,1,2,2,1,3];
+var EPIC=['LUNCHES','NOS, SAID OUT LOUD','UMBRELLAS, HELD','KERBS, SURVIVED','laugh','LIFTS, SHARED','REJECTIONS, SELF-ISSUED','DRAFTS, DELETED','GROUP PHOTOS','POWER CUTS','DRAWINGS SHARED','DAYS LIVED TODAY'];
+function epiCopy(o,extra){var c={},k;for(k in o)c[k]=o[k];for(k in extra)c[k]=extra[k];return c;}
+function epiFind(l){for(var i=0;i<EPI.length;i++)if(l==='laugh'?EPI[i].face==='laugh':EPI[i].l===l)return EPI[i];return null;}
+// The whole receipt, rolling up like credits: every row of the week, the player's methods, the total, the maker.
+function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · THE WHOLE THING'},{gap:1}];
+  EPI.forEach(function(o){if(!o.l)return;r.push({l:o.l,v:o.v});var n=typeof o.note==='function'?o.note():o.note;if(n)r.push({n:n});});
+  var mine=mineRows();if(mine.length){r.push({gap:1},{h:'EKSKYYSMI’S METHODS'});mine.forEach(function(m){r.push(m);});}
+  r.push({gap:1},{l:'SUBTOTAL',v:'ONE WEEK'},{l:'DISCOUNTS',v:'NONE NEEDED'},{l:'TOTAL',v:'LIVED ONCE'},{gap:1},{h:'Made by Joonas Huhta'},{h:'MoshBitSurfers'},{gap:1},{n:'thank you. come again.'},{n:'(not in a weird way.)'});
+  return r;}
+function epiRoll(e){
+  if(!e.rows2)e.rows2=epiRollRows();var rows=e.rows2,lh=24,w=350,x=W-w-36,h=rows.length*lh+40,dur=e.o.secs||60,k=clamp(e.ct/dur,0,1);
+  var y=H+10-k*(h+H*0.55),mono='"DM Mono",ui-monospace,Menlo,monospace';
+  ctx.save();ctx.globalAlpha=clamp(e.ct/1.2,0,1);ctx.fillStyle='rgba(244,237,223,0.95)';ctx.fillRect(x,y,w,h);
+  ctx.textBaseline='middle';rows.forEach(function(r,i){var yy=y+24+i*lh;if(yy<-20||yy>H+20)return;
+    if(r.h){ctx.font='700 14px '+mono;ctx.textAlign='center';ctx.fillStyle='#2b2733';ctx.fillText(r.h,x+w/2,yy);}
+    else if(r.n){ctx.font='500 11px '+mono;ctx.textAlign='left';ctx.fillStyle='#6b6470';ctx.fillText(r.n,x+16,yy);}
+    else if(r.l){var val=typeof r.v==='function'?r.v():r.v;ctx.font='600 12.5px '+mono;ctx.textAlign='left';ctx.fillStyle='#2b2733';ctx.fillText(r.l,x+16,yy);ctx.textAlign='right';ctx.fillText(val,x+w-16,yy);
+      var lw=ctx.measureText(r.l).width;ctx.textAlign='left';var vw=ctx.measureText(val).width;ctx.fillStyle='#8c8590';for(var d=x+16+lw+6;d<x+w-16-vw-6;d+=7)ctx.fillRect(d,yy+4,2,2);}});
+  ctx.restore();
+}
 function labEpilogue(){
-  var steps=[function(){G.epi={started:false,x:0,ct:0,snap:null,o:null};G.lines=[];}];
-  EPI.forEach(function(o){if(o.mine)steps.push(function(){return mineRows().length?[epiShot(o),{wait:o.secs||5.5}]:[];});else steps.push(epiShot(o),{wait:o.secs||5.5});});
-  steps.push(function(){G.epi=null;G.fade=1;G.fadeRate=0.5;},{wait:1.2});
+  var steps=[function(){G.epi={started:false,x:0,ct:0,snap:null,o:null,clock:0};G.lines=[];music('epilogue');}];
+  var shots=EPI.slice(0,EPIA.length),b=0;
+  shots.forEach(function(o,i){
+    var b0=b,n=EPIA[i];b+=n;
+    steps.push(epiAt(barT(b0)));
+    if(o.mine)steps.push(function(){return mineRows().length?[epiShot(epiCopy(o,{secs:barT(b0+n)-barT(b0)}))]:[];});   // no methods: the previous shot holds
+    else steps.push(epiShot(epiCopy(o,{secs:barT(b0+n)-barT(b0)})));
+  });
+  var rollStart=b,rollEnd=59;
+  steps.push(epiAt(barT(rollStart)),epiShot({cut:'fade',set:'home',clock:23*3600+20*60,s:0.95,mood:'calm',hx:330,sitting:1,roll:1,
+    cam:[1.3,360,300, 1.1,430,285],secs:barT(rollEnd)-barT(rollStart),
+    at:[[barT(49)-barT(rollStart),function(){var M=G.morko;M.pose='puppet';G.morko.sT=0.9;G.human.pose=null;}],[barT(55)-barT(rollStart),function(){G.morko.pose='sit';G.human.pose='floor';}]]}));
+  EPIC.forEach(function(l,i){var o=epiFind(l);if(!o)return;var b0=rollEnd+i;
+    steps.push(epiAt(barT(b0)),epiShot(epiCopy(o,{cut:'hard',noCap:1,secs:barT(b0+1)-barT(b0),cam:[o.cam[3],o.cam[4],o.cam[5],o.cam[3],o.cam[4],o.cam[5]]})));});
+  var last=epiFind('DAYS LIVED TODAY'),cred=EPI[EPI.length-1],cb=rollEnd+EPIC.length;
+  steps.push(epiAt(barT(cb)),epiShot(epiCopy(cred,{secs:EPISONG-barT(cb)})),epiAt(EPISONG-2.2),function(){G.fade=0;G.fadeRate=-0.45;},epiAt(EPISONG),
+    function(){G.epi=null;G.fade=1;G.fadeRate=0.5;music(null);},{wait:1.2});
   return labScene({set:'home',title:'Epilogue, first sketch.',plan:'',clock:21*3600}).concat(steps);
 }
 // ---- src/40-backdrops.js ----
