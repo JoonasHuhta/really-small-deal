@@ -360,15 +360,15 @@ Jos nämä ovat ristiriidassa §13:n kanssa, nämä voittavat. Korvautuneet §13
 | **V23** | Tiuskaisu tyhjällä mukilla viikkoon (Riitta tai Eero; Sanna avoin kysymys). | S–M | |
 | **V24** | Lisää hattuja vain ansaituille hetkille (pipo, kypärä, syntymäpäivä), enintään 5–6 koko pelissä. | S | |
 
-**Mukin tasapaino (0.66.0, testattu kaikilla reiteillä, tests/mug.test.cjs):**
+**Mukin tasapaino (0.67.0, Joonaksen korjaus: osumat vievät isosti, kotona tankataan; testattu kaikilla reiteillä, tests/mug.test.cjs):**
 
-| Päivä | Alku | Mikä vie / tuo | Pohja |
-|---|---|---|---|
-| Maanantai | 5 (täysi) | Eeron mukavuusaluepuhe −1, ”oh, hi.” −1, Sannan ”YES.” +1 | 3 |
-| Tiistai | 4 | ”quick chat?” −1, uni +1, pesulappu −1, ”shorter” −1 | 2 |
-| Keskiviikko | 4 | jokainen myöntävä vastaus −1 (ei alle yhden) | 1 |
-| Torstai | 3 | ”Seen” −1, tunti hiljaisuutta −1, pussi → **särkyy**; kultaliima → 1, Sannan viesti +1 | 0 |
-| Perjantai | 4 (kultasaumat) | ”oh, hi.” laukeaa silti −1 | 2–3 |
-| Ryhmächatti | 3 (kultasaumat, taustalla) | – | 3 |
+| Päivä | Muoto | Alku | Mikä vie / tuo | Pohja → loppu |
+|---|---|---|---|---|
+| Maanantai | **V: kuoppa ja tankkaus** | 5 (täysi) | Eeron puhe −1, ”oh, hi.” −2, muut lähtevät lounaalle ilman −1 (tai yhteinen lounas +1, hopeareunus), uusinta −1, Sannan ”YES.” +1, koti ja paahtoleipä +2 | 1 → 3 |
+| Tiistai | **vajoaminen** | 4 | ”quick chat?” −2, uni +1, pesulappu −1, ”shorter” −2 | 1 → 1 |
+| Keskiviikko | **hidas vuoto** | 4 | jokainen kyllä −1, pohja 2 (lasku tulee torstaina) | 2 → 2 |
+| Torstai | **romahdus** | 3 | ”Seen” −1, tunti hiljaisuutta −1, pussi → särkyy; kultaliima 1, Sannan viesti +1 | 0 → 2 |
+| Perjantai | kultasaumat | 4 | ”oh, hi.” laukeaa silti −1 | 2–3 |
+| Ryhmächatti | kultasaumat, taustalla | 3 | – | 3 |
 
-Säännöt: vain torstai saa tyhjentää ja rikkoa mukin. Välihetket eivät peri vanhaa mukia (ne tuovat omansa tarvittaessa). Muki ei koskaan muuta Ekskyysmin kokoa.
+Periaatteet: iso osuma vie kaksi (dysforia uuvuttaa), arki vie yhden, hopeareunus tuo yhden, koti tuo kaksi. Jokaisella päivällä on eri muoto, jotta matala taso ei muutu normaaliksi.

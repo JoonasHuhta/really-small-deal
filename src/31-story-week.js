@@ -20,14 +20,14 @@ function begin(n,o){return [scene(o),function(){
 // Ekskyysmi's tell: whenever it says it is fine and is not, it shrinks a little, then grows back.
 function fib(){var M=G.morko;M.s=Math.max(0.3,M.s-0.07);}
 function shadowHit(){var g=G;trigger();addLived('the one that landed',LIVED.shadowHit);sfx('hit');g.pulse=0.9;g.shake=RM?0:0.8;g.lines=[];g.cur=null;g.flash=0.8;g.morko.sT=0.62;g.morko.mood='scared';g.morko.pose=null;g.anx=0.9;g.cz=1.08;g.cx=W/2-30;g.cy=300;}
-function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);if(G.mug&&G.mug.v>1)drain(1,'saying yes')();}   // every yes costs a sip, down to the last one: only Thursday gets to empty the mug (VISIO V22)
+function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);if(G.mug)drain(1,'saying yes')();}   // every yes costs a sip, down to the last one: only Thursday gets to empty the mug (VISIO V22)
 
 function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60}).concat([
   mugOn(4),
   tuesdayOpening,
   {wait:0.6},
   ['P','Riitta: “Quick chat tomorrow at 9?”'],
-  hit(0.9,'P'),drain(1,'“quick chat?”'),set({sweat:0.7}),{wait:1.2},
+  hit(0.9,'P'),drain(2,'“quick chat?”'),set({sweat:0.7}),{wait:1.2},
   ['S','“Quick.”',{look:'squint'}],
   ['S','Nobody says “quick” about good news. Good news takes its time. Good news has cake.'],
   ['H','It’s probably nothing.'],
@@ -93,7 +93,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['R','And people like working with you. Sanna said so, actually.'],
   ['S','Padding.',{look:'squint'}],
   ['R','One small thing: the summary could be shorter next time.'],
-  hit(0.95,'R'),drain(1,'“shorter”'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.'],['YEAR 4','“Neat handwriting. Could be neater.”'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
+  hit(0.95,'R'),drain(2,'“shorter”'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.'],['YEAR 4','“Neat handwriting. Could be neater.”'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
   ['S','THERE it is.',{loud:1}],
   ['S','“Shorter.” The summary is too long. YOU are too long. Your whole deal is too long.'],
   ['R','Otherwise, great work. Keep it up.'],
@@ -139,7 +139,8 @@ function yesMenu(s,extra,extraKey){return {choice:[
   {t:'No.',off:true}
 ]};}
 function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600+20*60}).concat([
-  mugOn(4),
+  mugOn(4,2),   // Wednesday leaks slowly: every yes costs a sip, the bill arrives on Thursday
+  
   set({cowB:1,bx:880}),{wait:1.6},
   ['B','Hey! Quick favour. Could you take my slides for Friday? I’m swamped.'],
   ['H','I’ve got my own—'],
@@ -209,7 +210,7 @@ var SEEN={
     r:[['P','Sanna: “??? to you too! Phone died. 7?”'],['S','She bit back. Affectionately. Is that allowed?',{look:'squint'}]]}
 };
 function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock:17*3600+30*60,snacks:1}).concat([
-  mugOn(3),hat('party'),countBags,{wait:2.8},
+  mugOn(3,0),hat('party'),countBags,{wait:2.8},
   ['S','Snacks: eleven bags. Car: fuelled. Us: early. Hat: festive. I have no notes.',{look:'pleased'}],
   ['P','You: “What time tonight? I’ve got the snacks.”'],
   ['P','Seen 17:31.'],

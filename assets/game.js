@@ -848,7 +848,7 @@ function scSanna(){return [
   function(){return G.qteWon?scResponded():scSpiral();}
 ];}
 function scSpiral(){return [
-  set({aFace:1}),hit(1,'A'),drain(1,'“oh, hi.”'),archive('bad',[['2011','Waved back at someone who was waving at someone else.'],['2016','Said “you too” when the waiter said “enjoy your meal”.'],['2019','Signed an email “Love,”. To Facilities.']]),{wait:1.4},['N','Ekskyysmi opens the archive. All of it. At once.'],closeArchive,
+  set({aFace:1}),hit(1,'A'),drain(2,'“oh, hi.”'),archive('bad',[['2011','Waved back at someone who was waving at someone else.'],['2016','Said “you too” when the waiter said “enjoy your meal”.'],['2019','Signed an email “Love,”. To Facilities.']]),{wait:1.4},['N','Ekskyysmi opens the archive. All of it. At once.'],closeArchive,
   set({rate:0.03}),
   ['S','Okay. We missed the window. Nobody panic. I’ve reviewed the “oh”.'],
   ['H','It was a greeting.'],
@@ -886,7 +886,7 @@ function scSpiral(){return [
   function(){return scWalk();}
 ];}
 var OUTCAP={none:'A pause. Then a “hi”, just after the moment had moved on.',grow:'Stood very still. Then a slightly too loud hi, to nobody in particular.',cover:'Looked into the cup until the moment had passed.',exit:'Left. The coffee stayed.'};
-function lunch(n){return function(){G.lunch=n;};}
+function lunch(n){return function(){G.lunch=n;if(n)refill(1,'lunch, together')();else drain(1,'they went without us')();};}   // left out drains; lunch together is the silver lining (Joonas 20.11.)
 var CTAIL={
   seen:[set({s:1.1,mood:'care',anx:0.05}),['S','…I didn’t make that one up.'],['H','No.'],set({pose:'comfort',face:'down'}),['S','I’d like it noted that I don’t enjoy being right.'],['H','Noted.']],
   cover:[['H','What did they say?'],['S','…Weather. They said weather.'],['H','You’re a terrible liar.'],set({pose:null,mood:'care'}),['S','They said: no need to ask the others.'],set({pose:'comfort',face:'down'}),['H','…Okay.'],['S','I’d have covered it forever. I only have the two hands.']],
@@ -927,7 +927,7 @@ function walkMenu(done){return function(){
     ['S','Exhibit A. I’ve had it restored.'],
     replay(1),['A','oh, hi.'],['S','Note the comma.'],['H','People don’t say commas.'],
     replay(2),['A','ohhh. …hi.'],['S','Enhanced. Look at the eyebrows.'],['H','You drew those.'],['S','I RESTORED those.'],
-    replay(3),['A','OH.  …  hi.'],['S','Director’s cut. With the audience.'],['H','There was no audience.'],['S','There’s always an audience. It just sits in here.'],
+    replay(3),drain(1,'the replay'),['A','OH.  …  hi.'],['S','Director’s cut. With the audience.'],['H','There was no audience.'],['S','There’s always an audience. It just sits in here.'],
     ['S',FEAR[g.fear].walk],frozen,{wait:0.8},['S','…I’ve scared myself with my own cut.'],
     function(){G.rep=null;free();},
     ['H','Can we watch the original?'],['S','The original is very boring.']
@@ -974,8 +974,8 @@ function scWalk(){
     ['H','You can come in anyway.'],
     set({mood:'care',s:1.1}),
     ['S','…Is there toast?'],
-    ['H','There’s toast.'],
-    {wait:0.5},
+    ['H','There’s toast.'],refill(2,'home. toast.'),
+    {wait:0.9},
     showEnd
   ];
 }
@@ -1010,14 +1010,14 @@ function begin(n,o){return [scene(o),function(){
 // Ekskyysmi's tell: whenever it says it is fine and is not, it shrinks a little, then grows back.
 function fib(){var M=G.morko;M.s=Math.max(0.3,M.s-0.07);}
 function shadowHit(){var g=G;trigger();addLived('the one that landed',LIVED.shadowHit);sfx('hit');g.pulse=0.9;g.shake=RM?0:0.8;g.lines=[];g.cur=null;g.flash=0.8;g.morko.sT=0.62;g.morko.mood='scared';g.morko.pose=null;g.anx=0.9;g.cz=1.08;g.cx=W/2-30;g.cy=300;}
-function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);if(G.mug&&G.mug.v>1)drain(1,'saying yes')();}   // every yes costs a sip, down to the last one: only Thursday gets to empty the mug (VISIO V22)
+function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);if(G.mug)drain(1,'saying yes')();}   // every yes costs a sip, down to the last one: only Thursday gets to empty the mug (VISIO V22)
 
 function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60}).concat([
   mugOn(4),
   tuesdayOpening,
   {wait:0.6},
   ['P','Riitta: “Quick chat tomorrow at 9?”'],
-  hit(0.9,'P'),drain(1,'“quick chat?”'),set({sweat:0.7}),{wait:1.2},
+  hit(0.9,'P'),drain(2,'“quick chat?”'),set({sweat:0.7}),{wait:1.2},
   ['S','“Quick.”',{look:'squint'}],
   ['S','Nobody says “quick” about good news. Good news takes its time. Good news has cake.'],
   ['H','It’s probably nothing.'],
@@ -1083,7 +1083,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['R','And people like working with you. Sanna said so, actually.'],
   ['S','Padding.',{look:'squint'}],
   ['R','One small thing: the summary could be shorter next time.'],
-  hit(0.95,'R'),drain(1,'“shorter”'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.'],['YEAR 4','“Neat handwriting. Could be neater.”'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
+  hit(0.95,'R'),drain(2,'“shorter”'),function(){G.bigNote={text:'SHORTER',t:0};},set({blush:1}),archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.'],['YEAR 4','“Neat handwriting. Could be neater.”'],['2022','Laughed at my own joke. In a meeting. Alone.']]),{wait:1.4},['N','The archive again. Filed by wound.'],closeArchive,
   ['S','THERE it is.',{loud:1}],
   ['S','“Shorter.” The summary is too long. YOU are too long. Your whole deal is too long.'],
   ['R','Otherwise, great work. Keep it up.'],
@@ -1129,7 +1129,8 @@ function yesMenu(s,extra,extraKey){return {choice:[
   {t:'No.',off:true}
 ]};}
 function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600+20*60}).concat([
-  mugOn(4),
+  mugOn(4,2),   // Wednesday leaks slowly: every yes costs a sip, the bill arrives on Thursday
+  
   set({cowB:1,bx:880}),{wait:1.6},
   ['B','Hey! Quick favour. Could you take my slides for Friday? I’m swamped.'],
   ['H','I’ve got my own—'],
@@ -1199,7 +1200,7 @@ var SEEN={
     r:[['P','Sanna: “??? to you too! Phone died. 7?”'],['S','She bit back. Affectionately. Is that allowed?',{look:'squint'}]]}
 };
 function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock:17*3600+30*60,snacks:1}).concat([
-  mugOn(3),hat('party'),countBags,{wait:2.8},
+  mugOn(3,0),hat('party'),countBags,{wait:2.8},
   ['S','Snacks: eleven bags. Car: fuelled. Us: early. Hat: festive. I have no notes.',{look:'pleased'}],
   ['P','You: “What time tonight? I’ve got the snacks.”'],
   ['P','Seen 17:31.'],
@@ -1876,12 +1877,13 @@ function labDetail(){return labScene({set:'office',title:'One small thing.',plan
 var MUGMAX=5;
 // v: the real level. shown: what is drawn (drops at once, rises slowly). ghost: the part just lost, flickering out (Joonas 20.11.).
 // vis: the mug fades in when it matters and out when the scene wants to breathe. spiky: the monster edge, only where a scene asks for it.
-function mugOn(v){return function(){var lv=v==null?MUGMAX:v;G.mug={v:lv,shown:lv,t:0,slosh:0,last:null,ghost:null,vis:0,seen:0,spiky:false,shards:null,broken:false,mended:!!G.mugMended};};}
+function mugOn(v,floor){return function(){var lv=v==null?MUGMAX:v;G.mug={floor:floor==null?1:floor,v:lv,shown:lv,t:0,slosh:0,last:null,ghost:null,vis:0,seen:0,spiky:false,shards:null,broken:false,mended:!!G.mugMended};};}
 function mugOff(){G.mug=null;G.deal=null;}
 function mugQuiet(on){return function(){G.mugQuiet=!!on;};}          // a scene for the atmosphere: the mug steps out unless something happens to it
 function mugSpiky(on){return function(){if(G.mug)G.mug.spiky=!!on;};}
 function mugEmpty(){return !!(G.mug&&G.mug.v<=1);}
-function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown;m.v=Math.max(0,m.v-n);m.shown=m.v;m.ghost={from:from,to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:label,t:0,minus:true};sfx('sipOut');};}
+function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown;m.v=Math.max(Math.min(m.v,m.floor==null?0:m.floor),m.v-n);   // a day can scrape the bottom, only Thursday goes through it
+  m.shown=m.v;m.ghost={from:from,to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:label,t:0,minus:true};sfx('sipOut');};}
 function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:label,t:0,minus:false};sfx('pourIn');};}
 // The meltdown: the last drain on an empty mug breaks it. Shards fly; the mug stays broken until it is glued.
 function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.shown=0;m.broken=true;m.seen=0;m.ghost=null;m.last={text:label||'',t:0,minus:true};

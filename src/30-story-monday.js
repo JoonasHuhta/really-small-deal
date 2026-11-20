@@ -98,7 +98,7 @@ function scSanna(){return [
   function(){return G.qteWon?scResponded():scSpiral();}
 ];}
 function scSpiral(){return [
-  set({aFace:1}),hit(1,'A'),drain(1,'“oh, hi.”'),archive('bad',[['2011','Waved back at someone who was waving at someone else.'],['2016','Said “you too” when the waiter said “enjoy your meal”.'],['2019','Signed an email “Love,”. To Facilities.']]),{wait:1.4},['N','Ekskyysmi opens the archive. All of it. At once.'],closeArchive,
+  set({aFace:1}),hit(1,'A'),drain(2,'“oh, hi.”'),archive('bad',[['2011','Waved back at someone who was waving at someone else.'],['2016','Said “you too” when the waiter said “enjoy your meal”.'],['2019','Signed an email “Love,”. To Facilities.']]),{wait:1.4},['N','Ekskyysmi opens the archive. All of it. At once.'],closeArchive,
   set({rate:0.03}),
   ['S','Okay. We missed the window. Nobody panic. I’ve reviewed the “oh”.'],
   ['H','It was a greeting.'],
@@ -136,7 +136,7 @@ function scSpiral(){return [
   function(){return scWalk();}
 ];}
 var OUTCAP={none:'A pause. Then a “hi”, just after the moment had moved on.',grow:'Stood very still. Then a slightly too loud hi, to nobody in particular.',cover:'Looked into the cup until the moment had passed.',exit:'Left. The coffee stayed.'};
-function lunch(n){return function(){G.lunch=n;};}
+function lunch(n){return function(){G.lunch=n;if(n)refill(1,'lunch, together')();else drain(1,'they went without us')();};}   // left out drains; lunch together is the silver lining (Joonas 20.11.)
 var CTAIL={
   seen:[set({s:1.1,mood:'care',anx:0.05}),['S','…I didn’t make that one up.'],['H','No.'],set({pose:'comfort',face:'down'}),['S','I’d like it noted that I don’t enjoy being right.'],['H','Noted.']],
   cover:[['H','What did they say?'],['S','…Weather. They said weather.'],['H','You’re a terrible liar.'],set({pose:null,mood:'care'}),['S','They said: no need to ask the others.'],set({pose:'comfort',face:'down'}),['H','…Okay.'],['S','I’d have covered it forever. I only have the two hands.']],
@@ -177,7 +177,7 @@ function walkMenu(done){return function(){
     ['S','Exhibit A. I’ve had it restored.'],
     replay(1),['A','oh, hi.'],['S','Note the comma.'],['H','People don’t say commas.'],
     replay(2),['A','ohhh. …hi.'],['S','Enhanced. Look at the eyebrows.'],['H','You drew those.'],['S','I RESTORED those.'],
-    replay(3),['A','OH.  …  hi.'],['S','Director’s cut. With the audience.'],['H','There was no audience.'],['S','There’s always an audience. It just sits in here.'],
+    replay(3),drain(1,'the replay'),['A','OH.  …  hi.'],['S','Director’s cut. With the audience.'],['H','There was no audience.'],['S','There’s always an audience. It just sits in here.'],
     ['S',FEAR[g.fear].walk],frozen,{wait:0.8},['S','…I’ve scared myself with my own cut.'],
     function(){G.rep=null;free();},
     ['H','Can we watch the original?'],['S','The original is very boring.']
@@ -224,8 +224,8 @@ function scWalk(){
     ['H','You can come in anyway.'],
     set({mood:'care',s:1.1}),
     ['S','…Is there toast?'],
-    ['H','There’s toast.'],
-    {wait:0.5},
+    ['H','There’s toast.'],refill(2,'home. toast.'),
+    {wait:0.9},
     showEnd
   ];
 }

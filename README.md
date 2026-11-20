@@ -14,6 +14,11 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.67.0 (Claude, 20.11.2026): **mukin mitoitus Joonaksen korjauksen mukaan.**
+- Isot osumat vievät kaksi siemausta (”oh, hi.”, ”quick chat?”, ”shorter”): dysforia uuvuttaa. Maanantaina muki käy lähes tyhjänä: muut lähtevät lounaalle ilman (−1) tai yhteinen lounas on hopeareunus (+1), uusinta vie, kotona paahtoleipä tankkaa kaksi.
+- Päivillä on oma muotonsa: maanantai kuoppa ja tankkaus, tiistai vajoaminen, keskiviikko hidas vuoto (pohja kaksi), torstai romahdus. Pohja on yksi kaikkina muina päivinä; vain torstai menee läpi.
+- Testi tarkistaa myös muodon: maanantai käy pohjassa ja täyttyy, keskiviikko ei romahda.
+
 Versio 0.66.0 (Claude, 20.11.2026): **muki kulkee koko viikon (V22).**
 - Maanantai: muki ilmestyy työnkuvapuheen jälkeen (”Coffee. I’ll handle the catastrophes.”), kertoja selittää sen kerran. Ensimmäinen ”oh, hi.” osuu lähes täydellä mukilla: RSD ei ole väsymystä.
 - Tiistai: ”quick chat?”, pesulappu ja ”shorter” vievät, yöuni tuo siemauksen. Keskiviikko: jokainen myöntävä vastaus maksaa siemauksen, mutta ei koskaan viimeistä. Torstai: muki särkyy. Perjantai ja ryhmächatti: kultasaumainen muki.
