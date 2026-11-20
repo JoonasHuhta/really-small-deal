@@ -228,7 +228,7 @@ function handTargets(q){
 }
 function mcol(){return G.w||G.set==='home'||G.set==='bar'?'#0d0f18':G.dark>0.5?'#14111d':'#28243a';}
 function morkoBody(q){
-  var Hm=G.human,wk=G.morko.wake==null?1:G.morko.wake,al=wk;
+  var Hm=G.human,wk=G.morko.wake==null?1:G.morko.wake,al=wk*(G.gapWalk&&G.w&&G.gapA!=null?G.gapA:1);   // Lamp gap.: thinner between lamps; the eyes stay
   if(wk<0.98){ctx.fillStyle='rgba(20,16,30,'+(0.26*(1-wk))+')';ctx.beginPath();ctx.ellipse(Hm.x-12,FEETY+3,44,9,0,0,Math.PI*2);ctx.fill();}
   if(wk<0.02)return;
   ctx.fillStyle=mcol();
@@ -330,12 +330,13 @@ function drawPair(humanOpts){
   var q=geom(),ht=handTargets(q);
   var up=G.morko.wake==null||G.morko.wake>0.5;
   plainShadow();
-  morkoBody(q);if(up&&!ht.front)morkoArms(q,ht);
+  var fa=G.gapWalk&&G.w&&G.gapA!=null?G.gapA:1;ctx.save();ctx.globalAlpha*=fa;   // Lamp gap.: the shadow thins out between lamps
+  morkoBody(q);ctx.globalAlpha=fa;if(up&&!ht.front)morkoArms(q,ht);ctx.restore();   // morkoBody ends at alpha 1 for the eyes
   if(up)shadowDrink(q);
   drawGaze();
   if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to: not on the street
   drawHuman(humanOpts);
-  if(up&&ht.front)morkoArms(q,ht);
+  if(up&&ht.front){ctx.save();ctx.globalAlpha*=fa;morkoArms(q,ht);ctx.restore();}
   if(up)drawStamp();
 }
 

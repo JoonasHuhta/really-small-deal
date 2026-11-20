@@ -198,8 +198,8 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ['A','Oh. I was halfway out of the building.'],
   ['H','Yes. Obviously. YES.'],
   ['N','Sanna laughed eight times. Somebody from the next table joined in. Nobody rehearsed anything.'],
-  function(){var b=G.bar;G.barWas=b?{sdrink:b.sdrink,glass:b.glass}:null;}
- ],outside({title:'WHAT THE EVENING WAS',dur:'duration: 3 hours',cap:'Two colleagues laughing at a bar. One of them told a story about an umbrella.',anim:'text'}),[
+  function(){var b=G.bar;G.barWas=b?{sdrink:b.sdrink,glass:b.glass}:null;},{wait:1.2}
+ ],[
   scene({set:'home',clock:7*3600+10*60}),
   function(){var M=G.morko;M.wake=0;M.asleep=false;M.s=M.sT=0.35;G.human.face='neutral';},{wait:1.1},
   set({s:1.6,mood:'scared'}),

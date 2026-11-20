@@ -109,9 +109,9 @@ function scSpiral(){return [
   ['S','A lot can happen in two seconds. I just did all of it.'],
   ['S','Recommendation.'],
   {choice:[
-    {t:'Become furniture. Very convincing furniture.',m:'hide',preview:'hold',f:function(){G.leak='grow';},then:[['H','For how long?'],['S','Until retirement.'],prevent('furniture')]},
-    {t:'Study the cup. It has excellent manners.',m:'hide',preview:'cover',f:function(){G.leak='cover';},then:[['H','It’s a cup.'],['S','Not one personal remark.'],prevent('cup')]},
-    {t:'A strategic exit. We can come back.',m:'hide',preview:'pull',f:function(){G.leak='exit';},then:[['H','My coffee’s still here.'],['S','A convincing alibi.'],prevent('door')]},
+    {t:'Become furniture. Very convincing furniture.',m:'hide',preview:'hold',f:function(){G.leak='grow';},then:[['H','For how long?'],['S','Until retirement.'],prevent('furniture',1)]},
+    {t:'Study the cup. It has excellent manners.',m:'hide',preview:'cover',f:function(){G.leak='cover';},then:[['H','It’s a cup.'],['S','Not one personal remark.'],prevent('cup',1)]},
+    {t:'A strategic exit. We can come back.',m:'hide',preview:'pull',f:function(){G.leak='exit';},then:[['H','My coffee’s still here.'],['S','A convincing alibi.'],prevent('door',1)]},
     {t:'…Say “hi” back. I’ll stay right here.',m:'stay',preview:'comfort',f:function(){G.leak='none';},then:[['S','I reserve the right to wobble.'],['H','You can wobble.']]}
   ]},
   function(){var l=G.leak;G.lines=[];return l==='grow'?[{hold:{kind:'still',secs:2.6}}]:l==='cover'?[{hold:{kind:'cover',secs:3}}]:l==='exit'?[{hold:{kind:'pull',secs:3}}]:[];},

@@ -193,7 +193,7 @@ function labForm(){
   ['H','You’ve gone into the margin.'],
   ['S','The margin needed a witness too.'],
   function(){G.form=null;}
- ],outside({title:'WHAT THE CALENDAR SAW',dur:'duration: 40 minutes',cap:'An appointment. A form with eighteen questions. A small paper bag.',anim:'text'}));
+ ],outside({title:'WHAT THE APPOINTMENT WAS',dur:'duration: 40 minutes',cap:'An appointment. A form with eighteen questions. A small paper bag.',anim:'text'}));
 }
 
 /* ================= 3. Quiet. ================= */

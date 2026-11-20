@@ -14,6 +14,8 @@
 
 > **Tila 0.47.0 (20.11.):** ✔ Interaktiivisuus (§11): *(Say nothing.)* -kaari, kosketeltava huone, menetelmät kuittiin. 🧪 *The bag.* odottaa Joonaksen päätöstä: jos toimii, siirretään torstain klo 18.40 laukaisijaksi (pussi ennen riviä ”You’re just the loudest thing in the room”), ei uutena kohtauksena. Huom. Vantage Point -käänne: uusi minä ei saa olla parempi naamio, vaan siitä riisutaan pala. Seuraavaksi T7, T12.
 
+> **Tila 0.48.0 (20.11.):** ✔ T7: *Lamp gap.* lab-kloonina (`52-lamps.js`). ✔ Työkalujen tasapaino (§12). 🧪 Joonas päättää: *The bag.* torstaihin, *Lamp gap.* maanantain kotimatkaan (yksi lamppuväli, ei kolmea). Seuraavaksi T12 (pelaajatesti), sitten T10 kun kappale on valmis.
+
 Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, valmiiksi määriteltyinä tehtävinä, jotka halvempi malli (Sonnet tai Codex) voi tehdä. Opus tarvitaan vain tarinapäätöksiin ja uuteen dialogiin.
 
 ---
@@ -186,7 +188,7 @@ Jokaisessa tehtävässä: muokkaa vain `src/`-tiedostoja, aja `npm test` (story 
 | ✔ **T4** | Kamera: `shot()` ja kuvatyypit, `crash`, Less motion = leikkaus | S | `45-camera.js`, `60-update.js` (`camRate`), `20-engine.js` (`hitFrame`) | tehty 0.45.0 (`insert` hoidetaan edelleen Enhance-zoomilla) |
 | ✔ **T5** | Kamerakieli tarinaan: kaksi tai kolme kohtaa per päivä ti–pe (`two` + `crash` Sannan kanssa perjantaina) | O suunnittelee, S toteuttaa | tarinatiedostot | Joonas katsoo pelaten |
 | ✔ **T6** | Jousiviive varjon vartaloon (kohta 7.1) | S | `70-draw.js`, `60-update.js` | kotimatkan kuvakaappaus: ei kampivaikutelmaa, Less motion ilman keinuntaa |
-| **T7** | Lab-klooni: katuvalojen välit (kohta 7.2) | S | uusi `52-lamps.js` | vertailu Joonakselle |
+| ✔ **T7** | Lab-klooni: katuvalojen välit (kohta 7.2) | S | uusi `52-lamps.js` | vertailu Joonakselle |
 | ✔ **T8** | Toinen laatikko: siemenrivi maanantaihin ja paljastuskohtaus (kohta 2) | **O** | `keep()`, `KEPT`, `openDrawer()` (`20-engine.js`), `drawerReveal()` (`50-lab.js`) | tehty 0.44.0. Joonas arvioi pelaten. Välähdyskuvat (REPLAY · OTHER ANGLE) ovat jatkoidea: nyt paljastus tehdään korteilla. |
 | ✔ **T9** | Lisäkohtausvalikko tilanteen mukaan nimettynä, avautuu maanantain jälkeen, lab vain `?lab` (kohta 4) | S | `80-ui.js`, `28-progress.js` | tallennustesti: avautuminen säilyy |
 | **T10** | Epilogianimaatio (kohta 6) | S (moottori), O (välähdysten valinta) | uusi `37-epilogue.js` | Joonaksen kappale, tahdistus testattu selaimessa |
@@ -234,3 +236,24 @@ Jokaisessa tehtävässä: muokkaa vain `src/`-tiedostoja, aja `npm test` (story 
 - Uusi `G.`-kenttä, joka piirtää jotain, nollataan `scene()`-funktiossa.
 - C:\RSD ja git pidetään samassa tilassa. Codex voi muokata C:\RSD:tä ilman gittiä, joten tarkista muutosajat ennen päälle kirjoittamista.
 - Kun tehtävä on valmis, merkitse se tähän tiedostoon (✔ ja versio) ja kerro, mitä ei testattu oikealla laitteella.
+
+---
+
+## 12. Työkalubudjetti (20.11.)
+
+Ekskyysmin keinot ovat vitsejä vain niin kauan kuin ne ovat harvinaisia. Ennen kuin lisäät keinon kohtaukseen, tarkista tämä taulukko. Laskuri: `npm test` ei valvo tätä, joten katso `grep` tai pyydä analyysi.
+
+| Keino | Budjetti | Nyt |
+|---|---|---|
+| Ulkopuolinen kortti (WHAT X SAW) | enintään 1 per kohtaus; joka päivässä ainakin yksi kohtaus ilman korttia; sama otsikko enintään 2 kertaa | n. 20 tarinassa (karsittu 22:sta) |
+| Leimasin | maanantai (lyönti) ja perjantai (pidellään, pannaan pois). Ei muualla. | 1 + 1 |
+| *(Say nothing.)* | lukossa ti klo 3 ja ke keskiyö, auki pe ja kommenteissa. Ei viestivalinnoissa (sekoittuu ”älä lähetä”). | 2 + 2 |
+| Suurennuslasi | omat kohtauksensa (glass, nothing, library, evenings) + yksi kurkistus muualla per päivä | |
+| Arkisto (vanhat muistot) | enintään 1 per päivä | |
+| Kamera: erikoiskuva | 2–3 per päivä, sitten aina takaisin laajaan | |
+| Kosketeltavat esineet | 2–3 riviä per esine, sitten hiljaa; ei maanantaina | |
+| Iso varjo (s ≥ 1.6) | spiraalin huipulla, ei keskustelun pohjana | |
+| Erikoisilme (look) | yksi repliikki | |
+
+Sääntö: jos kohtauksessa on jo pito tai minipeli, sen jälkeen ei tarvita sekä korttia että leimaa. Yksi alleviivaus riittää.
+

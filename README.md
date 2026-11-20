@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.48.0 (Claude, 20.11.2026): **työkalujen tasapaino ja Lamp gap (T7).**
+- Leimasin: maanantaina vain kerran (Eeron ”Rejection prevented.”). Sannan jälkeen leimaa ei enää lyödä, koska pito ja ulkopuolinen kortti kantavat jo vitsin. Perjantain leimasin (pidellään ja pannaan pois) on maanantain vastapari.
+- Ulkopuolisia kortteja karsittu: tiistain ”A meeting was scheduled.” pois (kohtaus päättyy riviin ”ONE thumb. She has two.”), baarin ”WHAT THE EVENING WAS” pois (kertoja sanoi saman). Lomakkeen kortti on nyt ”WHAT THE APPOINTMENT WAS”, jotta ”WHAT THE CALENDAR SAW” ei toistu kolmesti.
+- *(Say nothing.)* pois kohdista, joissa se luettiin ”älä lähetä mitään” -viestinä (tiistain vastaus, torstain ”Seen”). Lukossa nyt ti klo 3 ja ke keskiyö, auki pe ja kommenteissa.
+- **Lamp gap.** (vain `?lab`, T7): kotimatkan klooni. Lamppujen välissä varjo haalistuu (silmät jäävät) ja jää jälkeen, seuraavan lampun alla se juoksee kiinni: ”Wait. WAIT. Lamp gap.” Loppu: ”You never lost me. You just couldn’t see me for a bit.” – ”…That’s the same thing.” – ”It really isn’t.”
+- Työkalubudjetti kirjattu suunnitelmaan (§12), jotta mikään keino ei ala toistua.
+
 Versio 0.47.0 (Claude, 20.11.2026): **mekaniikka on vitsi: hiljaisuus, kosketeltava huone, menetelmät kuittiin, ja sipsipussi.**
 - **(Say nothing.)** näkyy valikoissa koko viikon harmaana (”Not a setting. Yet.”) ja kieltäytyy omilla repliikeillään (”That isn’t a setting.”, ”Silence is how they get you.”). Torstain jälkeen se aukeaa: perjantaina ja kommenteissa sen voi valita. Kehityskaari näkyy käyttöliittymässä ilman selitystä. Paikat: ti viestivastaus ja klo 3 skenaariot, ke keskiyö, to ”Seen”-luonnokset (lukossa); pe tuomio ja kommentit (auki). `hush()` tiedostossa `20-engine.js`.
 - **Kosketeltava huone** (`58-hotspots.js`): kellolla, ilmoitustaululla, kasvilla, mukeilla, kahvinkeittimellä, ikkunoilla, kaaviolla, kuulla ja lampulla on Ekskyysmin kommentti (2–3 kpl/esine, sitten hiljaa). Ei maanantaina. Ei koskaan pysäytä tarinaa: toinen nopea napautus jatkaa. Yksi esine välähtää välillä, ja vihjerivi kertoo asiasta.

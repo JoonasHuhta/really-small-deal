@@ -10,7 +10,7 @@ function scene(o){return function(){
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
-  if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;
+  if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
 function begin(n,o){return [scene(o),function(){
@@ -41,8 +41,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   {choice:[
     {t:'“Sure!” With the exclamation mark.',m:'draft',then:[['S','Too keen. She’ll smell fear. Take it out.']]},
     {t:'“Sure.” With a full stop.',m:'draft',then:[['S','Too cold. A full stop is a slammed door. Put something back.']]},
-    {t:'“Sure” and nothing else. Raw.',m:'draft',then:[['S','No punctuation at all? What are we, feral?']]},
-    hush()
+    {t:'“Sure” and nothing else. Raw.',m:'draft',then:[['S','No punctuation at all? What are we, feral?']]}
   ]},
   ['P','You: “Sure, 9 works.”'],
   ['S','…You sent it. Without a committee.'],
@@ -50,8 +49,8 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['P','Riitta reacted with a thumbs-up.'],
   ['S','A thumb.',{look:'stunned'}],
   aside(['S','ONE thumb. She has two.']),
-  calm
- ],outside({title:'WHAT THE CALENDAR SAW',dur:'duration: 40 seconds',cap:'A meeting was scheduled.',anim:'text'}),[
+  calm,{wait:0.9}
+ ],[
   scene({set:'home',clock:3*3600+7*60}),
   ['N','03:07.'],
   ['S','Are you awake?'],
@@ -228,7 +227,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','WHERE WAS I.',{loud:1}],
   ['H','Twenty-one minutes.'],
   ['S','TWENTY-ONE MINUTES. Thank you. I’ve drafted some follow-ups.'],
-  {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,m:SEEN[k].m,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};}).concat([hush()]);}},
+  {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,m:SEEN[k].m,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};});}},
   function(){G.clock=18*3600+40*60;},
   ['N','18:40. Still nothing.'],
   set({s:2.5,mood:'stern',anx:0.8}),
