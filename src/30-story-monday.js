@@ -1,21 +1,21 @@
 /* ================= the script (all player-facing text) ================= */
 var FEAR={
- 1:{t:'“Oh” as in “oh no. It’s you.”',
+ 1:{t:'“Oh” as in “oh no. It’s you.”',m:'worst',
     a:[['S','She saw you and her whole morning went “oh”. You are the “oh” in her day.'],['H','I’m also the “hi”.'],['S','The “hi” was legally required.']],
     b:'By lunchtime the whole floor says “oh”. By Friday, the building. They’ll name the sound after you.',
     walk:'By now the whole building says “oh”. There’s a memo.'},
- 2:{t:'“Oh” as in “I forgot you existed.”',
+ 2:{t:'“Oh” as in “I forgot you existed.”',m:'worst',
     a:[['S','You are so forgettable she had to reload you.'],['H','She said hi within a second.'],['S','A full second. To remember a colleague of three years.']],
     b:'Soon they forget your desk. Someone puts a plant on it. The plant gets invited to lunch.',
     walk:'The plant has your desk now. The plant went to lunch.'},
- 3:{t:'She knows about the email from 2019.',
+ 3:{t:'She knows about the email from 2019.',m:'worst',
     a:[['H','What email?'],['S','You signed it “Love,”. To Facilities.'],['H','Nobody remembers that.'],['S','I remember it every night at 3 a.m. That is what I’m FOR.']],
     b:'It’s been forwarded. There’s a group chat. It’s called “Love, Facilities”.',
     walk:'The group chat has a logo now.'}
 };
 function fearChoice(){
   var out=[];[1,2,3].forEach(function(k){var F=FEAR[k];
-    out.push({t:F.t,f:function(){G.fear=k;G.morko.sT=2.1;G.morko.mood='stern';},
+    out.push({t:F.t,m:'worst',f:function(){G.fear=k;G.morko.sT=2.1;G.morko.mood='stern';},
       then:F.a.concat([set({s:2.2}),['S',F.b],{stretch:true}])});});
   return out;
 }
@@ -32,9 +32,9 @@ function scIntro(){return [
   ['H','Suggest something. I’ll decide.'],
   ['S','You usually do. It’s a flaw in the system.'],
   {choice:[
-    {t:'Rehearse the sentence. Forty times.',then:[['H','“Would you like to get lunch.”'],['S','You sounded hungry. Desperate, even. Again.'],['H','It’s lunch. Hunger is on topic.']]},
-    {t:'Locate the exits.',then:[['S','Door. Window. Cupboard under the sink.'],['H','I’m not hiding under the sink.'],['S','Not with that attitude.']]},
-    {t:'Schedule a meeting about whether to ask.',then:[['H','With whom?'],['S','Us. Closed session. No catering.'],['H','I’m asking before you invent a subcommittee.']]}
+    {t:'Rehearse the sentence. Forty times.',m:'draft',then:[['H','“Would you like to get lunch.”'],['S','You sounded hungry. Desperate, even. Again.'],['H','It’s lunch. Hunger is on topic.']]},
+    {t:'Locate the exits.',m:'hide',then:[['S','Door. Window. Cupboard under the sink.'],['H','I’m not hiding under the sink.'],['S','Not with that attitude.']]},
+    {t:'Schedule a meeting about whether to ask.',m:'draft',then:[['H','With whom?'],['S','Us. Closed session. No catering.'],['H','I’m asking before you invent a subcommittee.']]}
   ]},
   set({clr:1,s:1,mood:'calm'}),
   set({cowB:1,bx:880}),{wait:1.7},
@@ -48,7 +48,7 @@ function scIntro(){return [
   ['S','You are in a room. With a person. Holding a hot drink AND a conversation. This IS the expedition.'],
   {choice:[
     {t:'Tell him about the supermarket.',f:function(){G.advice=1;},then:[['S','Four hundred and twelve visits. It is still a supermarket. Tell him.'],['H','I’m not telling him about the supermarket.']]},
-    {t:'Deploy the nod.',f:function(){G.advice=2;},then:[['H','Deploying.']]},
+    {t:'Deploy the nod.',m:'please',f:function(){G.advice=2;},then:[['H','Deploying.']]},
     {t:'Ask where HIS comfort zone is. For later.',f:function(){G.advice=3;},then:[['S','Get an address.'],['H','No.'],['S','A postcode, then.']]},
     {t:'Show him some teeth. Small ones.',f:function(){G.advice=4;G.morko.mood='stern';G.morko.sT=2.3;},then:[['H','Wait—']]}
   ]},
@@ -109,10 +109,10 @@ function scSpiral(){return [
   ['S','A lot can happen in two seconds. I just did all of it.'],
   ['S','Recommendation.'],
   {choice:[
-    {t:'Become furniture. Very convincing furniture.',preview:'hold',f:function(){G.leak='grow';},then:[['H','For how long?'],['S','Until retirement.'],prevent('furniture')]},
-    {t:'Study the cup. It has excellent manners.',preview:'cover',f:function(){G.leak='cover';},then:[['H','It’s a cup.'],['S','Not one personal remark.'],prevent('cup')]},
-    {t:'A strategic exit. We can come back.',preview:'pull',f:function(){G.leak='exit';},then:[['H','My coffee’s still here.'],['S','A convincing alibi.'],prevent('door')]},
-    {t:'…Say “hi” back. I’ll stay right here.',preview:'comfort',f:function(){G.leak='none';},then:[['S','I reserve the right to wobble.'],['H','You can wobble.']]}
+    {t:'Become furniture. Very convincing furniture.',m:'hide',preview:'hold',f:function(){G.leak='grow';},then:[['H','For how long?'],['S','Until retirement.'],prevent('furniture')]},
+    {t:'Study the cup. It has excellent manners.',m:'hide',preview:'cover',f:function(){G.leak='cover';},then:[['H','It’s a cup.'],['S','Not one personal remark.'],prevent('cup')]},
+    {t:'A strategic exit. We can come back.',m:'hide',preview:'pull',f:function(){G.leak='exit';},then:[['H','My coffee’s still here.'],['S','A convincing alibi.'],prevent('door')]},
+    {t:'…Say “hi” back. I’ll stay right here.',m:'stay',preview:'comfort',f:function(){G.leak='none';},then:[['S','I reserve the right to wobble.'],['H','You can wobble.']]}
   ]},
   function(){var l=G.leak;G.lines=[];return l==='grow'?[{hold:{kind:'still',secs:2.6}}]:l==='cover'?[{hold:{kind:'cover',secs:3}}]:l==='exit'?[{hold:{kind:'pull',secs:3}}]:[];},
   {wait:0.9},
@@ -161,7 +161,7 @@ function realObs(){
 }
 function walkMenu(done){return function(){
   var g=G,o=[];
-  if(!done.oh)o.push({t:'Review the “oh”. Again.',f:function(){done.oh=1;g.w.speed=0;g.morko.sT=1.7;g.morko.mood='stern';},then:function(){return [
+  if(!done.oh)o.push({t:'Review the “oh”. Again.',m:'worst',f:function(){done.oh=1;g.w.speed=0;g.morko.sT=1.7;g.morko.mood='stern';},then:function(){return [
     ['S','Exhibit A. I’ve had it restored.'],
     replay(1),['A','oh, hi.'],['S','Note the comma.'],['H','People don’t say commas.'],
     replay(2),['A','ohhh. …hi.'],['S','Enhanced. Look at the eyebrows.'],['H','You drew those.'],['S','I RESTORED those.'],
@@ -173,17 +173,17 @@ function walkMenu(done){return function(){
     ['S','…It’s shorter than I remember.'],['H','It’s two seconds.'],['S','Mine has an intermission.'],
     function(){g.morko.sT=1;g.morko.mood='calm';g.clock+=8*60;g.w.late+=8;g.w.speed=34;},
     ['H','That took eight minutes.'],['S','Of a nine-minute walk. Efficient.']]);}});
-  if(!done.real)o.push({t:'Mention what I actually saw.',f:function(){done.real=1;g.reflected=true;g.morko.mood='care';},then:function(){return realObs().concat([set({mood:'calm',face:'neutral'})]);}});
+  if(!done.real)o.push({t:'Mention what I actually saw.',m:'stay',f:function(){done.real=1;g.reflected=true;g.morko.mood='care';},then:function(){return realObs().concat([set({mood:'calm',face:'neutral'})]);}});
   if(!done.zone)o.push({t:'Bring up the comfort zone thing.',f:function(){done.zone=1;g.morko.mood='stern';},then:[
     ['H','Mm.'],['S','I’ve done the maths. Today: one break room, two conversations, one lunch decision. Three expeditions. Eero took the lift.'],
     ['H','He means well.'],['S','He means well from INSIDE his comfort zone. It has a sofa.'],set({mood:'calm'})]});
-  if(g.bit&&!done.mika)o.push({t:'Apologise to Eero. I’ve drafted something.',f:function(){done.mika=1;g.morko.mood='worry';},then:[
+  if(g.bit&&!done.mika)o.push({t:'Apologise to Eero. I’ve drafted something.',m:'draft',f:function(){done.mika=1;g.morko.mood='worry';},then:[
     ['S','Twelve paragraphs. One diagram. A small poem about cardigans.'],['H','I’ll send one line.'],
     ['P','You: “Sorry I was snappy this morning. Comfort zone advice hits a nerve.”'],{wait:1.2},
     ['P','Eero: “Ha, no, fair. I take the lift for a reason.”'],
     set({mood:'surprised'}),['S','…Eero takes the lift for a REASON?'],['H','Everyone’s got something.'],
     ['S','Does Eero have one of me?'],['H','Probably. A smaller one. In a cardigan.'],set({mood:'calm'})]});
-  o.push({t:'We can walk while I’m still worried.',f:function(){done.stop=1;},then:[{wait:0.8},['S','I may bring up the comma again.'],['H','I know. Keep walking with me.']]});
+  o.push({t:'We can walk while I’m still worried.',m:'stay',f:function(){done.stop=1;},then:[{wait:0.8},['S','I may bring up the comma again.'],['H','I know. Keep walking with me.']]});
   done.n=(done.n||0)+1;
   return o;
 };}

@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.47.0 (Claude, 20.11.2026): **mekaniikka on vitsi: hiljaisuus, kosketeltava huone, menetelmät kuittiin, ja sipsipussi.**
+- **(Say nothing.)** näkyy valikoissa koko viikon harmaana (”Not a setting. Yet.”) ja kieltäytyy omilla repliikeillään (”That isn’t a setting.”, ”Silence is how they get you.”). Torstain jälkeen se aukeaa: perjantaina ja kommenteissa sen voi valita. Kehityskaari näkyy käyttöliittymässä ilman selitystä. Paikat: ti viestivastaus ja klo 3 skenaariot, ke keskiyö, to ”Seen”-luonnokset (lukossa); pe tuomio ja kommentit (auki). `hush()` tiedostossa `20-engine.js`.
+- **Kosketeltava huone** (`58-hotspots.js`): kellolla, ilmoitustaululla, kasvilla, mukeilla, kahvinkeittimellä, ikkunoilla, kaaviolla, kuulla ja lampulla on Ekskyysmin kommentti (2–3 kpl/esine, sitten hiljaa). Ei maanantaina. Ei koskaan pysäytä tarinaa: toinen nopea napautus jatkaa. Yksi esine välähtää välillä, ja vihjerivi kertoo asiasta.
+- **Ekskyysmin menetelmät kuittiin:** valinnat on merkitty (pahimmat skenaariot, käsikirjoitukset, miellyttäminen, pakoreitit, jääminen, hiljaisuudet), ja viikon kuitti laskee ne. Tallentuu tarkistuspisteisiin.
+- **The bag.** (vain `?lab`): torstain klo 18.40 klooni. Päivän naamio, pussi jossa lukee ”EASY OPEN”, ihminen käy varjon kimppuun (”Why am I LIKE this.”), *(Say nothing.)* yhä harmaana, naapurin kortti (”A cupboard door. Twice. Then nothing.”), ja lopuksi ”I hate that I’m like this.” – ”I don’t.” Pelattava päätöstä varten: tuleeko tämä torstain käänteen laukaisijaksi.
+
 Versio 0.46.1 (Claude, 19.11.2026): **kamerakieli tiistaista torstaihin (T5).** Yksi erikoiskuva per tahti, sitten takaisin laajaan.
 - Tiistai: Riitan tapaaminen kahden hengen kuvana (laukaisu kehystää sitten Riitan), kello 3 yöllä hidas työntö ihmiseen (”There’s only one watch”), ”…She said nice things?” lähikuvana Ekskyysmistä.
 - Keskiviikko: Sannan kutsu kahden hengen kuvana, keskiyön ”I only have the one move” hidas työntö, ja ”ALL STAFF” napsauttaa kuvan nopeasti takaisin laajaksi.

@@ -160,3 +160,8 @@ html.immersive body.playing .line p.loud{font-size:calc(18px * var(--ts,1))}html
 @keyframes optLate{from{opacity:0}to{opacity:1}}
 /* A long menu (Moments, Scenario lab) must scroll from its top: centring with align-items cut the first rows off. Auto margins centre short cards and let tall ones scroll. */
 .ov{align-items:flex-start}.ov>.card{margin-top:auto;margin-bottom:auto}
+/* (Say nothing.): greyed all week, then it opens. The open one breathes once so the player notices it changed. */
+.opt.hush.off{opacity:.42;font-style:italic}.opt.hush.off em{display:block;margin:2px 0 0;text-transform:none;letter-spacing:0}
+.opt.hush.open{font-style:italic;border-color:var(--accent,#e8b04a);animation:hushOpen 2.4s ease-out 1}
+@keyframes hushOpen{0%{box-shadow:0 0 0 0 rgba(232,176,74,.55)}100%{box-shadow:0 0 0 14px rgba(232,176,74,0)}}
+@media (prefers-reduced-motion:reduce){.opt.hush.open{animation:none}}

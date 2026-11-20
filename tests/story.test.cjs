@@ -160,6 +160,7 @@ for(const day of ['A','B','C'])for(let v=0;v<4;v++){
   assert.equal(tr.includes('By the way, thanks for the handout.'),T.G.handout);
   assert.match(element('ov').innerHTML,/Still here\. Both of you/);
   assert.equal(JSON.parse(savedItems.get('ekskyysmi.save')).done,true,'the ending is remembered for the Moments menu');
+  assert.match(element('ov').innerHTML,/EKSKYYSMI’S METHODS/,'the week’s receipt counts the methods');
   weeks++;
 }
 // Chapter select starts mid-week and still reaches the end; Friday can be started with the new job in place.
@@ -170,7 +171,7 @@ const checkpointFixture={version:2,ch:5,unlocked:5,chapters:{
   1:{day:'A'},
   3:{day:'A',lunch:1,leak:'cover',fear:2,fb:'ask',yes:0},
   4:{day:'B',lunch:2,leak:'grow',yes:5,handout:true,afterparty:true,fb:'explain'},
-  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true,coatNo:true,kept:['hi','eero']}
+  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true,coatNo:true,methods:{worst:4,please:3,hush:1},kept:['hi','eero']}
 }};
 savedItems.set(saveKey,JSON.stringify(checkpointFixture));
 T.chapter(3);
@@ -220,6 +221,13 @@ function stepUntil(done){let n=0;while(!done()&&n++<6000){T.unlock();T.draw();co
   if(st==='click')T.advance();else if(st==='view'){T.advance();T.tick(6);T.advance();}else if(st==='stretch'||st==='hold')T.advance();
   else if(st==='toss'){T.advance();T.tick(.4);}
   else if(st==='choice')T.choose(T.options().findIndex(o=>!o.off));else T.tick(1);}assert.ok(done(),'reached');}
+// (Say nothing.): greyed out and refused before Thursday, open on Friday, and choosing it never prints the label as a line.
+{T.chapter(2);const hushAt=()=>T.state()==='choice'&&T.options().some(o=>o.hush);stepUntil(hushAt);
+ let i=T.options().findIndex(o=>o.hush);assert.ok(T.options()[i].off,'locked before Thursday');assert.match(element('opts').innerHTML,/Not a setting\. Yet\./);
+ T.unlock();T.choose(i);assert.equal(T.state(),'choice','a locked hush does not advance');assert.match(String(T.G.nopeMsg),/setting/);
+ T.chapter(5);stepUntil(hushAt);i=T.options().findIndex(o=>o.hush);assert.ok(!T.options()[i].off,'open on Friday');
+ T.unlock();T.choose(i);stepUntil(()=>T.G.cur&&/printer/.test(T.G.cur.text));
+ assert.ok(!T.G.lines.some(l=>/Say nothing/.test(l.text||'')),'the label is not spoken');}
 T.chapter(3);stepUntil(()=>T.G.moment==='colleagues'&&T.state()==='click');
 {const yes=T.G.yes;assert.ok(yes>=3);saved=JSON.parse(savedItems.get(saveKey));
  assert.equal(saved.ch,3);assert.equal(saved.at.moment,'colleagues');assert.equal(saved.at.state.yes,yes);

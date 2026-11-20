@@ -502,6 +502,7 @@ function draw(){
     if(g.human.gone&&g.finalFrame){var endQ=geom();morkoBody(endQ);morkoArms(endQ,handTargets(endQ));}
     drawFight();
     drawDish();
+    drawHotGlint();
     drawTics(0);
     if(WAIT==='hold'&&g.hold&&!g.human.gone)holdRing();
     drawTape();drawToss();drawForm();drawDots();drawPaper();

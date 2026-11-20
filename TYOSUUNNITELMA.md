@@ -12,6 +12,8 @@
 
 > **Tila 0.46.1 (19.11.):** ✔ T5: kamerakieli ti–to (2–3 kuvaa per päivä, ks. README 0.46.1). Joonas katsoo pelaten. Seuraavaksi T7 (lamppuvälit, lab-klooni) ja T12 (pelaajatesti); T10 odottaa kappaletta.
 
+> **Tila 0.47.0 (20.11.):** ✔ Interaktiivisuus (§11): *(Say nothing.)* -kaari, kosketeltava huone, menetelmät kuittiin. 🧪 *The bag.* odottaa Joonaksen päätöstä: jos toimii, siirretään torstain klo 18.40 laukaisijaksi (pussi ennen riviä ”You’re just the loudest thing in the room”), ei uutena kohtauksena. Huom. Vantage Point -käänne: uusi minä ei saa olla parempi naamio, vaan siitä riisutaan pala. Seuraavaksi T7, T12.
+
 Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, valmiiksi määriteltyinä tehtävinä, jotka halvempi malli (Sonnet tai Codex) voi tehdä. Opus tarvitaan vain tarinapäätöksiin ja uuteen dialogiin.
 
 ---
