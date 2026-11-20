@@ -1,7 +1,7 @@
 // The mug's balance across the week (VISIO V22): full on Monday morning, only Thursday empties and breaks it,
 // Friday's mug is the mended one, and no other chapter drops below one sip on any route.
 const assert=require('assert');
-const makeHarness=require('/home/claude/rsd/tests/harness.cjs');
+const makeHarness=require('./harness.cjs');
 for(const route of ['A','B','C']){for(const pick of [0,1,2]){
 const {T,element,fire}=makeHarness();T.start(route,false);let steps=0;const per={};let lastv=null;
 while(!(T.G.ended&&!T.G.dayEnd)&&steps++<300000){const g=T.G,key=g.moment||'ch'+g.chapter;const st=T.state();T.unlock();

@@ -19,6 +19,7 @@ Versio 0.70.0 (Claude, 20.11.2026): **tiistain musiikki, päiväleima, maanantai
 - Päiväleima: vasemmassa yläkulmassa pieni ”TUESDAY · 16:55”. Kirkkaampi 4 s leikkauksen jälkeen, sitten himmeä. Kello kulkee. Puolenyön yli leikattaessa viikonpäivä vaihtuu itse (tiistain yö ja ”quick chat” ovat siis WEDNESDAY). Hetkissä leimana on hetken oma aika (”A SUNDAY, LATE AFTERNOON”, ilman kellonaikaa tekstissä). Baarin jälkeinen aamu: THE NEXT MORNING. Hiljaisen päivän toimisto: MONDAY.
 - Maanantai: ovella sanotaan vielä ”Is there toast?”, sitten häivytys ja leikkaus kotiin. Paahtoleipä ja kissa tapahtuvat sisällä, ei kadulla. Aiemmin maanantai loppui oven eteen ja seuraava kuva oli toimisto.
 - Keskiviikon ilta: kello 23:15 vastaa nyt kertojan riviä (oli 23:40).
+- Korjaus: tests/mug.test.cjs haki harnessin tämän koneen absoluuttisella polulla, joten `npm test` (ja APK-build) kaatui Windowsissa. Nyt polku on suhteellinen, ja story.test tarkistaa, ettei tests/, tools/ tai src/ sisällä koneen omia polkuja.
 
 Versio 0.69.0 (Claude, 20.11.2026): **kissa maanantaihin, muki vai ovi, kaiutinpuhelin.**
 - V7: maanantai-iltana paahtoleivän jälkeen ihminen piirtää muistilapulle kissan, jolla on neljä jalkaa. ”This one needs five.” Ekskyysmi: ”Then it goes in the drawer. Before somebody sees it.” Kissa saa viidennen jalkansa hiljaisena päivänä ja jaetaan sunnuntaina ryhmächatissa.

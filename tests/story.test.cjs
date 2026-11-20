@@ -638,3 +638,7 @@ assert.equal(T.G.endSeen,true,'the lamp-and-bird image was reached');assert.ok(r
 playLab('comments');assert.equal(T.G.finalFrame,true);assert.equal(T.G.bed,true);assert.equal(T.G.lampOff,false);assert.equal(T.G.morko.pose,'puppet');assert.equal(T.G.zShow,0);
 T.chapter(2);assert.equal(T.G.finalFrame,false);assert.equal(T.G.bed,false);assert.equal(T.G.morko.pose,null);
 console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment resumes; all three bar stories; part cards; distinct replays; form signature; quiet-day payoff; nightlight ending; paused animations; phone controls, audio and local assets. Cutaways: ${views}; size interactions: ${stretches}.`);
+// Portability: nothing in the repo may point at the build machine's own folders (0.70.0: mug.test broke on Windows).
+{const fs3=require('fs'),p3=require('path'),root=p3.join(__dirname,'..');
+ for(const d of ['tests','tools','src'])for(const f of fs3.readdirSync(p3.join(root,d)))if(/\.(c?js|cmd|py|html)$/.test(f))
+  assert.ok(!/\/home\/claude|\/mnt\/user-data/.test(fs3.readFileSync(p3.join(root,d,f),'utf8')),d+'/'+f+' has a machine-specific path');}
