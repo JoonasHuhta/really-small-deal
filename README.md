@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.70.0 (Claude, 20.11.2026): **tiistain musiikki, päiväleima, maanantai päättyy sisällä.**
+- Musiikki: Joonaksen *Ordinary Evening* (assets/audio/ordinary-evening.mp3, kansikuva riisuttu) soi koko tiistain (luku 2) ajan: alkaa 1,5 s viiveellä, nousee 2 s:ssa, voimakkuus 0.2, ei väisty puheen eikä iskujen alta, looppaa (190 s), jatkuu kohtausvaihtojen yli (klo 16:55 → 03:07 → 9:00) ja häivyttyy, kun seuraava hetki alkaa. Mekanismi: CHAPTERS[n].music → G.chapMusic; MUSICDELAY, MUSICNODUCK.
+- Päiväleima: vasemmassa yläkulmassa pieni ”TUESDAY · 16:55”. Kirkkaampi 4 s leikkauksen jälkeen, sitten himmeä. Kello kulkee. Puolenyön yli leikattaessa viikonpäivä vaihtuu itse (tiistain yö ja ”quick chat” ovat siis WEDNESDAY). Hetkissä leimana on hetken oma aika (”A SUNDAY, LATE AFTERNOON”, ilman kellonaikaa tekstissä). Baarin jälkeinen aamu: THE NEXT MORNING. Hiljaisen päivän toimisto: MONDAY.
+- Maanantai: ovella sanotaan vielä ”Is there toast?”, sitten häivytys ja leikkaus kotiin. Paahtoleipä ja kissa tapahtuvat sisällä, ei kadulla. Aiemmin maanantai loppui oven eteen ja seuraava kuva oli toimisto.
+- Keskiviikon ilta: kello 23:15 vastaa nyt kertojan riviä (oli 23:40).
+
 Versio 0.69.0 (Claude, 20.11.2026): **kissa maanantaihin, muki vai ovi, kaiutinpuhelin.**
 - V7: maanantai-iltana paahtoleivän jälkeen ihminen piirtää muistilapulle kissan, jolla on neljä jalkaa. ”This one needs five.” Ekskyysmi: ”Then it goes in the drawer. Before somebody sees it.” Kissa saa viidennen jalkansa hiljaisena päivänä ja jaetaan sunnuntaina ryhmächatissa.
 - V21 (prototyyppi): diilin kohdalla voi kysyä kerran ”Is that the mug talking, or the door?” Matalalla mukilla Ekskyysmi myöntää: ”The mug. Honestly.” Täydellä: ”…The door.” / ”The mug was a very convenient witness.” Kumpikin vaihtoehto on yhä auki; mitään ei rangaista.

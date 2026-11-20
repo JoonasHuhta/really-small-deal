@@ -241,7 +241,7 @@ function labQuiet(){
   var gap=['S','—'];
   return labScene({set:'home',title:'Quiet.',plan:'—',clock:7*3600+40*60}).concat([
   shadowAway,function(){G.human.gone=true;},tableShot(true),{wait:3.2},tableShot(false),
-  scene({set:'room',clock:8*3600+52*60}),shadowAway,
+  scene({set:'room',clock:8*3600+52*60,day:'MONDAY'}),shadowAway,
   function(){var g=G;g.hud=true;g.plan=true;g.planText='—';g.noCup=false;g.mugFixed=false;},
   ['N','Monday. 8:52. The same room. The same coffee.'],
   set({cowA:1,ax:700,aFace:-1}),{wait:1.6},

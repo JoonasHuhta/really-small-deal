@@ -504,6 +504,14 @@ function hud(){
   if(g.pop){ctx.globalAlpha=clamp(2.6-g.pop.t,0,1);ctx.textAlign='right';ctx.font='700 14px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(g.pop.text,W-20,y+4-Math.min(8,g.pop.t*10));ctx.globalAlpha=1;}
   ctx.restore();
 }
+// Top left, small and faint: which day it is and the time. Brighter for a few seconds after a cut.
+function dayStamp(){
+  var g=G;if(!g.started||g.ended||g.epi||g.finalFrame||g.out||g.qte||g.form||g.paper||g.clock==null)return;
+  var t=(g.dayTag?g.dayTag+'  ·  ':'')+hhmm(g.clock),a=0.55+0.4*clamp(1-((g.stampT||0)-3.5)/1.5,0,1);
+  ctx.save();ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='600 '+(COMPACT?14:11)+'px system-ui,sans-serif';
+  var w=ctx.measureText(t).width;ctx.globalAlpha=a;ctx.fillStyle='rgba(22,19,30,.72)';rr(10,10,w+20,COMPACT?26:22,11);ctx.fill();
+  ctx.fillStyle='#f1ebdd';ctx.fillText(t,20,COMPACT?23:21);ctx.restore();
+}
 function pausedNote(){
   var g=G,a=g.awayNote;
   ctx.fillStyle='rgba(13,17,20,.76)';ctx.fillRect(0,0,W,H);
@@ -562,6 +570,7 @@ function draw(){
   if(g.boss)drawBoss();
   if(g.rec)drawRec();
   if(g.hud&&g.started&&!g.qte&&!g.form&&!g.paper)hud();
+  dayStamp();
   drawMug();drawDeal();   // VISIO V1: capacity, and the small deals about it   // the form and the paper receipt need the top corner // the window has the screen for its second
   if(g.job&&!g.ended)jobCard();
   if(g.w){

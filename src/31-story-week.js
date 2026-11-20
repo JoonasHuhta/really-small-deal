@@ -1,11 +1,16 @@
 /* ================= the week: chapters 2–5 ================= */
 // `day` is what the card says. The weekdays are flavour; nothing insists they belong to the same week.
-var CHAPTERS=[null,{day:'A MONDAY',title:'Oh, hi.'},{day:'A TUESDAY',title:'Quick chat?'},{day:'A WEDNESDAY, PROBABLY',title:'Could you just…'},{day:'A THURSDAY',title:'Seen.'},{day:'A FRIDAY. NOT NECESSARILY THAT ONE.',title:'Oh, hi. Again.'}];
+var CHAPTERS=[null,{day:'A MONDAY',title:'Oh, hi.',wd:'MONDAY'},{day:'A TUESDAY',title:'Quick chat?',wd:'TUESDAY',music:'tuesday'},{day:'A WEDNESDAY, PROBABLY',title:'Could you just…',wd:'WEDNESDAY'},{day:'A THURSDAY',title:'Seen.',wd:'THURSDAY'},{day:'A FRIDAY. NOT NECESSARILY THAT ONE.',title:'Oh, hi. Again.',wd:'FRIDAY'}];
+// The day stamp (top left): the weekday and the clock, so a cut to the next morning reads as one (Joonas 20.11.).
+var WEEK=['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
+function nextDay(d){var i=WEEK.indexOf(d);return i<0?null:WEEK[(i+1)%7];}
 var RIITTA={body:'#7a6a9c',hair:'#cfc8ba'};
 function dayName(n){return CHAPTERS[n].title;} // kept under its old name: the title is what menus show now
 function scene(o){return function(){
   var g=G,M=g.morko,Hm=g.human;if(!g.epi)epiChrome(false);   // the panel comes back with the next real scene
-  music(o.music||o.set||'room');
+  music(o.music||g.chapMusic||o.set||'room');   // a chapter with its own song keeps it across its scenes
+  if(o.day!==undefined)g.dayTag=o.day;else if(o.clock!=null&&g.clock!=null&&o.clock<g.clock-3600)g.dayTag=nextDay(g.dayTag);   // past midnight: the next day
+  g.stampT=0;
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
@@ -13,8 +18,8 @@ function scene(o){return function(){
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
-function begin(n,o){return [scene(o),function(){
-  var g=G;g.chapter=n;g.moment=null;newDay();g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
+function begin(n,o){return [function(){G.chapMusic=CHAPTERS[n].music||null;},scene(o),function(){
+  var g=G;g.dayTag=CHAPTERS[n].wd;g.stampT=0;g.chapter=n;g.moment=null;newDay();g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
   g.morko.s=1;g.morko.off=-70;g.chap={day:CHAPTERS[n].day,title:CHAPTERS[n].title,t:0};saveProgress(n);stopVoice();sfx('card');
  },function(){return n===5?partCard(3):[{wait:2.8}];},function(){G.chap=null;G.fade=1;}];}
 // Ekskyysmi's tell: whenever it says it is fine and is not, it shrinks a little, then grows back.
@@ -168,7 +173,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   ['H','I’m extremely tired.'],
   ['S','Liked AND tired. The classic combination.',{look:'pleased'}]
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 minutes',cap:'Someone helpful. Possibly too helpful. Nobody checked.',anim:'nod'}),[
-  scene({set:'home',clock:23*3600+40*60}),function(){G.human.grin=0;},
+  scene({set:'home',clock:23*3600+15*60}),function(){G.human.grin=0;},
   ['N','23:15. Eero’s slides.'],
   ['H','It’s nearly midnight and I’m doing Eero’s slides.'],
   extraWorkCallback,

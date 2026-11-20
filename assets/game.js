@@ -54,13 +54,15 @@ function tone(f,t0,dur,type,vol,f2){
 var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
 // Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
 // A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
-var MUSIC={title:'assets/audio/title.mp3',epilogue:'assets/audio/epilogue.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
+var MUSIC={title:'assets/audio/title.mp3',epilogue:'assets/audio/epilogue.mp3',tuesday:'assets/audio/ordinary-evening.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
 var firstTouch=false,BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 // Scene music is background: well under the voices. It fades in, and steps aside for a moment when something lands.
-var MUSICVOLS={epilogue:0.36},MUSICFADEIN={},MUSICONCE={epilogue:true},musicLvl=1,talkLvl=1,talkT=null,rampId=null;   // monday.mp3 is mastered at -24 LUFS, ~10 dB under the title track
+var MUSICVOLS={epilogue:0.36,tuesday:0.2},MUSICFADEIN={tuesday:2},MUSICONCE={epilogue:true},
+    MUSICDELAY={tuesday:1.5},MUSICNODUCK={tuesday:true},   // Joonas 20.11.: Ordinary Evening under the whole Tuesday, 1–2 s in, quiet, and it never steps aside
+    musicLvl=1,talkLvl=1,talkT=null,rampId=null;   // monday.mp3 is mastered at -24 LUFS, ~10 dB under the title track
 function musicTarget(){return (MUSICVOLS[musicName]!=null?MUSICVOLS[musicName]:MUSICVOL)*musicLvl*talkLvl;}
 // While anyone talks, the music steps back, and returns a moment after the last syllable.
-function talkDuck(secs){if(!musicEl||typeof setTimeout!=='function'||G&&G.epi)return;talkLvl=0.4;rampMusic(0.25);
+function talkDuck(secs){if(!musicEl||typeof setTimeout!=='function'||G&&G.epi||MUSICNODUCK[musicName])return;talkLvl=0.4;rampMusic(0.25);
   if(talkT)clearTimeout(talkT);talkT=setTimeout(function(){talkT=null;talkLvl=1;rampMusic(1.4);},secs*1000+450);}
 function rampMusic(secs){
   var el=musicEl;if(!el)return;if(typeof setInterval!=='function'){el.volume=musicTarget();return;}
@@ -69,7 +71,7 @@ function rampMusic(secs){
     if(Math.abs(v-t)<=step){el.volume=t;clearInterval(rampId);rampId=null;}else el.volume=v<t?v+step:v-step;},60);
 }
 // The music ducks under a hit and comes back by itself.
-function duckMusic(){if(!musicEl||G&&G.epi)return;musicLvl=0.3;if(musicEl)musicEl.volume=Math.min(musicEl.volume,musicTarget());
+function duckMusic(){if(!musicEl||G&&G.epi||MUSICNODUCK[musicName])return;musicLvl=0.3;if(musicEl)musicEl.volume=Math.min(musicEl.volume,musicTarget());
   if(typeof setTimeout==='function')setTimeout(function(){musicLvl=1;rampMusic(2.5);},1400);}
 function loadSound(k,url){
   if(BUF[k]||LOADING[k]||!window.fetch)return;var a=audio();if(!a)return;LOADING[k]=true;
@@ -89,10 +91,12 @@ function music(name){
   musicName=name;if(musicEl){fadeOut(musicEl);musicEl=null;}
   if(!name||!MUSIC[name]||typeof window.Audio!=='function')return;
   var el=new window.Audio(MUSIC[name]);el.loop=!MUSICONCE[name];el.preload=firstTouch?'auto':'none';musicLvl=1;musicEl=el;
-  var fin=MUSICFADEIN[name];el.volume=fin?0:musicTarget();syncMusic();if(fin)rampMusic(fin);
+  var fin=MUSICFADEIN[name];el.volume=fin?0:musicTarget();
+  if(MUSICDELAY[name]&&typeof setTimeout==='function'){el.held=true;setTimeout(function(){if(el!==musicEl)return;el.held=false;syncMusic();if(fin)rampMusic(fin);},MUSICDELAY[name]*1000);return;}
+  syncMusic();if(fin)rampMusic(fin);
 }
 function syncMusic(){
-  var el=musicEl;if(!el)return;
+  var el=musicEl;if(!el||el.held)return;
   try{if(soundOn&&!paused&&!appHidden){var p=el.play();if(p&&p.catch)p.catch(function(){});}else el.pause();}catch(e){}
   if(paused||appHidden||!soundOn)for(var i=0;i<fading.length;i++){try{fading[i].pause();}catch(e){}}
 }
@@ -598,7 +602,7 @@ function wake(){var g=G,M=g.morko;M.asleep=false;M.sT=1.35;M.mood='surprised';g.
 function scPrelude(){return [
   function(){var g=G,Hm=g.human,M=g.morko;music('intro');g.skippable=true;g.hud=false;g.clock=8*3600+51*60+20;
     Hm.gone=true;Hm.x=Hm.xT=1010;Hm.facing=-1;g.noCup=true;g.mugFixed=false;M.asleep=true;M.wake=0;M.s=M.sT=0.3;
-    g.chap={day:CHAPTERS[1].day,title:CHAPTERS[1].title,t:0};g.chapter=1;newDay();sfx('card');},
+    g.chap={day:CHAPTERS[1].day,title:CHAPTERS[1].title,t:0};g.chapter=1;g.dayTag='MONDAY';g.stampT=0;newDay();sfx('card');},
   function(){return partCard(1);},
   function(){G.chap=null;G.fade=1;G.fadeRate=0.36;},
   addTic('Monday, 8:52. Nobody here yet.',190,62,{at:0.9,life:3.4,size:19}),
@@ -974,9 +978,12 @@ function scWalk(){
     ['H','You can come in anyway.'],
     set({mood:'care',s:1.1}),
     ['S','…Is there toast?'],
-    ['H','There’s toast.'],refill(2,'home. toast.'),
+    ['H','There’s toast.'],
+    {wait:0.6},function(){var g=G;g.fade=0;g.fadeRate=-1;},{wait:1},   // inside, so the door is not the last thing Monday shows (Joonas 20.11.)
+    function(){return [scene({set:'home',clock:G.clock+25*60})];},set({mood:'care',s:1}),
+    refill(2,'home. toast.'),
     // VISIO 6: the drawing is the heart. Planted on Monday night, finished on the quiet day, shared on Sunday.
-    ['N','After toast, a cat. On a sticky note. Four legs so far.'],
+    ['N','Inside. Toast. After toast, a cat. On a sticky note. Four legs so far.'],
     ['H','It needs one more leg.'],
     ['S','Cats have four. I checked.',{look:'squint'}],
     ['H','This one needs five.'],
@@ -997,12 +1004,17 @@ function startWalk(){
 // ---- src/31-story-week.js ----
 /* ================= the week: chapters 2–5 ================= */
 // `day` is what the card says. The weekdays are flavour; nothing insists they belong to the same week.
-var CHAPTERS=[null,{day:'A MONDAY',title:'Oh, hi.'},{day:'A TUESDAY',title:'Quick chat?'},{day:'A WEDNESDAY, PROBABLY',title:'Could you just…'},{day:'A THURSDAY',title:'Seen.'},{day:'A FRIDAY. NOT NECESSARILY THAT ONE.',title:'Oh, hi. Again.'}];
+var CHAPTERS=[null,{day:'A MONDAY',title:'Oh, hi.',wd:'MONDAY'},{day:'A TUESDAY',title:'Quick chat?',wd:'TUESDAY',music:'tuesday'},{day:'A WEDNESDAY, PROBABLY',title:'Could you just…',wd:'WEDNESDAY'},{day:'A THURSDAY',title:'Seen.',wd:'THURSDAY'},{day:'A FRIDAY. NOT NECESSARILY THAT ONE.',title:'Oh, hi. Again.',wd:'FRIDAY'}];
+// The day stamp (top left): the weekday and the clock, so a cut to the next morning reads as one (Joonas 20.11.).
+var WEEK=['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
+function nextDay(d){var i=WEEK.indexOf(d);return i<0?null:WEEK[(i+1)%7];}
 var RIITTA={body:'#7a6a9c',hair:'#cfc8ba'};
 function dayName(n){return CHAPTERS[n].title;} // kept under its old name: the title is what menus show now
 function scene(o){return function(){
   var g=G,M=g.morko,Hm=g.human;if(!g.epi)epiChrome(false);   // the panel comes back with the next real scene
-  music(o.music||o.set||'room');
+  music(o.music||g.chapMusic||o.set||'room');   // a chapter with its own song keeps it across its scenes
+  if(o.day!==undefined)g.dayTag=o.day;else if(o.clock!=null&&g.clock!=null&&o.clock<g.clock-3600)g.dayTag=nextDay(g.dayTag);   // past midnight: the next day
+  g.stampT=0;
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
@@ -1010,8 +1022,8 @@ function scene(o){return function(){
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
-function begin(n,o){return [scene(o),function(){
-  var g=G;g.chapter=n;g.moment=null;newDay();g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
+function begin(n,o){return [function(){G.chapMusic=CHAPTERS[n].music||null;},scene(o),function(){
+  var g=G;g.dayTag=CHAPTERS[n].wd;g.stampT=0;g.chapter=n;g.moment=null;newDay();g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
   g.morko.s=1;g.morko.off=-70;g.chap={day:CHAPTERS[n].day,title:CHAPTERS[n].title,t:0};saveProgress(n);stopVoice();sfx('card');
  },function(){return n===5?partCard(3):[{wait:2.8}];},function(){G.chap=null;G.fade=1;}];}
 // Ekskyysmi's tell: whenever it says it is fine and is not, it shrinks a little, then grows back.
@@ -1165,7 +1177,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   ['H','I’m extremely tired.'],
   ['S','Liked AND tired. The classic combination.',{look:'pleased'}]
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 minutes',cap:'Someone helpful. Possibly too helpful. Nobody checked.',anim:'nod'}),[
-  scene({set:'home',clock:23*3600+40*60}),function(){G.human.grin=0;},
+  scene({set:'home',clock:23*3600+15*60}),function(){G.human.grin=0;},
   ['N','23:15. Eero’s slides.'],
   ['H','It’s nearly midnight and I’m doing Eero’s slides.'],
   extraWorkCallback,
@@ -2730,7 +2742,7 @@ function labQuiet(){
   var gap=['S','—'];
   return labScene({set:'home',title:'Quiet.',plan:'—',clock:7*3600+40*60}).concat([
   shadowAway,function(){G.human.gone=true;},tableShot(true),{wait:3.2},tableShot(false),
-  scene({set:'room',clock:8*3600+52*60}),shadowAway,
+  scene({set:'room',clock:8*3600+52*60,day:'MONDAY'}),shadowAway,
   function(){var g=G;g.hud=true;g.plan=true;g.planText='—';g.noCup=false;g.mugFixed=false;},
   ['N','Monday. 8:52. The same room. The same coffee.'],
   set({cowA:1,ax:700,aFace:-1}),{wait:1.6},
@@ -3031,8 +3043,8 @@ var LABS={
   mug:{title:'A Tuesday, with a mug.',blurb:'Prototype (VISIO V1): the mug is how much of you there is today. The senses drain it, quiet refills it, and an empty mug makes a monster.',script:labMug},
   comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments}
 };
-function labScene(o){return [scene(o),function(){
-  var g=G;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
+function labScene(o){return [function(){G.chapMusic=null;},scene(o),function(){
+  var g=G;g.dayTag=g.moment&&WHEN[g.moment]?WHEN[g.moment].replace(/,\s*\d\d?:\d\d$/,''):null;g.stampT=0;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
   g.planText=o.plan;g.hud=true;g.plan=true;g.fade=0;
   if(g.lab){g.label=(DEVLAB?'Scenario lab / ':'Moments / ')+o.title;newDay();return;}
   // In the story the same scene opens with a card, like any other moment.
@@ -4031,7 +4043,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ['N','Sanna laughed eight times. Somebody from the next table joined in. Nobody rehearsed anything.'],
   function(){var b=G.bar;G.barWas=b?{sdrink:b.sdrink,glass:b.glass}:null;},{wait:1.2}
  ],[
-  scene({set:'home',clock:7*3600+10*60}),
+  scene({set:'home',clock:7*3600+10*60,day:'THE NEXT MORNING'}),
   function(){var M=G.morko;M.wake=0;M.asleep=false;M.s=M.sT=0.35;G.human.face='neutral';},{wait:1.1},
   set({s:1.6,mood:'scared'}),
   ['S','…What happened.'],
@@ -4684,7 +4696,7 @@ function update(dt,elapsed){
       if(hh.p>=hh.secs)finishHold();
     }
   }
-  if(g.card>0)g.card-=dt;if(g.job)g.job.t+=elapsed;if(g.chap)g.chap.t+=dt;if(g.bigNote)g.bigNote.t+=dt;if(g.fade>0)g.fade=Math.max(0,g.fade-dt*(g.fadeRate||1.6));Hm.sip=ease(Hm.sip||0,Hm.sipT||0,8*dt);titleIdle(dt);M.wake=ease(M.wake==null?1:M.wake,M.asleep?0:M.dim!=null?M.dim:1,2.6*dt);if(g.anx>0.3)g.anx=Math.max(0.3,g.anx-0.06*dt);g.zShow=ease(g.zShow,g.zT,2*dt);g.yShow=ease(g.yShow||0,g.yT||0,2*dt);g.wShow=ease(g.wShow||0,g.wT||0,2*dt);if(g.wDrop)g.wDrop.t+=dt;g.yx=approach(g.yx||0,g.yxT||0,(RM?400:75)*dt);if(g.out)g.out.t+=dt;if(g.pop){g.pop.t+=dt;if(g.pop.t>2.6)g.pop=null;}
+  if(g.card>0)g.card-=dt;if(g.job)g.job.t+=elapsed;if(g.chap)g.chap.t+=dt;g.stampT=(g.stampT||0)+dt;if(g.bigNote)g.bigNote.t+=dt;if(g.fade>0)g.fade=Math.max(0,g.fade-dt*(g.fadeRate||1.6));Hm.sip=ease(Hm.sip||0,Hm.sipT||0,8*dt);titleIdle(dt);M.wake=ease(M.wake==null?1:M.wake,M.asleep?0:M.dim!=null?M.dim:1,2.6*dt);if(g.anx>0.3)g.anx=Math.max(0.3,g.anx-0.06*dt);g.zShow=ease(g.zShow,g.zT,2*dt);g.yShow=ease(g.yShow||0,g.yT||0,2*dt);g.wShow=ease(g.wShow||0,g.wT||0,2*dt);if(g.wDrop)g.wDrop.t+=dt;g.yx=approach(g.yx||0,g.yxT||0,(RM?400:75)*dt);if(g.out)g.out.t+=dt;if(g.pop){g.pop.t+=dt;if(g.pop.t>2.6)g.pop=null;}
   var base=M.sT,offT=-70-(M.s-1)*12;
   if(g.w){var lb=lampBase();base=M.sT+lb.s;offT=lb.off-(M.sT-1)*45;g.w.x=approach(g.w.x,g.w.xT,g.w.speed*dt);g.walking=g.w.x<g.w.xT-0.5&&g.w.speed>0;offT-=gapStep(dt);}
   if(M.st==='free'||M.st==='pokka')M.s=approach(M.s,base,(M.s<base?1.5:1.1)*dt);
@@ -5224,6 +5236,14 @@ function hud(){
   if(g.pop){ctx.globalAlpha=clamp(2.6-g.pop.t,0,1);ctx.textAlign='right';ctx.font='700 14px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(g.pop.text,W-20,y+4-Math.min(8,g.pop.t*10));ctx.globalAlpha=1;}
   ctx.restore();
 }
+// Top left, small and faint: which day it is and the time. Brighter for a few seconds after a cut.
+function dayStamp(){
+  var g=G;if(!g.started||g.ended||g.epi||g.finalFrame||g.out||g.qte||g.form||g.paper||g.clock==null)return;
+  var t=(g.dayTag?g.dayTag+'  ·  ':'')+hhmm(g.clock),a=0.55+0.4*clamp(1-((g.stampT||0)-3.5)/1.5,0,1);
+  ctx.save();ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='600 '+(COMPACT?14:11)+'px system-ui,sans-serif';
+  var w=ctx.measureText(t).width;ctx.globalAlpha=a;ctx.fillStyle='rgba(22,19,30,.72)';rr(10,10,w+20,COMPACT?26:22,11);ctx.fill();
+  ctx.fillStyle='#f1ebdd';ctx.fillText(t,20,COMPACT?23:21);ctx.restore();
+}
 function pausedNote(){
   var g=G,a=g.awayNote;
   ctx.fillStyle='rgba(13,17,20,.76)';ctx.fillRect(0,0,W,H);
@@ -5282,6 +5302,7 @@ function draw(){
   if(g.boss)drawBoss();
   if(g.rec)drawRec();
   if(g.hud&&g.started&&!g.qte&&!g.form&&!g.paper)hud();
+  dayStamp();
   drawMug();drawDeal();   // VISIO V1: capacity, and the small deals about it   // the form and the paper receipt need the top corner // the window has the screen for its second
   if(g.job&&!g.ended)jobCard();
   if(g.w){
@@ -5354,7 +5375,7 @@ function showEnd(){
 }
 function startGame(day,skip){
   var snap=null;try{if(cv.width&&document.createElement){snap=document.createElement('canvas');snap.width=cv.width;snap.height=cv.height;var sc=snap.getContext&&snap.getContext('2d');if(sc)sc.drawImage(cv,0,0);else snap=null;}}catch(e){snap=null;}   // the title picture, to fade from
-  reset(day);G.snap=snap;G.started=true;G.chapter=1;newDay();
+  reset(day);G.snap=snap;G.started=true;G.chapter=1;G.dayTag='MONDAY';G.stampT=0;newDay();
   saveProgress(1);
   if(skip){G.bx2=G.bxT=880;Q=scSanna();}
   else Q=scPrelude().concat(scIntro(),[function(){return scSanna();}]);

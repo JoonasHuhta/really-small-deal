@@ -200,7 +200,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ['N','Sanna laughed eight times. Somebody from the next table joined in. Nobody rehearsed anything.'],
   function(){var b=G.bar;G.barWas=b?{sdrink:b.sdrink,glass:b.glass}:null;},{wait:1.2}
  ],[
-  scene({set:'home',clock:7*3600+10*60}),
+  scene({set:'home',clock:7*3600+10*60,day:'THE NEXT MORNING'}),
   function(){var M=G.morko;M.wake=0;M.asleep=false;M.s=M.sT=0.35;G.human.face='neutral';},{wait:1.1},
   set({s:1.6,mood:'scared'}),
   ['S','…What happened.'],

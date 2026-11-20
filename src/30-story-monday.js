@@ -224,9 +224,12 @@ function scWalk(){
     ['H','You can come in anyway.'],
     set({mood:'care',s:1.1}),
     ['S','…Is there toast?'],
-    ['H','There’s toast.'],refill(2,'home. toast.'),
+    ['H','There’s toast.'],
+    {wait:0.6},function(){var g=G;g.fade=0;g.fadeRate=-1;},{wait:1},   // inside, so the door is not the last thing Monday shows (Joonas 20.11.)
+    function(){return [scene({set:'home',clock:G.clock+25*60})];},set({mood:'care',s:1}),
+    refill(2,'home. toast.'),
     // VISIO 6: the drawing is the heart. Planted on Monday night, finished on the quiet day, shared on Sunday.
-    ['N','After toast, a cat. On a sticky note. Four legs so far.'],
+    ['N','Inside. Toast. After toast, a cat. On a sticky note. Four legs so far.'],
     ['H','It needs one more leg.'],
     ['S','Cats have four. I checked.',{look:'squint'}],
     ['H','This one needs five.'],

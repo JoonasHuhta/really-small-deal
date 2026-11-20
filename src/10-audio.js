@@ -23,13 +23,15 @@ function tone(f,t0,dur,type,vol,f2){
 var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
 // Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
 // A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
-var MUSIC={title:'assets/audio/title.mp3',epilogue:'assets/audio/epilogue.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
+var MUSIC={title:'assets/audio/title.mp3',epilogue:'assets/audio/epilogue.mp3',tuesday:'assets/audio/ordinary-evening.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
 var firstTouch=false,BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 // Scene music is background: well under the voices. It fades in, and steps aside for a moment when something lands.
-var MUSICVOLS={epilogue:0.36},MUSICFADEIN={},MUSICONCE={epilogue:true},musicLvl=1,talkLvl=1,talkT=null,rampId=null;   // monday.mp3 is mastered at -24 LUFS, ~10 dB under the title track
+var MUSICVOLS={epilogue:0.36,tuesday:0.2},MUSICFADEIN={tuesday:2},MUSICONCE={epilogue:true},
+    MUSICDELAY={tuesday:1.5},MUSICNODUCK={tuesday:true},   // Joonas 20.11.: Ordinary Evening under the whole Tuesday, 1–2 s in, quiet, and it never steps aside
+    musicLvl=1,talkLvl=1,talkT=null,rampId=null;   // monday.mp3 is mastered at -24 LUFS, ~10 dB under the title track
 function musicTarget(){return (MUSICVOLS[musicName]!=null?MUSICVOLS[musicName]:MUSICVOL)*musicLvl*talkLvl;}
 // While anyone talks, the music steps back, and returns a moment after the last syllable.
-function talkDuck(secs){if(!musicEl||typeof setTimeout!=='function'||G&&G.epi)return;talkLvl=0.4;rampMusic(0.25);
+function talkDuck(secs){if(!musicEl||typeof setTimeout!=='function'||G&&G.epi||MUSICNODUCK[musicName])return;talkLvl=0.4;rampMusic(0.25);
   if(talkT)clearTimeout(talkT);talkT=setTimeout(function(){talkT=null;talkLvl=1;rampMusic(1.4);},secs*1000+450);}
 function rampMusic(secs){
   var el=musicEl;if(!el)return;if(typeof setInterval!=='function'){el.volume=musicTarget();return;}
@@ -38,7 +40,7 @@ function rampMusic(secs){
     if(Math.abs(v-t)<=step){el.volume=t;clearInterval(rampId);rampId=null;}else el.volume=v<t?v+step:v-step;},60);
 }
 // The music ducks under a hit and comes back by itself.
-function duckMusic(){if(!musicEl||G&&G.epi)return;musicLvl=0.3;if(musicEl)musicEl.volume=Math.min(musicEl.volume,musicTarget());
+function duckMusic(){if(!musicEl||G&&G.epi||MUSICNODUCK[musicName])return;musicLvl=0.3;if(musicEl)musicEl.volume=Math.min(musicEl.volume,musicTarget());
   if(typeof setTimeout==='function')setTimeout(function(){musicLvl=1;rampMusic(2.5);},1400);}
 function loadSound(k,url){
   if(BUF[k]||LOADING[k]||!window.fetch)return;var a=audio();if(!a)return;LOADING[k]=true;
@@ -58,10 +60,12 @@ function music(name){
   musicName=name;if(musicEl){fadeOut(musicEl);musicEl=null;}
   if(!name||!MUSIC[name]||typeof window.Audio!=='function')return;
   var el=new window.Audio(MUSIC[name]);el.loop=!MUSICONCE[name];el.preload=firstTouch?'auto':'none';musicLvl=1;musicEl=el;
-  var fin=MUSICFADEIN[name];el.volume=fin?0:musicTarget();syncMusic();if(fin)rampMusic(fin);
+  var fin=MUSICFADEIN[name];el.volume=fin?0:musicTarget();
+  if(MUSICDELAY[name]&&typeof setTimeout==='function'){el.held=true;setTimeout(function(){if(el!==musicEl)return;el.held=false;syncMusic();if(fin)rampMusic(fin);},MUSICDELAY[name]*1000);return;}
+  syncMusic();if(fin)rampMusic(fin);
 }
 function syncMusic(){
-  var el=musicEl;if(!el)return;
+  var el=musicEl;if(!el||el.held)return;
   try{if(soundOn&&!paused&&!appHidden){var p=el.play();if(p&&p.catch)p.catch(function(){});}else el.pause();}catch(e){}
   if(paused||appHidden||!soundOn)for(var i=0;i<fading.length;i++){try{fading[i].pause();}catch(e){}}
 }

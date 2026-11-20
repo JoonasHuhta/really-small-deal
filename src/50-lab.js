@@ -26,8 +26,8 @@ var LABS={
   mug:{title:'A Tuesday, with a mug.',blurb:'Prototype (VISIO V1): the mug is how much of you there is today. The senses drain it, quiet refills it, and an empty mug makes a monster.',script:labMug},
   comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments}
 };
-function labScene(o){return [scene(o),function(){
-  var g=G;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
+function labScene(o){return [function(){G.chapMusic=null;},scene(o),function(){
+  var g=G;g.dayTag=g.moment&&WHEN[g.moment]?WHEN[g.moment].replace(/,\s*\d\d?:\d\d$/,''):null;g.stampT=0;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
   g.planText=o.plan;g.hud=true;g.plan=true;g.fade=0;
   if(g.lab){g.label=(DEVLAB?'Scenario lab / ':'Moments / ')+o.title;newDay();return;}
   // In the story the same scene opens with a card, like any other moment.
