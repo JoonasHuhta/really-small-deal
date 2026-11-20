@@ -170,3 +170,4 @@ html.immersive body.playing .line p.loud{font-size:calc(18px * var(--ts,1))}html
 /* Phone: the panel text starts a little further in. */
 @media(max-width:720px){.line{padding:0 6px 0 8px}}
 .opts.who-S .opt:not(.cont){border-left:3px solid #b9a9f2}.opts.who-H .opt:not(.cont){border-left:3px solid var(--accent)}
+.epi-on .play-panel,.epi-on #hint{display:none!important}

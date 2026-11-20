@@ -104,6 +104,8 @@ function person(x,o){
   ctx.fillStyle=skin;rr(x-7,top-14,14,23,4);ctx.fill();
   ctx.fillStyle=o.body;ctx.strokeStyle='#34413e';ctx.lineWidth=1.6;rr(x-25,top,50,76+fl*5,13);ctx.fill();ctx.stroke();
   ctx.strokeStyle='#fff4db55';ctx.lineWidth=2;line(x-17,top+64,x+17,top+64);line(x-9,top+5,x+9,top+5);
+  if(o.wet){ctx.fillStyle='rgba(40,30,20,.16)';for(var wi=0;wi<9;wi++){var wx=x-20+((wi*37)%40),wy=top+6+((wi*23)%66);ctx.beginPath();ctx.ellipse(wx,wy,5+(wi%3)*2,7+(wi%2)*3,0,0,Math.PI*2);ctx.fill();}   // soaked patches
+    ctx.fillStyle='rgba(170,215,240,.85)';for(var wj=0;wj<7;wj++){var dx=x-18+((wj*29)%36),dy=top+10+(((wj*41)+(RM?0:G.time*40))%70);ctx.beginPath();ctx.ellipse(dx,dy,1.6,2.6,0,0,Math.PI*2);ctx.fill();}}   // and drops running down
   ctx.strokeStyle=o.body;ctx.lineWidth=10;
   if(o.reach){line(x+f*12,top+17,o.reach.x,o.reach.y+6);ctx.fillStyle=skin;circ(o.reach.x,o.reach.y,6);ctx.fill();}   // a hand up: a high five
   else{line(x-f*18,top+17,x-f*28,top+61);ctx.fillStyle=skin;circ(x-f*28,top+64,5);ctx.fill();}
@@ -168,7 +170,7 @@ function person(x,o){
 }
 var SANNA={body:'#62887f',hair:'#463b38'},MIKA={body:'#ac8277',hair:'#895e41'};
 function drawHuman(extra){
-  var Hm=G.human,o={body:'#c98f2e',hair:'#4a3b32',facing:Hm.facing||1,cup:!G.cupLeft&&!G.w&&!G.noCup,phone:!G.w&&!Hm.gone&&((G.phoneN||0)>0||WAIT==='fight'||!!(G.draft&&!G.draft.sent)),buzz:G.buzz||0,sip:Hm.sip||0,flinch:Hm.flinch,face:Hm.face,back:Hm.back,sweat:Hm.sweat,blush:Hm.blush,grin:Hm.grin,puddle:Hm.puddle,reach:Hm.reach||null};
+  var Hm=G.human,o={body:'#c98f2e',hair:'#4a3b32',facing:Hm.facing||1,cup:!G.cupLeft&&!G.w&&!G.noCup,phone:!G.w&&!Hm.gone&&((G.phoneN||0)>0||WAIT==='fight'||!!(G.draft&&!G.draft.sent)),buzz:G.buzz||0,sip:Hm.sip||0,flinch:Hm.flinch,face:Hm.face,back:Hm.back,sweat:Hm.sweat,blush:Hm.blush,grin:Hm.grin,puddle:Hm.puddle,reach:Hm.reach||null,wet:!!Hm.wet};
   if(o.face==='down')o.down=true;
   if(!G.w&&Math.abs(Hm.x-Hm.xT)>1){o.walk=true;if(!Hm.back)o.facing=Hm.xT>Hm.x?1:-1;}   // nobody walks backwards
   else if(G.w&&G.walking&&!Hm.back)o.facing=G.w.xT>G.w.x?1:-1;                          // not on the way home either

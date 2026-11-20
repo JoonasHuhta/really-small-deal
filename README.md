@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.56.0 (Claude, 20.11.2026): **epilogi: vain kappale, ei palkkia, ja kotimatka autolla.**
+- Epilogin aikana ei kuulu pelin ääniefektejä, eikä musiikki vaimene (`sfx`, `talkDuck`, `duckMusic` vaikenevat, kun `G.epi`).
+- Alapaneeli ja vihjerivi piilotetaan epilogin ajaksi (`body.epi-on`): puhelimella se oli lukukelvoton palkki. Kesken poistuminen palauttaa ne ja pysäyttää kappaleen.
+- Kaatuminen kadulla poistettu. Tilalla: ihminen ajaa autoa (ikkunasta näkyy kuski), ja Ekskyysmi juoksee seiniä pitkin perässä hikoillen (”RIDES HOME … 1, one in the car. one running behind.”). Sama rivi rullaavassa kuitissa ja kertosäkeen välähdyksissä.
+- Sateessa vaatteet kastuvat: märkiä läikkiä ja valuvia pisaroita (`wet`).
+
 Versio 0.55.0 (Claude, 20.11.2026): **epilogi kappaleen kanssa (Safe At Last, 2:55).**
 - Kappale `assets/audio/epilogue.mp3` (kansikuva poistettu, ääni koskematon). Soi kerran, ei silmukkana; voimakkuus 0.36 (masteroitu −13 LUFS, n. 3 dB otsikkokappaletta kovempi).
 - Leikkaukset osuvat tahteihin: tahtien alut haettiin rytmintunnistuksella (n. 108 BPM) ja ovat koodissa (`EPIBARS`). Kello seuraa kappaleen `currentTime`-arvoa; ilman ääntä sama aikataulu kulkee ajan mukaan.
