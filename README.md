@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.54.0 (Claude, 20.11.2026): **neljä uutta välähdystä epilogiin.**
+- Sade: Ekskyysmi pitää sateenvarjoa ihmisen yllä, mutta se on varjon sateenvarjo ja sade menee läpi (”UMBRELLAS, HELD … 1, effective: no. appreciated: yes.”).
+- Hissi: Eero, ihminen, Eeron varjo ja ahtautunut Ekskyysmi, ”(sorry.)” (”LIFTS, SHARED … 1, shadows touching: 0 (narrowly)”). Uusi tausta `epiLift`.
+- Luonnos: pitkä varmisteleva viesti, ihminen lähettää ”ok 👍”, Ekskyysmi pyörtyy: ”thud.” (”DRAFTS, DELETED … 1”).
+- Sähkökatko: pimeässä vain kahdet silmät vierekkäin, kukaan ei panikoi, lamppu palaa (”POWER CUTS … 1, eyes in the dark: four. panic: none.”).
+- Riitan ja muiden varjojen kuvat pois, jotta kokonaisuus pysyy noin 75 sekunnissa.
+
 Versio 0.53.0 (Claude, 20.11.2026): **istuva varjo korjattu pelissä, ja epilogiin kolme uutta välähdystä.**
 - Istuva Ekskyysmi (*Nothing.*-hetki ja epilogin loppu): lyhyempi vartalo, reisi lattiaa pitkin, polvi koholla ja kädet polvella. Ennen se näytti seisovalta varjolta, jonka vieressä on möykky.
 - Suurennuslasi epilogissa näyttää totuuden: Sanna hymyilee (”FACE: FRIENDLY. RE-CHECKING.”). Tarinassa lasi tekee yhä kaikesta pahemman näköistä; epilogissa lasi on rehellinen (`honest`).
