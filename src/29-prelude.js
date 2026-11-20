@@ -37,7 +37,6 @@ function scPrelude(){return [
   ['H','Today I’m going to ask Sanna to lunch.'],
   set({plan:1}),{wait:0.9},
   wake,{wait:0.9},
-  function(){music('monday');},   // the shadow is up, and so is the music: quietly, under everything
   {wait:0.4},
   ['S','…Sorry. WHAT are we doing today?'],
   ['H','Asking Sanna to lunch.'],

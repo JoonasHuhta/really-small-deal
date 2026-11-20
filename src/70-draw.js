@@ -488,6 +488,7 @@ function draw(){
   var g=G;
   ctx.setTransform(SC,0,0,SC,0,0);
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+  epiFilterOn();   // the closing montage is drawn soft (37-epilogue.js)
   if(g.chap){chapCard();if(paused)pausedNote();return;}
   if(g.out){drawOutside();return;}
   if(g.rep){drawReplay();return;}
@@ -516,6 +517,7 @@ function draw(){
     drawQte();
   }
   ctx.restore();
+  drawEpi();
   if(g.cctv&&!g.w)drawCctv();   // security footage has no sound: the words stay in the panel
   if(g.flash>0.01&&!RM){ctx.fillStyle='rgba(255,250,235,'+(0.22*g.flash)+')';ctx.fillRect(0,0,W,H);}
   if(g.pulse>0.02){

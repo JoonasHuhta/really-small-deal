@@ -18,6 +18,8 @@
 
 > **Tila 0.49.0 (20.11.):** ✔ Pussi torstain laukaisijana ja viikon menetelmät käänteessä. ✔ Yksi lamppuväli maanantaihin. ✔ ”Filed.”-merkintä, ensimmäisen valinnan selkeys, ihmisen oma ”You too.” ja perjantain vastapari. Seuraavaksi T12 (pelaajatesti) ja APK:n tarkistus; sitten neljän lopun rakenne ja sisältöhuomautus (§9.1).
 
+> **Tila 0.50.0 (20.11.):** Maanantain kappale poistettu (Joonaksen päätös: ei sovi). 🧪 T10:n ensimmäinen luonnos labissa ilman musiikkia (`37-epilogue.js`); Joonas arvioi, voiko siitä jalostaa oman kokonaisuutensa. Huom. canvasin blur-suodin hylättiin: liian hidas puhelimella.
+
 Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, valmiiksi määriteltyinä tehtävinä, jotka halvempi malli (Sonnet tai Codex) voi tehdä. Opus tarvitaan vain tarinapäätöksiin ja uuteen dialogiin.
 
 ---

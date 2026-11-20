@@ -14,6 +14,10 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.50.0 (Claude, 20.11.2026): **maanantain kappale pois, epilogin ensimmäinen luonnos labiin.**
+- Maanantain taustakappale (`monday.mp3`) on poistettu pelistä: ei soittoa, ei `MUSIC`-merkintää, ei tiedostoa repossa. `tools/www.cjs` ottaa sovellukseen vain ne äänitiedostot, jotka `game.js` mainitsee, joten vaikka tiedosto jäisi kansioon, se ei päädy APK:hon.
+- **Epilogue, first sketch.** (vain `?lab`, T10 ilman musiikkia): yhdeksän pehmeää välähdystä viikosta (lounas, Eeron diat, puoli sivua, pahimmat skenaariot 0 *, kirjaston €4.60, piirros ja 0 suljettua tiliä, kehut oikeassa laatikossa), kuittirivi kussakin, ristihäivytys ja hidas työntö, lopuksi tekijärivi. Noin 52 s. Ajoitus on arvaus, kunnes kappale on olemassa (`EPI` tiedostossa `37-epilogue.js`).
+
 Versio 0.49.0 (Claude, 20.11.2026): **valinnoilla on seuraus, ja torstai lukee pelaajan viikon.**
 - *Ekskyysmi filed that.* välähtää vain valinnoissa, jotka palaavat myöhemmin (ma pelot ja pakotapa, ke ”not this time” ja ylimääräinen kyllä, to ”Seen”-luonnos, työpaikkailmoitus). Parodia ”X will remember that” -ilmoituksesta.
 - Torstain käänne: pussi repeää (”EASY OPEN. All of it. Everywhere.”), ja ihminen lukee pelaajan eniten käyttämän menetelmän kokonaisena lauseena, esim. ”You’ve taken me out of 6 rooms this week. I wanted to stay in most of them.” Jos mikään menetelmä ei ole toistunut kolmesti, vanha rivi jää.

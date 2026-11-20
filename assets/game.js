@@ -54,10 +54,10 @@ function tone(f,t0,dur,type,vol,f2){
 var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
 // Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
 // A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
-var MUSIC={title:'assets/audio/title.mp3',monday:'assets/audio/monday.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};
+var MUSIC={title:'assets/audio/title.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
 var firstTouch=false,BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 // Scene music is background: well under the voices. It fades in, and steps aside for a moment when something lands.
-var MUSICVOLS={monday:0.22},MUSICFADEIN={monday:4},musicLvl=1,talkLvl=1,talkT=null,rampId=null;   // monday.mp3 is mastered at -24 LUFS, ~10 dB under the title track
+var MUSICVOLS={},MUSICFADEIN={},musicLvl=1,talkLvl=1,talkT=null,rampId=null;   // monday.mp3 is mastered at -24 LUFS, ~10 dB under the title track
 function musicTarget(){return (MUSICVOLS[musicName]!=null?MUSICVOLS[musicName]:MUSICVOL)*musicLvl*talkLvl;}
 // While anyone talks, the music steps back, and returns a moment after the last syllable.
 function talkDuck(secs){if(!musicEl||typeof setTimeout!=='function')return;talkLvl=0.4;rampMusic(0.25);
@@ -597,7 +597,6 @@ function scPrelude(){return [
   ['H','Today I’m going to ask Sanna to lunch.'],
   set({plan:1}),{wait:0.9},
   wake,{wait:0.9},
-  function(){music('monday');},   // the shadow is up, and so is the music: quietly, under everything
   {wait:0.4},
   ['S','…Sorry. WHAT are we doing today?'],
   ['H','Asking Sanna to lunch.'],
@@ -1814,6 +1813,68 @@ function labDetail(){return labScene({set:'office',title:'One small thing.',plan
   ['S','That one I’ll forget by Thursday. It’s the font I’ll keep.'],
   ['H','You always keep the font.']
  ]);}
+// ---- src/37-epilogue.js ----
+/* ================= the closing montage, first sketch (T10, lab only, no music yet) ================= */
+// TYOSUUNNITELMA section 6. Instead of credits: short, soft flashes from the week, cross-faded, each with one receipt line.
+// No advice, no statistics about anyone but these two. The timings are a guess (about 5.5 s a shot); when the song arrives,
+// EPI.at becomes beat times and the montage follows audio.currentTime instead of {wait} steps.
+// The look: the game's own scenes, slightly blurred and warmed, like a memory of the week rather than a replay.
+var EPI=[
+  {set:'home',clock:21*3600,s:0.9,mood:'calm',hx:470,cap:'THE WEEK, ITEMISED',secs:6},
+  {set:'room',clock:12*3600,s:0.8,mood:'calm',hx:420,a:560,face:'smile',cap:'LUNCHES ........................ 1'},
+  {set:'office',clock:10*3600,s:0.75,mood:'pleased',hx:250,b:520,bFace:-1,cap:'SLIDES, PRESENTED ...... 1 (EERO)'},
+  {set:'office',clock:9*3600+15*60,s:0.85,mood:'calm',hx:420,r:600,cap:'SUMMARY ........... HALF A PAGE'},
+  {set:'room',clock:16*3600,s:1.4,mood:'stern',hx:470,cap:'WORST CASES ................ 0 *',note:'* prepared: plenty'},
+  {set:'library',clock:15*3600,s:0.8,mood:'calm',hx:430,cap:'LATE FEES ................. €4.60'},
+  {set:'home',clock:20*3600,s:1.0,mood:'calm',hx:470,face:'smile',cap:'DRAWINGS SHARED ............... 1',note:'accounts closed: 0'},
+  {set:'room',clock:12*3600+40*60,s:0.8,mood:'calm',hx:400,a:520,face:'smile',cap:'COMPLIMENTS, FILED CORRECTLY ... 3'},
+  {set:'home',clock:23*3600,s:0.9,mood:'care',hx:470,cap:'Made by Joonas Huhta (MoshBitSurfers)',credit:true,secs:7}
+];
+function epiSnap(){try{var c=document.createElement('canvas');c.width=cv.width;c.height=cv.height;c.getContext('2d').drawImage(cv,0,0);return c;}catch(e){return null;}}
+function epiShot(o){return function(){
+  var snap=G.epi&&G.epi.started?epiSnap():null;
+  scene({set:o.set,clock:o.clock})();
+  var g=G,M=g.morko,Hm=g.human;g.fade=0;g.hud=false;g.plan=false;
+  Hm.x=Hm.xT=o.hx||HOME;if(o.face)Hm.face=o.face;
+  M.s=M.sT=o.s||1;M.mood=o.mood||'calm';
+  if(o.a){g.cowA=true;g.ax=g.axT=o.a;g.aFace=-1;}
+  if(o.b){g.cowB=true;g.bx2=g.bxT=o.b;g.bFace=o.bFace||-1;}
+  if(o.r){g.cowR=true;g.rx=o.r;}
+  // a slow push towards the people in the shot, a few percent over the whole shot: alive, not busy. Less motion: still.
+  C.z=1.025;C.fx=W/2;C.fy=H/2;
+  if(!RM){var fx=o.a?(Hm.x+o.a)/2:o.b?(Hm.x+o.b)/2:o.r?(Hm.x+o.r)/2:Hm.x-30;g.cz=o.z||1.12;g.cx=fx;g.cy=H/2+20;g.camRate=0.16;}
+  g.epi.started=true;g.epi.snap=snap;g.epi.x=snap?1:0;g.epi.o=o;g.epi.ct=0;
+  if(!snap){g.fade=1;g.fadeRate=0.8;}
+};}
+function stepEpi(dt){var e=G.epi;if(!e)return;e.ct+=dt;if(e.x>0)e.x=Math.max(0,e.x-dt/(RM?2.2:1.3));}
+// No canvas blur filter: it is slow on phones and in software rendering (the montage ran at a fifth of its speed).
+// The softness comes from a haze layer in drawEpi instead.
+function epiFilterOn(){}
+function drawEpi(){
+  var e=G.epi;if(!e)return;
+  // a warm wash, a little haze: the week as remembered
+  var gr=ctx.createRadialGradient(W/2,H*0.45,H*0.2,W/2,H/2,H*0.9);gr.addColorStop(0,'rgba(255,224,170,0.10)');gr.addColorStop(1,'rgba(30,22,40,0.55)');
+  ctx.fillStyle=gr;ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(236,226,206,0.10)';ctx.fillRect(0,0,W,H);
+  if(e.snap&&e.x>0){ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=e.x;ctx.drawImage(e.snap,0,0);ctx.restore();ctx.setTransform(SC,0,0,SC,0,0);}
+  var o=e.o;if(!o||!o.cap)return;
+  var a=clamp((e.ct-0.8)/0.6,0,1)*clamp(((o.secs||5.5)-0.3-e.ct)/0.5,0,1);if(a<=0)return;
+  ctx.save();ctx.globalAlpha=a;ctx.textBaseline='middle';
+  if(o.credit){ctx.textAlign='center';ctx.font='500 22px Fraunces,Georgia,serif';ctx.fillStyle='#f4eddf';ctx.fillText(o.cap,W/2,H-58);ctx.restore();return;}
+  ctx.font='600 15px "DM Mono",ui-monospace,Menlo,monospace';ctx.textAlign='left';
+  var w=Math.max(ctx.measureText(o.cap).width,o.note?ctx.measureText(o.note).width:0)+36,h=o.note?62:42,x=W/2-w/2,y=H-34-h;
+  ctx.translate(W/2,y+h/2);ctx.rotate(-0.012);ctx.translate(-W/2,-(y+h/2));
+  ctx.fillStyle='rgba(244,237,223,0.94)';ctx.fillRect(x,y,w,h);
+  ctx.fillStyle='rgba(244,237,223,0.94)';for(var i=0;i<w;i+=8){ctx.beginPath();ctx.moveTo(x+i,y+h);ctx.lineTo(x+i+4,y+h+5);ctx.lineTo(x+i+8,y+h);ctx.fill();}   // torn edge
+  ctx.fillStyle='#2b2733';ctx.fillText(o.cap,x+18,y+21);
+  if(o.note){ctx.font='500 12px "DM Mono",ui-monospace,Menlo,monospace';ctx.fillStyle='#6b6470';ctx.fillText(o.note,x+18,y+44);}
+  ctx.restore();
+}
+function labEpilogue(){
+  var steps=[function(){G.epi={started:false,x:0,ct:0,snap:null,o:null};G.lines=[];}];
+  EPI.forEach(function(o){steps.push(epiShot(o),{wait:o.secs||5.5});});
+  steps.push(function(){G.epi=null;G.fade=1;G.fadeRate=0.5;},{wait:1.2});
+  return labScene({set:'home',title:'Epilogue, first sketch.',plan:'',clock:21*3600}).concat(steps);
+}
 // ---- src/40-backdrops.js ----
 /* ================= extra backdrops ================= */
 function home(){
@@ -2429,6 +2490,7 @@ var LABS={
   evening:{title:'An ordinary evening',blurb:'Stairs, dishes, a half-hummed line, an overdue book. Nothing happens. On purpose.',script:labEvening},
   glass:{title:'Evidence.',blurb:'Two people stop laughing when you walk in. Ekskyysmi gets out the magnifying glass.',script:labGlass},
   colleagues:{title:'Colleagues.',blurb:'Sanna’s shadow says “oh. hi.” to Ekskyysmi. Now it knows how that felt.',script:labColleagues},
+  epilogue:{title:'Epilogue, first sketch.',blurb:'T10 without music: soft flashes from the week, one receipt line each, then the credit. Timing is a guess until the song exists.',script:labEpilogue},
   lampgap:{title:'Lamp gap.',blurb:'Test clone of the walk home. Between the street lamps, the shadow falls behind.',script:labLampGap},
   bag:{title:'The bag.',blurb:'Test clone of Thursday 18:40. A whole day of holding the face, then a bag that will not open.',script:labBag},
   night:{title:'Night shift.',blurb:'The human is asleep and the lamp is off. In the dark every shadow is the same shadow.',script:labNight},
@@ -3880,7 +3942,7 @@ var HOT={
   ]
 };
 var hotUsed={},hotLast=null,hotGlint=null,hotNext=8;
-function hotOn(){var g=G;return g.started&&!g.ended&&!paused&&(g.lab||g.chapter>1)&&(WAIT==='click'||WAIT==='choice')&&!g.out&&!g.chap&&!g.w&&!g.cctv&&!g.lens&&!g.finalFrame&&!g.job&&!!HOT[g.set];}
+function hotOn(){var g=G;return g.started&&!g.ended&&!paused&&(g.lab||g.chapter>1)&&(WAIT==='click'||WAIT==='choice')&&!g.out&&!g.chap&&!g.w&&!g.cctv&&!g.lens&&!g.finalFrame&&!g.job&&!g.epi&&!!HOT[g.set];}
 function hotWorld(e){var p=lensPoint(e),z=C.z,hw=W/(2*z),hh=H/(2*z),fx=clamp(C.fx,hw,W-hw),fy=clamp(C.fy,hh,H-hh);return {x:(p.x-W/2)/z+fx,y:(p.y-H/2)/z+fy};}
 function hotAt(e){if(!hotOn())return null;var p=hotWorld(e),a=HOT[G.set];
   for(var i=0;i<a.length;i++){var h=a[i];if(G.set==='home'&&h.id==='lamp'&&G.kitchen)continue;if(Math.hypot(h.x-p.x,h.y-p.y)<h.r)return h;}return null;}
@@ -4064,7 +4126,7 @@ function update(dt,elapsed){
   if(g.zoom)g.zoom.t+=dt;
   stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);stepToss(dt);stepAuto(dt);if(g.buzz>0)g.buzz=Math.max(0,g.buzz-dt);
   var hk=(g.planText||'')+'|'+g.jobDone+'|'+g.hud+'|'+g.chapter+'|'+g.lab+'|'+g.yes+'|'+(g.w?1:0);if(hk!==g.hudKey){g.hudKey=hk;g.hudAge=0;}g.hudAge=(g.hudAge||0)+dt;
-  stepTics(dt);stepHot(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
+  stepTics(dt);stepHot(dt);stepEpi(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
   if(WAIT==='fight'&&g.fight&&!paused)stepFight(elapsed);
   if(WAIT==='hold'&&g.hold){
     var hh=g.hold,hon=hh.on||hh.tap>0;hh.tap=Math.max(0,hh.tap-elapsed);if(hh.on)hh.p+=elapsed;holdStep(hh,hon,elapsed);
@@ -4592,6 +4654,7 @@ function draw(){
   var g=G;
   ctx.setTransform(SC,0,0,SC,0,0);
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+  epiFilterOn();   // the closing montage is drawn soft (37-epilogue.js)
   if(g.chap){chapCard();if(paused)pausedNote();return;}
   if(g.out){drawOutside();return;}
   if(g.rep){drawReplay();return;}
@@ -4620,6 +4683,7 @@ function draw(){
     drawQte();
   }
   ctx.restore();
+  drawEpi();
   if(g.cctv&&!g.w)drawCctv();   // security footage has no sound: the words stay in the panel
   if(g.flash>0.01&&!RM){ctx.fillStyle='rgba(255,250,235,'+(0.22*g.flash)+')';ctx.fillRect(0,0,W,H);}
   if(g.pulse>0.02){

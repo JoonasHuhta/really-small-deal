@@ -23,7 +23,7 @@ var HOT={
   ]
 };
 var hotUsed={},hotLast=null,hotGlint=null,hotNext=8;
-function hotOn(){var g=G;return g.started&&!g.ended&&!paused&&(g.lab||g.chapter>1)&&(WAIT==='click'||WAIT==='choice')&&!g.out&&!g.chap&&!g.w&&!g.cctv&&!g.lens&&!g.finalFrame&&!g.job&&!!HOT[g.set];}
+function hotOn(){var g=G;return g.started&&!g.ended&&!paused&&(g.lab||g.chapter>1)&&(WAIT==='click'||WAIT==='choice')&&!g.out&&!g.chap&&!g.w&&!g.cctv&&!g.lens&&!g.finalFrame&&!g.job&&!g.epi&&!!HOT[g.set];}
 function hotWorld(e){var p=lensPoint(e),z=C.z,hw=W/(2*z),hh=H/(2*z),fx=clamp(C.fx,hw,W-hw),fy=clamp(C.fy,hh,H-hh);return {x:(p.x-W/2)/z+fx,y:(p.y-H/2)/z+fy};}
 function hotAt(e){if(!hotOn())return null;var p=hotWorld(e),a=HOT[G.set];
   for(var i=0;i<a.length;i++){var h=a[i];if(G.set==='home'&&h.id==='lamp'&&G.kitchen)continue;if(Math.hypot(h.x-p.x,h.y-p.y)<h.r)return h;}return null;}
