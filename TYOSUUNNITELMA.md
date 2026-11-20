@@ -24,6 +24,8 @@ Tavoite: tarinan kaari toimii, kohtaukset on valittu, ja työ etenee pieninä, v
 
 ---
 
+> **20.11.2026 (ilta):** suunta tarkentui. **VISIO.md** voittaa ristiriidoissa (muki = jaksaminen, diili = sopimus, uusi työ = mukin vartiointi). Armoton analyysi on tiedostossa **ANALYYSI.md**. Tehtävät ovat kohdassa §14.
+>
 > **20.11.2026:** syväluotaava katsaus (rytmi, kaari, uskottavuus, tutkimus, kielet) on tiedostossa **KATSAUS.md**. Sen kohta 12 on ehdotettu työjärjestys; Joonas päättää isot sisältömuutokset (8 ja 10).
 
 ## 1. Missä ollaan (mitattu)
@@ -317,3 +319,28 @@ Perustelut ovat tiedostossa KATSAUS.md (kohta suluissa). Jokainen uusi kohtaus t
 - **K32 Elävä maailma, jatko:** linnut, lentokoneet, tähdenlento ja pöly ovat mukana. Seuraavaksi: höyry kahvikupeista, toimiston kasvin lehti heilahtaa, baarin riippuvalaisimet keinuvat hieman, satunnainen ohikulkija ikkunan takana, perhonen tai kärpänen, joka laskeutuu Ekskyysmin päähän (Ekskyysmi jähmettyy). Periaate: liike on taustalla eikä vie huomiota repliikeiltä; Less motion poistaa kaiken.
 - **K33 Kaupungin nimi (Joonas päättää):** ehdotus Varjola; majakka keksityksi (Pikkukari / Lonely Rock). Bengtskär on nyt kirjaston kirjassa ainoana oikeana paikkana.
 - Huom: hiljaisen päivän toimistossa haalea varjo seinällä on tarkoituksellinen: Ekskyysmin paikka on tyhjä (”Vacant”).
+
+---
+
+## 14. Visio-kierroksen tehtävät (20.11.2026 ilta, VISIO.md)
+
+Jos nämä ovat ristiriidassa §13:n kanssa, nämä voittavat. Korvautuneet §13-kohdat on merkitty.
+
+| ID | Tehtävä | Koko | Tila |
+|---|---|---|---|
+| **V1** | **Muki-prototyyppi** WIP-osioon: ”A Tuesday, with a mug.” Muki-HUD (kahvin pinta, ei numeroita), aistit vievät mukista, yksi diili paperilappuna, Riitan palaveri, tyhjä muki → mörkötila (piikikäs Ekskyysmi, kärjistyneet vaihtoehdot, pehmeä vaihtoehto lukittu: ”Not enough mug for that.”), iltatäyttö. | M | ✔ 0.64.0 (prototyyppi) |
+| **V2** | Joonas pelaa V1:n. Päätökset: tuntuuko muki oikealta, kahvi vai tee, saako ihminen tiuskaista Sannalle. | Joonas | |
+| **V3** | Muki viikkoon kohtaus kerrallaan, torstaista alkaen (siellä muki on aina melkein tyhjä). Käsikirjoitettu systeemi: taso rajataan avainkohdissa. Korvaa K8:n (The reply): ruma puoli tulee tyhjästä mukista. | L | |
+| **V4** | Aistit kohtauksiin mukin kautta (korvaa K6c/K6d): maiskutus, hajuvesi hississä, loisteputki. Pienet aisti-ikonit kertyvät pään ympärille. | M | |
+| **V5** | **Pino**: vastaamattomat viestit kasvavat lattialla, ihmisen oma kitka; Kaisan ”are you alive??” on osittain ansaittu torjunta. | M–L | |
+| **V6** | **Diilit** (4–6 koko pelissä) paperilappuina; osa hyviä (lepo), osa lainaa huomiselta. Kuitti toimii diilien tilikirjana. Diilit eivät koske Ekskyysmin kokoa. | M | |
+| **V7** | **Kissa maanantaihin**: ihminen piirtää muistilapulle, Ekskyysmi piilottaa; kissa kulkee viikon läpi ryhmächattiin asti. | S–M | |
+| **V8** | **Majakkakirja = hyperfokus**: täyttää mukin, mutta viesti jää vastaamatta (Pino). Yksi diili, jonka kumpikin puoli on totta. | S–M | |
+| **V9** | **Uusi maanantai -loppu**: sama ”oh, hi.”, vanhat vaihtoehdot + *Stay*, viimeinen diili (”Not today. Maybe Thursday.”), työnkuva ”Look after the mug. Stay when it happens.”, ensimmäinen itse arkistoitu kehu. | M | |
+| **V10** | **Ennusteet** kolme kertaa (ma, to, uusi ma), kalibrointirivi kuittiin. | M | |
+| **V11** | **Hiljaisuus** pitenee kohtauksesta toiseen (21 min → 3 h → 2 päivää → Nothing); kerran se päättyy ilman selitystä (oikea torjunta, K10:n rinnalla). | M | |
+| **V12** | Ekskyysmi hereillä baarissa: paras hetki ei saa syntyä vain sen poissa ollessa (ANALYYSI 2.4). Ekskyysmi herää tarinan puolivälissä ja kertoo itse parhaan yksityiskohdan. | S | |
+| **V13** | ”BOSS DEFEATED” → ironia selvemmäksi tai poisto (ei voittoruutua). | S | |
+| **V14** | Peilivarjo (Sannan varjo, yhteinen säätely). Myöhemmin, kun V1–V9 ovat valmiita. | L | |
+
+**Järjestys:** V1 → V2 (Joonas) → V7 → V3 → V4 → V5 → V6 → V8 → V12 → V13 → V11 → V10 → V9 → V14. K10 (The ball) ja K12 (merkkijonotaulukko) pysyvät voimassa; K12 tehdään ennen käännöksiä mutta vasta kun V3–V9 ovat paikallaan.

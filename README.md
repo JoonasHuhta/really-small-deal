@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.64.0 (Claude, 20.11.2026): **suunta tarkentui: muki. ANALYYSI.md ja VISIO.md.**
+- ANALYYSI.md: armoton kokonaisanalyysi (vahvuudet, sokeat pisteet, parannukset, arvosanat 6,5–7 nyt / 8,5–9 potentiaali).
+- VISIO.md: mitä oikeasti teemme. Ihmisen kahvimuki on jaksaminen (”BE A MUG. NOT A HERO.”), tyhjä muki avaa ruman puolen (mörkötila), diili on Ekskyysmin ja ihmisen sopimus eikä pistejärjestelmä, ja Ekskyysmin uusi työ on vartioida mukia (”Look after the mug. Stay when it happens.”). Pilarit, mitä emme tee, PUBG-vertailu ja avoimet kysymykset.
+- Prototyyppi V1 Moments-valikon WIP-osiossa: **A Tuesday, with a mug.** Muki-HUD (kahvin pinta, ei numeroita), pesulappu, porkkana ja hajuvesi vievät mukista, yksi diili paperilappuna (lounas vai hiljainen tunti), Riitan palaveri tyhjällä mukilla: Ekskyysmi piikikkäänä mörkönä, kärjistyneet vaihtoehdot, pehmeä vaihtoehto lukittu (”Not enough mug for that.”), ilta täyttää mukin. Diilin hinta näkyy illalla.
+- TYOSUUNNITELMA §14: tehtävät V1–V14.
+
 Versio 0.63.0 (Claude, 20.11.2026): **kampaus, osa 2 (Joonaksen kuvat).**
 - Puhekuplat eivät enää mene kuvan yläreunan yli (zoomattu kamera, puhelimen valikkonappi) eivätkä pomotaistelun palkin alle.
 - Pomotaistelu: myös ”One at a time” -tilassa tikarit lentävät kohti (hitaammin ja jonossa); avattu viesti odottaa lukijaansa kuten ennen.

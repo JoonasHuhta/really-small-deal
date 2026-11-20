@@ -96,7 +96,7 @@ function render(){
   if(WAIT==='choice'&&CH){
     speaker=g.choiceWho||'S';text=g.nopeMsg||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':g.chapter===1&&!g.lab&&!g.firstPick?'You’re Ekskyysmi. Pick what I say.':'What do we do with this?');   // the very first choice says who the player is
     if(g.form&&g.form.i>=0){speaker='N';text=FORM_Q[g.form.i].q;}
-    for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(CH[i].t)+' <em>Not a setting. Yet.</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>';
+    for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(CH[i].t)+' <em>Not a setting. Yet.</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>':CH[i].off&&CH[i].note?'<button class="opt off'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>'+esc(CH[i].note)+'</em></button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>';
   }else if(WAIT==='stretch'){
     speaker='S';text='A small warning. Just enough to make my point.';
     html='<div class="stretch-controls"><label for="stretch">Unfurl your warning</label><input id="stretch" type="range" min="1.8" max="3.8" step="0.05" value="'+g.morko.sT+'" aria-label="Size of your warning"><button class="opt cont" type="button" data-i="go">That should do it →</button></div>';
@@ -208,7 +208,7 @@ function lineInBubble(l){var g=G;
   if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)return false;if(l.who==='S'&&g.morko.asleep)return false;
   if(l.who==='T'||l.who==='X')return !!g.bar;
   return 'SHABPRLZYW'.indexOf(l.who)>=0;}
-function nope(i){var o=CH[i],L=o.hush?HUSHNOPE:NOPE;o.tried=(o.tried||0)+1;G.nopeMsg=L[Math.min(o.tried-1,L.length-1)];G.morko.mood='stern';sfx('nope');render();}
+function nope(i){var o=CH[i],L=o.hush?HUSHNOPE:NOPE;o.tried=(o.tried||0)+1;G.nopeMsg=o.note||L[Math.min(o.tried-1,L.length-1)];G.morko.mood='stern';sfx('nope');render();}
 function holdText(){
   var h=G.hold,on=h.on||h.tap>0;
   if(h.kind==='sit')return on?h.o.text:'Hold to sit down. Do nothing else.';

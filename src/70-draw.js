@@ -354,7 +354,7 @@ function drawPair(humanOpts){
   var up=G.morko.wake==null||G.morko.wake>0.5;
   plainShadow();
   var fa=G.gapWalk&&G.w&&G.gapA!=null?G.gapA:1;ctx.save();ctx.globalAlpha*=fa;   // Lamp gap.: the shadow thins out between lamps
-  morkoBody(q);ctx.globalAlpha=fa;if(up&&!ht.front)morkoArms(q,ht);ctx.restore();   // morkoBody ends at alpha 1 for the eyes
+  morkoBody(q);morkoSpikes(q);ctx.globalAlpha=fa;if(up&&!ht.front)morkoArms(q,ht);ctx.restore();   // morkoBody ends at alpha 1 for the eyes
   if(up)shadowDrink(q);
   drawGaze();
   if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to: not on the street
@@ -560,7 +560,8 @@ function draw(){
   if(g.draft)drawDraft();
   if(g.boss)drawBoss();
   if(g.rec)drawRec();
-  if(g.hud&&g.started&&!g.qte&&!g.form&&!g.paper)hud();   // the form and the paper receipt need the top corner // the window has the screen for its second
+  if(g.hud&&g.started&&!g.qte&&!g.form&&!g.paper)hud();
+  drawMug();drawDeal();   // VISIO V1: capacity, and the small deals about it   // the form and the paper receipt need the top corner // the window has the screen for its second
   if(g.job&&!g.ended)jobCard();
   if(g.w){
         if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText('THE WALK HOME',W/2,74);

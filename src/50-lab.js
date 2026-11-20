@@ -23,6 +23,7 @@ var LABS={
   radiator:{title:'By the radiator.',blurb:'The next Tuesday. Ekskyysmi has a meeting with Sanna’s shadow. Three topics prepared. All of them weather.',script:labRadiator},
   footage:{title:'Footage.',blurb:'A nice chat with Sanna. Ekskyysmi switches to the corner camera. It only points one way.',script:labFootage},
   enhance:{title:'Enhance.',blurb:'One eyebrow. Four levels of zoom. A forensic investigation nobody asked for.',script:labEnhance},
+  mug:{title:'A Tuesday, with a mug.',blurb:'Prototype (VISIO V1): the mug is how much of you there is today. The senses drain it, quiet refills it, and an empty mug makes a monster.',script:labMug},
   comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments}
 };
 function labScene(o){return [scene(o),function(){
@@ -45,7 +46,7 @@ var SITUATION={detail:'One small thing in a good review.',sometime:'“We should
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
-var WIP=['epilogue'];
+var WIP=['epilogue','mug'];
 function wipList(){var h='<div class="eyebrow">Work in progress</div><div class="lab-list">';for(var i=0;i<WIP.length;i++)if(LABS[WIP[i]])h+=momentButton(WIP[i],LABS[WIP[i]].blurb);return h+'</div>';}
 function showMoments(){
   var sv=loadProgress(),top=sv?sv.unlocked||1:1,h='<div class="eyebrow">Moments</div>';
