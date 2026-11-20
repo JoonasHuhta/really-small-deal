@@ -1822,19 +1822,36 @@ function labDetail(){return labScene({set:'office',title:'One small thing.',plan
 // Each shot: a scene, and one receipt row (label and value kept apart so they translate; the dots are drawn).
 // The last rows are the player's own week (Ekskyysmi's methods), then the line the whole receipt mechanic was for:
 // one day lived inside, one day outside. Safe at last, said as bookkeeping.
+// Peanuts-credits rules: every shot is composed (its own framing and camera move), and Ekskyysmi does one small,
+// purposeful thing in each. Close-ups for the intimate ones, wide for the jokes that need the room.
+// cam: [z, x, y] at the start and the end of the shot; the camera eases between them (Less motion: the end framing, still).
+// pose: Ekskyysmi's arms (see morkoArms). at: little things that happen during the shot, [seconds, function].
+function epiLens(x,y,tag){return function(){var q=geom();G.lens={x:q.bx+40,y:q.hdY+60,xT:x,yT:y,mode:'peek',tag:tag,spot:null,done:{},t:0};G.morko.pose='lens';};}
 var EPI=[
-  {set:'home',clock:21*3600,s:0.9,mood:'calm',hx:470,title:'THE WEEK, ITEMISED',secs:6},
-  {set:'room',clock:12*3600,s:0.8,mood:'calm',hx:420,a:560,wave:1,face:'smile',l:'LUNCHES',v:'1'},
-  {set:'office',clock:10*3600,s:0.75,mood:'calm',hx:250,b:520,l:'SLIDES, PRESENTED',v:'1 (EERO)',note:'he was good. he still hates it.'},
-  {set:'office',clock:9*3600+15*60,s:0.85,mood:'calm',hx:420,r:600,l:'SUMMARY',v:'HALF A PAGE',note:'thumbs received: 1 (of 2)'},
-  {set:'room',clock:16*3600,s:1.5,mood:'stern',hx:470,l:'WORST CASES THAT HAPPENED',v:'0',note:function(){var n=(G.methods||{}).worst;return n?fmtN('prepared: {n}',n):'prepared: plenty';}},
-  {set:'library',clock:15*3600,s:0.8,mood:'calm',hx:430,l:'LATE FEES',v:'€4.60',note:'lighthouses: a shared interest'},
-  {set:'room',clock:12*3600+5*60,s:0.85,mood:'calm',hx:400,a:540,z:1,l:'OTHER PEOPLE’S SHADOWS',v:'ALSO ON SHIFT'},
-  {set:'home',clock:20*3600,s:1.0,mood:'calm',hx:470,face:'smile',l:'DRAWINGS SHARED',v:'1',note:'accounts closed: 0'},
-  {set:'room',clock:12*3600+40*60,s:0.8,mood:'calm',hx:400,a:520,face:'smile',l:'COMPLIMENTS, FILED CORRECTLY',v:'3'},
-  {set:'home',clock:22*3600,s:0.95,mood:'care',hx:470,mine:1},
-  {set:'home',clock:23*3600,s:0.9,mood:'care',hx:470,l:'DAYS LIVED TODAY',v:'1.0',note:'inside and outside, the same day. first time this week.',secs:7},
-  {set:'home',clock:23*3600+1,s:0.9,mood:'care',hx:470,credit:'Made by Joonas Huhta (MoshBitSurfers)',secs:6}
+  {set:'home',clock:21*3600,s:0.9,mood:'calm',hx:470,cam:[1.5,200,190, 1.08,470,280],secs:6.5,title:'THE WEEK, ITEMISED'},
+  {set:'room',clock:12*3600,s:0.8,mood:'calm',hx:420,a:560,wave:1,face:'smile',cam:[1.45,490,262, 1.6,490,262],
+    at:[[1.8,epiLens(555,330,'FACE: FRIENDLY. RE-CHECKING.')]],l:'LUNCHES',v:'1'},
+  {set:'office',clock:10*3600,s:0.75,mood:'worry',hx:250,b:560,pose:'selfeyes',cam:[1.15,420,270, 1.3,400,265],
+    l:'SLIDES, PRESENTED',v:'1 (EERO)',note:'he was good. he still hates it.'},
+  {set:'office',clock:9*3600+15*60,s:0.85,mood:'calm',hx:420,r:600,pose:'comfort',cam:[1.6,450,290, 1.72,440,285],
+    l:'SUMMARY',v:'HALF A PAGE',note:'thumbs received: 1 (of 2)'},
+  {set:'room',clock:16*3600,s:1.9,mood:'stern',hx:470,pose:'grow',cam:[1.0,480,270, 1.05,480,280],
+    at:[[2.6,function(){var M=G.morko;M.sT=0.8;M.pose=null;M.mood='surprised';}]],l:'WORST CASES THAT HAPPENED',v:'0',
+    note:function(){var n=(G.methods||{}).worst;return n?fmtN('prepared: {n}',n):'prepared: plenty';}},
+  {set:'bar',clock:21*3600+30*60,s:1.0,mood:'calm',hx:430,bar:1,cam:[1.7,420,250, 1.8,410,245],
+    l:'UMBRELLA STORIES, TOLD',v:'1',note:'classified: not any more'},
+  {set:'library',clock:15*3600,s:0.8,mood:'calm',hx:430,cam:[1.2,470,270, 1.35,450,262],
+    at:[[1.4,epiLens(560,300,'PAGE 212. NOBODY HAS DIED YET.')]],l:'LATE FEES',v:'€4.60',note:'lighthouses: a shared interest'},
+  {set:'room',clock:12*3600+5*60,s:0.85,mood:'calm',hx:400,a:540,z:1,pose:'toast',cam:[1.1,470,270, 1.25,470,262],
+    l:'OTHER PEOPLE’S SHADOWS',v:'ALSO ON SHIFT'},
+  {set:'home',clock:20*3600,s:1.0,mood:'care',hx:470,face:'smile',pose:'hold',cam:[1.9,465,330, 1.75,465,320],
+    l:'DRAWINGS SHARED',v:'1',note:'accounts closed: 0'},
+  {set:'room',clock:12*3600+40*60,s:0.8,mood:'calm',hx:400,a:520,face:'smile',pose:'sip',cam:[1.3,450,265, 1.5,450,262],
+    l:'COMPLIMENTS, FILED CORRECTLY',v:'3'},
+  {set:'home',clock:22*3600,s:0.95,mood:'calm',hx:470,mine:1,pose:'selfmouth',cam:[1.55,450,250, 1.65,445,245]},
+  {set:'home',clock:23*3600,s:0.75,mood:'calm',hx:470,sitting:1,cam:[1.8,450,380, 1.12,470,300],secs:7.5,
+    l:'DAYS LIVED TODAY',v:'1.0',note:'inside and outside, the same day. first time this week.'},
+  {set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,pose:'puppet',cam:[1.08,470,280, 1.0,480,270],secs:6.5,credit:'Made by Joonas Huhta (MoshBitSurfers)'}
 ];
 // The player's own top methods, as rows. In the lab (or a week with no choices) the shot is skipped.
 var MINE={worst:'WORST CASES, PREPARED',draft:'SCRIPTS, DRAFTED',please:'YESES, UNMEANT',hide:'EXITS, TAKEN',stay:'TIMES WE STAYED',hush:'SILENCES, KEPT'};
@@ -1844,19 +1861,22 @@ function epiShot(o){return function(){
   var snap=G.epi&&G.epi.started?epiSnap():null;
   scene({set:o.set,clock:o.clock})();
   var g=G,M=g.morko,Hm=g.human;g.fade=0;g.hud=false;g.plan=false;
-  Hm.x=Hm.xT=o.hx||HOME;if(o.face)Hm.face=o.face;
-  M.s=M.sT=o.s||1;M.mood=o.mood||'calm';
+  if(o.bar){barSetup();var b=g.bar;b.sdrink=true;b.shelter=true;b.umbrella=1;}
+  Hm.x=Hm.xT=o.hx||HOME;if(o.face)Hm.face=o.face;if(o.sitting)Hm.pose='floor';
+  M.s=M.sT=o.s||1;M.mood=o.mood||'calm';M.pose=o.bar?'shelter':o.sitting?'sit':o.pose||null;
   if(o.a){g.cowA=true;g.ax=g.axT=o.a;g.aFace=-1;g.aWave=!!o.wave;if(o.z){g.zT=1;g.zShow=0.2;}}
-  if(o.b){g.cowB=true;g.bx2=g.bxT=o.b;g.bFace=o.bFace||-1;}
+  if(o.b){g.cowB=true;g.bx2=g.bxT=o.b;g.bFace=-1;}
   if(o.r){g.cowR=true;g.rx=o.r;}
-  // a slow push towards the people in the shot, a few percent over the whole shot: alive, not busy. Less motion: still.
-  C.z=1.025;C.fx=W/2;C.fy=H/2;
-  if(!RM){var fx=o.a?(Hm.x+o.a)/2:o.b?(Hm.x+o.b)/2:o.r?(Hm.x+o.r)/2:Hm.x-30;g.cz=o.z||1.12;g.cx=fx;g.cy=H/2+20;g.camRate=0.16;}
-  g.epi.rows=o.mine?mineRows():null;
+  // composed framing: start, and drift to the end over the shot. Less motion: the end framing, no drift.
+  var c=o.cam||[1.025,W/2,H/2,1.06,W/2,H/2];
+  if(RM){C.z=c[3];C.fx=c[4];C.fy=c[5];}else{C.z=c[0];C.fx=c[1];C.fy=c[2];}
+  g.cz=c[3];g.cx=c[4];g.cy=c[5];g.camRate=RM?40:1.4/(o.secs||5.5);
+  g.epi.rows=o.mine?mineRows():null;g.epi.at=(o.at||[]).slice();
   g.epi.started=true;g.epi.snap=snap;g.epi.x=snap?1:0;g.epi.o=o;g.epi.ct=0;
   if(!snap){g.fade=1;g.fadeRate=0.8;}
 };}
-function stepEpi(dt){var e=G.epi;if(!e)return;e.ct+=dt;if(e.x>0)e.x=Math.max(0,e.x-dt/(RM?2.2:1.3));}
+function stepEpi(dt){var e=G.epi;if(!e)return;e.ct+=dt;
+  while(e.at&&e.at.length&&e.at[0][0]<=e.ct)e.at.shift()[1]();if(e.x>0)e.x=Math.max(0,e.x-dt/(RM?2.2:1.3));}
 // No canvas blur filter: it is slow on phones and in software rendering (the montage ran at a fifth of its speed).
 // The softness comes from a haze layer in drawEpi instead.
 function epiFilterOn(){}
