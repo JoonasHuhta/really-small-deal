@@ -14,6 +14,11 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.59.0 (Claude, 20.11.2026): **kuitin WHAT IT FELT LIKE -osio uusittu Joonaksen kokemusten pohjalta.**
+- Ensin aistit: `COLLAR LABEL, FELT … ALL DAY`, `CHEWING, NEXT TO ME … DEAFENING`, `PERFUME, IN THE LIFT … ALL THE AIR`. Sitten pää: `TABS OPEN, IN HEAD … 37` ja pisin uudelleenkelaus. Sitten muut ihmiset: `“DO THEY STILL LIKE ME?” … ×23` / *answer so far: yes.*, `FACE HELD UP`, `RECOVERY AFTER ONE LUNCH … ONE EVENING`, `BRAVE THINGS NOBODY SAW`.
+- Korjattu: rivi ”first time this week” valui kuitin reunan yli, nyt *a first.*
+- `APOLOGIES, IN ADVANCE` poistettu: ulkopuolisuuden pelko kantaa saman asian terävämmin. Osio kasvoi viidellä rivillä, rullaus nopeutui vain vähän.
+
 Versio 0.58.0 (Claude, 20.11.2026): **epilogi on nyt pelin loppu.**
 - Tarinassa: loppukuva (lamppu ja varjolintu) → ”For now” → **The End. (of the week)** mustalla kappaleen hiljaisen ensimmäisen tahdin ajan → epilogi kappaleen kanssa → *By the radiator.* lopputekstien jälkeen → viikon kuitti. (`AFTER[5]`, `NOCARD.epilogue`.)
 - Epilogin loppu: häivytys mustaan alkaa bändin viimeisestä iskusta (169,4 s, iskuanalyysi) ja on musta ennen jälkikaikua. Ei enää välähdystä eikä kertojan palkkia lopussa; paneeli palaa vasta seuraavan kohtauksen mukana.

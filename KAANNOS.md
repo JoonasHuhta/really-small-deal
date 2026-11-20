@@ -23,3 +23,8 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
 ## Rakenteet, joissa on luku
 
 `BILL` (`31-story-week.js`): ”You’ve taken me out of {n} rooms this week…” Kääntäjä saa koko lauseen; monikko tarvitsee ehkä oman muodon luvulle 1 (nykyään luku on aina vähintään 3).
+
+## Epilogin kuitti: WHAT IT FELT LIKE (0.59)
+- Rivit ovat kuitin kieltä: lyhyt nimike vasemmalle, arvo oikealle, ei verbejä. Kaksi riviä mahtuu noin 42 merkkiin yhteensä.
+- Aistirivit (`COLLAR LABEL, FELT`, `CHEWING, NEXT TO ME`, `PERFUME, IN THE LIFT`) ovat konkreettisia tarkoituksella: älä yleistä ”aistikuormitukseksi”.
+- `“DO THEY STILL LIKE ME?” … ×23` / *answer so far: yes.*: lainausmerkit kuuluvat ajatukseen, ja ”so far” jättää pelon todeksi mutta vastauksen myönteiseksi.

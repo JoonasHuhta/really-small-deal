@@ -1931,7 +1931,7 @@ var EPI=[
     l:'DRAWINGS SHARED',v:'1',note:'accounts closed: 0'},
   {cut:'hard',set:'home',clock:22*3600,s:0.95,mood:'calm',hx:470,mine:1,pose:'selfmouth',cam:[1.55,450,250, 1.55,450,250],secs:3.4},
   {cut:'fade',set:'home',clock:23*3600,s:0.95,mood:'calm',hx:520,sitting:1,cam:[1.8,450,380, 1.05,475,290],secs:7,
-    l:'DAYS LIVED TODAY',v:'1.0',note:'inside and outside, the same day. first time this week.'},
+    l:'DAYS LIVED TODAY',v:'1.0',note:'inside and outside, the same day. a first.'},
   {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,pose:'puppet',cam:[1.05,475,290, 1.05,475,290],secs:6,credit:'Made by Joonas Huhta (MoshBitSurfers)'}
 ];
 // The player's own top methods, as rows. In the lab (or a week with no choices) the shot is skipped.
@@ -2027,9 +2027,14 @@ function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · THE WHOLE T
 function epiInsideRows(){
   var g=G,run=(g.run||[]).filter(function(d){return d.label!=='SCENARIO LAB';}),lived=0,cal=run.length,top=null;
   run.forEach(function(d){lived+=d.ratio;(d.ledger||[]).forEach(function(x){if(!top||x.secs>top.secs)top=x;});});
-  var r=[{l:'TIME OUTSIDE THE COMFORT ZONE',v:'ALL OF IT'},{n:'source: eero.'}];
+  // The inside of the week: senses first, then the head, then other people. One row each, no advice.
+  var r=[{l:'TIME OUTSIDE THE COMFORT ZONE',v:'ALL OF IT'},{n:'source: eero.'},
+    {l:'COLLAR LABEL, FELT',v:'ALL DAY'},{l:'CHEWING, NEXT TO ME',v:'DEAFENING'},{l:'PERFUME, IN THE LIFT',v:'ALL THE AIR'},
+    {l:'TABS OPEN, IN HEAD',v:'37'}];
   if(top)r.push({l:'LONGEST REPLAY',v:dur(top.secs)},{n:top.label});else r.push({l:'“OH, HI.”, REPLAYED',v:'×41'});
-  r.push({l:'FACE HELD UP',v:'MOST DAYS'},{l:'APOLOGIES, IN ADVANCE',v:'PLENTY'},{l:'BRAVE THINGS NOBODY SAW',v:String(Math.max(3,(g.methods||{}).stay||0))},{n:'seen by: one shadow.'});
+  r.push({l:'“DO THEY STILL LIKE ME?”',v:'×23'},{n:'answer so far: yes.'},
+    {l:'FACE HELD UP',v:'MOST DAYS'},{l:'RECOVERY AFTER ONE LUNCH',v:'ONE EVENING'},
+    {l:'BRAVE THINGS NOBODY SAW',v:String(Math.max(3,(g.methods||{}).stay||0))},{n:'seen by: one shadow.'});
   if(cal)r.push({l:'DAYS ON THE CALENDAR',v:String(cal)},{l:'DAYS LIVED INSIDE',v:lived.toFixed(1)});
   return r;}
 function epiRoll(e){
