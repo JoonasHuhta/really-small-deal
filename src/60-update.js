@@ -49,6 +49,7 @@ function update(dt,elapsed){
   if(g.w){var lb=lampBase();base=M.sT+lb.s;offT=lb.off-(M.sT-1)*45;g.w.x=approach(g.w.x,g.w.xT,g.w.speed*dt);g.walking=g.w.x<g.w.xT-0.5&&g.w.speed>0;offT-=gapStep(dt);}
   if(M.st==='free'||M.st==='pokka')M.s=approach(M.s,base,(M.s<base?1.5:1.1)*dt);
   else if(M.st==='hide')M.s=ease(M.s,1.25,5*dt);
+  if(g.epi&&g.epi.o&&g.epi.o.off!=null)offT=g.epi.o.off;   // the montage can place the shadow (a hug needs it centred)
   M.off=ease(M.off,M.st==='hide'?0:offT,6*dt);
   // Spring lag (TYOSUUNNITELMA 7.1): the feet stay on the human, the shoulders trail a little and settle with one small sway.
   // It takes away the crank look on the walk home. Less motion: no lag, no sway. A jump (new scene) snaps.

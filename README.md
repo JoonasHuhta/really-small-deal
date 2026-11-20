@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.51.1 (Claude, 20.11.2026): **epilogiin ystävyyttä ja kohellusta.**
+- Kädet eivät enää mene ihmisen pään yli: Riitan kuvassa käsi olalla (`shoulder`), piirroskuvassa halaus keskitetystä varjosta (`hug`, `off:0`).
+- Uusi, keksitty kuva: he katsovat toisiaan ja lyövät yläfemmat. Ensimmäinen yritys menee ohi (liian innokas), toinen osuu: ”CLAP.” Kuitti: ”NOS, SAID OUT LOUD … 1, wobbling: allowed” (jos perjantaina sanoi kyllä: ”0, next time, then.”).
+- Uusi, keksitty kuva: sateenvarjotarina uudestaan kotona, ja molemmat nauravat vedet silmissä (ihmisen uusi ilme `laugh`, kyyneleet, ”ha” ja ”HA”). Kuitti: ”THE UMBRELLA STORY, AGAIN … ×4, still classified. still funny.”
+- Kehut-kuva poistettu, jotta kokonaisuus ei veny.
+
 Versio 0.51.0 (Claude, 20.11.2026): **epilogi sommiteltuna, Tenavat-lopputekstien hengessä.**
 - Jokaisella kuvalla on oma rajaus ja kameran liike (alku- ja loppurajaus, `cam`), ja Ekskyysmi tekee joka kuvassa yhden pienen asian (`pose`, `at`).
 - Kuvat: ikkunasta lähtevä avaus; lounas, jossa Ekskyysmi tarkistaa Sannan kasvot suurennuslasilla (”FACE: FRIENDLY. RE-CHECKING.”); Eeron diat, joita Ekskyysmi ei kestä katsoa (kädet silmillä); Riitan kohdalla lähikuva, jossa varjon käsi on ihmisen päällä; pahimmat skenaariot: valtava varjo kutistuu kesken kuvan; baari ja drinkin sateenvarjo (”UMBRELLA STORIES, TOLD … 1”); kirjasto: ”PAGE 212. NOBODY HAS DIED YET.”; Ekskyysmi tervehtii Sannan varjoa; piirros: varjo halaa takaapäin; kehut: varjo siemaisee kahvia; pelaajan omat menetelmät: käsi suulla; ”DAYS LIVED TODAY 1.0”: molemmat istuvat lattialla ja kamera vetäytyy; tekijärivi: varjolintu.

@@ -104,9 +104,10 @@ function person(x,o){
   ctx.fillStyle=skin;rr(x-7,top-14,14,23,4);ctx.fill();
   ctx.fillStyle=o.body;ctx.strokeStyle='#34413e';ctx.lineWidth=1.6;rr(x-25,top,50,76+fl*5,13);ctx.fill();ctx.stroke();
   ctx.strokeStyle='#fff4db55';ctx.lineWidth=2;line(x-17,top+64,x+17,top+64);line(x-9,top+5,x+9,top+5);
-  ctx.strokeStyle=o.body;ctx.lineWidth=10;line(x-f*18,top+17,x-f*28,top+61);
-  ctx.fillStyle=skin;circ(x-f*28,top+64,5);ctx.fill();
-  var hy=FEETY-150+(o.nod||0)*5+fl*3+(o.down?4:0)-(o.walk?Math.abs(Math.sin(G.time*8))*1.5:0),hx=x+(o.back?0:f*2);
+  ctx.strokeStyle=o.body;ctx.lineWidth=10;
+  if(o.reach){line(x+f*12,top+17,o.reach.x,o.reach.y+6);ctx.fillStyle=skin;circ(o.reach.x,o.reach.y,6);ctx.fill();}   // a hand up: a high five
+  else{line(x-f*18,top+17,x-f*28,top+61);ctx.fillStyle=skin;circ(x-f*28,top+64,5);ctx.fill();}
+  var hy=FEETY-150+(o.nod||0)*5+fl*3+(o.down?4:0)-(o.walk?Math.abs(Math.sin(G.time*8))*1.5:0)+(o.face==='laugh'&&!RM?Math.abs(Math.sin(G.time*13))*-3:0),hx=x+(o.back?0:f*2);
   if(o.body===SANNA.body){ctx.fillStyle=o.hair;rr(hx-23,hy-17,45,45,18);ctx.fill();ctx.fillStyle=skin;rr(x-7,top-15,14,19,4);ctx.fill();}
   ctx.fillStyle=skin;ctx.strokeStyle='#34413e';ctx.lineWidth=1.8;circ(hx,hy,21);ctx.fill();ctx.stroke();
   circ(hx-f*20,hy+3,5);ctx.fill();ctx.stroke();
@@ -117,7 +118,9 @@ function person(x,o){
     if(o.body===MIKA.body){circ(hx-8,hy-21,7);ctx.fill();circ(hx+2,hy-22,8);ctx.fill();}
     var ey=hy+2+(o.down?4:0),ex=hx+f*5,er=2+fl*1.6+(o.face==='stiff'?1.2:0);
     ctx.fillStyle='#2b2733';
-    if(o.down){ctx.lineWidth=2;line(ex-8,ey,ex-4,ey+1);line(ex+4,ey+1,ex+8,ey);}
+    if(o.face==='laugh'){ctx.strokeStyle='#2b2733';ctx.lineWidth=2;ctx.beginPath();ctx.arc(ex-6,ey+1,3.2,1.1*Math.PI,1.9*Math.PI);ctx.stroke();ctx.beginPath();ctx.arc(ex+6,ey+1,3.2,1.1*Math.PI,1.9*Math.PI);ctx.stroke();
+      var tk=RM?0.5:(G.time*1.6)%1;ctx.fillStyle='rgba(150,205,235,'+(0.9-tk*0.6)+')';ctx.beginPath();ctx.ellipse(ex-11,ey+3+tk*9,1.8,2.6,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(ex+11,ey+3+((tk+0.5)%1)*9,1.8,2.6,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#2b2733';}   // laughing until it leaks
+    else if(o.down){ctx.lineWidth=2;line(ex-8,ey,ex-4,ey+1);line(ex+4,ey+1,ex+8,ey);}
     else if(!RM&&Math.sin(G.time*.8+x)>0.997){line(ex-8,ey,ex-4,ey);line(ex+4,ey,ex+8,ey);}
     else{circ(ex-6,ey,er);ctx.fill();circ(ex+6,ey,er);ctx.fill();}
     ctx.strokeStyle='#34413e';ctx.lineWidth=1.2;
@@ -135,6 +138,7 @@ function person(x,o){
       if(o.grin>=2){ctx.lineWidth=1.2;line(ex-gw-1,cy0-4,ex-gw-3,cy0+1);line(ex+gw+1,cy0-4,ex+gw+3,cy0+1);}
     }
     else if(o.face==='smile'){ctx.beginPath();ctx.arc(ex,ey+8,5,0.15*Math.PI,0.85*Math.PI);ctx.stroke();}
+    else if(o.face==='laugh'){ctx.fillStyle='#6b2f35';ctx.beginPath();ctx.arc(ex,ey+9,6,0,Math.PI);ctx.closePath();ctx.fill();}
     else if(o.face==='stiff'){line(ex-6,ey+12,ex+6,ey+12);}
     else if(o.face==='frown'){ctx.beginPath();ctx.arc(ex,ey+17,6,1.15*Math.PI,1.85*Math.PI);ctx.stroke();line(ex-11,ey-9,ex-3,ey-6);line(ex+11,ey-9,ex+3,ey-6);}
     else line(ex-3.5,ey+12,ex+3.5,ey+12);   // low enough not to read as a second nose
@@ -164,7 +168,7 @@ function person(x,o){
 }
 var SANNA={body:'#62887f',hair:'#463b38'},MIKA={body:'#ac8277',hair:'#895e41'};
 function drawHuman(extra){
-  var Hm=G.human,o={body:'#c98f2e',hair:'#4a3b32',facing:Hm.facing||1,cup:!G.cupLeft&&!G.w&&!G.noCup,phone:!G.w&&!Hm.gone&&((G.phoneN||0)>0||WAIT==='fight'||!!(G.draft&&!G.draft.sent)),buzz:G.buzz||0,sip:Hm.sip||0,flinch:Hm.flinch,face:Hm.face,back:Hm.back,sweat:Hm.sweat,blush:Hm.blush,grin:Hm.grin,puddle:Hm.puddle};
+  var Hm=G.human,o={body:'#c98f2e',hair:'#4a3b32',facing:Hm.facing||1,cup:!G.cupLeft&&!G.w&&!G.noCup,phone:!G.w&&!Hm.gone&&((G.phoneN||0)>0||WAIT==='fight'||!!(G.draft&&!G.draft.sent)),buzz:G.buzz||0,sip:Hm.sip||0,flinch:Hm.flinch,face:Hm.face,back:Hm.back,sweat:Hm.sweat,blush:Hm.blush,grin:Hm.grin,puddle:Hm.puddle,reach:Hm.reach||null};
   if(o.face==='down')o.down=true;
   if(!G.w&&Math.abs(Hm.x-Hm.xT)>1){o.walk=true;if(!Hm.back)o.facing=Hm.xT>Hm.x?1:-1;}   // nobody walks backwards
   else if(G.w&&G.walking&&!Hm.back)o.facing=G.w.xT>G.w.x?1:-1;                          // not on the way home either
@@ -210,6 +214,9 @@ function handTargets(q){
     case 'cover':a={x:Hm.x-7,y:hy+2};b={x:Hm.x+11,y:hy+2};front=true;break;
     case 'pull':a={x:Hm.x+24,y:FEETY-96};b={x:Hm.x+22,y:FEETY-72};front=true;break;
     case 'hold':a={x:Hm.x-24,y:FEETY-112};b={x:Hm.x+24,y:FEETY-112};front=true;break;
+    case 'shoulder':a={x:L.x-4,y:q.shY+80*q.s};b={x:Hm.x-16,y:FEETY-114};front=true;break;   // one hand on the near shoulder, never across the head
+    case 'hug':a={x:Hm.x-27,y:FEETY-100};b={x:Hm.x+27,y:FEETY-100};front=true;break;   // from behind, around the shoulders (keep the shadow centred: off 0)
+    case 'five':var fv=G.five||{dx:0,dy:0};a={x:L.x-4,y:q.shY+70*q.s};b={x:Hm.x-34+fv.dx,y:FEETY-196+fv.dy};front=true;break;
     case 'comfort':a={x:L.x-6,y:q.shY+85*q.s};b={x:Hm.x+25,y:FEETY-106};front=true;break;
     case 'lens':if(G.lens){var lh=lensHandle();a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b={x:lh.x2,y:lh.y2};front=true;break;}a={x:L.x,y:q.shY+60};b={x:R.x,y:q.shY+60};break;
     case 'swat':if(G.fight&&G.fight.swat){a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b={x:G.fight.swat.x,y:G.fight.swat.y};front=true;break;}a={x:L.x,y:q.shY+60};b={x:R.x,y:q.shY+60};break;
