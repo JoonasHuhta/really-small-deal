@@ -14,6 +14,11 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.48.1 (Claude, 20.11.2026): **repliikki sanotaan kerran, ja esittely on aamurituaali.**
+- Kun repliikki näkyy luettavassa puhekuplassa (kohtaus vähintään 740 px leveä, tekstikoko ei ”large”), alapaneelin kopio piilotetaan näkyvistä ja jätetään vain ruudunlukijalle. Sama koskee ulkopuolista korttia. Kertojan rivit, valinnat ja kapea ruutu pitävät paneelitekstin. Asetus *Text below* tuo sen aina takaisin.
+- Puhelimella paneelin teksti alkaa muutaman pikselin sisempää.
+- Ekskyysmin esittely puhutaan ihmiselle, ei pelaajalle: ”Ekskyysmi. Informal head of keeping things from getting awkward. Reporting for duty.” – ”You don’t have to introduce yourself every morning. You live on my wall.” – ”It’s a formality. Formalities are how nothing goes wrong.”
+
 Versio 0.48.0 (Claude, 20.11.2026): **työkalujen tasapaino ja Lamp gap (T7).**
 - Leimasin: maanantaina vain kerran (Eeron ”Rejection prevented.”). Sannan jälkeen leimaa ei enää lyödä, koska pito ja ulkopuolinen kortti kantavat jo vitsin. Perjantain leimasin (pidellään ja pannaan pois) on maanantain vastapari.
 - Ulkopuolisia kortteja karsittu: tiistain ”A meeting was scheduled.” pois (kohtaus päättyy riviin ”ONE thumb. She has two.”), baarin ”WHAT THE EVENING WAS” pois (kertoja sanoi saman). Lomakkeen kortti on nyt ”WHAT THE APPOINTMENT WAS”, jotta ”WHAT THE CALENDAR SAW” ei toistu kolmesti.

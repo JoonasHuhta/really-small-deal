@@ -139,6 +139,9 @@ document.getElementById('slow').addEventListener('click',function(){
   slowUI();sfx('pick');
 });
 slowUI();
+function belowUI(){var b=document.getElementById('below');if(b)b.setAttribute('aria-pressed',String(textBelow));}
+(function(){var b=document.getElementById('below');if(!b)return;b.addEventListener('click',function(){
+  textBelow=!textBelow;try{window.localStorage.setItem('ekskyysmi.below',textBelow?'on':'off');}catch(e){}belowUI();render();sfx('pick');});belowUI();})();
 function motionUI(){document.getElementById('motion').setAttribute('aria-pressed',String(RM));document.body.classList.toggle('reduce-motion',RM);}
 document.getElementById('motion').addEventListener('click',function(){RM=!RM;motionUI();});
 motionUI();

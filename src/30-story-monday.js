@@ -21,7 +21,11 @@ function fearChoice(){
 }
 function scIntro(){return [
   set({clr:1}),
-  ['S','I’m Ekskyysmi. Informal head of keeping things from getting awkward.'],
+  // Said to the human, not to the player: they have known each other since a Tuesday when the human was seven.
+  // The introduction is a morning ritual (a formality, and formalities are how nothing goes wrong); the player overhears it.
+  ['S','Ekskyysmi. Informal head of keeping things from getting awkward. Reporting for duty.'],
+  ['H','You don’t have to introduce yourself every morning. You live on my wall.'],
+  ['S','It’s a formality. Formalities are how nothing goes wrong.'],
   ['S','My job is simple. Keep you from being rejected. By anyone. Ever.'],
   set({hud:1}),
   ['H','And my job?'],

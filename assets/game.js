@@ -278,6 +278,9 @@ function render(){
   var icon=speaker==='H'?'human':speaker==='S'?'':speaker==='N'?'narrator':'other';
   elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'"><b>'+(g.skippable&&!cur?NAMES.N:NAMES[speaker])+'</b><p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
+  // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
+  // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
+  elLine.classList.toggle('echo',!textBelow&&WAIT==='click'&&(g.out?true:!!cur&&lineInBubble(cur)));
   elOpts.innerHTML=html;
   if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
     var nextControl=elOpts.querySelector('[data-i=read]');if(nextControl&&!nextControl.disabled)nextControl.focus();
@@ -333,6 +336,14 @@ var NOPE=['That one isn’t available. I’m sitting on it.','Still sitting on i
 // hush(then) opens it, hush() keeps it shut. It is always the last option.
 var HUSHNOPE=['That isn’t a setting.','Silence is how they get you.','I don’t have that button. I looked.','Somebody has to talk. It’s always been me.'];
 function hush(then){return then?{t:'(Say nothing.)',hush:1,m:'hush',then:[['S','…',{quiet:1}]].concat(then)}:{t:'(Say nothing.)',hush:1,off:true};}
+var textBelow=false;try{textBelow=window.localStorage.getItem('ekskyysmi.below')==='on';}catch(e){}
+function lineInBubble(l){var g=G;
+  if(!WIDE||(cv.clientWidth||0)<740)return false;                 // bubble text under ~13 px: the panel stays
+  if(textStep>1)return false;   // the player asked for large text: the panel reads better than a bubble
+  if(l.big&&l.who==='S')return true;
+  if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)return false;if(l.who==='S'&&g.morko.asleep)return false;
+  if(l.who==='T'||l.who==='X')return !!g.bar;
+  return 'SHABPRLZYW'.indexOf(l.who)>=0;}
 function nope(i){var o=CH[i],L=o.hush?HUSHNOPE:NOPE;o.tried=(o.tried||0)+1;G.nopeMsg=L[Math.min(o.tried-1,L.length-1)];G.morko.mood='stern';sfx('nope');render();}
 function holdText(){
   var h=G.hold,on=h.on||h.tap>0;
@@ -730,7 +741,11 @@ function fearChoice(){
 }
 function scIntro(){return [
   set({clr:1}),
-  ['S','I’m Ekskyysmi. Informal head of keeping things from getting awkward.'],
+  // Said to the human, not to the player: they have known each other since a Tuesday when the human was seven.
+  // The introduction is a morning ritual (a formality, and formalities are how nothing goes wrong); the player overhears it.
+  ['S','Ekskyysmi. Informal head of keeping things from getting awkward. Reporting for duty.'],
+  ['H','You don’t have to introduce yourself every morning. You live on my wall.'],
+  ['S','It’s a formality. Formalities are how nothing goes wrong.'],
   ['S','My job is simple. Keep you from being rejected. By anyone. Ever.'],
   set({hud:1}),
   ['H','And my job?'],
@@ -4737,6 +4752,9 @@ document.getElementById('slow').addEventListener('click',function(){
   slowUI();sfx('pick');
 });
 slowUI();
+function belowUI(){var b=document.getElementById('below');if(b)b.setAttribute('aria-pressed',String(textBelow));}
+(function(){var b=document.getElementById('below');if(!b)return;b.addEventListener('click',function(){
+  textBelow=!textBelow;try{window.localStorage.setItem('ekskyysmi.below',textBelow?'on':'off');}catch(e){}belowUI();render();sfx('pick');});belowUI();})();
 function motionUI(){document.getElementById('motion').setAttribute('aria-pressed',String(RM));document.body.classList.toggle('reduce-motion',RM);}
 document.getElementById('motion').addEventListener('click',function(){RM=!RM;motionUI();});
 motionUI();
