@@ -181,9 +181,9 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   function(){G.morko.pose=null;shadowAway();},function(){G.tics.push(tic('z',G.human.x-70,WALLY-150,{life:2.2}));},{wait:1.6},
   ['N','Ekskyysmi is off duty. Nobody is reviewing anything.'],
   {who:'H',choice:[
-    {t:'Tell her about the umbrella.',f:function(){G.barStory='umbrella';},then:[['H','Can I tell you something odd? My shadow had a drink.'],['A','Your shadow.'],['H','With an umbrella. For cover.']]},
-    {t:'Tell her about the umbrella. With your arms.',f:function(){G.barStory='arms';},then:[['H','Okay. So. My shadow. Had a DRINK.'],['A','With what arms?'],['H','These arms. And an umbrella. For cover.']]},
-    {t:'Tell her everything. Starting in 2011.',f:function(){G.barStory='2011';},then:[['H','In 2011 I waved at someone who was waving at someone else.'],['A','No!'],['H','And tonight my shadow had a drink. With an umbrella.']]}
+    {t:'Tell her about the umbrella.',hush:1,f:function(){G.barStory='umbrella';},then:[['H','Can I tell you something odd? My shadow had a drink.'],['A','Your shadow.'],['H','With an umbrella. For cover.']]},
+    {t:'Tell her about the umbrella. With arms.',hush:1,f:function(){G.barStory='arms';},then:[['H','Okay. So. My shadow. Had a DRINK.'],['A','With what arms?'],['H','These arms. And an umbrella. For cover.']]},
+    {t:'Tell her everything. Starting with the wave.',hush:1,f:function(){G.barStory='2011';},then:[['H','In 2011 I waved at someone who was waving at someone else.'],['A','No!'],['H','And tonight my shadow had a drink. With an umbrella.']]}
   ]},
   ['A','That’s the best thing I’ve heard all week.'],
   ['T','Here’s the menu, if you want food.'],

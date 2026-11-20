@@ -180,3 +180,9 @@ html.immersive body.playing .line p.loud{font-size:calc(18px * var(--ts,1))}html
 .lang-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;padding:6px 12px;color:var(--ink)}
 .lang-row select{font:inherit;background:transparent;color:inherit;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:5px 8px}
 .lang-row option{color:#14111d}
+
+/* Options never run off the screen: count-based columns that do not depend on :has (Joonas 20.11.: the fourth option was cut off on the phone) */
+.opt{min-width:0}.opts{max-width:100%}
+html.immersive body.playing .opts.n4{grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr))}
+html.immersive body.playing .opts.n4 .opt{font-size:calc(12.5px * var(--ts,1));padding:6px 8px}
+html.immersive body.playing .opts.n5{grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr))}

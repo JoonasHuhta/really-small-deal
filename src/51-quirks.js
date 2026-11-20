@@ -48,14 +48,25 @@ function drawDish(){
   ctx.strokeStyle='#7a5c3a';ctx.lineWidth=4;ctx.lineCap='round';line(bx,by,bx+22,by+26);ctx.fillStyle='#e2b04a';circ(bx,by,6);ctx.fill();
   if(!RM){ctx.fillStyle='rgba(220,235,255,.7)';for(i=0;i<4;i++){circ(px-22+((i*19+d.t*40)%46),py-34-((d.t*30+i*11)%24),2.5);ctx.fill();}}
 }
+// The kitchen: cabinets and a fridge on the right-hand wall, and the counter in the FOREGROUND, between the human and us.
+// Before, the counter stood against the wall next to the sofa and the shadow fell across the sink (Joonas 20.11.).
 function kitchen(){
-  ctx.fillStyle='#4d566e';rr(330,300,260,95,6);ctx.fill();
-  ctx.fillStyle='#c9c2b0';ctx.fillRect(320,292,280,12);
-  ctx.fillStyle='#2a2f3d';rr(430,295,90,7,3);ctx.fill();
-  ctx.strokeStyle='#c9c2b0';ctx.lineWidth=5;ctx.lineCap='round';line(476,292,476,262);line(476,262,500,262);
-  ctx.fillStyle='#e9e2cf';for(var i=0;i<3;i++){rr(352+i*10,260-i*2,8,34,2);ctx.fill();}
-  ctx.strokeStyle='#2a2f3d';ctx.lineWidth=2;line(460,312,460,388);
-  ctx.fillStyle='#e2b04a';circ(450,330,3);ctx.fill();circ(470,330,3);ctx.fill();
+  ctx.fillStyle='#39405a';ctx.fillRect(600,WALLY-170,360,170);                                          // tiled splash-back
+  ctx.strokeStyle='rgba(255,255,255,.06)';ctx.lineWidth=1;for(var y=WALLY-170;y<WALLY;y+=20)line(600,y,960,y);for(var x=600;x<960;x+=24)line(x,WALLY-170,x,WALLY);
+  ctx.fillStyle='#4d566e';for(var i=0;i<3;i++){rr(612+i*86,96,80,96,5);ctx.fill();}ctx.fillStyle='#c9c2b0';for(i=0;i<3;i++){rr(646+i*86,176,14,4,2);ctx.fill();}
+  ctx.fillStyle='#8f97a6';rr(868,120,84,WALLY-120+60,8);ctx.fill();ctx.fillStyle='#c9c2b0';rr(878,200,4,46,2);ctx.fill();rr(878,280,4,60,2);ctx.fill();   // fridge
+  ctx.fillStyle='#454d63';ctx.fillRect(600,WALLY-52,262,52);ctx.fillStyle='#c9c2b0';ctx.fillRect(596,WALLY-58,270,8);   // the back counter under the tiles
+  ctx.strokeStyle='#2a2f3d';ctx.lineWidth=2;line(686,WALLY-46,686,WALLY-2);line(774,WALLY-46,774,WALLY-2);
+  ctx.fillStyle='#e9e2cf';for(i=0;i<3;i++){rr(628+i*10,WALLY-92-i*2,8,34,2);ctx.fill();}                // plates drying on it
+}
+function kitchenFront(){
+  if(!G.kitchen||G.set!=='home'||G.human.gone)return;var cx=G.human.x+20;
+  ctx.fillStyle='#c9c2b0';ctx.fillRect(cx-170,FEETY-100,340,12);                                        // worktop
+  ctx.fillStyle='#4d566e';rr(cx-160,FEETY-88,320,90,4);ctx.fill();
+  ctx.fillStyle='#2a2f3d';rr(cx-6,FEETY-98,90,6,3);ctx.fill();                                           // the sink
+  ctx.strokeStyle='#c9c2b0';ctx.lineWidth=5;ctx.lineCap='round';line(cx+40,FEETY-100,cx+40,FEETY-128);line(cx+40,FEETY-128,cx+62,FEETY-128);
+  ctx.strokeStyle='#2a2f3d';ctx.lineWidth=2;line(cx,FEETY-80,cx,FEETY-6);line(cx-80,FEETY-80,cx-80,FEETY-6);line(cx+80,FEETY-80,cx+80,FEETY-6);
+  ctx.fillStyle='#e2b04a';for(var i=-1;i<3;i++){circ(cx-90+i*80+70,FEETY-60,3);ctx.fill();}
 }
 
 /* ---------- Lab: Sometime. ---------- */

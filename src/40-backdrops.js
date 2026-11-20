@@ -1,17 +1,18 @@
 /* ================= extra backdrops ================= */
 function home(){
   ctx.fillStyle='#2c3242';ctx.fillRect(-20,-20,W+40,WALLY+20);
-  var glx=G.bed?690:520,gr=ctx.createRadialGradient(glx,300,10,glx,300,330);gr.addColorStop(0,'rgba(255,214,140,'+(G.lampOff?0:.42)+')');gr.addColorStop(1,'rgba(255,214,140,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);
+  var glx=G.bed?690:520,gr=ctx.createRadialGradient(glx,300,10,glx,300,330);gr.addColorStop(0,'rgba(255,214,140,'+(G.lampOff?0:.42)+')');gr.addColorStop(1,'rgba(255,214,140,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);if(!G.lampOff&&!G.kitchen)dust(G.bed?690:520,250);
   ctx.fillStyle='#232733';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);ctx.fillStyle='#1c202b';ctx.fillRect(-20,WALLY-6,W+40,6);
-  ctx.fillStyle='#e9e2cf';rr(112,96,170,150,4);ctx.fill();ctx.fillStyle='#12152a';ctx.fillRect(120,104,154,134);
+  ctx.fillStyle='#e9e2cf';rr(112,96,170,150,4);ctx.fill();ctx.fillStyle='#12152a';ctx.fillRect(120,104,154,134);sky(120,104,154,134,true);
   ctx.fillStyle='#f6f1e4';circ(236,134,13);ctx.fill();ctx.fillStyle='#12152a';circ(242,130,11);ctx.fill();
   ctx.fillStyle='#f6f1e4';for(var i=0;i<7;i++){circ(132+i*19,118+(i*41)%96,1.2);ctx.fill();}
   ctx.strokeStyle='#e9e2cf';ctx.lineWidth=5;line(197,104,197,238);
   if(G.kitchen)kitchen();   // the floor lamp is drawn later (homeLamp): it stands in the room, in front of the shadow on the wall
-  if(G.basket){var bx=G.human.x+64;ctx.fillStyle='#b99b6b';ctx.beginPath();ctx.moveTo(bx-30,FEETY-34);ctx.lineTo(bx+30,FEETY-34);ctx.lineTo(bx+24,FEETY);ctx.lineTo(bx-24,FEETY);ctx.closePath();ctx.fill();
+  if(G.basket){var bx=G.human.x+64;if(Math.abs(bx-520)<70)bx=G.human.x-78;   // never under the lamp (Joonas 20.11.)
+    ctx.fillStyle='#b99b6b';ctx.beginPath();ctx.moveTo(bx-30,FEETY-34);ctx.lineTo(bx+30,FEETY-34);ctx.lineTo(bx+24,FEETY);ctx.lineTo(bx-24,FEETY);ctx.closePath();ctx.fill();
     ctx.fillStyle='#e9e2cf';ctx.beginPath();ctx.ellipse(bx-6,FEETY-36,22,9,0,Math.PI,0);ctx.fill();ctx.fillStyle='#9fb6c9';ctx.beginPath();ctx.ellipse(bx+12,FEETY-36,14,7,0,Math.PI,0);ctx.fill();}
   drawTable();drawBed();
-  if(!G.bed){   // at night the bed takes the floor: no sofa on top of it
+  if(!G.bed&&!G.kitchen){   // at night the bed takes the floor; in the kitchen there is no sofa
   ctx.fillStyle='#57486a';rr(600,292,300,70,16);ctx.fill();ctx.fillStyle='#655479';rr(588,338,324,84,14);ctx.fill();
   ctx.fillStyle='#4b3e5b';rr(588,330,30,92,10);ctx.fill();rr(882,330,30,92,10);ctx.fill();
   ctx.fillStyle='#c98f2e';rr(700,322,60,34,8);ctx.fill();}
@@ -31,7 +32,7 @@ function office(flat){
   ctx.fillStyle='#fbf8ef';ctx.strokeStyle='#8d9a8c';ctx.lineWidth=4;rr(130,112,250,140,6);ctx.fill();ctx.stroke();
   ctx.strokeStyle='#62887f';ctx.lineWidth=3;ctx.lineCap='round';line(156,150,270,150);line(156,176,330,176);line(156,202,240,202);
   ctx.strokeStyle='#c9553f';ctx.beginPath();ctx.moveTo(290,222);ctx.lineTo(312,196);ctx.lineTo(330,210);ctx.lineTo(356,170);ctx.stroke();
-  ctx.fillStyle='#f4eedb';rr(689,99,170,146,4);ctx.fill();ctx.fillStyle='#a9c0c4';ctx.fillRect(697,107,154,130);
+  ctx.fillStyle='#f4eedb';rr(689,99,170,146,4);ctx.fill();ctx.fillStyle='#a9c0c4';ctx.fillRect(697,107,154,130);sky(697,107,154,130,false);
   ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(774,107,774,237);
   ctx.fillStyle='#8b7355';rr(560,404,330,14,4);ctx.fill();ctx.fillRect(578,418,8,50);ctx.fillRect(864,418,8,50);
 }
@@ -104,4 +105,28 @@ function bigNote(){
   ctx.save();ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 150px Fraunces,Georgia,serif';
   ctx.fillStyle='rgba(18,14,30,.55)';ctx.fillText(n.text,W/2+sh+5,H/2-34);
   ctx.fillStyle='#e0563e';ctx.fillText(n.text,W/2+sh,H/2-40);ctx.restore();
+}
+
+/* ================= a little life (Joonas 20.11.: the world felt static) =================
+   Through windows: now and then a bird by day, a plane's light or a shooting star by night. In lamp light: dust.
+   All of it is clocked by G.time, so it is the same on every replay, and Less motion turns it off. */
+function sky(x,y,w,h,night){
+  if(RM||!G.time)return;var t=G.time+x*0.37,P=night?9.5:7.3,k=Math.floor(t/P),ph=t-k*P,r=((k*9301+x*49297)%233280)/233280;
+  ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+  if(!night){
+    if(ph<2.8){var bx=x-20+(w+40)*(ph/2.8),by=y+18+r*(h*0.55)+Math.sin(ph*3)*4,fl=Math.sin(G.time*14)*4,dir=r>0.5?1:-1;if(dir<0)bx=x+w+20-(w+40)*(ph/2.8);
+      ctx.strokeStyle='rgba(40,46,52,.75)';ctx.lineWidth=1.8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(bx-7,by-fl);ctx.lineTo(bx,by);ctx.lineTo(bx+7,by-fl);ctx.stroke();
+      if(r>0.6){var b2=bx-dir*16;ctx.beginPath();ctx.moveTo(b2-6,by+7+fl);ctx.lineTo(b2,by+9);ctx.lineTo(b2+6,by+7+fl);ctx.stroke();}}
+  }else{
+    var px=x+((t*9)%(w+60))-30,py=y+22+((x*7)%30);if(Math.sin(G.time*5)>0.6){ctx.fillStyle='rgba(255,90,80,.9)';circ(px,py,1.6);ctx.fill();}
+    ctx.fillStyle='rgba(255,255,255,.55)';circ(px+4,py,1.1);ctx.fill();
+    if(r>0.55&&ph<0.7){var sx=x+w*0.85-ph*w*1.1,sy=y+10+ph*h*0.5;var g2=ctx.createLinearGradient(sx,sy,sx+26,sy-12);g2.addColorStop(0,'rgba(255,255,255,'+(0.9-ph)+')');g2.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.strokeStyle=g2;ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+26,sy-12);ctx.stroke();}
+  }
+  ctx.restore();
+}
+function dust(cx,cy){
+  if(RM||!G.time)return;ctx.fillStyle='rgba(255,236,190,.55)';
+  for(var i=0;i<9;i++){var a=i*2.39,rad=40+((i*53)%120),u=G.time*(0.05+i*0.008)+a;
+    circ(cx+Math.cos(u)*rad,cy-30+Math.sin(u*1.3)*rad*0.5-((G.time*4+i*17)%60)*0.4,1+((i*3)%2)*0.6);ctx.fill();}
 }

@@ -14,7 +14,7 @@ function bubble(x,y,text,o){
   for(i=0;i<lines.length;i++){var ws=lines[i].split(' '),lw=0,wd=[];
     for(j=0;j<ws.length;j++){ctx.font=isLoud(ws[j])?em:base;var m=ctx.measureText(ws[j]+(j<ws.length-1?' ':'')).width;wd.push(m);lw+=m;}
     words.push(ws);widths.push(wd);w=Math.max(w,lw);}
-  w+=26;var h=lines.length*lh+16,pad=18/(VIEW.z||1),bx=clamp(x-w/2,Math.max(8,VIEW.l+pad),Math.min(W-8,VIEW.r-pad)-w),by=o.top!=null?o.top:Math.max(8,y-h-12);
+  w+=26;var h=lines.length*lh+16,pad=18/(VIEW.z||1),bx=clamp(x-w/2,Math.max(8,VIEW.l+pad),Math.min(W-8,VIEW.r-pad)-w),topPad=((COMPACT?46:10)+(G.boss?50:0))/(VIEW.z||1),by=o.top!=null?o.top:Math.max(VIEW.t+topPad,y-h-12);
   var fill=o.dark?'#14111d':'#fffdf6',ink=o.dark?'#f6f1e4':'#2b2733',hot=o.dark?'#ebbd79':'#2b2733';
   ctx.fillStyle=fill;ctx.strokeStyle=ink;ctx.lineWidth=k>1?3:2;rr(bx,by,w,h,10);ctx.fill();ctx.stroke();
   if(!o.noTail){var tx=clamp(x,bx+16,bx+w-16);ctx.beginPath();ctx.moveTo(tx-8,by+h-1);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h-1);ctx.closePath();ctx.fill();
@@ -46,10 +46,10 @@ function applyCamera(){
   if(!RM&&!G.cctv){sx=Math.sin(G.time*0.45)*5+Math.sin(G.time*83)*8*G.shake;sy=Math.sin(G.time*0.9)*2.6+Math.cos(G.time*71)*6*G.shake;}
   var fx=clamp(C.fx+sx,hw,W-hw),fy=clamp(C.fy+sy,hh,H-hh);
   ctx.translate(W/2,H/2);ctx.scale(z,z);ctx.translate(-fx,-fy);
-  VIEW.l=fx-hw;VIEW.r=fx+hw;VIEW.z=z;
+  VIEW.l=fx-hw;VIEW.r=fx+hw;VIEW.t=fy-hh;VIEW.z=z;
 }
 // What the camera shows, in world units: bubbles stay inside it (Joonas 20.11.: Eero's first bubble touched the edge).
-var VIEW={l:0,r:W,z:1};
+var VIEW={l:0,r:W,t:0,z:1};
 
 /* ================= drawing: break room ================= */
 // The lamp table stands on the floor in front of the wall, so the shadow on the wall goes behind it.
@@ -67,7 +67,7 @@ function room(flat,noFront){
   ctx.fillStyle='#899887';ctx.fillRect(-20,WALLY-6,W+40,6);
   ctx.strokeStyle='#697e7018';ctx.lineWidth=1;for(var f=0;f<8;f++)line(0,405+f*24,W,405+f*24);
   ctx.fillStyle='#f4eedb';rr(689,99,170,146,4);ctx.fill();ctx.fillStyle='#94ada7';ctx.fillRect(697,107,154,130);
-  ctx.fillStyle='#b5c6b7';ctx.beginPath();ctx.moveTo(697,201);ctx.lineTo(740,162);ctx.lineTo(790,205);ctx.lineTo(823,177);ctx.lineTo(851,198);ctx.lineTo(851,237);ctx.lineTo(697,237);ctx.fill();
+  ctx.fillStyle='#b5c6b7';ctx.beginPath();ctx.moveTo(697,201);ctx.lineTo(740,162);ctx.lineTo(790,205);ctx.lineTo(823,177);ctx.lineTo(851,198);ctx.lineTo(851,237);ctx.lineTo(697,237);ctx.fill();sky(697,107,154,130,false);   // birds in front of the far hills
   ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(774,107,774,237);line(697,172,851,172);
   ctx.fillStyle='#f4eedb';rr(682,239,184,9,3);ctx.fill();
   ctx.fillStyle='#64816a';ctx.beginPath();ctx.ellipse(67,323,13,31,-.4,0,Math.PI*2);ctx.ellipse(93,301,14,35,.3,0,Math.PI*2);ctx.ellipse(109,330,11,27,.7,0,Math.PI*2);ctx.fill();
@@ -253,7 +253,7 @@ function morkoBody(q){
   if(wk<0.98){ctx.fillStyle='rgba(20,16,30,'+(0.26*(1-wk))+')';ctx.beginPath();ctx.ellipse(Hm.x-12,FEETY+3,44,9,0,0,Math.PI*2);ctx.fill();}
   if(wk<0.02)return;
   ctx.fillStyle=mcol();
-  var noLink=G.epi&&G.epi.o&&G.epi.o.drive;   // montage drive: no floor shadow stretched from the car to the runner
+  var noLink=(G.epi&&G.epi.o&&G.epi.o.drive)||G.bed;   // no floor shadow from the car to the runner, nor across the bed (Joonas 20.11.)   // montage drive: no floor shadow stretched from the car to the runner
   ctx.globalAlpha=noLink?0:0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.baseX-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
   ctx.beginPath();ctx.moveTo(q.baseX-26*q.s,q.by);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.bx+q.shW*0.8,q.shY+6);ctx.lineTo(q.bx-q.shW*0.8,q.shY+6);ctx.closePath();ctx.fill();
   ctx.beginPath();ctx.ellipse(q.bx,q.shY+4,q.shW,Math.max(14,26*q.s),0,0,Math.PI*2);ctx.fill();
@@ -512,7 +512,7 @@ function pausedNote(){
 }
 function draw(){
   var g=G;
-  ctx.setTransform(SC,0,0,SC,0,0);VIEW.l=0;VIEW.r=W;VIEW.z=1;   // unzoomed until applyCamera says otherwise
+  ctx.setTransform(SC,0,0,SC,0,0);VIEW.l=0;VIEW.r=W;VIEW.t=0;VIEW.z=1;   // unzoomed until applyCamera says otherwise
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
   epiFilterOn();   // the closing montage is drawn soft (37-epilogue.js)
   if(g.chap){chapCard();if(paused)pausedNote();return;}
@@ -530,6 +530,7 @@ function draw(){
     if(g.human.gone&&g.finalFrame){var endQ=geom();morkoBody(endQ);morkoArms(endQ,handTargets(endQ));}
     if(g.human.gone)homeLamp();
     drawFight();
+    kitchenFront();
     drawDish();
     drawHotGlint();
     drawTics(0);

@@ -9,7 +9,7 @@ function library(){
     for(var r=0;r<4;r++){var sy=84+r*74;ctx.fillStyle='#4f3626';ctx.fillRect(sx+8,sy,154,62);
       var bx=sx+11;for(i=0;bx<sx+154;i++){var bw=9+((i*7+j*5+r*3)%4)*3,bh=42+((i*5+r*7+j)%4)*5;if(bx+bw>sx+160)break;ctx.fillStyle=cols[(i*3+j+r*2)%cols.length];ctx.fillRect(bx,sy+62-bh,bw,bh);bx+=bw+2;}}}
   // window and a sign nobody needs
-  ctx.fillStyle='#f4eedb';rr(640,90,150,120,4);ctx.fill();ctx.fillStyle='#a9c0c4';ctx.fillRect(648,98,134,104);ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(715,98,715,202);
+  ctx.fillStyle='#f4eedb';rr(640,90,150,120,4);ctx.fill();ctx.fillStyle='#a9c0c4';ctx.fillRect(648,98,134,104);sky(648,98,134,104,false);ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(715,98,715,202);
   ctx.fillStyle='#2f6b4f';rr(820,110,110,44,6);ctx.fill();ctx.fillStyle='#fbf8ef';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('QUIET,',875,124);ctx.fillText('PLEASE',875,141);
   // the librarian stands behind her desk
   var L=g.lib||{};

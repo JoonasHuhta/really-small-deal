@@ -282,7 +282,8 @@ function playLab(id,mode){
       case 'fight':
         if(mode&&mode.indexOf('paced')===0){
           const m=T.G.fight.msgs.find(x=>!x.done);
-          if(m&&(m.state==='fly'||m.state==='open')){
+          if(m&&m.state==='fly'){const x0=m.x;T.tick(0.2);assert.ok(m.x<x0||m.state==='open','single-file daggers still fly in');}
+          if(m&&m.state==='open'){
             const state=m.state,position=m.x;T.tick(30);
             assert.equal(m.state,state,'paced replies must wait for the reader');assert.equal(m.x,position);
             const before=T.G.fight.t;T.pause();T.frame(900000+st*1000);assert.equal(T.G.fight.t,before,'pause freezes the fight');T.pause();

@@ -99,7 +99,8 @@ function drawTable(){
   ctx.fillStyle='rgba(200,225,240,.55)';rr(x-26,y-34,22,34,3);ctx.fill();ctx.fillStyle='rgba(235,245,250,.8)';ctx.fillRect(x-26,y-20,22,20);
   ctx.fillStyle='#fbf8ef';ctx.beginPath();ctx.ellipse(x+22,y-3,6,3,0,0,Math.PI*2);ctx.fill();
 }
-function tableShot(on){return function(){var g=G;g.tableShot=on;if(on){g.cz=1.55;g.cx=600;g.cy=FEETY-60;}else{g.cz=1;g.cx=W/2;g.cy=H/2;}};}
+function tableShot(on){return function(){var g=G;g.tableShot=on;g.kitchen=on;   // the table stands in the kitchen, not in front of the sofa and the lamp (Joonas 20.11.)
+  if(on){g.cz=1.55;g.cx=600;g.cy=FEETY-60;}else{g.cz=1;g.cx=W/2;g.cy=H/2;}};}
 function sitDown(){var Hm=G.human;Hm.pose='floor';Hm.face='down';sfx('drip');}
 
 /* ================= 1. Nothing. ================= */
@@ -160,6 +161,11 @@ function labForm(){
   ]},
   ['S','Fine. “Very often.” It’s a strength.'],
   formQ(1),
+  {choice:[   // Joonas 20.11.: more of the form for the player to answer
+    {t:'Tick “Sometimes”. Keep it light.',then:[['S','Light. Breezy. A person of few remarks.']]},
+    {t:'Ask how long “longer” is.',then:[['S','In days? In years? Since the drawing?'],['H','You’re making my point.']]},
+    {t:'Leave it blank. Mystery is attractive.',then:[['S','Let them wonder.']]}
+  ]},
   ['S','Longer than I’d LIKE? I like having them. I’ve had some since the drawing.',{look:'pleased'}],
   formTick(1,2),
   ['S','You didn’t even ask me.'],
@@ -193,7 +199,40 @@ function labForm(){
   ['H','You’ve gone into the margin.'],
   ['S','The margin needed a witness too.'],
   function(){G.form=null;}
- ],outside({title:'WHAT THE APPOINTMENT WAS',dur:'duration: 40 minutes',cap:'An appointment. A form with eighteen questions. A small paper bag.',anim:'text'}));
+ ],outside({title:'WHAT THE APPOINTMENT WAS',dur:'duration: 40 minutes',cap:'An appointment. A form with eighteen questions. A small paper bag.',anim:'text'}),afterForm());
+}
+// After the appointment: what the help is, what it does, what it doesn't, and whether the human is glad.
+// No names of medicines or professions: a small paper bag, and a chair every other Tuesday (Joonas 20.11.: the player must not be left guessing).
+function afterForm(){
+  var asked={};
+  function ask(k){asked[k]=1;return ANSWERS[k];}
+  var ANSWERS={
+    bag:[['S','And the bag?'],['H','It turns the volume down. Not off. Down.'],['S','Down how far?'],['H','Far enough that I can hear myself between your memos.']],
+    chair:[['S','And the chair?'],['H','Every other Tuesday. We open a few of your files and check whether they say what you say they say.'],['S','They do.'],['H','Some do. One of them just says “oh, hi”.']],
+    me:[['S','Am I being… replaced?',{quiet:1}],['H','No. You’re being listened to. And sometimes overruled.'],['S','Overruled is a strong word.'],['H','It’s a nice word. I’m keeping it.']]
+  };
+  function rest(){var o=[];['bag','chair','me'].forEach(function(k){if(!asked[k])o=o.concat(ask(k));});return o;}
+  return [
+    scene({set:'home',clock:18*3600+40*60}),
+    ['N','That evening. The paper bag is on the table. Nobody has opened the conversation about it.'],
+    ['S','So. What did they say? Did they confiscate me?'],
+    ['H','Nobody confiscates you. There’s the bag. And a chair I sit in every other Tuesday, to talk.'],
+    ['S','Talk about WHAT?'],
+    ['H','You. Mostly. Kindly.'],
+    ['S','…Kindly.',{look:'stunned'}],
+    {choice:[
+      {t:'Ask what the bag does.',m:'stay',then:function(){return ask('bag');}},
+      {t:'Ask what the chair does.',m:'stay',then:function(){return ask('chair');}},
+      {t:'Ask if I’m being replaced.',m:'hide',then:function(){return ask('me');}}
+    ]},
+    rest,
+    ['S','And? Is it working?'],
+    ['H','Some days are easier. Not all of them.'],
+    ['H','It doesn’t make you go away. It makes you a bit easier to talk to.'],
+    ['S','…I’ve always been easy to talk to. I talk constantly.'],
+    ['H','I know. I’m glad I went.'],
+    ['S','…Noted.',{quiet:1}]
+  ];
 }
 
 /* ================= 3. Quiet. ================= */

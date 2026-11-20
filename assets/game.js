@@ -299,7 +299,8 @@ function render(){
   // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
   elLine.classList.toggle('echo',!textBelow&&(g.out?(g.out.anim==='text'||!COMPACT):WAIT==='click'&&!!cur&&lineInBubble(cur)));
   elOpts.innerHTML=html;
-  elOpts.classList.toggle('who-S',WAIT==='choice'&&(g.choiceWho||'S')==='S');elOpts.classList.toggle('who-H',WAIT==='choice'&&g.choiceWho==='H');   // whose words these are, in their colour
+  elOpts.classList.toggle('who-S',WAIT==='choice'&&(g.choiceWho||'S')==='S');elOpts.classList.toggle('who-H',WAIT==='choice'&&g.choiceWho==='H');
+  for(var nn=2;nn<=5;nn++)elOpts.classList.toggle('n'+nn,WAIT==='choice'&&!!CH&&CH.length===nn);   // column count without :has (older Android web views)   // whose words these are, in their colour
   if(WAIT==='fight'&&g.fight.paced&&g.fight.focusControls){
     var nextControl=elOpts.querySelector('[data-i=read]');if(nextControl&&!nextControl.disabled)nextControl.focus();
   }
@@ -2128,17 +2129,18 @@ function labEpilogue(){
 /* ================= extra backdrops ================= */
 function home(){
   ctx.fillStyle='#2c3242';ctx.fillRect(-20,-20,W+40,WALLY+20);
-  var glx=G.bed?690:520,gr=ctx.createRadialGradient(glx,300,10,glx,300,330);gr.addColorStop(0,'rgba(255,214,140,'+(G.lampOff?0:.42)+')');gr.addColorStop(1,'rgba(255,214,140,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);
+  var glx=G.bed?690:520,gr=ctx.createRadialGradient(glx,300,10,glx,300,330);gr.addColorStop(0,'rgba(255,214,140,'+(G.lampOff?0:.42)+')');gr.addColorStop(1,'rgba(255,214,140,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);if(!G.lampOff&&!G.kitchen)dust(G.bed?690:520,250);
   ctx.fillStyle='#232733';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);ctx.fillStyle='#1c202b';ctx.fillRect(-20,WALLY-6,W+40,6);
-  ctx.fillStyle='#e9e2cf';rr(112,96,170,150,4);ctx.fill();ctx.fillStyle='#12152a';ctx.fillRect(120,104,154,134);
+  ctx.fillStyle='#e9e2cf';rr(112,96,170,150,4);ctx.fill();ctx.fillStyle='#12152a';ctx.fillRect(120,104,154,134);sky(120,104,154,134,true);
   ctx.fillStyle='#f6f1e4';circ(236,134,13);ctx.fill();ctx.fillStyle='#12152a';circ(242,130,11);ctx.fill();
   ctx.fillStyle='#f6f1e4';for(var i=0;i<7;i++){circ(132+i*19,118+(i*41)%96,1.2);ctx.fill();}
   ctx.strokeStyle='#e9e2cf';ctx.lineWidth=5;line(197,104,197,238);
   if(G.kitchen)kitchen();   // the floor lamp is drawn later (homeLamp): it stands in the room, in front of the shadow on the wall
-  if(G.basket){var bx=G.human.x+64;ctx.fillStyle='#b99b6b';ctx.beginPath();ctx.moveTo(bx-30,FEETY-34);ctx.lineTo(bx+30,FEETY-34);ctx.lineTo(bx+24,FEETY);ctx.lineTo(bx-24,FEETY);ctx.closePath();ctx.fill();
+  if(G.basket){var bx=G.human.x+64;if(Math.abs(bx-520)<70)bx=G.human.x-78;   // never under the lamp (Joonas 20.11.)
+    ctx.fillStyle='#b99b6b';ctx.beginPath();ctx.moveTo(bx-30,FEETY-34);ctx.lineTo(bx+30,FEETY-34);ctx.lineTo(bx+24,FEETY);ctx.lineTo(bx-24,FEETY);ctx.closePath();ctx.fill();
     ctx.fillStyle='#e9e2cf';ctx.beginPath();ctx.ellipse(bx-6,FEETY-36,22,9,0,Math.PI,0);ctx.fill();ctx.fillStyle='#9fb6c9';ctx.beginPath();ctx.ellipse(bx+12,FEETY-36,14,7,0,Math.PI,0);ctx.fill();}
   drawTable();drawBed();
-  if(!G.bed){   // at night the bed takes the floor: no sofa on top of it
+  if(!G.bed&&!G.kitchen){   // at night the bed takes the floor; in the kitchen there is no sofa
   ctx.fillStyle='#57486a';rr(600,292,300,70,16);ctx.fill();ctx.fillStyle='#655479';rr(588,338,324,84,14);ctx.fill();
   ctx.fillStyle='#4b3e5b';rr(588,330,30,92,10);ctx.fill();rr(882,330,30,92,10);ctx.fill();
   ctx.fillStyle='#c98f2e';rr(700,322,60,34,8);ctx.fill();}
@@ -2158,7 +2160,7 @@ function office(flat){
   ctx.fillStyle='#fbf8ef';ctx.strokeStyle='#8d9a8c';ctx.lineWidth=4;rr(130,112,250,140,6);ctx.fill();ctx.stroke();
   ctx.strokeStyle='#62887f';ctx.lineWidth=3;ctx.lineCap='round';line(156,150,270,150);line(156,176,330,176);line(156,202,240,202);
   ctx.strokeStyle='#c9553f';ctx.beginPath();ctx.moveTo(290,222);ctx.lineTo(312,196);ctx.lineTo(330,210);ctx.lineTo(356,170);ctx.stroke();
-  ctx.fillStyle='#f4eedb';rr(689,99,170,146,4);ctx.fill();ctx.fillStyle='#a9c0c4';ctx.fillRect(697,107,154,130);
+  ctx.fillStyle='#f4eedb';rr(689,99,170,146,4);ctx.fill();ctx.fillStyle='#a9c0c4';ctx.fillRect(697,107,154,130);sky(697,107,154,130,false);
   ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(774,107,774,237);
   ctx.fillStyle='#8b7355';rr(560,404,330,14,4);ctx.fill();ctx.fillRect(578,418,8,50);ctx.fillRect(864,418,8,50);
 }
@@ -2231,6 +2233,30 @@ function bigNote(){
   ctx.save();ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 150px Fraunces,Georgia,serif';
   ctx.fillStyle='rgba(18,14,30,.55)';ctx.fillText(n.text,W/2+sh+5,H/2-34);
   ctx.fillStyle='#e0563e';ctx.fillText(n.text,W/2+sh,H/2-40);ctx.restore();
+}
+
+/* ================= a little life (Joonas 20.11.: the world felt static) =================
+   Through windows: now and then a bird by day, a plane's light or a shooting star by night. In lamp light: dust.
+   All of it is clocked by G.time, so it is the same on every replay, and Less motion turns it off. */
+function sky(x,y,w,h,night){
+  if(RM||!G.time)return;var t=G.time+x*0.37,P=night?9.5:7.3,k=Math.floor(t/P),ph=t-k*P,r=((k*9301+x*49297)%233280)/233280;
+  ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+  if(!night){
+    if(ph<2.8){var bx=x-20+(w+40)*(ph/2.8),by=y+18+r*(h*0.55)+Math.sin(ph*3)*4,fl=Math.sin(G.time*14)*4,dir=r>0.5?1:-1;if(dir<0)bx=x+w+20-(w+40)*(ph/2.8);
+      ctx.strokeStyle='rgba(40,46,52,.75)';ctx.lineWidth=1.8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(bx-7,by-fl);ctx.lineTo(bx,by);ctx.lineTo(bx+7,by-fl);ctx.stroke();
+      if(r>0.6){var b2=bx-dir*16;ctx.beginPath();ctx.moveTo(b2-6,by+7+fl);ctx.lineTo(b2,by+9);ctx.lineTo(b2+6,by+7+fl);ctx.stroke();}}
+  }else{
+    var px=x+((t*9)%(w+60))-30,py=y+22+((x*7)%30);if(Math.sin(G.time*5)>0.6){ctx.fillStyle='rgba(255,90,80,.9)';circ(px,py,1.6);ctx.fill();}
+    ctx.fillStyle='rgba(255,255,255,.55)';circ(px+4,py,1.1);ctx.fill();
+    if(r>0.55&&ph<0.7){var sx=x+w*0.85-ph*w*1.1,sy=y+10+ph*h*0.5;var g2=ctx.createLinearGradient(sx,sy,sx+26,sy-12);g2.addColorStop(0,'rgba(255,255,255,'+(0.9-ph)+')');g2.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.strokeStyle=g2;ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+26,sy-12);ctx.stroke();}
+  }
+  ctx.restore();
+}
+function dust(cx,cy){
+  if(RM||!G.time)return;ctx.fillStyle='rgba(255,236,190,.55)';
+  for(var i=0;i<9;i++){var a=i*2.39,rad=40+((i*53)%120),u=G.time*(0.05+i*0.008)+a;
+    circ(cx+Math.cos(u)*rad,cy-30+Math.sin(u*1.3)*rad*0.5-((G.time*4+i*17)%60)*0.4,1+((i*3)%2)*0.6);ctx.fill();}
 }
 // ---- src/45-camera.js ----
 /* ================= the camera has a grammar, not one move ================= */
@@ -2364,7 +2390,8 @@ function drawTable(){
   ctx.fillStyle='rgba(200,225,240,.55)';rr(x-26,y-34,22,34,3);ctx.fill();ctx.fillStyle='rgba(235,245,250,.8)';ctx.fillRect(x-26,y-20,22,20);
   ctx.fillStyle='#fbf8ef';ctx.beginPath();ctx.ellipse(x+22,y-3,6,3,0,0,Math.PI*2);ctx.fill();
 }
-function tableShot(on){return function(){var g=G;g.tableShot=on;if(on){g.cz=1.55;g.cx=600;g.cy=FEETY-60;}else{g.cz=1;g.cx=W/2;g.cy=H/2;}};}
+function tableShot(on){return function(){var g=G;g.tableShot=on;g.kitchen=on;   // the table stands in the kitchen, not in front of the sofa and the lamp (Joonas 20.11.)
+  if(on){g.cz=1.55;g.cx=600;g.cy=FEETY-60;}else{g.cz=1;g.cx=W/2;g.cy=H/2;}};}
 function sitDown(){var Hm=G.human;Hm.pose='floor';Hm.face='down';sfx('drip');}
 
 /* ================= 1. Nothing. ================= */
@@ -2425,6 +2452,11 @@ function labForm(){
   ]},
   ['S','Fine. “Very often.” It’s a strength.'],
   formQ(1),
+  {choice:[   // Joonas 20.11.: more of the form for the player to answer
+    {t:'Tick “Sometimes”. Keep it light.',then:[['S','Light. Breezy. A person of few remarks.']]},
+    {t:'Ask how long “longer” is.',then:[['S','In days? In years? Since the drawing?'],['H','You’re making my point.']]},
+    {t:'Leave it blank. Mystery is attractive.',then:[['S','Let them wonder.']]}
+  ]},
   ['S','Longer than I’d LIKE? I like having them. I’ve had some since the drawing.',{look:'pleased'}],
   formTick(1,2),
   ['S','You didn’t even ask me.'],
@@ -2458,7 +2490,40 @@ function labForm(){
   ['H','You’ve gone into the margin.'],
   ['S','The margin needed a witness too.'],
   function(){G.form=null;}
- ],outside({title:'WHAT THE APPOINTMENT WAS',dur:'duration: 40 minutes',cap:'An appointment. A form with eighteen questions. A small paper bag.',anim:'text'}));
+ ],outside({title:'WHAT THE APPOINTMENT WAS',dur:'duration: 40 minutes',cap:'An appointment. A form with eighteen questions. A small paper bag.',anim:'text'}),afterForm());
+}
+// After the appointment: what the help is, what it does, what it doesn't, and whether the human is glad.
+// No names of medicines or professions: a small paper bag, and a chair every other Tuesday (Joonas 20.11.: the player must not be left guessing).
+function afterForm(){
+  var asked={};
+  function ask(k){asked[k]=1;return ANSWERS[k];}
+  var ANSWERS={
+    bag:[['S','And the bag?'],['H','It turns the volume down. Not off. Down.'],['S','Down how far?'],['H','Far enough that I can hear myself between your memos.']],
+    chair:[['S','And the chair?'],['H','Every other Tuesday. We open a few of your files and check whether they say what you say they say.'],['S','They do.'],['H','Some do. One of them just says “oh, hi”.']],
+    me:[['S','Am I being… replaced?',{quiet:1}],['H','No. You’re being listened to. And sometimes overruled.'],['S','Overruled is a strong word.'],['H','It’s a nice word. I’m keeping it.']]
+  };
+  function rest(){var o=[];['bag','chair','me'].forEach(function(k){if(!asked[k])o=o.concat(ask(k));});return o;}
+  return [
+    scene({set:'home',clock:18*3600+40*60}),
+    ['N','That evening. The paper bag is on the table. Nobody has opened the conversation about it.'],
+    ['S','So. What did they say? Did they confiscate me?'],
+    ['H','Nobody confiscates you. There’s the bag. And a chair I sit in every other Tuesday, to talk.'],
+    ['S','Talk about WHAT?'],
+    ['H','You. Mostly. Kindly.'],
+    ['S','…Kindly.',{look:'stunned'}],
+    {choice:[
+      {t:'Ask what the bag does.',m:'stay',then:function(){return ask('bag');}},
+      {t:'Ask what the chair does.',m:'stay',then:function(){return ask('chair');}},
+      {t:'Ask if I’m being replaced.',m:'hide',then:function(){return ask('me');}}
+    ]},
+    rest,
+    ['S','And? Is it working?'],
+    ['H','Some days are easier. Not all of them.'],
+    ['H','It doesn’t make you go away. It makes you a bit easier to talk to.'],
+    ['S','…I’ve always been easy to talk to. I talk constantly.'],
+    ['H','I know. I’m glad I went.'],
+    ['S','…Noted.',{quiet:1}]
+  ];
 }
 
 /* ================= 3. Quiet. ================= */
@@ -2920,7 +2985,7 @@ function startFight(id){
 function currentReply(){return G.fight&&G.fight.msgs.find(function(m){return !m.done;});}
 function nextReply(){
   var m=currentReply();if(!m)return;
-  m.state='fly';m.x=G.human.x+360;m.y=205;m.t=0;
+  m.state='fly';m.x=Math.min(W+60,G.human.x+520);m.y=205;m.t=0;
 }
 function replyArrives(m){
   var g=G,Hm=g.human;m.state='hit';m.t=0;
@@ -2958,8 +3023,10 @@ function stepFight(dt){
     if(m.done)return;all=false;
     if(m.state==='wait'){if(!F.paced&&F.t>=m.at)m.state='fly';return;}
     m.t+=dt;
-    if(m.state==='fly'){if(!F.paced){m.x-=150*dt;if(m.x<Hm.x+300){m.state='open';m.seen=true;m.t=0;sfx('pick');}}}
-    else if(m.state==='open'){if(!F.paced){m.x-=50*dt;if(m.x<Hm.x+120)replyArrives(m);}}
+    // One at a time still moves (Joonas 20.11.: the fight was better when the daggers really came at you); it is just slower and single file.
+    var sp=F.paced?0.55:1;
+    if(m.state==='fly'){m.x-=150*sp*dt;if(m.x<Hm.x+300){m.state='open';m.seen=true;m.t=0;sfx('pick');}}
+    else if(m.state==='open'){if(!F.paced){m.x-=50*dt;if(m.x<Hm.x+120)replyArrives(m);}}   // an opened reply waits for its reader in single file
     else if(m.state==='hit'){if(m.t>1.7)m.done=true;}
     else if(m.state==='swatted'){m.x+=m.vx*dt;m.y+=m.vy*dt;m.vy+=700*dt;m.rot+=10*dt;if(m.t>1.1)m.done=true;}
   });
@@ -3152,14 +3219,25 @@ function drawDish(){
   ctx.strokeStyle='#7a5c3a';ctx.lineWidth=4;ctx.lineCap='round';line(bx,by,bx+22,by+26);ctx.fillStyle='#e2b04a';circ(bx,by,6);ctx.fill();
   if(!RM){ctx.fillStyle='rgba(220,235,255,.7)';for(i=0;i<4;i++){circ(px-22+((i*19+d.t*40)%46),py-34-((d.t*30+i*11)%24),2.5);ctx.fill();}}
 }
+// The kitchen: cabinets and a fridge on the right-hand wall, and the counter in the FOREGROUND, between the human and us.
+// Before, the counter stood against the wall next to the sofa and the shadow fell across the sink (Joonas 20.11.).
 function kitchen(){
-  ctx.fillStyle='#4d566e';rr(330,300,260,95,6);ctx.fill();
-  ctx.fillStyle='#c9c2b0';ctx.fillRect(320,292,280,12);
-  ctx.fillStyle='#2a2f3d';rr(430,295,90,7,3);ctx.fill();
-  ctx.strokeStyle='#c9c2b0';ctx.lineWidth=5;ctx.lineCap='round';line(476,292,476,262);line(476,262,500,262);
-  ctx.fillStyle='#e9e2cf';for(var i=0;i<3;i++){rr(352+i*10,260-i*2,8,34,2);ctx.fill();}
-  ctx.strokeStyle='#2a2f3d';ctx.lineWidth=2;line(460,312,460,388);
-  ctx.fillStyle='#e2b04a';circ(450,330,3);ctx.fill();circ(470,330,3);ctx.fill();
+  ctx.fillStyle='#39405a';ctx.fillRect(600,WALLY-170,360,170);                                          // tiled splash-back
+  ctx.strokeStyle='rgba(255,255,255,.06)';ctx.lineWidth=1;for(var y=WALLY-170;y<WALLY;y+=20)line(600,y,960,y);for(var x=600;x<960;x+=24)line(x,WALLY-170,x,WALLY);
+  ctx.fillStyle='#4d566e';for(var i=0;i<3;i++){rr(612+i*86,96,80,96,5);ctx.fill();}ctx.fillStyle='#c9c2b0';for(i=0;i<3;i++){rr(646+i*86,176,14,4,2);ctx.fill();}
+  ctx.fillStyle='#8f97a6';rr(868,120,84,WALLY-120+60,8);ctx.fill();ctx.fillStyle='#c9c2b0';rr(878,200,4,46,2);ctx.fill();rr(878,280,4,60,2);ctx.fill();   // fridge
+  ctx.fillStyle='#454d63';ctx.fillRect(600,WALLY-52,262,52);ctx.fillStyle='#c9c2b0';ctx.fillRect(596,WALLY-58,270,8);   // the back counter under the tiles
+  ctx.strokeStyle='#2a2f3d';ctx.lineWidth=2;line(686,WALLY-46,686,WALLY-2);line(774,WALLY-46,774,WALLY-2);
+  ctx.fillStyle='#e9e2cf';for(i=0;i<3;i++){rr(628+i*10,WALLY-92-i*2,8,34,2);ctx.fill();}                // plates drying on it
+}
+function kitchenFront(){
+  if(!G.kitchen||G.set!=='home'||G.human.gone)return;var cx=G.human.x+20;
+  ctx.fillStyle='#c9c2b0';ctx.fillRect(cx-170,FEETY-100,340,12);                                        // worktop
+  ctx.fillStyle='#4d566e';rr(cx-160,FEETY-88,320,90,4);ctx.fill();
+  ctx.fillStyle='#2a2f3d';rr(cx-6,FEETY-98,90,6,3);ctx.fill();                                           // the sink
+  ctx.strokeStyle='#c9c2b0';ctx.lineWidth=5;ctx.lineCap='round';line(cx+40,FEETY-100,cx+40,FEETY-128);line(cx+40,FEETY-128,cx+62,FEETY-128);
+  ctx.strokeStyle='#2a2f3d';ctx.lineWidth=2;line(cx,FEETY-80,cx,FEETY-6);line(cx-80,FEETY-80,cx-80,FEETY-6);line(cx+80,FEETY-80,cx+80,FEETY-6);
+  ctx.fillStyle='#e2b04a';for(var i=-1;i<3;i++){circ(cx-90+i*80+70,FEETY-60,3);ctx.fill();}
 }
 
 /* ---------- Lab: Sometime. ---------- */
@@ -3731,9 +3809,9 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   function(){G.morko.pose=null;shadowAway();},function(){G.tics.push(tic('z',G.human.x-70,WALLY-150,{life:2.2}));},{wait:1.6},
   ['N','Ekskyysmi is off duty. Nobody is reviewing anything.'],
   {who:'H',choice:[
-    {t:'Tell her about the umbrella.',f:function(){G.barStory='umbrella';},then:[['H','Can I tell you something odd? My shadow had a drink.'],['A','Your shadow.'],['H','With an umbrella. For cover.']]},
-    {t:'Tell her about the umbrella. With your arms.',f:function(){G.barStory='arms';},then:[['H','Okay. So. My shadow. Had a DRINK.'],['A','With what arms?'],['H','These arms. And an umbrella. For cover.']]},
-    {t:'Tell her everything. Starting in 2011.',f:function(){G.barStory='2011';},then:[['H','In 2011 I waved at someone who was waving at someone else.'],['A','No!'],['H','And tonight my shadow had a drink. With an umbrella.']]}
+    {t:'Tell her about the umbrella.',hush:1,f:function(){G.barStory='umbrella';},then:[['H','Can I tell you something odd? My shadow had a drink.'],['A','Your shadow.'],['H','With an umbrella. For cover.']]},
+    {t:'Tell her about the umbrella. With arms.',hush:1,f:function(){G.barStory='arms';},then:[['H','Okay. So. My shadow. Had a DRINK.'],['A','With what arms?'],['H','These arms. And an umbrella. For cover.']]},
+    {t:'Tell her everything. Starting with the wave.',hush:1,f:function(){G.barStory='2011';},then:[['H','In 2011 I waved at someone who was waving at someone else.'],['A','No!'],['H','And tonight my shadow had a drink. With an umbrella.']]}
   ]},
   ['A','That’s the best thing I’ve heard all week.'],
   ['T','Here’s the menu, if you want food.'],
@@ -3956,7 +4034,7 @@ function library(){
     for(var r=0;r<4;r++){var sy=84+r*74;ctx.fillStyle='#4f3626';ctx.fillRect(sx+8,sy,154,62);
       var bx=sx+11;for(i=0;bx<sx+154;i++){var bw=9+((i*7+j*5+r*3)%4)*3,bh=42+((i*5+r*7+j)%4)*5;if(bx+bw>sx+160)break;ctx.fillStyle=cols[(i*3+j+r*2)%cols.length];ctx.fillRect(bx,sy+62-bh,bw,bh);bx+=bw+2;}}}
   // window and a sign nobody needs
-  ctx.fillStyle='#f4eedb';rr(640,90,150,120,4);ctx.fill();ctx.fillStyle='#a9c0c4';ctx.fillRect(648,98,134,104);ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(715,98,715,202);
+  ctx.fillStyle='#f4eedb';rr(640,90,150,120,4);ctx.fill();ctx.fillStyle='#a9c0c4';ctx.fillRect(648,98,134,104);sky(648,98,134,104,false);ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(715,98,715,202);
   ctx.fillStyle='#2f6b4f';rr(820,110,110,44,6);ctx.fill();ctx.fillStyle='#fbf8ef';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('QUIET,',875,124);ctx.fillText('PLEASE',875,141);
   // the librarian stands behind her desk
   var L=g.lib||{};
@@ -4452,7 +4530,7 @@ function bubble(x,y,text,o){
   for(i=0;i<lines.length;i++){var ws=lines[i].split(' '),lw=0,wd=[];
     for(j=0;j<ws.length;j++){ctx.font=isLoud(ws[j])?em:base;var m=ctx.measureText(ws[j]+(j<ws.length-1?' ':'')).width;wd.push(m);lw+=m;}
     words.push(ws);widths.push(wd);w=Math.max(w,lw);}
-  w+=26;var h=lines.length*lh+16,pad=18/(VIEW.z||1),bx=clamp(x-w/2,Math.max(8,VIEW.l+pad),Math.min(W-8,VIEW.r-pad)-w),by=o.top!=null?o.top:Math.max(8,y-h-12);
+  w+=26;var h=lines.length*lh+16,pad=18/(VIEW.z||1),bx=clamp(x-w/2,Math.max(8,VIEW.l+pad),Math.min(W-8,VIEW.r-pad)-w),topPad=((COMPACT?46:10)+(G.boss?50:0))/(VIEW.z||1),by=o.top!=null?o.top:Math.max(VIEW.t+topPad,y-h-12);
   var fill=o.dark?'#14111d':'#fffdf6',ink=o.dark?'#f6f1e4':'#2b2733',hot=o.dark?'#ebbd79':'#2b2733';
   ctx.fillStyle=fill;ctx.strokeStyle=ink;ctx.lineWidth=k>1?3:2;rr(bx,by,w,h,10);ctx.fill();ctx.stroke();
   if(!o.noTail){var tx=clamp(x,bx+16,bx+w-16);ctx.beginPath();ctx.moveTo(tx-8,by+h-1);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h-1);ctx.closePath();ctx.fill();
@@ -4484,10 +4562,10 @@ function applyCamera(){
   if(!RM&&!G.cctv){sx=Math.sin(G.time*0.45)*5+Math.sin(G.time*83)*8*G.shake;sy=Math.sin(G.time*0.9)*2.6+Math.cos(G.time*71)*6*G.shake;}
   var fx=clamp(C.fx+sx,hw,W-hw),fy=clamp(C.fy+sy,hh,H-hh);
   ctx.translate(W/2,H/2);ctx.scale(z,z);ctx.translate(-fx,-fy);
-  VIEW.l=fx-hw;VIEW.r=fx+hw;VIEW.z=z;
+  VIEW.l=fx-hw;VIEW.r=fx+hw;VIEW.t=fy-hh;VIEW.z=z;
 }
 // What the camera shows, in world units: bubbles stay inside it (Joonas 20.11.: Eero's first bubble touched the edge).
-var VIEW={l:0,r:W,z:1};
+var VIEW={l:0,r:W,t:0,z:1};
 
 /* ================= drawing: break room ================= */
 // The lamp table stands on the floor in front of the wall, so the shadow on the wall goes behind it.
@@ -4505,7 +4583,7 @@ function room(flat,noFront){
   ctx.fillStyle='#899887';ctx.fillRect(-20,WALLY-6,W+40,6);
   ctx.strokeStyle='#697e7018';ctx.lineWidth=1;for(var f=0;f<8;f++)line(0,405+f*24,W,405+f*24);
   ctx.fillStyle='#f4eedb';rr(689,99,170,146,4);ctx.fill();ctx.fillStyle='#94ada7';ctx.fillRect(697,107,154,130);
-  ctx.fillStyle='#b5c6b7';ctx.beginPath();ctx.moveTo(697,201);ctx.lineTo(740,162);ctx.lineTo(790,205);ctx.lineTo(823,177);ctx.lineTo(851,198);ctx.lineTo(851,237);ctx.lineTo(697,237);ctx.fill();
+  ctx.fillStyle='#b5c6b7';ctx.beginPath();ctx.moveTo(697,201);ctx.lineTo(740,162);ctx.lineTo(790,205);ctx.lineTo(823,177);ctx.lineTo(851,198);ctx.lineTo(851,237);ctx.lineTo(697,237);ctx.fill();sky(697,107,154,130,false);   // birds in front of the far hills
   ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(774,107,774,237);line(697,172,851,172);
   ctx.fillStyle='#f4eedb';rr(682,239,184,9,3);ctx.fill();
   ctx.fillStyle='#64816a';ctx.beginPath();ctx.ellipse(67,323,13,31,-.4,0,Math.PI*2);ctx.ellipse(93,301,14,35,.3,0,Math.PI*2);ctx.ellipse(109,330,11,27,.7,0,Math.PI*2);ctx.fill();
@@ -4691,7 +4769,7 @@ function morkoBody(q){
   if(wk<0.98){ctx.fillStyle='rgba(20,16,30,'+(0.26*(1-wk))+')';ctx.beginPath();ctx.ellipse(Hm.x-12,FEETY+3,44,9,0,0,Math.PI*2);ctx.fill();}
   if(wk<0.02)return;
   ctx.fillStyle=mcol();
-  var noLink=G.epi&&G.epi.o&&G.epi.o.drive;   // montage drive: no floor shadow stretched from the car to the runner
+  var noLink=(G.epi&&G.epi.o&&G.epi.o.drive)||G.bed;   // no floor shadow from the car to the runner, nor across the bed (Joonas 20.11.)   // montage drive: no floor shadow stretched from the car to the runner
   ctx.globalAlpha=noLink?0:0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.baseX-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
   ctx.beginPath();ctx.moveTo(q.baseX-26*q.s,q.by);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.bx+q.shW*0.8,q.shY+6);ctx.lineTo(q.bx-q.shW*0.8,q.shY+6);ctx.closePath();ctx.fill();
   ctx.beginPath();ctx.ellipse(q.bx,q.shY+4,q.shW,Math.max(14,26*q.s),0,0,Math.PI*2);ctx.fill();
@@ -4950,7 +5028,7 @@ function pausedNote(){
 }
 function draw(){
   var g=G;
-  ctx.setTransform(SC,0,0,SC,0,0);VIEW.l=0;VIEW.r=W;VIEW.z=1;   // unzoomed until applyCamera says otherwise
+  ctx.setTransform(SC,0,0,SC,0,0);VIEW.l=0;VIEW.r=W;VIEW.t=0;VIEW.z=1;   // unzoomed until applyCamera says otherwise
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
   epiFilterOn();   // the closing montage is drawn soft (37-epilogue.js)
   if(g.chap){chapCard();if(paused)pausedNote();return;}
@@ -4968,6 +5046,7 @@ function draw(){
     if(g.human.gone&&g.finalFrame){var endQ=geom();morkoBody(endQ);morkoArms(endQ,handTargets(endQ));}
     if(g.human.gone)homeLamp();
     drawFight();
+    kitchenFront();
     drawDish();
     drawHotGlint();
     drawTics(0);

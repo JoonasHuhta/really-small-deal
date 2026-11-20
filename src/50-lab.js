@@ -178,7 +178,7 @@ function startFight(id){
 function currentReply(){return G.fight&&G.fight.msgs.find(function(m){return !m.done;});}
 function nextReply(){
   var m=currentReply();if(!m)return;
-  m.state='fly';m.x=G.human.x+360;m.y=205;m.t=0;
+  m.state='fly';m.x=Math.min(W+60,G.human.x+520);m.y=205;m.t=0;
 }
 function replyArrives(m){
   var g=G,Hm=g.human;m.state='hit';m.t=0;
@@ -216,8 +216,10 @@ function stepFight(dt){
     if(m.done)return;all=false;
     if(m.state==='wait'){if(!F.paced&&F.t>=m.at)m.state='fly';return;}
     m.t+=dt;
-    if(m.state==='fly'){if(!F.paced){m.x-=150*dt;if(m.x<Hm.x+300){m.state='open';m.seen=true;m.t=0;sfx('pick');}}}
-    else if(m.state==='open'){if(!F.paced){m.x-=50*dt;if(m.x<Hm.x+120)replyArrives(m);}}
+    // One at a time still moves (Joonas 20.11.: the fight was better when the daggers really came at you); it is just slower and single file.
+    var sp=F.paced?0.55:1;
+    if(m.state==='fly'){m.x-=150*sp*dt;if(m.x<Hm.x+300){m.state='open';m.seen=true;m.t=0;sfx('pick');}}
+    else if(m.state==='open'){if(!F.paced){m.x-=50*dt;if(m.x<Hm.x+120)replyArrives(m);}}   // an opened reply waits for its reader in single file
     else if(m.state==='hit'){if(m.t>1.7)m.done=true;}
     else if(m.state==='swatted'){m.x+=m.vx*dt;m.y+=m.vy*dt;m.vy+=700*dt;m.rot+=10*dt;if(m.t>1.1)m.done=true;}
   });

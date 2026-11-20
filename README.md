@@ -14,6 +14,17 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.63.0 (Claude, 20.11.2026): **kampaus, osa 2 (Joonaksen kuvat).**
+- Puhekuplat eivät enää mene kuvan yläreunan yli (zoomattu kamera, puhelimen valikkonappi) eivätkä pomotaistelun palkin alle.
+- Pomotaistelu: myös ”One at a time” -tilassa tikarit lentävät kohti (hitaammin ja jonossa); avattu viesti odottaa lukijaansa kuten ennen.
+- Baari: ihmisen valinnat ovat näyttämöohjeita, eikä niitä enää toisteta ihmisen repliikkinä (”Tell her everything…” näytti ihmisen sanomalta). ”2011” → ”Starting with the wave.”
+- Keittiö: oikea keittiö (kaapit, jääkaappi, laatat, takataso), ja tiskipöytä on etualalla ihmisen ja kameran välissä. Varjo ei enää osu tiskialtaaseen, eikä sohvaa ole keittiössä.
+- Nothing: pyykkikori ei ole lampun alla. Quiet: pöytäkuva on keittiössä (ei sohvan ja lampun päällä).
+- Sängyn kohtaus (ryhmächatin loppu): ei lattiavarjoa ihmisen ja Ekskyysmin välillä sängyn yli.
+- Vaihtoehdot: sarakkeet määräytyvät vaihtoehtojen määrästä ilman :has-valitsinta, joten neljäs vaihtoehto ei enää valu ruudun yli vanhemmissa Android-näkymissä.
+- Vastaanotto: lomakkeessa yksi vastattava kysymys lisää. Vastaanoton jälkeen uusi kotikohtaus: mitä apu on (pieni paperipussi, tuoli joka toinen tiistai), mitä se tekee (”turns the volume down. Not off. Down.”, tiedostot tarkistetaan), mitä se ei tee (”It doesn’t make you go away.”) ja onko ihminen tyytyväinen (”Some days are easier. Not all of them.” / ”I’m glad I went.”). Pelaaja valitsee, mitä Ekskyysmi kysyy ensin. Ei lääkkeiden eikä ammattien nimiä.
+- Elävämpi maailma: päivällä ikkunoiden takana lentää välillä lintu tai kaksi, yöllä vilkkuu lentokoneen valo ja joskus tähdenlento; lampun valossa leijuu pölyä. Kaikki pois päältä Less motion -asetuksella.
+
 Versio 0.62.0 (Claude, 20.11.2026): **kampaus, osa 1.**
 - Kotimatka: enintään kolme vaihtoehtoa kerrallaan ja kaksi aihetta. Todellinen havainto (tuo Sannan vastauksen) on aina tarjolla; Eeron näykkäisyn jälkeen anteeksipyyntö tulee toisena.
 - Pisimmät pelkät klikkausjaksot saivat valinnan: *Night shift* (50 riviä → valinta ”Explain about the door.” / ”Admit it: I didn’t know I was allowed out.”) ja perjantai (37 riviä → Sannan ”You okay?” -kohtaan: ”Say ’nothing’.” / ”Say it’s something. A small something.”; ihminen päättää silti itse).
