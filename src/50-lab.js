@@ -322,7 +322,6 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   function(){G.boss.friendly=true;G.boss.name='THE GROUP CHAT';sfx('turn');},
   ['N','BOSS DEFEATED. Correction: there was no boss.'],
   function(){return G.lab?[]:[['S','Year two. Somebody laughed.'],['H','This time I left it up.'],['S','…I’ll update the file.'],function(){var g=G;g.cards.push({kind:'good',year:'TODAY',text:'Shared a drawing. Left it up.',t:0,life:null,x:790,y:178,rot:-0.03});sfx('card');},{wait:2.2},closeArchive].concat(drawerReveal());},
-  ['S','I’m keeping the headband.'],
   nightlightEnding   // the lamp and the bird share the final image; the reader decides when to leave
  ]);}
 // The other drawer (TYOSUUNNITELMA.md, section 2). It does not change what Ekskyysmi did. It changes what it kept.

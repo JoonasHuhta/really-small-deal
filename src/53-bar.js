@@ -224,6 +224,9 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ]},
   function(){if(G.pie){G.pie=null;G.hud=G.hudWas;}addLived('one good evening, audited',150);},
   set({s:1.1,mood:'care'}),
+  ['S','I’ve put tomorrow in the calendar. Lying on the floor. All day.'],
+  ['H','We had a nice time.'],
+  ['S','That’s why. Nice is still a lot.'],
   ['S','Next time I’m staying awake.'],
   ['H','Next time you’re having two.'],
   ['S','…Of the shadow ones.']

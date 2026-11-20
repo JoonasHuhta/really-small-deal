@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.60.0 (Claude, 20.11.2026): **katsauksen (KATSAUS.md) pienet korjaukset; kaikki täydennykset kirjattu TYOSUUNNITELMA §13:een (K1–K25).**
+- Jatkuvuus: arkisto on nyt ”since the drawing” eikä ”since 2011” (ihmisen ikä jää auki). Keskiviikon diat 23:15, ettei kahdessa yökohtauksessa ole samaa kellonaikaa.
+- Ryhmächatin kohtaus päättyy lauseeseen ”A crack. Leave it open a crack.”
+- Sanattomat tauot torstain ”That one landed.” ja perjantain ”smaller once it’s out” jälkeen.
+- Uutta: pesulappu tiistain palaverissa (aistikuorma madaltaa kynnystä, ”Two crises.”), baarin jälkeen ”Nice is still a lot.” (hyväkin rasittaa), perjantaina Ekskyysmi huomaa Sannan varovaisen ”fine”-sanan ja ihminen sanoo: ”when I say ’fine’, it’s the good kind.”
+- About: ”Some moments may land close.”
+
 Versio 0.59.0 (Claude, 20.11.2026): **kuitin WHAT IT FELT LIKE -osio uusittu Joonaksen kokemusten pohjalta.**
 - Ensin aistit: `COLLAR LABEL, FELT … ALL DAY`, `CHEWING, NEXT TO ME … DEAFENING`, `PERFUME, IN THE LIFT … ALL THE AIR`. Sitten pää: `TABS OPEN, IN HEAD … 37` ja pisin uudelleenkelaus. Sitten muut ihmiset: `“DO THEY STILL LIKE ME?” … ×23` / *answer so far: yes.*, `FACE HELD UP`, `RECOVERY AFTER ONE LUNCH … ONE EVENING`, `BRAVE THINGS NOBODY SAW`.
 - Korjattu: rivi ”first time this week” valui kuitin reunan yli, nyt *a first.*

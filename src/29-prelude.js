@@ -136,7 +136,7 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   ['W','That was “not now”. It’s the only one I’m allowed to drop.'],
   ['S','It LANDED.',{loud:1}],
   ['W','They do. Sorry. Ten.'],
-  ['S','You drop things on PURPOSE? I have never dropped anything. I have all of it. Since 2011.'],
+  ['S','You drop things on PURPOSE? I have never dropped anything. I have all of it. Since the drawing.'],
   ['W','Heavy?'],
   {wait:1.2},
   set({mood:'worry'}),

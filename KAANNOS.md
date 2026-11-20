@@ -28,3 +28,11 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
 - Rivit ovat kuitin kieltä: lyhyt nimike vasemmalle, arvo oikealle, ei verbejä. Kaksi riviä mahtuu noin 42 merkkiin yhteensä.
 - Aistirivit (`COLLAR LABEL, FELT`, `CHEWING, NEXT TO ME`, `PERFUME, IN THE LIFT`) ovat konkreettisia tarkoituksella: älä yleistä ”aistikuormitukseksi”.
 - `“DO THEY STILL LIKE ME?” … ×23` / *answer so far: yes.*: lainausmerkit kuuluvat ajatukseen, ja ”so far” jättää pelon todeksi mutta vastauksen myönteiseksi.
+
+## Lokalisointi, ei käännös (KATSAUS.md §10)
+- **”You too”** (Eerolle, menulle): suomeksi tilanne on valmiina kansallisena noloutena. Tarjoilija: ”Hyvää ruokahalua!” → ”Kiitos, samoin.” Käytä tätä, älä käännä sanatarkasti. Ruotsiksi: ”Smaklig måltid!” → ”Tack, detsamma.”
+- **”oh, hi.”** → ”ai, moi.” / ruotsiksi ”jaha, hej.” Piste säilyy, koska vitsi on pisteessä.
+- **Kirjaston ”fine”** (sakko / ihan ok) ei käänny. Kirjoita uudelleen: esim. suomeksi Ekskyysmi kuulee ”maksu” → ”maksaa itsensä?” tai rakentaa vitsi ”myöhästymismaksu”-sanan pituuden ympärille. Säilytä rakenne: pelko → odottamaton arkinen merkitys → helpotus → uusi pikkupelko (”In public. In front of the large-print section.”).
+- **Ekskyysmi**: nimi on suomalaisittain kirjoitettu ”excuse me”. Suomeksi merkitys aukeaa heti, älä selitä. Ruotsiksi nimi pysyy; tarvittaessa yksi vihjerivi (TYOSUUNNITELMA K18).
+- **”For the record”** on Ekskyysmin tunnuslause ja toistuu (myös ihmisen suussa perjantaina ja hiljaisena päivänä). Valitse yksi vakiokäännös (”Pöytäkirjaan:” / ”Till protokollet:”) ja pidä se kaikkialla.
+- **”since the drawing”**: ei vuosilukua. Älä lisää.

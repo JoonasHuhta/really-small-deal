@@ -12,7 +12,7 @@ function showAbout(){
   showOv('<div class="eyebrow">About</div><h2>What is this?</h2>'+
    '<p>You play Ekskyysmi, the overprotective shadow of a perfectly ordinary human. The human has one small plan: ask Sanna from work to lunch. You have concerns.</p>'+
    '<p>About 45 minutes. Read at your own pace: almost nothing is timed. The one thing that is, is unfair on purpose. Conversations don’t wait either.</p>'+
-   '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice.</p>'+
+   '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice. Some moments may land close.</p>'+
    '<p class="small">Alpha'+gameVersion()+', still changing. Made by Joonas Huhta (MoshBitSurfers).</p>'+
    '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
 }

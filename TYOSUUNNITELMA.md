@@ -264,3 +264,41 @@ Ekskyysmin keinot ovat vitsejä vain niin kauan kuin ne ovat harvinaisia. Ennen 
 
 Sääntö: jos kohtauksessa on jo pito tai minipeli, sen jälkeen ei tarvita sekä korttia että leimaa. Yksi alleviivaus riittää.
 
+---
+
+## 13. Katsauksen täydennykset (Joonas hyväksyi kaikki 20.11.2026)
+
+Perustelut ovat tiedostossa KATSAUS.md (kohta suluissa). Jokainen uusi kohtaus tarkistetaan työkalubudjettia (§12) vasten. Peli ei mainitse tutkimuksia eikä neuvo: ilmiö näytetään.
+
+| ID | Tehtävä | Koko | Tila |
+|---|---|---|---|
+| ✔ **K1** | ”since 2011” → ”since the drawing” (3 kohtaa; 2011 jää yksittäisen muiston vuodeksi). Keskiviikon diat 23:40 → 23:15. | S | 0.60.0 |
+| ✔ **K2** | Ryhmächatin kohtaus päättyy lauseeseen ”A crack. Leave it open a crack.” (päänauharivi pois). Loppunäytön kuitti jää jaettavaksi versioksi (kuva/teksti), epilogin kuitti on elokuvaversio. | S | 0.60.0 |
+| ✔ **K3** | Sanattomat tauot: torstain ”That one landed.” jälkeen ja perjantain ”smaller once it’s out” jälkeen (piirustusrivin jälkeen tauko oli jo). | S | 0.60.0 |
+| **K4** | Ulkopuolinen kortti, jossa varjon puuttuminen sanotaan ääneen (illusion of transparency). Havainto: kortit eivät koskaan piirrä varjoa, eli sääntö on jo kuvassa. Tarvitaan vain yksi kohta, jossa Ekskyysmi huomaa sen: ”…I’ve been doing all this for an audience of none?” Paras paikka: maanantain ”WHAT THE OTHERS SAW” venytyksen jälkeen, kun varjo oli seinän kokoinen. | S–M | |
+| ✔ **K5** | Havaitseminen huolenpitona: perjantaina Ekskyysmi huomaa Sannan varovaisen ”fine”-sanan, ihminen: ”For the record: when I say ’fine’, it’s the good kind.” | S | 0.60.0 |
+| ✔ **K6a** | Palautuminen: baarin loppuun ”Nice is still a lot.” | S | 0.60.0 |
+| ✔ **K6b** | Aistit 1/3: pesulappu tiistain palaverissa (”One crisis at a time. …Two crises.”). | S | 0.60.0 |
+| **K6c** | Aistit 2/3: maiskutus perjantain lounaalla tai lounaskohtauksessa; Ekskyysmin huomio pirstoutuu kesken Sannan lauseen. Kynnysajatus: ”The cup was full before she said anything. She just added a drop.” | S | |
+| **K6d** | Aistit 3/3: hajuvesi hississä (hissi on vain epilogissa; joko uusi pieni hetki tai epilogin hissikuvan rivi). | S–M | |
+| **K7** | *Rewind* lisäkohtaukseksi tai sen paras aines (”Memory is a living document.”, sarvet) tiistain klo 3 -kohtaukseen. Ratkaisee suurennusten toiston ja kaksi yörumina-kohtausta peräkkäin. | M | |
+| **K8** | *The reply*: impulsiivinen puolustusviesti (”FINE. Have fun without me.” lähtee ennen kuin pelaaja ehtii estää), häpeä, peruutuspaniikki, yhden rivin anteeksipyyntö. Piikikäs ääriviiva Ekskyysmille. RSD:n ruma puoli. | M | |
+| **K9** | Monta valoa, monta varjoa: baarin värivaloissa Ekskyysmi hajoaa 3–4 varjoksi, jotka puhuvat yhtä aikaa (”TABS OPEN, IN HEAD” kuvana). | M | |
+| **K10** | *The ball*: oikea ulkopuolelle jääminen ilman käännettä. Lounaspöytä, mökkireissu, jolle ihmistä ei kutsuttu; keskustelu pallona (`toss`), kortti ei käännä (”They planned it in a car. You weren’t in the car.”). Pelaaja voi heittää pallon itse (”How was it?”). Paikka: toisen osan loppupuoli. Antaa toiselle osalle jännitteen. | L | |
+| **K11** | *Stay* hyvässä hetkessä: viimeinen pito on kauniissa hetkessä, ei kurjassa (hyvien hetkien pelko, toinen laatikko). | M | |
+| **K12** | Merkkijonotaulukko en/fi/sv ennen uutta sisältöä: rivitunnisteet, `lang/*.json`, avaintesti, `audit_layout` kielikohtaisesti, myös kankaalle piirretty teksti (kuitti, leimat, kortit). | L | |
+| **K13** | Toinen laatikko näkyviin toisessa osassa (Ekskyysmi istuu laatikon päällä *Night shiftissä*). | S | |
+| **K14** | Yksi suurennus käännetään: totuus on *parempi* kuin Ekskyysmi kuvitteli, ei vain arkinen. | S–M | |
+| **K15** | Ihminen vähemmän terapeutti: yksi oivallus Ekskyysmille itselleen tai Sannan varjolle; tarkista ”That’s the good half…” pelaajatestissä. | S | |
+| **K16** | ADHD-tekstuuri: ihminen keskeyttää palaverissa innostuneena → Ekskyysmille materiaalia koko illaksi (impulsiivisuus ja RSD yhtenä silmukkana). | S–M | |
+| **K17** | Ekskyysmin valo-ideat: ilta-aurinko venyttää ilman pelkoa (”I’m not scared. It’s just five o’clock.”); kädet kohtaavat vain varjoina, kun ihminen nostaa kätensä. | M | |
+| **K18** | Nimen vitsi: ”Excuse me.” / ”…That’s my name.” / ”I know. It suits you.” (patteri tai About). | S | |
+| **K19** | *Night shift* -vuorovaikutus: auton valo pyyhkii huoneen, pelaaja pitelee varjoa valossa (”a short holiday”). | M | |
+| **K20** | Ekskyysmin paikan vahvistus: ”You’re still on the wall. That doesn’t change.” | S | |
+| **K21** | Pelaajatesti molemmille yleisöille (tunnistaminen / ymmärrys), kysymys NT-pelaajalle: ”Mitä ymmärsit, mitä et ennen ymmärtänyt?” Lisää §9.7:n kysymyksiin. | Joonas | |
+| **K22** | Saavutettavuus: tekstikoko, tekstin nopeus; aikarajoitettujen kohtien epäonnistuminen ei saa näyttää pelaajan virheeltä. | M | |
+| ✔ **K23** | Sisältöhuomautus About-sivulle (§9.1): ”Some moments may land close.” | S | 0.60.0 |
+| ✔ **K24** | Lokalisointimuistiinpanot KAANNOS.md:hen: ”You too” → ”Kiitos, samoin.” (hyvää ruokahalua), ”oh, hi.” → ”ai, moi.” / ”jaha, hej.”, kirjaston ”fine” kirjoitetaan uudelleen. | S | 0.60.0 |
+| **K25** | Koulupaketti (myöhemmin): samat ilmiöt yläkoulun arjessa (parien valinta, luokan chat, ”voitko jäädä tunnin jälkeen”). Vain muistiin. | – | idea |
+
+**Järjestys:** K4 → K6c → K13 → K18 → K20 → K23 → K24 (pienet) → K7 → K14 → K15 (tarina) → K8 → K10 → K9 → K11 (isot, yksi kerrallaan, pelaajatesti välissä) → K12 ennen kuin sisältöä lisätään paljon.

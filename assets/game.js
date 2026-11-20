@@ -703,7 +703,7 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   ['W','That was “not now”. It’s the only one I’m allowed to drop.'],
   ['S','It LANDED.',{loud:1}],
   ['W','They do. Sorry. Ten.'],
-  ['S','You drop things on PURPOSE? I have never dropped anything. I have all of it. Since 2011.'],
+  ['S','You drop things on PURPOSE? I have never dropped anything. I have all of it. Since the drawing.'],
   ['W','Heavy?'],
   {wait:1.2},
   set({mood:'worry'}),
@@ -1041,6 +1041,8 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','And yet nobody has ever been rejected in their sleep. You’re welcome.',{look:'pleased'}],
   scene({set:'office',clock:9*3600,cowR:1,s:1.3,mood:'alert'}),set({sweat:1}),
   addTic('The next morning, 9:00. The quick chat.',230,62,{life:3.4,size:19}),{wait:1.6},
+  ['H','This label has been scratching my neck since eight.',{quiet:1}],
+  ['S','One crisis at a time. …Two crises.'],
   ['H','Can you just… handle this one?',{quiet:1}],
   ['S','Full authority?'],
   ['S','I have waited my whole life for that sentence.',{look:'pleased'}],
@@ -1123,7 +1125,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   ['S','Liked AND tired. The classic combination.',{look:'pleased'}]
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 minutes',cap:'Someone helpful. Possibly too helpful. Nobody checked.',anim:'nod'}),[
   scene({set:'home',clock:23*3600+40*60}),function(){G.human.grin=0;},
-  ['N','23:40. Eero’s slides.'],
+  ['N','23:15. Eero’s slides.'],
   ['H','It’s nearly midnight and I’m doing Eero’s slides.'],
   extraWorkCallback,
   ['S','And nobody is angry with us.'],
@@ -1209,6 +1211,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   shadowHit,set({sweat:0}),{wait:2.2},
   ['S','…That one landed.'],
   function(){return G.metSannaShadow?[['S','With a full stop.']]:[];},
+  {wait:1.5},   // KATSAUS 3: room to think after the hardest line
   set({face:'down'}),
   ['H','Sorry.'],
   fib,
@@ -1303,7 +1306,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','I know they are.'],
   stampPutAway,{wait:0.6},
   {choice:[
-    {t:'Read the verdict anyway. Quietly.',m:'worst',then:[['S','For the record: she hates us.',{quiet:1}],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.',{look:'soft'}]]},
+    {t:'Read the verdict anyway. Quietly.',m:'worst',then:[['S','For the record: she hates us.',{quiet:1}],['H','Noted.'],['S','That’s it? “Noted”?'],['H','You said it. I heard it. We’re still standing here.'],['S','…Huh. It’s smaller once it’s out.',{look:'soft'}],{wait:1.5}]},
     {t:'Hold the verdict. Count to two.',m:'stay',then:[['S','One.'],['S','Two.'],['S','It’s been two seconds and nothing has happened to us.'],['H','I wasn’t sure either.'],['S','I’ll keep the counting finger ready.']]},
     {t:'Stay. Wobble visibly.',m:'stay',then:[wobbleOn,['S','I’m wobbling.'],['H','I can see that.'],['S','In front of people.'],['H','They can’t see you.'],['S','It’s the principle.'],wobbleOff]},
     hush([{wait:1.4},['H','…Did you just not say anything?'],['S','I’m trying it.',{quiet:1}],['S','I can hear the printer. Has it always been this loud?']])
@@ -1339,6 +1342,9 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['A','I was going to ask you on Monday. You looked busy.'],keep('asked'),
   shot('crash'),aside(['S','Looking busy was my idea.']),
   ['A','So we’ve been being polite AT each other. For a year.'],
+  ['S','She says “fine” carefully. Like it might break. Tell her.',{quiet:1}],
+  ['H','For the record: when I say “fine”, it’s the good kind.'],
+  ['A','…The good kind. Noted.'],
   shot('wide'),
   mondayRepair,
   set({bFace:-1,mood:'alert'}),
@@ -2377,7 +2383,7 @@ function labForm(){
   ]},
   ['S','Fine. “Very often.” It’s a strength.'],
   formQ(1),
-  ['S','Longer than I’d LIKE? I like having them. I’ve had some since 2011.',{look:'pleased'}],
+  ['S','Longer than I’d LIKE? I like having them. I’ve had some since the drawing.',{look:'pleased'}],
   formTick(1,2),
   ['S','You didn’t even ask me.'],
   ['H','I didn’t need to.'],
@@ -2653,7 +2659,7 @@ function labNight(){return labScene({set:'home',title:'Night shift.',plan:'Sleep
   ['S','It IS a threat. It has no date.'],
   ['Y','That’s what I SAID.'],
   ['W','What do you do with yours? The things.'],
-  ['S','I file them. Since 2011.'],
+  ['S','I file them. Since the drawing.'],
   ['W','All of them?'],
   ['S','All of them.'],
   ['W','Heavy.'],
@@ -3013,7 +3019,6 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   function(){G.boss.friendly=true;G.boss.name='THE GROUP CHAT';sfx('turn');},
   ['N','BOSS DEFEATED. Correction: there was no boss.'],
   function(){return G.lab?[]:[['S','Year two. Somebody laughed.'],['H','This time I left it up.'],['S','…I’ll update the file.'],function(){var g=G;g.cards.push({kind:'good',year:'TODAY',text:'Shared a drawing. Left it up.',t:0,life:null,x:790,y:178,rot:-0.03});sfx('card');},{wait:2.2},closeArchive].concat(drawerReveal());},
-  ['S','I’m keeping the headband.'],
   nightlightEnding   // the lamp and the bird share the final image; the reader decides when to leave
  ]);}
 // The other drawer (TYOSUUNNITELMA.md, section 2). It does not change what Ekskyysmi did. It changes what it kept.
@@ -3720,6 +3725,9 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   ]},
   function(){if(G.pie){G.pie=null;G.hud=G.hudWas;}addLived('one good evening, audited',150);},
   set({s:1.1,mood:'care'}),
+  ['S','I’ve put tomorrow in the calendar. Lying on the floor. All day.'],
+  ['H','We had a nice time.'],
+  ['S','That’s why. Nice is still a lot.'],
   ['S','Next time I’m staying awake.'],
   ['H','Next time you’re having two.'],
   ['S','…Of the shadow ones.']
@@ -4954,7 +4962,7 @@ function showAbout(){
   showOv('<div class="eyebrow">About</div><h2>What is this?</h2>'+
    '<p>You play Ekskyysmi, the overprotective shadow of a perfectly ordinary human. The human has one small plan: ask Sanna from work to lunch. You have concerns.</p>'+
    '<p>About 45 minutes. Read at your own pace: almost nothing is timed. The one thing that is, is unfair on purpose. Conversations don’t wait either.</p>'+
-   '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice.</p>'+
+   '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice. Some moments may land close.</p>'+
    '<p class="small">Alpha'+gameVersion()+', still changing. Made by Joonas Huhta (MoshBitSurfers).</p>'+
    '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
 }
