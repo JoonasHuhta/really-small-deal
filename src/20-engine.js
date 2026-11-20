@@ -285,7 +285,7 @@ function archive(kind,items){return function(){
   var g=G;for(var i=0;i<items.length;i++)g.cards.push({kind:kind,year:items[i][0],text:items[i][1],t:-i*0.45,life:null,
     x:kind==='good'?790:170+i*310,y:kind==='good'?178:150+(i%2)*46,rot:kind==='good'?-0.03:((i%2?1:-1)*(0.06+i*0.02))});
   if(kind==='bad')addLived('archive visits',LIVED.archive);
-  sfx('card');
+  if(kind!=='bad')sfx('card');   // red cards make their own bang as each one lands (update loop)
 };}
 // The other drawer. All week Ekskyysmi files the good things it calls irrelevant. Nobody sees where. (TYOSUUNNITELMA.md, section 2)
 function keep(id){return function(){var k=G.kept||(G.kept=[]);if(k.indexOf(id)<0)k.push(id);};}

@@ -123,12 +123,23 @@ function speak(who,text,o){
   }
   if(n)talkDuck(last+0.05);
 }
+// Filtered noise with a falling tail: the body of every crash, slosh and crack (Joonas 20.11.: the red cards and the mug need a proper bang).
+function noise(t0,dur,vol,type,freq,q){var a=AC;if(!a)return;try{var len=Math.max(1,Math.ceil(a.sampleRate*dur)),b=a.createBuffer(1,len,a.sampleRate),d=b.getChannelData(0);
+  for(var i=0;i<len;i++){var e=1-i/len;d[i]=(Math.random()*2-1)*e*e;}
+  var s=a.createBufferSource();s.buffer=b;var f=a.createBiquadFilter();f.type=type||'bandpass';f.frequency.value=freq||1000;f.Q.value=q||1;var g=a.createGain();g.gain.value=vol;s.connect(f);f.connect(g);g.connect(BUS);s.start(t0);}catch(e){}}
 function sfx(k){if(G&&G.epi)return;   // the epilogue is the song alone: no effects, no ducking
 
   var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;
   if(k==='hit'){duckMusic();tone(120,t,0.4,'sine',0.24,42);tone(900,t,0.06,'square',0.025,300);for(var hb=0;hb<3;hb++){tone(62,t+0.6+hb*0.75,0.13,'sine',0.14-hb*0.03);tone(54,t+0.78+hb*0.75,0.13,'sine',0.1-hb*0.02);}}
   else if(k==='rewind'){for(var rw=0;rw<7;rw++)tone(1500-rw*120,t+rw*0.045,0.04,'square',0.016,1700-rw*120);tone(90,t+0.36,0.12,'sine',0.06);}
   else if(k==='car'){tone(70,t,1.6,'sawtooth',0.02,140);tone(140,t+0.7,0.9,'sine',0.03,60);}
+  else if(k==='slam'){duckMusic();tone(70,t,0.38,'sine',0.24,36);noise(t,0.26,0.4,'lowpass',1500,0.7);tone(190,t,0.08,'square',0.035,90);}   // a red card hits the wall
+  else if(k==='sipOut'){tone(640,t,0.07,'triangle',0.07,470);noise(t+0.02,0.2,0.14,'bandpass',850,2.2);tone(96,t,0.14,'sine',0.1,58);}   // the mug drops a level: a clunk and a slosh
+  else if(k==='pourIn'){for(var pi=0;pi<5;pi++)tone(300+pi*68,t+pi*0.065,0.05,'sine',0.045,350+pi*70);noise(t,0.4,0.05,'bandpass',620,1.4);}   // the mug fills: a small gurgle upwards
+  else if(k==='crack'){noise(t,0.09,0.32,'highpass',3200,0.7);tone(2300,t,0.05,'square',0.03,900);}
+  else if(k==='shatter'){duckMusic();tone(62,t,0.55,'sine',0.32,30);noise(t,0.8,0.5,'bandpass',2600,0.8);noise(t+0.05,0.4,0.25,'lowpass',700,0.8);
+    for(var si=0;si<10;si++)tone(2300+((si*577)%1900),t+0.03+si*0.04,0.09,'triangle',0.035,1700);}
+  else if(k==='glue'){tone(523,t,0.45,'sine',0.045);tone(784,t+0.22,0.55,'sine',0.04);tone(1046,t+0.45,0.6,'sine',0.03);}
   else if(k==='step'||k==='step2'){var sf=k==='step'?1:0.9;tone(105*sf,t,0.08,'sine',0.045,58*sf);tone(1500*sf,t,0.014,'triangle',0.005,900);}   // soft shoes on a hard floor, left and right a little different
   else if(k==='pop'){tone(380,t,0.05,'sine',0.035,720);}
   else if(k==='popS'){tone(170,t,0.07,'sine',0.05,310);}
@@ -441,7 +452,7 @@ function archive(kind,items){return function(){
   var g=G;for(var i=0;i<items.length;i++)g.cards.push({kind:kind,year:items[i][0],text:items[i][1],t:-i*0.45,life:null,
     x:kind==='good'?790:170+i*310,y:kind==='good'?178:150+(i%2)*46,rot:kind==='good'?-0.03:((i%2?1:-1)*(0.06+i*0.02))});
   if(kind==='bad')addLived('archive visits',LIVED.archive);
-  sfx('card');
+  if(kind!=='bad')sfx('card');   // red cards make their own bang as each one lands (update loop)
 };}
 // The other drawer. All week Ekskyysmi files the good things it calls irrelevant. Nobody sees where. (TYOSUUNNITELMA.md, section 2)
 function keep(id){return function(){var k=G.kept||(G.kept=[]);if(k.indexOf(id)<0)k.push(id);};}
@@ -987,7 +998,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.mugQuiet=false;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -1184,12 +1195,12 @@ var SEEN={
     r:[['P','Sanna: “??? to you too! Phone died. 7?”'],['S','She bit back. Affectionately. Is that allowed?',{look:'squint'}]]}
 };
 function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock:17*3600+30*60,snacks:1}).concat([
-  countBags,{wait:2.8},
-  ['S','Snacks: eleven bags. Car: fuelled. Us: early. I have no notes.',{look:'pleased'}],
+  mugOn(3),hat('party'),countBags,{wait:2.8},
+  ['S','Snacks: eleven bags. Car: fuelled. Us: early. Hat: festive. I have no notes.',{look:'pleased'}],
   ['P','You: “What time tonight? I’ve got the snacks.”'],
   ['P','Seen 17:31.'],
   {wait:1.0},typingDots(2.4),
-  hit(0.6,'P'),set({sweat:0.6}),archive('bad',[['2009','Texted “haha”. Got back “ok”.'],['2018','Group chat went silent after my message. Six minutes.'],['2023','“We should hang out sometime!” We did not.']]),{wait:1.4},['N','The archive, sorted by silence.'],closeArchive,
+  hit(0.6,'P'),drain(1,'seen. no reply.'),set({sweat:0.6}),archive('bad',[['2009','Texted “haha”. Got back “ok”.'],['2018','Group chat went silent after my message. Six minutes.'],['2023','“We should hang out sometime!” We did not.']]),{wait:1.4},['N','The archive, sorted by silence.'],closeArchive,
   ['S','“Seen.”',{look:'stunned'}],
   ['S','She has SEEN it. With her eyes. And chosen silence.'],
   ['S','And she TYPED. I saw the dots. Then she UN-typed.',{look:'stunned'}],
@@ -1209,7 +1220,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','TWENTY-ONE MINUTES. Thank you. I’ve drafted some follow-ups.'],
   {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,m:SEEN[k].m,filed:1,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};});}},
   function(){G.clock=18*3600+40*60;},
-  ['N','18:40. Still nothing.'],
+  ['N','18:40. Still nothing.'],drain(1,'an hour of nothing'),
   set({s:2.5,mood:'stern',anx:0.8}),
   ['S','She hates us. Eero hates us. Riitta wants a shorter you. I’ve run the numbers. It’s unanimous.'],
   // The turn has a physical trigger (lab clone “The bag.”, 0.47): a whole week of holding the face, then a bag that won’t open.
@@ -1218,11 +1229,14 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   {wait:0.9},crumbs,hit(0.9,'P'),
   ['N','EASY OPEN. All of it. Everywhere.'],
   ['S','Floor crisps are still crisps, if we—'],
-  ['H','Stop.',{loud:1}],
+  // The meltdown (Joonas 20.11.: meltdowns are real). The last sip goes, the mug breaks, the hat flies. Alone at home, at the shadow, never at a person.
+  mugBreak('the bag. the last sip.'),hat(null),addTic('(the party hat.)',300,150,{life:1.8}),set({face:'stiff',flinch:1,mood:'surprised'}),
+  ['H','STOP! STOP IT! ALL OF IT!',{loud:1,big:1}],
   ['S','I’m PROTECTING you.',{loud:1}],
-  ['H','From what? Board games?'],
+  ['H','From WHAT? BOARD GAMES?',{loud:1}],
   weekBill,
-  ['H','I’m at home with ten bags of snacks and one on the floor.'],
+  ['H','I’m at home with ten bags of snacks and one on the FLOOR.',{loud:1}],
+  {wait:1.2},
   ['H','You’re not protecting me. You’re just the loudest thing in the room.'],
   shadowHit,set({sweat:0}),{wait:2.2},
   ['S','…That one landed.'],
@@ -1269,10 +1283,12 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['H','Same hours?'],
   ['S','Same hours. Fewer exits.'],
   set({pose:null}),
+  ['N','The pieces. Glue. Gold, because it was the only glue in the drawer.'],mugMend(1),
+  ['S','It’s got seams now.',{quiet:1}],['H','It holds coffee.'],
   function(){return SEEN[G.txt].r;},
   set({mood:'surprised'}),
   ['S','Her phone died.'],
-  ['H','Her phone died.'],
+  ['H','Her phone died.'],refill(1,'her phone died'),
   ['S','For over an hour I grieved a battery.',{look:'up'}]
  ],outside({title:'WHAT SANNA SAW',dur:'duration: over an hour',cap:'A dead phone. A long hunt for a charger. Then your message.',anim:'text'}),[
   calm,
@@ -1280,7 +1296,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','I’m attached to your feet.'],
   ['H','That’s not what I asked.'],
   ['S','…Yes. I’m coming.',{look:'soft'}],
-  {wait:0.8}
+  {wait:0.8},mugOff   // the mug sits out the rest of the week for now (VISIO V3 continues scene by scene); the gold seams are remembered
  ]);}
 
 // Thursday reads the player’s own week back: the method chosen most often, as one whole sentence (translators get whole lines).
@@ -1853,40 +1869,82 @@ function labDetail(){return labScene({set:'office',title:'One small thing.',plan
    No numbers on screen: only the level of coffee. An empty mug is the door to the ugly side: Ekskyysmi goes spiky,
    answers get short, the soft option is locked. The size of Ekskyysmi is still feeling; the mug is capacity. */
 var MUGMAX=5;
-function mugOn(v){return function(){G.mug={v:v==null?MUGMAX:v,shown:v==null?MUGMAX:v,t:0,slosh:0,last:null};};}
+// v: the real level. shown: what is drawn (drops at once, rises slowly). ghost: the part just lost, flickering out (Joonas 20.11.).
+// vis: the mug fades in when it matters and out when the scene wants to breathe. spiky: the monster edge, only where a scene asks for it.
+function mugOn(v){return function(){var lv=v==null?MUGMAX:v;G.mug={v:lv,shown:lv,t:0,slosh:0,last:null,ghost:null,vis:0,seen:0,spiky:false,shards:null,broken:false,mended:!!G.mugMended};};}
 function mugOff(){G.mug=null;G.deal=null;}
+function mugQuiet(on){return function(){G.mugQuiet=!!on;};}          // a scene for the atmosphere: the mug steps out unless something happens to it
+function mugSpiky(on){return function(){if(G.mug)G.mug.spiky=!!on;};}
 function mugEmpty(){return !!(G.mug&&G.mug.v<=1);}
-// drain(n,label): a sip taken by the world. The label floats next to the mug for a moment.
-function drain(n,label){return function(){var m=G.mug;if(!m)return;m.v=Math.max(0,m.v-n);m.slosh=1;m.last={text:label,t:0,minus:true};sfx(m.v<=1?'hit':'drip');};}
-function refill(n,label){return function(){var m=G.mug;if(!m)return;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.last={text:label,t:0,minus:false};sfx('good');};}
-function stepMug(dt){var m=G.mug;if(!m)return;m.t+=dt;m.shown+=(m.v-m.shown)*Math.min(1,dt*2.2);m.slosh=Math.max(0,m.slosh-dt*0.9);if(m.last){m.last.t+=dt;if(m.last.t>2.6)m.last=null;}
+function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown;m.v=Math.max(0,m.v-n);m.shown=m.v;m.ghost={from:from,to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:label,t:0,minus:true};sfx('sipOut');};}
+function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:label,t:0,minus:false};sfx('pourIn');};}
+// The meltdown: the last drain on an empty mug breaks it. Shards fly; the mug stays broken until it is glued.
+function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.shown=0;m.broken=true;m.seen=0;m.ghost=null;m.last={text:label||'',t:0,minus:true};
+  m.shards=[];for(var i=0;i<11;i++)m.shards.push({x:0,y:0,vx:(i%2?1:-1)*(60+((i*53)%160)),vy:-160-((i*71)%170),r:((i*37)%10)/10*6,va:((i%3)-1)*9,t:0});
+  G.shake=RM?0:1;G.pulse=1;sfx('crack');sfx('shatter');};}
+// Glued with gold, because it was the only glue in the drawer. The seams stay for the rest of the game.
+function mugMend(v){return function(){var m=G.mug;if(!m)return;m.broken=false;m.mended=true;G.mugMended=true;m.shards=null;m.v=v||1;m.shown=0;m.seen=0;m.last={text:'glued. gold seams.',t:0,minus:false};sfx('glue');};}
+function stepMug(dt){var m=G.mug;if(!m)return;m.t+=dt;m.seen+=dt;
+  if(m.shown<m.v)m.shown=Math.min(m.v,m.shown+dt*1.6);
+  m.slosh=Math.max(0,m.slosh-dt*0.9);if(m.last){m.last.t+=dt;if(m.last.t>2.6)m.last=null;}
+  if(m.ghost){m.ghost.t+=dt;if(m.ghost.t>1.3)m.ghost=null;}
+  if(m.shards)m.shards.forEach(function(sh){sh.t+=dt;sh.x+=sh.vx*dt;sh.y+=sh.vy*dt;sh.vy+=620*dt;sh.r+=sh.va*dt;});
+  var want=!G.mugQuiet||m.seen<4||m.v<=1||m.broken?1:0;m.vis+=(want-m.vis)*Math.min(1,dt*(want?4:1.2));
   if(G.deal)G.deal.t+=dt;}
 
 // The mug sits under the HUD pills, top right. A real mug: handle, steam while there is something to steam.
 function drawMug(){
-  var m=G.mug;if(!m||G.out||G.epi)return;
-  var x=W-64,y=COMPACT?150:104,w=40,h=44,lvl=clamp(m.shown/MUGMAX,0,1),wob=RM?0:Math.sin(m.t*9)*3*m.slosh;
-  ctx.save();ctx.setTransform(SC,0,0,SC,0,0);
+  var m=G.mug;if(!m||G.out||G.epi||m.vis<0.02)return;
+  var x=W-64,y=COMPACT?156:116,w=40,h=44,lvl=clamp(m.shown/MUGMAX,0,1),wob=RM?0:Math.sin(m.t*9)*3*m.slosh,i;
+  ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.globalAlpha=m.vis;
   ctx.fillStyle='rgba(22,19,30,.55)';rr(x-12,y-12,w+34,h+24,12);ctx.fill();
-  ctx.strokeStyle='#f1ebdd';ctx.lineWidth=4;ctx.beginPath();ctx.arc(x+w+2,y+h*0.45,10,-Math.PI/2,Math.PI/2);ctx.stroke();   // handle
-  ctx.fillStyle='#f1ebdd';rr(x,y,w,h,6);ctx.fill();
-  ctx.save();ctx.beginPath();rr(x+4,y+4,w-8,h-8,4);ctx.clip();
-  var top=y+4+(h-8)*(1-lvl);
-  ctx.fillStyle=lvl<0.25?'#7a3b2a':'#6b4428';ctx.beginPath();ctx.moveTo(x,top+wob);ctx.quadraticCurveTo(x+w/2,top-wob,x+w,top+wob);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.closePath();ctx.fill();
-  ctx.restore();
-  if(lvl>0.55&&!RM){ctx.strokeStyle='rgba(241,235,221,.45)';ctx.lineWidth=2;for(var i=0;i<2;i++){var sx=x+12+i*14,ph=m.t*2+i;ctx.beginPath();ctx.moveTo(sx,y-4);ctx.quadraticCurveTo(sx+Math.sin(ph)*5,y-12,sx,y-20);ctx.stroke();}}
-  if(m.last){var a=clamp(1-(m.last.t-1.8)/0.8,0,1);ctx.globalAlpha=a;ctx.font='700 12px system-ui,sans-serif';ctx.textAlign='right';ctx.textBaseline='middle';
+  if(!m.broken){
+    ctx.strokeStyle='#f1ebdd';ctx.lineWidth=4;ctx.beginPath();ctx.arc(x+w+2,y+h*0.45,10,-Math.PI/2,Math.PI/2);ctx.stroke();   // handle
+    ctx.fillStyle='#f1ebdd';rr(x,y,w,h,6);ctx.fill();
+    ctx.save();ctx.beginPath();rr(x+4,y+4,w-8,h-8,4);ctx.clip();
+    var inner=h-8,top=y+4+inner*(1-lvl);
+    if(m.ghost&&!RM){   // the lost sip lingers for a moment, flickering, then it is gone
+      var gt=m.ghost.t,fl=gt<0.9?(Math.sin(gt*38)>0?0.75:0.25)*(1-gt/1.3):clamp(1-(gt-0.9)/0.4,0,1)*0.3,gtop=y+4+inner*(1-clamp(m.ghost.from/MUGMAX,0,1));
+      ctx.fillStyle='rgba(224,120,90,'+fl+')';ctx.fillRect(x,gtop,w,top-gtop);}
+    ctx.fillStyle=lvl<0.25?'#7a3b2a':'#6b4428';ctx.beginPath();ctx.moveTo(x,top+wob);ctx.quadraticCurveTo(x+w/2,top-wob,x+w,top+wob);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.closePath();ctx.fill();
+    ctx.restore();
+    if(m.mended){ctx.strokeStyle='#d9a93a';ctx.lineWidth=2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x+8,y);ctx.lineTo(x+14,y+12);ctx.lineTo(x+11,y+22);ctx.lineTo(x+19,y+33);ctx.lineTo(x+16,y+h);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x+w,y+18);ctx.lineTo(x+28,y+24);ctx.lineTo(x+31,y+30);ctx.stroke();}   // kintsugi
+    if(lvl>0.55&&!RM){ctx.strokeStyle='rgba(241,235,221,.45)';ctx.lineWidth=2;for(i=0;i<2;i++){var sx=x+12+i*14,ph=m.t*2+i;ctx.beginPath();ctx.moveTo(sx,y-4);ctx.quadraticCurveTo(sx+Math.sin(ph)*5,y-12,sx,y-20);ctx.stroke();}}
+  }else{   // broken: the base and two halves, coffee on the floor
+    ctx.fillStyle='#f1ebdd';ctx.beginPath();ctx.moveTo(x,y+h*0.45);ctx.lineTo(x+12,y+h*0.6);ctx.lineTo(x+7,y+h*0.75);ctx.lineTo(x+18,y+h*0.85);ctx.lineTo(x+w-6,y+h*0.62);ctx.lineTo(x+w,y+h*0.7);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.closePath();ctx.fill();
+    ctx.fillStyle='rgba(107,68,40,.8)';ctx.beginPath();ctx.ellipse(x+w/2,y+h+8,30,5,0,0,Math.PI*2);ctx.fill();}
+  if(m.shards){ctx.fillStyle='#f1ebdd';m.shards.forEach(function(sh){if(sh.t>1.6)return;ctx.save();ctx.globalAlpha=m.vis*clamp(1.6-sh.t,0,1);ctx.translate(x+w/2+sh.x,y+h/2+sh.y);ctx.rotate(sh.r);ctx.beginPath();ctx.moveTo(-5,-3);ctx.lineTo(6,-1);ctx.lineTo(1,6);ctx.closePath();ctx.fill();ctx.restore();});}
+  if(m.last&&m.last.text){var a=clamp(1-(m.last.t-1.8)/0.8,0,1);ctx.globalAlpha=a*m.vis;ctx.font='700 12px system-ui,sans-serif';ctx.textAlign='right';ctx.textBaseline='middle';
     var lw=ctx.measureText(m.last.text).width+16,ly=y+h/2-m.last.t*6;ctx.fillStyle='rgba(22,19,30,.78)';rr(x-18-lw+8,ly-11,lw,22,11);ctx.fill();   // readable over a bright window
-    ctx.fillStyle=m.last.minus?'#f0a08f':'#9fd3a8';ctx.fillText(m.last.text,x-18,ly);ctx.globalAlpha=1;}
+    ctx.fillStyle=m.last.minus?'#f0a08f':'#9fd3a8';ctx.fillText(m.last.text,x-18,ly);}
   ctx.restore();
 }
 
-// Empty mug: Ekskyysmi's outline grows spikes. Same size, different edges.
+// Empty mug, and only where the scene asks for it: Ekskyysmi's outline grows spikes. Same size, different edges.
 function morkoSpikes(q){
-  if(!mugEmpty())return;var s=q.s,n=9,i,a,r=q.hdR;ctx.fillStyle=mcol();
+  if(!mugEmpty()||!G.mug.spiky)return;var s=q.s,n=9,i,a,r=q.hdR;ctx.fillStyle=mcol();
   for(i=0;i<n;i++){a=Math.PI*(1.08+0.84*i/(n-1));var px=q.bx+Math.cos(a)*r,py=q.hdY+Math.sin(a)*r,len=(9+((i*7)%5))*Math.min(1.4,s),tx=q.bx+Math.cos(a)*(r+len),ty=q.hdY+Math.sin(a)*(r+len),nx=-Math.sin(a)*4,ny=Math.cos(a)*4;
     ctx.beginPath();ctx.moveTo(px+nx,py+ny);ctx.lineTo(tx,ty);ctx.lineTo(px-nx,py-ny);ctx.closePath();ctx.fill();}
   for(i=0;i<7;i++){var sx=q.bx-q.shW*0.95+i*(q.shW*1.9/6),sy=q.shY+2;ctx.beginPath();ctx.moveTo(sx-5,sy+4);ctx.lineTo(sx+2,sy-10*Math.min(1.4,s));ctx.lineTo(sx+7,sy+4);ctx.closePath();ctx.fill();}
+}
+
+/* ---------- Hats (Joonas 20.11.): the shadow of a hat, only when the moment has earned one ----------
+   Silhouettes in the shadow's own colour: a shadow can only wear the shadow of a hat. */
+function hat(kind){return function(){G.morko.hat=kind||null;};}
+function drawHat(q){
+  var k=G.morko.hat;if(!k||G.ninja)return;var r=q.hdR,x=q.bx,y=q.hdY,s=Math.max(0.6,r/20);
+  // drawn twice: a pale rim first (so a dark hat still reads against a dark wall at night), then the shadow-coloured hat on top
+  for(var pass=0;pass<2;pass++){ctx.save();ctx.translate(x,y-r*0.72);ctx.scale(s,s);
+  if(pass===0){ctx.fillStyle='rgba(241,235,221,.28)';ctx.scale(1.08,1.08);ctx.translate(0,1);}else ctx.fillStyle=mcol();
+  if(k==='party'){ctx.beginPath();ctx.moveTo(-15,4);ctx.lineTo(15,4);ctx.lineTo(2,-44);ctx.closePath();ctx.fill();circ(2,-46,6);ctx.fill();
+    if(pass){ctx.fillStyle='rgba(241,235,221,.22)';circ(-3,-8,2.5);ctx.fill();circ(6,-20,2.5);ctx.fill();circ(0,-32,2);ctx.fill();}}
+  else if(k==='chef'){rr(-17,-14,34,16,3);ctx.fill();circ(-12,-22,11);ctx.fill();circ(0,-28,13);ctx.fill();circ(12,-22,11);ctx.fill();}
+  else if(k==='pirate'){ctx.beginPath();ctx.moveTo(-30,0);ctx.quadraticCurveTo(-18,-8,-14,-26);ctx.quadraticCurveTo(0,-34,14,-26);ctx.quadraticCurveTo(18,-8,30,0);ctx.quadraticCurveTo(0,-8,-30,0);ctx.fill();
+    if(pass){ctx.strokeStyle='rgba(241,235,221,.35)';ctx.lineWidth=2;circ(0,-16,4);ctx.stroke();line(-5,-9,5,-9);}}
+  else if(k==='detective'){ctx.beginPath();ctx.ellipse(0,-6,24,7,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(0,-14,17,13,0,Math.PI,0);ctx.fill();rr(-16,-14,32,8,2);ctx.fill();
+    ctx.beginPath();ctx.moveTo(-14,-6);ctx.lineTo(-22,6);ctx.lineTo(-10,-2);ctx.fill();ctx.beginPath();ctx.moveTo(14,-6);ctx.lineTo(22,6);ctx.lineTo(10,-2);ctx.fill();}
+  ctx.restore();}
 }
 
 // A deal is a paper slip in Ekskyysmi's handwriting: what you get now, what it costs later. It is about the mug, never about Ekskyysmi's size.
@@ -1894,7 +1952,7 @@ function dealOffer(now,later){return function(){G.deal={now:now,later:later,t:0,
 function dealSign(ok){return function(){if(G.deal){G.deal.state=ok?'signed':'declined';G.deal.t=0;sfx(ok?'stamp':'nope');}};}
 function drawDeal(){
   var d=G.deal;if(!d||G.out)return;var out=d.state!=='offer'?clamp((d.t-1.4)/0.5,0,1):0;if(out>=1){G.deal=null;return;}
-  var w=318,h=112,x=W-w-24,y=COMPACT?214:166;   // under the mug, clear of the speech bubbles on the left
+  var w=318,h=112,x=W-w-24,y=COMPACT?220:178;   // under the mug, clear of the speech bubbles on the left
   ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.globalAlpha=1-out;ctx.translate(x+w/2,y+h/2);ctx.rotate(-0.03+(d.state==='declined'?out*0.3:0));ctx.translate(-w/2,-h/2);
   ctx.fillStyle='rgba(20,17,29,.25)';rr(5,6,w,h,4);ctx.fill();ctx.fillStyle='#fbf8ef';rr(0,0,w,h,4);ctx.fill();
   ctx.fillStyle='#2b2733';ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='800 13px "Courier New",monospace';ctx.fillText('A REALLY SMALL DEAL',14,20);
@@ -1925,12 +1983,13 @@ function labMug(){return labScene({set:'room',title:'A Tuesday, with a mug.',pla
   ]},
   ['B','See you at lunch? Sanna’s coming too.'],
   function(){G.bxT=1200;G.bFace=1;},
-  dealOffer('no lunch. a quiet hour at the desk.','Sanna has asked twice. She may stop asking.'),
+  hat('pirate'),dealOffer('no lunch. a quiet hour at the desk.','Sanna has asked twice. She may stop asking.'),
+  ['S','Parley.',{look:'pleased'}],
   ['S','I’ve drawn up a small deal. You eat at your desk. I get you a quiet hour. The mug stays where it is.'],
   ['S','It’s a good deal. I wrote it.'],
   {choice:[
-    {t:'Take the deal. Save the mug.',m:'hide',f:function(){G.lunchSkipped=1;},then:[dealSign(true),refill(1,'a quiet hour'),['S','Signed. Witnessed. Filed.'],['H','…She did ask twice.'],['S','That’s a LATER problem. Later is a different department.']]},
-    {t:'No deal. Lunch with Sanna.',m:'stay',f:function(){G.lunchSkipped=0;},then:[dealSign(false),drain(1,'lunch, worth it'),['S','That will cost a sip.'],['H','Then it costs a sip.'],['S','…Was it worth it?',{quiet:1}],['H','Ask me after.']]}
+    {t:'Take the deal. Save the mug.',m:'hide',f:function(){G.lunchSkipped=1;},then:[dealSign(true),hat(null),refill(1,'a quiet hour'),['S','Signed. Witnessed. Filed.'],['H','…She did ask twice.'],['S','That’s a LATER problem. Later is a different department.']]},
+    {t:'No deal. Lunch with Sanna.',m:'stay',f:function(){G.lunchSkipped=0;},then:[dealSign(false),hat(null),drain(1,'lunch, worth it'),['S','That will cost a sip.'],['H','Then it costs a sip.'],['S','…Was it worth it?',{quiet:1}],['H','Ask me after.']]}
   ]},
   scene({set:'office',clock:13*3600+58*60}),
   ['N','The lift up to Riitta. Somebody’s perfume. All of it.'],
@@ -1939,6 +1998,7 @@ function labMug(){return labScene({set:'room',title:'A Tuesday, with a mug.',pla
   function(){var m=G.mug;if(m&&m.v>1){m.v=1;m.slosh=1;m.last={text:'the afternoon',t:0,minus:true};}},   // the prototype lands on an empty mug on every path, so the meeting can be tested
   ['N','Two o’clock. Riitta’s “quick chat”.'],
   function(){G.cowR=true;},
+  mugSpiky(true),
   ['R','Good work on the report. One thing: could the summary be shorter?'],
   ['S','Shorter. SHORTER. I’ll give her shorter.',{look:'stern'}],
   {choice:[
@@ -1951,6 +2011,7 @@ function labMug(){return labScene({set:'room',title:'A Tuesday, with a mug.',pla
   ['H','It was us. With an empty mug.'],
   ['S','…I’ll draft an apology. A small one. Tomorrow. When there is coffee.',{quiet:1}],
   scene({set:'home',clock:19*3600+20*60}),
+  mugSpiky(false),mugQuiet(true),
   ['N','Evening. Nobody needs anything.'],
   {wait:1.0},refill(1,'the lamp'),{wait:1.4},refill(1,'nobody talking'),{wait:1.2},
   function(){return G.lunchSkipped?[['N','A message from Sanna: “Missed you at lunch! Tomorrow?”'],['S','She asked a third time.'],['H','Then the deal was cheap today.'],['S','Today.',{quiet:1}]]:
@@ -3414,12 +3475,13 @@ function labEvening(){return labScene({set:'home',title:'An ordinary evening',pl
   {wait:4.2},
   ['N','An ordinary evening. Nothing happens in it. That is the plan.'],
   dishes,addTic('♪ hm-hm, hm—',440,FEETY-250,{at:0.5,life:2.2}),{wait:DISHSECS},
-  function(){G.dish=null;},
+  function(){G.dish=null;},hat('chef'),
   ['S','I don’t interfere with the dishes.'],
-  ['H','Good.'],
+  ['H','You’re wearing a chef’s hat.'],
+  ['S','For morale. Not for interfering.'],
   ['S','It’s the only ten minutes a day when nobody has an opinion about us.'],
   ['H','The plate might.'],
-  aside(['S','…Don’t.']),
+  aside(['S','…Don’t.']),hat(null),
   addTic('♪ the bus is late, the bus is la—',440,FEETY-250,{life:30}),{wait:1.8},
   function(){var g=G;g.tics=[];sfx('pick');g.human.flinch=0.4;},
   ['P','Kaisa is calling.'],
@@ -3626,8 +3688,8 @@ function labGlass(){
   hit(0.6,'A'),{wait:1.2},
   ['S','They were laughing. Then they saw us. Then they stopped.'],
   ['H','People stop laughing. It’s how laughing ends.'],
-  ['S','I’ll need the glass.'],
-  lensOn,{wait:0.8},
+  ['S','I’ll need the glass. And the hat.'],
+  hat('detective'),lensOn,{wait:0.8},
   ['N','Move the glass around the room. Tap a numbered circle, or pick from the list.'],
   {choice:glassMenu},more,
   function(){var g=G;g.lens.xT=g.human.x+120;g.lens.yT=FEETY-210;g.lens.spot=null;g.aWave=true;},
@@ -3638,6 +3700,7 @@ function labGlass(){
   calm,function(){G.morko.pose='lens';},
   ['S','…A cat.'],
   ['S','The glass didn’t show a cat.'],
+  hat(null),
   ['H','The glass never shows the cat.'],
   ['H','Can I see it?'],
   ['S','It’s a professional instrument.'],
@@ -4578,7 +4641,8 @@ function update(dt,elapsed){
   if(g.rep)g.rep.t+=dt;
   if(g.dots)g.dots.t+=dt;if(g.tape)g.tape.t+=dt;if(g.pie)g.pie.t+=dt;
   if(g.night){g.night.t+=dt;if(g.night.car!=null){g.night.car+=dt;if(g.night.car>1.9)g.night.car=null;}}
-  for(var ci=g.cards.length-1;ci>=0;ci--){g.cards[ci].t+=dt;if(g.cards[ci].life!=null&&g.cards[ci].t>g.cards[ci].life)g.cards.splice(ci,1);}
+  for(var ci=g.cards.length-1;ci>=0;ci--){var c0=g.cards[ci].t;g.cards[ci].t+=dt;if(g.cards[ci].kind==='bad'&&c0<0&&g.cards[ci].t>=0)sfx('slam');   // each red card lands with a bang
+    if(g.cards[ci].life!=null&&g.cards[ci].t>g.cards[ci].life)g.cards.splice(ci,1);}
   g.pulse=Math.max(0,g.pulse-dt*0.3);g.shake=Math.max(0,g.shake-dt*2.6);
   if(g.zoom)g.zoom.t+=dt;
   stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);stepToss(dt);stepAuto(dt);if(g.buzz>0)g.buzz=Math.max(0,g.buzz-dt);
@@ -4893,7 +4957,7 @@ function morkoBody(q){
   ctx.globalAlpha=1;
   if(G.selfStamps>0)selfStamps(q,G.selfStamps);   // epilogue: stamped REJECTED by its own hand
   if(wk>0.4)morkoFace(q);
-  if(G.ninja)drawHeadband(q);
+  if(G.ninja)drawHeadband(q);drawHat(q);
 }
 function morkoArms(q,ht){
   var M=G.morko,lw=11*Math.sqrt(q.s),sh=[ht.L,ht.R];
@@ -5004,7 +5068,7 @@ function drawLines(){
     var n=l.text.length,mw=n>90?330:n>50?290:0,rv=isCur?revealCount(l.text,g.curT||0,l):1e9;
     if(l.who==='S'&&g.morko.asleep)continue;
     ctx.save();
-    if(l.who==='S'){var q=geom(),above=q.hdY-q.hdR-14,sw=mw||260,bh=bubbleH(l.text,sw,l);
+    if(l.who==='S'){var q=geom(),above=q.hdY-q.hdR-14-(g.morko.hat&&!g.ninja?44*Math.max(0.6,q.hdR/20):0),sw=mw||260,bh=bubbleH(l.text,sw,l);
       if(above-12>=bh+8)bubble(q.bx-70,above+12,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet});
       else bubble(q.bx-70,0,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet,top:Math.min(q.hdY+q.hdR+14,WALLY-bh-70)});}
     else if(l.who==='H')bubble(g.human.x+60,FEETY-172,l.text,{maxW:mw||230,reveal:rv});

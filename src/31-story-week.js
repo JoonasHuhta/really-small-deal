@@ -9,7 +9,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.mugQuiet=false;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -206,12 +206,12 @@ var SEEN={
     r:[['P','Sanna: “??? to you too! Phone died. 7?”'],['S','She bit back. Affectionately. Is that allowed?',{look:'squint'}]]}
 };
 function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock:17*3600+30*60,snacks:1}).concat([
-  countBags,{wait:2.8},
-  ['S','Snacks: eleven bags. Car: fuelled. Us: early. I have no notes.',{look:'pleased'}],
+  mugOn(3),hat('party'),countBags,{wait:2.8},
+  ['S','Snacks: eleven bags. Car: fuelled. Us: early. Hat: festive. I have no notes.',{look:'pleased'}],
   ['P','You: “What time tonight? I’ve got the snacks.”'],
   ['P','Seen 17:31.'],
   {wait:1.0},typingDots(2.4),
-  hit(0.6,'P'),set({sweat:0.6}),archive('bad',[['2009','Texted “haha”. Got back “ok”.'],['2018','Group chat went silent after my message. Six minutes.'],['2023','“We should hang out sometime!” We did not.']]),{wait:1.4},['N','The archive, sorted by silence.'],closeArchive,
+  hit(0.6,'P'),drain(1,'seen. no reply.'),set({sweat:0.6}),archive('bad',[['2009','Texted “haha”. Got back “ok”.'],['2018','Group chat went silent after my message. Six minutes.'],['2023','“We should hang out sometime!” We did not.']]),{wait:1.4},['N','The archive, sorted by silence.'],closeArchive,
   ['S','“Seen.”',{look:'stunned'}],
   ['S','She has SEEN it. With her eyes. And chosen silence.'],
   ['S','And she TYPED. I saw the dots. Then she UN-typed.',{look:'stunned'}],
@@ -231,7 +231,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','TWENTY-ONE MINUTES. Thank you. I’ve drafted some follow-ups.'],
   {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,m:SEEN[k].m,filed:1,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};});}},
   function(){G.clock=18*3600+40*60;},
-  ['N','18:40. Still nothing.'],
+  ['N','18:40. Still nothing.'],drain(1,'an hour of nothing'),
   set({s:2.5,mood:'stern',anx:0.8}),
   ['S','She hates us. Eero hates us. Riitta wants a shorter you. I’ve run the numbers. It’s unanimous.'],
   // The turn has a physical trigger (lab clone “The bag.”, 0.47): a whole week of holding the face, then a bag that won’t open.
@@ -240,11 +240,14 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   {wait:0.9},crumbs,hit(0.9,'P'),
   ['N','EASY OPEN. All of it. Everywhere.'],
   ['S','Floor crisps are still crisps, if we—'],
-  ['H','Stop.',{loud:1}],
+  // The meltdown (Joonas 20.11.: meltdowns are real). The last sip goes, the mug breaks, the hat flies. Alone at home, at the shadow, never at a person.
+  mugBreak('the bag. the last sip.'),hat(null),addTic('(the party hat.)',300,150,{life:1.8}),set({face:'stiff',flinch:1,mood:'surprised'}),
+  ['H','STOP! STOP IT! ALL OF IT!',{loud:1,big:1}],
   ['S','I’m PROTECTING you.',{loud:1}],
-  ['H','From what? Board games?'],
+  ['H','From WHAT? BOARD GAMES?',{loud:1}],
   weekBill,
-  ['H','I’m at home with ten bags of snacks and one on the floor.'],
+  ['H','I’m at home with ten bags of snacks and one on the FLOOR.',{loud:1}],
+  {wait:1.2},
   ['H','You’re not protecting me. You’re just the loudest thing in the room.'],
   shadowHit,set({sweat:0}),{wait:2.2},
   ['S','…That one landed.'],
@@ -291,10 +294,12 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['H','Same hours?'],
   ['S','Same hours. Fewer exits.'],
   set({pose:null}),
+  ['N','The pieces. Glue. Gold, because it was the only glue in the drawer.'],mugMend(1),
+  ['S','It’s got seams now.',{quiet:1}],['H','It holds coffee.'],
   function(){return SEEN[G.txt].r;},
   set({mood:'surprised'}),
   ['S','Her phone died.'],
-  ['H','Her phone died.'],
+  ['H','Her phone died.'],refill(1,'her phone died'),
   ['S','For over an hour I grieved a battery.',{look:'up'}]
  ],outside({title:'WHAT SANNA SAW',dur:'duration: over an hour',cap:'A dead phone. A long hunt for a charger. Then your message.',anim:'text'}),[
   calm,
@@ -302,7 +307,7 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['S','I’m attached to your feet.'],
   ['H','That’s not what I asked.'],
   ['S','…Yes. I’m coming.',{look:'soft'}],
-  {wait:0.8}
+  {wait:0.8},mugOff   // the mug sits out the rest of the week for now (VISIO V3 continues scene by scene); the gold seams are remembered
  ]);}
 
 // Thursday reads the player’s own week back: the method chosen most often, as one whole sentence (translators get whole lines).

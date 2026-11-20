@@ -92,12 +92,23 @@ function speak(who,text,o){
   }
   if(n)talkDuck(last+0.05);
 }
+// Filtered noise with a falling tail: the body of every crash, slosh and crack (Joonas 20.11.: the red cards and the mug need a proper bang).
+function noise(t0,dur,vol,type,freq,q){var a=AC;if(!a)return;try{var len=Math.max(1,Math.ceil(a.sampleRate*dur)),b=a.createBuffer(1,len,a.sampleRate),d=b.getChannelData(0);
+  for(var i=0;i<len;i++){var e=1-i/len;d[i]=(Math.random()*2-1)*e*e;}
+  var s=a.createBufferSource();s.buffer=b;var f=a.createBiquadFilter();f.type=type||'bandpass';f.frequency.value=freq||1000;f.Q.value=q||1;var g=a.createGain();g.gain.value=vol;s.connect(f);f.connect(g);g.connect(BUS);s.start(t0);}catch(e){}}
 function sfx(k){if(G&&G.epi)return;   // the epilogue is the song alone: no effects, no ducking
 
   var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;
   if(k==='hit'){duckMusic();tone(120,t,0.4,'sine',0.24,42);tone(900,t,0.06,'square',0.025,300);for(var hb=0;hb<3;hb++){tone(62,t+0.6+hb*0.75,0.13,'sine',0.14-hb*0.03);tone(54,t+0.78+hb*0.75,0.13,'sine',0.1-hb*0.02);}}
   else if(k==='rewind'){for(var rw=0;rw<7;rw++)tone(1500-rw*120,t+rw*0.045,0.04,'square',0.016,1700-rw*120);tone(90,t+0.36,0.12,'sine',0.06);}
   else if(k==='car'){tone(70,t,1.6,'sawtooth',0.02,140);tone(140,t+0.7,0.9,'sine',0.03,60);}
+  else if(k==='slam'){duckMusic();tone(70,t,0.38,'sine',0.24,36);noise(t,0.26,0.4,'lowpass',1500,0.7);tone(190,t,0.08,'square',0.035,90);}   // a red card hits the wall
+  else if(k==='sipOut'){tone(640,t,0.07,'triangle',0.07,470);noise(t+0.02,0.2,0.14,'bandpass',850,2.2);tone(96,t,0.14,'sine',0.1,58);}   // the mug drops a level: a clunk and a slosh
+  else if(k==='pourIn'){for(var pi=0;pi<5;pi++)tone(300+pi*68,t+pi*0.065,0.05,'sine',0.045,350+pi*70);noise(t,0.4,0.05,'bandpass',620,1.4);}   // the mug fills: a small gurgle upwards
+  else if(k==='crack'){noise(t,0.09,0.32,'highpass',3200,0.7);tone(2300,t,0.05,'square',0.03,900);}
+  else if(k==='shatter'){duckMusic();tone(62,t,0.55,'sine',0.32,30);noise(t,0.8,0.5,'bandpass',2600,0.8);noise(t+0.05,0.4,0.25,'lowpass',700,0.8);
+    for(var si=0;si<10;si++)tone(2300+((si*577)%1900),t+0.03+si*0.04,0.09,'triangle',0.035,1700);}
+  else if(k==='glue'){tone(523,t,0.45,'sine',0.045);tone(784,t+0.22,0.55,'sine',0.04);tone(1046,t+0.45,0.6,'sine',0.03);}
   else if(k==='step'||k==='step2'){var sf=k==='step'?1:0.9;tone(105*sf,t,0.08,'sine',0.045,58*sf);tone(1500*sf,t,0.014,'triangle',0.005,900);}   // soft shoes on a hard floor, left and right a little different
   else if(k==='pop'){tone(380,t,0.05,'sine',0.035,720);}
   else if(k==='popS'){tone(170,t,0.07,'sine',0.05,310);}

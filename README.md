@@ -14,6 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.65.0 (Claude, 20.11.2026): **muki saa luonteen: haamu, äänet, romahdus, kintsugi ja hatut.**
+- Muki: menetetty osa välkkyy punertavana haamuna ja sammuu, täyttö nousee hitaasti. Muki näkyy kun sillä on merkitystä ja vetäytyy tunnelmakohtauksissa (`mugQuiet`).
+- Äänet (syntetisoidut): punaiset arkistokortit paukahtavat seinään yksi kerrallaan, muki kolahtaa ja loiskahtaa tyhjentyessään, lorisee täyttyessään, säröilee ja räsähtää rikki, kilahtaa liimautuessa.
+- Torstai kantaa mukia (ensimmäinen integraatio viikkoon): puolillaan alussa, ”Seen” ja tunti hiljaisuutta vievät, sipsipussi rikkoo tyhjän mukin. **Romahdus:** ”STOP! STOP IT! ALL OF IT!” varjolle, bilehattu lentää, sitten hiljaisuus ja ”…That one landed.” Myöhemmin sirpaleet liimataan kullalla (”the only glue in the drawer”), ja Sannan viesti tuo siemauksen takaisin.
+- Hatut (hatun varjo, vaalea reunus, kupla väistää): etsivän hattu suurennuslasin kanssa, kokin hattu tiskatessa (”For morale. Not for interfering.”), bilehattu torstaina, merirosvohattu diilissä (”Parley.”).
+- Piikikäs mörkö vain kun kohtaus pyytää (prototyypissä Riitan palaverissa), ei automaattisesti tyhjällä mukilla.
+- VISIO kierros 3: Ekskyysmin työtä EI vaihdeta mukin vartioinniksi (ensimmäinen osuma tulee täydellä mukilla; ”säästän energiaa” on välttelyn paras tekosyy). Muki on erillinen totuus, ja kasvu on erottelukykyä: ”Is that the mug talking, or the door?”
+
 Versio 0.64.0 (Claude, 20.11.2026): **suunta tarkentui: muki. ANALYYSI.md ja VISIO.md.**
 - ANALYYSI.md: armoton kokonaisanalyysi (vahvuudet, sokeat pisteet, parannukset, arvosanat 6,5–7 nyt / 8,5–9 potentiaali).
 - VISIO.md: mitä oikeasti teemme. Ihmisen kahvimuki on jaksaminen (”BE A MUG. NOT A HERO.”), tyhjä muki avaa ruman puolen (mörkötila), diili on Ekskyysmin ja ihmisen sopimus eikä pistejärjestelmä, ja Ekskyysmin uusi työ on vartioida mukia (”Look after the mug. Stay when it happens.”). Pilarit, mitä emme tee, PUBG-vertailu ja avoimet kysymykset.

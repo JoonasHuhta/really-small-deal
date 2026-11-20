@@ -264,7 +264,7 @@ function morkoBody(q){
   ctx.globalAlpha=1;
   if(G.selfStamps>0)selfStamps(q,G.selfStamps);   // epilogue: stamped REJECTED by its own hand
   if(wk>0.4)morkoFace(q);
-  if(G.ninja)drawHeadband(q);
+  if(G.ninja)drawHeadband(q);drawHat(q);
 }
 function morkoArms(q,ht){
   var M=G.morko,lw=11*Math.sqrt(q.s),sh=[ht.L,ht.R];
@@ -375,7 +375,7 @@ function drawLines(){
     var n=l.text.length,mw=n>90?330:n>50?290:0,rv=isCur?revealCount(l.text,g.curT||0,l):1e9;
     if(l.who==='S'&&g.morko.asleep)continue;
     ctx.save();
-    if(l.who==='S'){var q=geom(),above=q.hdY-q.hdR-14,sw=mw||260,bh=bubbleH(l.text,sw,l);
+    if(l.who==='S'){var q=geom(),above=q.hdY-q.hdR-14-(g.morko.hat&&!g.ninja?44*Math.max(0.6,q.hdR/20):0),sw=mw||260,bh=bubbleH(l.text,sw,l);
       if(above-12>=bh+8)bubble(q.bx-70,above+12,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet});
       else bubble(q.bx-70,0,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet,top:Math.min(q.hdY+q.hdR+14,WALLY-bh-70)});}
     else if(l.who==='H')bubble(g.human.x+60,FEETY-172,l.text,{maxW:mw||230,reveal:rv});
