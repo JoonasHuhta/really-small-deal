@@ -278,13 +278,15 @@ function render(){
     html='<button class="opt cont" type="button" data-i="go"'+(TIMER>0?' disabled':'')+'>Back inside →</button>';
     if(g.out.anim==='chatlog')html=chatTranscript()+html;
   }else{
-    if(WAIT==='time'&&!cur)text=g.skippable?'The break room, before anyone needs anything.':'…';
+    if(WAIT==='time'&&!cur)text=g.skippable?'':'…';   // the intro speaks through its own caption (top left); the panel only offers Skip
     html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">Skip intro →</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+(WAIT==='time'?'A moment…':'Continue →')+'</button>';
   }
   if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">Begin '+g.chap.day.toLowerCase()+' →</button>';
   if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">For now →</button>';}
   var icon=speaker==='H'?'human':speaker==='S'?'':speaker==='N'?'narrator':'other';
-  elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'"><b>'+(g.skippable&&!cur?NAMES.N:NAMES[speaker])+'</b><p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
+  // Narration is unlabelled and in italics, as in most narrative games: a voice, not a character. Screen readers still hear “Narrator”.
+  var label=speaker==='N'?'<b class="sr">'+NAMES.N+'</b>':'<b>'+NAMES[speaker]+'</b>';
+  elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'">'+label+'<p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
   // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
@@ -4398,7 +4400,7 @@ function bubble(x,y,text,o){
   for(i=0;i<lines.length;i++){var ws=lines[i].split(' '),lw=0,wd=[];
     for(j=0;j<ws.length;j++){ctx.font=isLoud(ws[j])?em:base;var m=ctx.measureText(ws[j]+(j<ws.length-1?' ':'')).width;wd.push(m);lw+=m;}
     words.push(ws);widths.push(wd);w=Math.max(w,lw);}
-  w+=26;var h=lines.length*lh+16,bx=clamp(x-w/2,8,W-w-8),by=o.top!=null?o.top:Math.max(8,y-h-12);
+  w+=26;var h=lines.length*lh+16,pad=18/(VIEW.z||1),bx=clamp(x-w/2,Math.max(8,VIEW.l+pad),Math.min(W-8,VIEW.r-pad)-w),by=o.top!=null?o.top:Math.max(8,y-h-12);
   var fill=o.dark?'#14111d':'#fffdf6',ink=o.dark?'#f6f1e4':'#2b2733',hot=o.dark?'#ebbd79':'#2b2733';
   ctx.fillStyle=fill;ctx.strokeStyle=ink;ctx.lineWidth=k>1?3:2;rr(bx,by,w,h,10);ctx.fill();ctx.stroke();
   if(!o.noTail){var tx=clamp(x,bx+16,bx+w-16);ctx.beginPath();ctx.moveTo(tx-8,by+h-1);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h-1);ctx.closePath();ctx.fill();
@@ -4430,7 +4432,10 @@ function applyCamera(){
   if(!RM&&!G.cctv){sx=Math.sin(G.time*0.45)*5+Math.sin(G.time*83)*8*G.shake;sy=Math.sin(G.time*0.9)*2.6+Math.cos(G.time*71)*6*G.shake;}
   var fx=clamp(C.fx+sx,hw,W-hw),fy=clamp(C.fy+sy,hh,H-hh);
   ctx.translate(W/2,H/2);ctx.scale(z,z);ctx.translate(-fx,-fy);
+  VIEW.l=fx-hw;VIEW.r=fx+hw;VIEW.z=z;
 }
+// What the camera shows, in world units: bubbles stay inside it (Joonas 20.11.: Eero's first bubble touched the edge).
+var VIEW={l:0,r:W,z:1};
 
 /* ================= drawing: break room ================= */
 // The lamp table stands on the floor in front of the wall, so the shadow on the wall goes behind it.
@@ -4891,7 +4896,7 @@ function pausedNote(){
 }
 function draw(){
   var g=G;
-  ctx.setTransform(SC,0,0,SC,0,0);
+  ctx.setTransform(SC,0,0,SC,0,0);VIEW.l=0;VIEW.r=W;VIEW.z=1;   // unzoomed until applyCamera says otherwise
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
   epiFilterOn();   // the closing montage is drawn soft (37-epilogue.js)
   if(g.chap){chapCard();if(paused)pausedNote();return;}

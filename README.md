@@ -14,6 +14,11 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.61.0 (Claude, 20.11.2026): **kertoja ja kuplat.**
+- Kertojan rivit ovat nimettömiä ja kursiivisia, ilman kuvaketta (ruudunlukija kuulee yhä ”Narrator”). Alun hetki ei enää näytä kertojan riviä paneelissa samaan aikaan kuin kuvateksti ”Monday, 8:52. Nobody here yet.”
+- Puhekupla pysyy näkyvän kuva-alan sisällä myös zoomatessa (vähintään 18 px reunasta). Eeron ensimmäinen kupla osui reunaan.
+- Kirjattu linjaukset: RSD ei katoa (ei parantumislupauksia), epilogin varjolintu pysyy, epilogin loppu kuitin jälkeen on auki (K26).
+
 Versio 0.60.0 (Claude, 20.11.2026): **katsauksen (KATSAUS.md) pienet korjaukset; kaikki täydennykset kirjattu TYOSUUNNITELMA §13:een (K1–K25).**
 - Jatkuvuus: arkisto on nyt ”since the drawing” eikä ”since 2011” (ihmisen ikä jää auki). Keskiviikon diat 23:15, ettei kahdessa yökohtauksessa ole samaa kellonaikaa.
 - Ryhmächatin kohtaus päättyy lauseeseen ”A crack. Leave it open a crack.”

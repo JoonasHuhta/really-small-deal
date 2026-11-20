@@ -123,13 +123,15 @@ function render(){
     html='<button class="opt cont" type="button" data-i="go"'+(TIMER>0?' disabled':'')+'>Back inside →</button>';
     if(g.out.anim==='chatlog')html=chatTranscript()+html;
   }else{
-    if(WAIT==='time'&&!cur)text=g.skippable?'The break room, before anyone needs anything.':'…';
+    if(WAIT==='time'&&!cur)text=g.skippable?'':'…';   // the intro speaks through its own caption (top left); the panel only offers Skip
     html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">Skip intro →</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+(WAIT==='time'?'A moment…':'Continue →')+'</button>';
   }
   if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">Begin '+g.chap.day.toLowerCase()+' →</button>';
   if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">For now →</button>';}
   var icon=speaker==='H'?'human':speaker==='S'?'':speaker==='N'?'narrator':'other';
-  elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'"><b>'+(g.skippable&&!cur?NAMES.N:NAMES[speaker])+'</b><p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
+  // Narration is unlabelled and in italics, as in most narrative games: a voice, not a character. Screen readers still hear “Narrator”.
+  var label=speaker==='N'?'<b class="sr">'+NAMES.N+'</b>':'<b>'+NAMES[speaker]+'</b>';
+  elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'">'+label+'<p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
   // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.

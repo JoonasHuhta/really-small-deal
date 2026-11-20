@@ -302,3 +302,11 @@ Perustelut ovat tiedostossa KATSAUS.md (kohta suluissa). Jokainen uusi kohtaus t
 | **K25** | Koulupaketti (myöhemmin): samat ilmiöt yläkoulun arjessa (parien valinta, luokan chat, ”voitko jäädä tunnin jälkeen”). Vain muistiin. | – | idea |
 
 **Järjestys:** K4 → K6c → K13 → K18 → K20 → K23 → K24 (pienet) → K7 → K14 → K15 (tarina) → K8 → K10 → K9 → K11 (isot, yksi kerrallaan, pelaajatesti välissä) → K12 ennen kuin sisältöä lisätään paljon.
+
+### 13.1 Joonaksen linjaukset 20.11.2026 (illalla)
+
+- **Peruslinja: RSD ei katoa.** Siitä ei päästä eroon. Sen vaikutusvaltaa voi oppia ymmärtämään ja hallitsemaan, ja siihen auttaa armollisuus itseä kohtaan. Mikään kohtaus, kortti tai kuitin rivi ei saa vihjata parantumiseen. Nykyinen loppu on linjassa: ”For the record, I intend to go off again on Monday.” / ”I know. I’ll be there.” Tarkista jokainen uusi loppu tätä vasten. Hiljainen päivä (Quiet) on yksi helpompi päivä, ei uusi elämä.
+- **Epilogin varjolintu pysyy.** Ekskyysmin lintuleikki osuu musiikkiin juuri oikein. Älä siirrä tahtia (bar 49) äläkä poista.
+- **K26 Epilogin loppu kuitin jälkeen (auki, ei kiire):** jotain, mitä ei ole vielä nähty. Joonaksen idea: Ekskyysmin ninjailu. Ei toistoa aiemmista kuvista. Epilogin ei tarvitse olla valmis vielä.
+- ✔ **K27 Kertoja (0.61.0):** kertojan rivit ovat nimettömiä ja kursiivisia, ilman kuvaketta (ruudunlukija kuulee yhä ”Narrator”). Alun tyhjä hetki ei enää näytä kertojan riviä paneelissa, vaan alku puhuu omalla kuvatekstillään. Peleissä yleinen tapa: kertoja on ääni, ei hahmo; aika ja paikka näytetään hetkellisenä kuvatekstinä.
+- ✔ **K28 Puhekuplat kameran sisällä (0.61.0):** kupla pysyy näkyvän kuva-alan sisällä myös zoomatessa, vähintään 18 px reunasta (Eeron ensimmäinen kupla osui reunaan).

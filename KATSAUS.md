@@ -226,6 +226,8 @@ Nämä peli sanoo jo nyt, ilman neuvoja:
 3. **Kyse on koosta, ei siitä, onko jotain tapahtunut.** ”So I was right. / That it happened. Yes. / And the size? / You had it at ’career over’.” Tämä on pelin tärkein kohtaus kaikille, joille on joskus sanottu ”kuvittelet vain”.
 4. **Haavoittuvuus näyttää ulkoa rohkeudelta.** Perjantain ”Can I say something odd?” lunastaa tämän (beautiful mess -ilmiö).
 
+**Peruslinja (Joonas 20.11.):** RSD ei katoa. Sen vaikutusvaltaa voi oppia ymmärtämään ja hallitsemaan, ja armollisuus itseä kohtaan auttaa. Peli ei saa luvata parantumista; perjantain viimeinen rivi (”I intend to go off again on Monday.”) on tämän linjan mukainen.
+
 Tätä peli ei vielä sano, ja tämän sen pitäisi sanoa:
 5. **Kaikkien ei tarvitse pitää sinusta, ja se on selvittävissä.** Katso kohta 4.2.1.
 
