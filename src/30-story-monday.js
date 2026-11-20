@@ -64,7 +64,7 @@ function scIntro(){return [
     ['B','Enjoy the coffee!'],
     ['H','You too.'],
     {wait:0.7},
-    ['S','He doesn’t HAVE a coffee.'],
+    ['S','He doesn’t HAVE a coffee. He’s drinking TEA.'],
     ['H','I know.'],
     ['S','I didn’t do that one. That was all you.',{look:'squint'}]
   ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'4 seconds',cap:'Two nods. One sip. One “you too”. A perfectly ordinary pause.',anim:'nod'},4.4),[
@@ -81,7 +81,7 @@ function scBite(){return [
  ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'3 seconds',cap:'One slightly sharp joke. Eero laughed a beat too late.',anim:'bite'},4.4),[
   calm,set({pose:'selfmouth',mood:'scared',s:1.3}),
   ['S','…Did we just bite Eero?'],
-  ['H','We bit Eero.'],
+  ['H','We bit Eero.'],drain(1,'the snap'),   // biting costs a sip too
   ['S','Eero is SOFT. Eero owns a cardigan.'],
   set({pose:null,mood:'worry'}),
   ['S','I was defending us. From advice.'],

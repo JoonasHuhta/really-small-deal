@@ -166,7 +166,8 @@ function person(x,o){
     ctx.strokeStyle=o.body;ctx.lineWidth=9;ctx.lineCap='round';}
   if(o.cup){var cxp=x+f*22,cyp=top+40-(o.sip||0)*30+(o.shake?Math.sin(G.time*38)*1.5:0);
     line(x+f*15,top+18,cxp-f*3,cyp+4);
-    ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(cxp-6,cyp-7,12,14,2);ctx.fill();ctx.stroke();}
+    ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(cxp-6,cyp-7,12,14,2);ctx.fill();ctx.stroke();
+    if(o.body===MIKA.body){ctx.lineWidth=1;line(cxp+f*2,cyp-7,cxp+f*9,cyp+3);ctx.fillStyle='#c9553f';rr(cxp+f*9-3,cyp+2,6,7,1);ctx.fill();}}   // Eero drinks tea: a string and a tag, so “Enjoy the coffee!” is wrong twice
   if(o.wave){ctx.strokeStyle=o.body;ctx.lineWidth=9;var wy=top-26+Math.sin(G.time*11)*4;line(x+f*17,top+14,x+f*30,wy);
     ctx.fillStyle='#f4ecdd';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;circ(x+f*31,wy-5,6);ctx.fill();ctx.stroke();}
   ctx.restore();

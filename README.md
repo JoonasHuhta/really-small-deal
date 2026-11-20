@@ -14,6 +14,10 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.68.0 (Claude, 20.11.2026): **Eero juo teetä.**
+- Ristiriita korjattu: Eero piirrettiin kahvikuppi kädessä, vaikka Ekskyysmi sanoo ”He doesn’t HAVE a coffee.” Nyt Eeron kupissa roikkuu teepussin naru ja lappu, ja repliikki on ”He doesn’t HAVE a coffee. He’s drinking TEA.” ”You too” on edelleen väärin, nyt kahdesti.
+- Bite-polku (”Show him some teeth. Small ones.”) on ennallaan maanantain neljäntenä vaihtoehtona; nyt näykkäisy maksaa siemauksen (”the snap”), ja kotimatkan anteeksipyyntö tulee edelleen etusijalla.
+
 Versio 0.67.0 (Claude, 20.11.2026): **mukin mitoitus Joonaksen korjauksen mukaan.**
 - Isot osumat vievät kaksi siemausta (”oh, hi.”, ”quick chat?”, ”shorter”): dysforia uuvuttaa. Maanantaina muki käy lähes tyhjänä: muut lähtevät lounaalle ilman (−1) tai yhteinen lounas on hopeareunus (+1), uusinta vie, kotona paahtoleipä tankkaa kaksi.
 - Päivillä on oma muotonsa: maanantai kuoppa ja tankkaus, tiistai vajoaminen, keskiviikko hidas vuoto (pohja kaksi), torstai romahdus. Pohja on yksi kaikkina muina päivinä; vain torstai menee läpi.

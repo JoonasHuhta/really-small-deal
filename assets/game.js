@@ -814,7 +814,7 @@ function scIntro(){return [
     ['B','Enjoy the coffee!'],
     ['H','You too.'],
     {wait:0.7},
-    ['S','He doesn’t HAVE a coffee.'],
+    ['S','He doesn’t HAVE a coffee. He’s drinking TEA.'],
     ['H','I know.'],
     ['S','I didn’t do that one. That was all you.',{look:'squint'}]
   ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'4 seconds',cap:'Two nods. One sip. One “you too”. A perfectly ordinary pause.',anim:'nod'},4.4),[
@@ -831,7 +831,7 @@ function scBite(){return [
  ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'3 seconds',cap:'One slightly sharp joke. Eero laughed a beat too late.',anim:'bite'},4.4),[
   calm,set({pose:'selfmouth',mood:'scared',s:1.3}),
   ['S','…Did we just bite Eero?'],
-  ['H','We bit Eero.'],
+  ['H','We bit Eero.'],drain(1,'the snap'),   // biting costs a sip too
   ['S','Eero is SOFT. Eero owns a cardigan.'],
   set({pose:null,mood:'worry'}),
   ['S','I was defending us. From advice.'],
@@ -4868,7 +4868,8 @@ function person(x,o){
     ctx.strokeStyle=o.body;ctx.lineWidth=9;ctx.lineCap='round';}
   if(o.cup){var cxp=x+f*22,cyp=top+40-(o.sip||0)*30+(o.shake?Math.sin(G.time*38)*1.5:0);
     line(x+f*15,top+18,cxp-f*3,cyp+4);
-    ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(cxp-6,cyp-7,12,14,2);ctx.fill();ctx.stroke();}
+    ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(cxp-6,cyp-7,12,14,2);ctx.fill();ctx.stroke();
+    if(o.body===MIKA.body){ctx.lineWidth=1;line(cxp+f*2,cyp-7,cxp+f*9,cyp+3);ctx.fillStyle='#c9553f';rr(cxp+f*9-3,cyp+2,6,7,1);ctx.fill();}}   // Eero drinks tea: a string and a tag, so “Enjoy the coffee!” is wrong twice
   if(o.wave){ctx.strokeStyle=o.body;ctx.lineWidth=9;var wy=top-26+Math.sin(G.time*11)*4;line(x+f*17,top+14,x+f*30,wy);
     ctx.fillStyle='#f4ecdd';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;circ(x+f*31,wy-5,6);ctx.fill();ctx.stroke();}
   ctx.restore();
