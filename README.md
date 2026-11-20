@@ -14,6 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.52.0 (Claude, 20.11.2026): **epilogin leikkauskieli: ei diaesityksen zoomia.**
+- Kuvien pituudet vaihtelevat (1,6 s välähdys – 7 s viipyvä kuva), ja tahti kiihtyy keskellä ja hidastuu lopussa.
+- Leikkaukset: ristihäivytys herkille kuville, kova leikkaus komiikalle, *smash cut* kontrastille. Useimmat kuvat ovat paikallaan; liike tarkoittaa jotain (hidas vetäytyminen lopussa, äkillinen zoomi gagiin).
+- Uudet keinot: lounaskuvassa kamera nykäisee suurennuslasiin (”FACE: FRIENDLY. RE-CHECKING.”); hälytys: punainen syke, tärinä, sireeni ja jättivarjo – sitten mitään ei tapahdu ja varjo lysähtää kesken kuvan (”WORST CASES THAT HAPPENED … 0”); yläfemmoissa läimäysääni ja pieni tärähdys.
+- Naurukohtaus on nyt 1,6 s välähdys ilman kuittia.
+- Lopun istuva varjo: ei enää istuma-asentoa (näytti oudolta), vaan matalampi varjo istuvan ihmisen vieressä.
+- Uudet äänet: `siren`, `clap`. Kesto noin 58 s.
+
 Versio 0.51.1 (Claude, 20.11.2026): **epilogiin ystävyyttä ja kohellusta.**
 - Kädet eivät enää mene ihmisen pään yli: Riitan kuvassa käsi olalla (`shoulder`), piirroskuvassa halaus keskitetystä varjosta (`hug`, `off:0`).
 - Uusi, keksitty kuva: he katsovat toisiaan ja lyövät yläfemmat. Ensimmäinen yritys menee ohi (liian innokas), toinen osuu: ”CLAP.” Kuitti: ”NOS, SAID OUT LOUD … 1, wobbling: allowed” (jos perjantaina sanoi kyllä: ”0, next time, then.”).

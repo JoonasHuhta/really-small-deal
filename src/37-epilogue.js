@@ -6,56 +6,60 @@
 // Each shot: a scene, and one receipt row (label and value kept apart so they translate; the dots are drawn).
 // The last rows are the player's own week (Ekskyysmi's methods), then the line the whole receipt mechanic was for:
 // one day lived inside, one day outside. Safe at last, said as bookkeeping.
-// Peanuts-credits rules: every shot is composed (its own framing and camera move), and Ekskyysmi does one small,
-// purposeful thing in each. Close-ups for the intimate ones, wide for the jokes that need the room.
-// cam: [z, x, y] at the start and the end of the shot; the camera eases between them (Less motion: the end framing, still).
-// pose: Ekskyysmi's arms (see morkoArms). at: little things that happen during the shot, [seconds, function].
-function epiHa(dx,dy){return function(){var g=G,q=geom();g.tics.push(tic(Math.random()<0.5?'ha':'HA',(g.human.x+q.bx)/2+dx,q.hdY+20+dy,{life:1.5,size:15+Math.random()*5}));};}
+// Montage grammar (TYOSUUNNITELMA 6, Joonas 20.11.: “not a slideshow zoom”). What made the first sketch flat was sameness:
+// every shot the same length, the same crossfade, the same slow push. Rules now:
+//  - rhythm: shot lengths vary (a flash of 1.5 s next to a held 7 s); it speeds up in the middle and slows down at the end
+//  - cuts: 'fade' for tender, 'hard' for comedy, 'smash' for a contrast (quiet to alarm); not every shot fades
+//  - camera: most shots are locked off (still). A move must mean something: a slow pull back to let go, a sudden punch-in on a gag
+//  - one in-shot reversal (alarm → nothing happened), one fumble (the high five misses), one flash (the laughing)
+// cam: [z, x, y] start and end; equal = still. at: [seconds, function] beats inside a shot.
+function epiHa(dx,dy){return function(){var g=G,q=geom();g.tics.push(tic(Math.random()<0.5?'ha':'HA',(g.human.x+q.bx)/2+dx,q.hdY+20+dy,{life:1.2,size:15+Math.random()*5}));};}
 function epiLens(x,y,tag){return function(){var q=geom();G.lens={x:q.bx+40,y:q.hdY+60,xT:x,yT:y,mode:'peek',tag:tag,spot:null,done:{},t:0};G.morko.pose='lens';};}
+function epiPunch(z,x,y){return function(){if(RM)return;C.z=z;C.fx=x;C.fy=y;var g=G;g.cz=z;g.cx=x;g.cy=y;sfx('cut');};}   // a snap zoom: the comedy kind
+function epiShake(k){return function(){G.shake=RM?0:k;};}
 var EPI=[
-  {set:'home',clock:21*3600,s:0.9,mood:'calm',hx:470,cam:[1.5,200,190, 1.08,470,280],secs:6.5,title:'THE WEEK, ITEMISED'},
-  {set:'room',clock:12*3600,s:0.8,mood:'calm',hx:420,a:560,wave:1,face:'smile',cam:[1.45,490,262, 1.6,490,262],
-    at:[[1.8,epiLens(555,330,'FACE: FRIENDLY. RE-CHECKING.')]],l:'LUNCHES',v:'1'},
-  {set:'office',clock:10*3600,s:0.75,mood:'worry',hx:250,b:560,pose:'selfeyes',cam:[1.15,420,270, 1.3,400,265],
+  {cut:'fade',set:'home',clock:21*3600,s:0.9,mood:'calm',hx:470,cam:[1.45,200,190, 1.08,470,280],secs:5,title:'THE WEEK, ITEMISED'},
+  {cut:'hard',set:'room',clock:12*3600,s:0.8,mood:'calm',hx:420,a:560,wave:1,face:'smile',cam:[1.45,490,262, 1.45,490,262],secs:4.2,
+    at:[[0.9,epiLens(555,330,'FACE: FRIENDLY. RE-CHECKING.')],[2.6,epiPunch(2.4,560,300)]],l:'LUNCHES',v:'1'},
+  {cut:'hard',set:'office',clock:10*3600,s:0.75,mood:'worry',hx:250,b:560,pose:'selfeyes',cam:[1.2,410,268, 1.2,410,268],secs:3,
     l:'SLIDES, PRESENTED',v:'1 (EERO)',note:'he was good. he still hates it.'},
-  {set:'office',clock:9*3600+15*60,s:0.85,mood:'calm',hx:420,r:600,pose:'shoulder',cam:[1.6,450,290, 1.72,440,285],
+  {cut:'fade',set:'office',clock:9*3600+15*60,s:0.85,mood:'calm',hx:420,r:600,pose:'shoulder',cam:[1.6,450,290, 1.6,450,290],secs:3.6,
     l:'SUMMARY',v:'HALF A PAGE',note:'thumbs received: 1 (of 2)'},
-  {set:'room',clock:16*3600,s:1.9,mood:'stern',hx:470,pose:'grow',cam:[1.0,480,270, 1.05,480,280],
-    at:[[2.6,function(){var M=G.morko;M.sT=0.8;M.pose=null;M.mood='surprised';}]],l:'WORST CASES THAT HAPPENED',v:'0',
-    note:function(){var n=(G.methods||{}).worst;return n?fmtN('prepared: {n}',n):'prepared: plenty';}},
-  // invented, not in the story: they look at each other and high-five. The first try misses (too keen); the second lands.
-  {set:'room',clock:16*3600+2*60,s:0.95,mood:'pleased',hx:500,face:'smile',facing:-1,reach:1,pose:'five',five:{dx:30,dy:-38},cam:[1.45,455,262, 1.55,450,258],
-    at:[[1.5,function(){G.five={dx:0,dy:0};}],[1.9,function(){var g=G;g.tics.push(tic('CLAP.',g.human.x-34,FEETY-232,{life:1.4,size:17}));sfx('pick');g.shake=RM?0:0.15;}]],
+  // smash: the alarm. Red, shaking, enormous, a siren. Then nothing happens, and the shadow deflates mid-shot.
+  {cut:'smash',set:'room',clock:16*3600,s:2.3,mood:'scared',hx:470,pose:'grow',alarm:1,cam:[1.0,480,270, 1.0,480,270],secs:4.4,
+    at:[[1.9,function(){var g=G,M=g.morko;g.pulse=0;g.shake=0;M.sT=0.8;M.pose=null;M.mood='surprised';}]],
+    l:'WORST CASES THAT HAPPENED',v:'0',note:function(){var n=(G.methods||{}).worst;return n?fmtN('prepared: {n}',n):'prepared: plenty';}},
+  {cut:'hard',set:'room',clock:16*3600+2*60,s:0.95,mood:'pleased',hx:500,face:'smile',facing:-1,reach:1,pose:'five',five:{dx:30,dy:-38},cam:[1.45,455,262, 1.45,455,262],secs:3.4,
+    at:[[1.3,function(){G.five={dx:0,dy:0};}],[1.65,function(){var g=G;g.tics.push(tic('CLAP.',g.human.x-34,FEETY-232,{life:1.3,size:17}));sfx('clap');g.shake=RM?0:0.18;}]],
     l:'NOS, SAID OUT LOUD',v:function(){return G.endSeen&&!G.no?'0':'1';},note:function(){return G.endSeen&&!G.no?'next time, then.':'wobbling: allowed';}},
-  {set:'bar',clock:21*3600+30*60,s:1.0,mood:'calm',hx:430,bar:1,cam:[1.7,420,250, 1.8,410,245],
+  {cut:'fade',set:'bar',clock:21*3600+30*60,s:1.0,mood:'calm',hx:430,bar:1,cam:[1.75,420,250, 1.75,420,250],secs:3.4,
     l:'UMBRELLA STORIES, TOLD',v:'1',note:'classified: not any more'},
-  // invented: the story again, at home, and they cannot stop. Laughing until it leaks.
-  {set:'home',clock:22*3600+20*60,s:1.05,mood:'pleased',hx:500,face:'laugh',facing:-1,cam:[1.7,450,250, 1.8,450,248],
-    at:[[0.9,epiHa(-60,0)],[1.5,epiHa(40,-20)],[2.2,epiHa(-90,-30)],[3.0,epiHa(30,-40)]],
-    l:'THE UMBRELLA STORY, AGAIN',v:'×4',note:'still classified. still funny.'},
-  {set:'library',clock:15*3600,s:0.8,mood:'calm',hx:430,cam:[1.2,470,270, 1.35,450,262],
-    at:[[1.4,epiLens(560,300,'PAGE 212. NOBODY HAS DIED YET.')]],l:'LATE FEES',v:'€4.60',note:'lighthouses: a shared interest'},
-  {set:'room',clock:12*3600+5*60,s:0.85,mood:'calm',hx:400,a:540,z:1,pose:'toast',cam:[1.1,470,270, 1.25,470,262],
+  // a flash, no caption: the story again at home, and they cannot stop laughing
+  {cut:'hard',set:'home',clock:22*3600+20*60,s:1.05,mood:'pleased',hx:500,face:'laugh',facing:-1,cam:[1.85,455,250, 1.85,455,250],secs:1.6,
+    at:[[0.2,epiHa(-60,0)],[0.6,epiHa(40,-20)],[1.0,epiHa(-90,-30)]]},
+  {cut:'hard',set:'library',clock:15*3600,s:0.8,mood:'calm',hx:430,cam:[1.25,460,266, 1.25,460,266],secs:4,
+    at:[[0.8,epiLens(560,300,'PAGE 212. NOBODY HAS DIED YET.')]],l:'LATE FEES',v:'€4.60',note:'lighthouses: a shared interest'},
+  {cut:'fade',set:'room',clock:12*3600+5*60,s:0.85,mood:'calm',hx:400,a:540,z:1,pose:'toast',cam:[1.1,470,270, 1.22,470,264],secs:4,
     l:'OTHER PEOPLE’S SHADOWS',v:'ALSO ON SHIFT'},
-  {set:'home',clock:20*3600,s:1.0,mood:'calm',hx:470,face:'smile',pose:'hug',off:0,cam:[1.85,470,320, 1.7,470,312],
+  {cut:'fade',set:'home',clock:20*3600,s:1.0,mood:'calm',hx:470,face:'smile',pose:'hug',off:0,cam:[1.9,470,320, 1.55,470,305],secs:5,
     l:'DRAWINGS SHARED',v:'1',note:'accounts closed: 0'},
-  {set:'home',clock:22*3600,s:0.95,mood:'calm',hx:470,mine:1,pose:'selfmouth',cam:[1.55,450,250, 1.65,445,245]},
-  {set:'home',clock:23*3600,s:0.75,mood:'calm',hx:470,sitting:1,cam:[1.8,450,380, 1.12,470,300],secs:7.5,
+  {cut:'hard',set:'home',clock:22*3600,s:0.95,mood:'calm',hx:470,mine:1,pose:'selfmouth',cam:[1.55,450,250, 1.55,450,250],secs:3.4},
+  {cut:'fade',set:'home',clock:23*3600,s:0.62,mood:'calm',hx:470,sitting:1,cam:[1.8,450,380, 1.05,475,290],secs:7,
     l:'DAYS LIVED TODAY',v:'1.0',note:'inside and outside, the same day. first time this week.'},
-  {set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,pose:'puppet',cam:[1.08,470,280, 1.0,480,270],secs:6.5,credit:'Made by Joonas Huhta (MoshBitSurfers)'}
+  {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,pose:'puppet',cam:[1.05,475,290, 1.05,475,290],secs:6,credit:'Made by Joonas Huhta (MoshBitSurfers)'}
 ];
 // The player's own top methods, as rows. In the lab (or a week with no choices) the shot is skipped.
 var MINE={worst:'WORST CASES, PREPARED',draft:'SCRIPTS, DRAFTED',please:'YESES, UNMEANT',hide:'EXITS, TAKEN',stay:'TIMES WE STAYED',hush:'SILENCES, KEPT'};
 function mineRows(){var m=G.methods||{};return Object.keys(MINE).filter(function(k){return m[k]>0;}).sort(function(a,b){return m[b]-m[a];}).slice(0,3).map(function(k){return {l:MINE[k],v:'×'+m[k]};});}
 function epiSnap(){try{var c=document.createElement('canvas');c.width=cv.width;c.height=cv.height;c.getContext('2d').drawImage(cv,0,0);return c;}catch(e){return null;}}
 function epiShot(o){return function(){
-  var snap=G.epi&&G.epi.started?epiSnap():null;
+  var snap=G.epi&&G.epi.started&&(o.cut||'fade')==='fade'?epiSnap():null;   // hard and smash cuts have no crossfade
   scene({set:o.set,clock:o.clock})();
   var g=G,M=g.morko,Hm=g.human;g.fade=0;g.hud=false;g.plan=false;
   if(o.bar){barSetup();var b=g.bar;b.sdrink=true;b.shelter=true;b.umbrella=1;}
   Hm.x=Hm.xT=o.hx||HOME;if(o.face)Hm.face=o.face;if(o.sitting)Hm.pose='floor';
   if(o.facing)Hm.facing=o.facing;if(o.reach)Hm.reach={x:Hm.x-34,y:FEETY-196};if(o.five)g.five={dx:o.five.dx,dy:o.five.dy};
-  M.s=M.sT=o.s||1;M.mood=o.mood||'calm';M.pose=o.bar?'shelter':o.sitting?'sit':o.pose||null;
+  M.s=M.sT=o.s||1;M.mood=o.mood||'calm';M.pose=o.bar?'shelter':o.pose||null;   // sitting: a lower shadow beside the seated human, not the sit pose (it read oddly)
   if(o.a){g.cowA=true;g.ax=g.axT=o.a;g.aFace=-1;g.aWave=!!o.wave;if(o.z){g.zT=1;g.zShow=0.2;}}
   if(o.b){g.cowB=true;g.bx2=g.bxT=o.b;g.bFace=-1;}
   if(o.r){g.cowR=true;g.rx=o.r;}
@@ -65,7 +69,9 @@ function epiShot(o){return function(){
   g.cz=c[3];g.cx=c[4];g.cy=c[5];g.camRate=RM?40:1.4/(o.secs||5.5);
   g.epi.rows=o.mine?mineRows():null;g.epi.at=(o.at||[]).slice();
   g.epi.started=true;g.epi.snap=snap;g.epi.x=snap?1:0;g.epi.o=o;g.epi.ct=0;
-  if(!snap){g.fade=1;g.fadeRate=0.8;}
+  if(o.alarm){g.pulse=RM?0.5:0.95;g.shake=RM?0:0.45;sfx('siren');}
+  if(o.cut==='smash'||o.cut==='hard'){g.fade=0;if(o.cut==='smash'){g.flash=1;sfx('cut');}}
+  else if(!snap){g.fade=1;g.fadeRate=0.8;}
 };}
 function stepEpi(dt){var e=G.epi;if(!e)return;e.ct+=dt;
   while(e.at&&e.at.length&&e.at[0][0]<=e.ct)e.at.shift()[1]();if(e.x>0)e.x=Math.max(0,e.x-dt/(RM?2.2:1.3));}

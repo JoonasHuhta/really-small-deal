@@ -160,6 +160,7 @@ Toteutettavissa. Kahdeksasta kahteentoista välähdystä, kukin 5–10 sekuntia,
 - **Tekstit:** ei RSD-neuvoja eikä tilastoja. Tilalle kuittirivejä takaisinviittauksina: ”Lunches: 1 · Accounts closed: 0 · Files updated: 1”. Viimeisenä yksi rivi: Made by Joonas Huhta (MoshBitSurfers).
 - **Joonakselta tarvitaan:** kappaleen tiedosto ja tempo (BPM) tai iskujen ajat. Jos *Cosmic Loneliness* on tämä kappale, lähetä se.
 - **Tekniikka:** aikajana `[{t, draw, caption}]` synkronoidaan `audio.currentTime`-arvoon. Less motion -asetuksella häivytykset ovat hitaampia.
+- **Leikkauskieli (0.52, Joonaksen palaute):** ei tasaista Ken Burns -zoomia joka kuvassa. Vaihtele kuvien pituutta, käytä kovaa leikkausta komiikkaan ja ristihäivytystä herkkiin kohtiin, pidä useimmat kuvat paikallaan ja käytä liikettä vain merkityksen kanssa (äkillinen zoomi gagiin, hidas vetäytyminen lopussa). Yksi kontrasti (hälytys → ei mitään), yksi kohellus (ohi menevä yläfemma), yksi välähdys (nauru). Luonnos: `37-epilogue.js`, Moments → Work in progress.
 
 ---
 

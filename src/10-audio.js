@@ -102,6 +102,8 @@ function sfx(k){
   else if(k==='menuOff'){tone(780,t,0.05,'sine',0.03);tone(520,t+0.05,0.07,'sine',0.03);}
   else if(k==='swat'){tone(900,t,0.12,'triangle',0.07,180);tone(240,t+0.02,0.08,'square',0.02,120);}
   else if(k==='stamp'){tone(150,t,0.09,'triangle',0.08,65);tone(780,t,0.025,'square',0.018,260);}
+  else if(k==='siren'){for(var si=0;si<4;si++){tone(880,t+si*0.36,0.17,'square',0.022,700);tone(620,t+si*0.36+0.18,0.17,'square',0.022,780);}}   // a small, slightly ridiculous alarm
+  else if(k==='clap'){tone(2400,t,0.03,'square',0.05,600);tone(180,t,0.06,'triangle',0.06,90);}
   else if(k==='good'){tone(660,t,0.08,'sine',0.05);tone(990,t+0.09,0.14,'sine',0.05);}
   else if(k==='enhance'){tone(300,t,0.3,'square',0.03,1400);tone(1400,t+0.32,0.08,'square',0.03);}
   else if(k==='zap'){tone(110,t,0.32,'square',0.05,55);tone(2600,t,0.05,'sawtooth',0.04,400);tone(1900,t+0.07,0.04,'square',0.03,260);tone(70,t+0.12,0.4,'sine',0.16,40);}
