@@ -225,6 +225,13 @@ function scWalk(){
     set({mood:'care',s:1.1}),
     ['S','…Is there toast?'],
     ['H','There’s toast.'],refill(2,'home. toast.'),
+    // VISIO 6: the drawing is the heart. Planted on Monday night, finished on the quiet day, shared on Sunday.
+    ['N','After toast, a cat. On a sticky note. Four legs so far.'],
+    ['H','It needs one more leg.'],
+    ['S','Cats have four. I checked.',{look:'squint'}],
+    ['H','This one needs five.'],
+    ['S','Then it goes in the drawer. Before somebody sees it.',{quiet:1}],
+    ['H','…For now.'],function(){G.catStarted=true;},
     {wait:0.9},
     showEnd
   ];

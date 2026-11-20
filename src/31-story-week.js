@@ -140,7 +140,9 @@ function yesMenu(s,extra,extraKey){return {choice:[
 ]};}
 function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600+20*60}).concat([
   mugOn(4,2),   // Wednesday leaks slowly: every yes costs a sip, the bill arrives on Thursday
-  
+  // VISIO V4: the senses take from the mug too. An open office, a speakerphone, since nine.
+  ['N','The open office. Someone is on speakerphone. Since nine.'],drain(1,'speakerphone'),
+  ['S','He has said “can you hear me now” forty times. We can. We all can.'],
   set({cowB:1,bx:880}),{wait:1.6},
   ['B','Hey! Quick favour. Could you take my slides for Friday? I’m swamped.'],
   ['H','I’ve got my own—'],

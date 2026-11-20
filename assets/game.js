@@ -975,6 +975,13 @@ function scWalk(){
     set({mood:'care',s:1.1}),
     ['S','…Is there toast?'],
     ['H','There’s toast.'],refill(2,'home. toast.'),
+    // VISIO 6: the drawing is the heart. Planted on Monday night, finished on the quiet day, shared on Sunday.
+    ['N','After toast, a cat. On a sticky note. Four legs so far.'],
+    ['H','It needs one more leg.'],
+    ['S','Cats have four. I checked.',{look:'squint'}],
+    ['H','This one needs five.'],
+    ['S','Then it goes in the drawer. Before somebody sees it.',{quiet:1}],
+    ['H','…For now.'],function(){G.catStarted=true;},
     {wait:0.9},
     showEnd
   ];
@@ -1130,7 +1137,9 @@ function yesMenu(s,extra,extraKey){return {choice:[
 ]};}
 function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600+20*60}).concat([
   mugOn(4,2),   // Wednesday leaks slowly: every yes costs a sip, the bill arrives on Thursday
-  
+  // VISIO V4: the senses take from the mug too. An open office, a speakerphone, since nine.
+  ['N','The open office. Someone is on speakerphone. Since nine.'],drain(1,'speakerphone'),
+  ['S','He has said “can you hear me now” forty times. We can. We all can.'],
   set({cowB:1,bx:880}),{wait:1.6},
   ['B','Hey! Quick favour. Could you take my slides for Friday? I’m swamped.'],
   ['H','I’ve got my own—'],
@@ -1994,10 +2003,7 @@ function labMug(){return labScene({set:'room',title:'A Tuesday, with a mug.',pla
   ['S','Parley.',{look:'pleased'}],
   ['S','I’ve drawn up a small deal. You eat at your desk. I get you a quiet hour. The mug stays where it is.'],
   ['S','It’s a good deal. I wrote it.'],
-  {choice:[
-    {t:'Take the deal. Save the mug.',m:'hide',f:function(){G.lunchSkipped=1;},then:[dealSign(true),hat(null),refill(1,'a quiet hour'),['S','Signed. Witnessed. Filed.'],['H','…She did ask twice.'],['S','That’s a LATER problem. Later is a different department.']]},
-    {t:'No deal. Lunch with Sanna.',m:'stay',f:function(){G.lunchSkipped=0;},then:[dealSign(false),hat(null),drain(1,'lunch, worth it'),['S','That will cost a sip.'],['H','Then it costs a sip.'],['S','…Was it worth it?',{quiet:1}],['H','Ask me after.']]}
-  ]},
+  {choice:function(){return dealOptions(true);}},
   scene({set:'office',clock:13*3600+58*60}),
   ['N','The lift up to Riitta. Somebody’s perfume. All of it.'],
   drain(1,'perfume, in the lift'),
@@ -2027,6 +2033,18 @@ function labMug(){return labScene({set:'room',title:'A Tuesday, with a mug.',pla
   ['H','Probably is fine.'],
   mugOff
  ]);}
+
+// VISIO kierros 3 A / V21: a deal is argued with the mug. The question is who is talking: the mug (a fair limit) or the door (fear).
+// Asked once; the answer depends on the real level, and either way both options stay open. Nothing is punished.
+function dealOptions(canAsk){
+  var o=[{t:'Take the deal. Save the mug.',m:'hide',f:function(){G.lunchSkipped=1;},then:[dealSign(true),hat(null),refill(1,'a quiet hour'),['S','Signed. Witnessed. Filed.'],['H','…She did ask twice.'],['S','That’s a LATER problem. Later is a different department.']]},
+    {t:'No deal. Lunch with Sanna.',m:'stay',f:function(){G.lunchSkipped=0;},then:[dealSign(false),hat(null),drain(1,'lunch, worth it'),['S','That will cost a sip.'],['H','Then it costs a sip.'],['S','…Was it worth it?',{quiet:1}],['H','Ask me after.']]}];
+  if(canAsk)o.push({t:'Ask: is that the mug talking, or the door?',m:'stay',then:function(){
+    var low=G.mug&&G.mug.v<=2;
+    return (low?[['S','…The mug. Honestly. It’s low.',{quiet:1}],['H','Then it’s a fair deal.'],['S','I do write fair ones. Occasionally.']]:
+      [{wait:0.8},['S','…The door.',{quiet:1}],['H','Thought so.'],['S','The mug was a very convenient witness.']]).concat([{choice:function(){return dealOptions(false);}}]);}});
+  return o;
+}
 // ---- src/37-epilogue.js ----
 /* ================= the closing montage, first sketch (T10, lab only, no music yet) ================= */
 // TYOSUUNNITELMA section 6. Instead of credits: short, soft flashes from the week, cross-faded, each with one receipt line.

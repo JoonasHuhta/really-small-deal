@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.69.0 (Claude, 20.11.2026): **kissa maanantaihin, muki vai ovi, kaiutinpuhelin.**
+- V7: maanantai-iltana paahtoleivän jälkeen ihminen piirtää muistilapulle kissan, jolla on neljä jalkaa. ”This one needs five.” Ekskyysmi: ”Then it goes in the drawer. Before somebody sees it.” Kissa saa viidennen jalkansa hiljaisena päivänä ja jaetaan sunnuntaina ryhmächatissa.
+- V21 (prototyyppi): diilin kohdalla voi kysyä kerran ”Is that the mug talking, or the door?” Matalalla mukilla Ekskyysmi myöntää: ”The mug. Honestly.” Täydellä: ”…The door.” / ”The mug was a very convenient witness.” Kumpikin vaihtoehto on yhä auki; mitään ei rangaista.
+- V4: keskiviikon avokonttorissa joku on ollut kaiutinpuhelimessa yhdeksästä asti (vie siemauksen).
+- Kesto 48:54.
+
 Versio 0.68.0 (Claude, 20.11.2026): **Eero juo teetä.**
 - Ristiriita korjattu: Eero piirrettiin kahvikuppi kädessä, vaikka Ekskyysmi sanoo ”He doesn’t HAVE a coffee.” Nyt Eeron kupissa roikkuu teepussin naru ja lappu, ja repliikki on ”He doesn’t HAVE a coffee. He’s drinking TEA.” ”You too” on edelleen väärin, nyt kahdesti.
 - Bite-polku (”Show him some teeth. Small ones.”) on ennallaan maanantain neljäntenä vaihtoehtona; nyt näykkäisy maksaa siemauksen (”the snap”), ja kotimatkan anteeksipyyntö tulee edelleen etusijalla.

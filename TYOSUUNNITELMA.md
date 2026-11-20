@@ -331,10 +331,10 @@ Jos nämä ovat ristiriidassa §13:n kanssa, nämä voittavat. Korvautuneet §13
 | **V1** | **Muki-prototyyppi** WIP-osioon: ”A Tuesday, with a mug.” Muki-HUD (kahvin pinta, ei numeroita), aistit vievät mukista, yksi diili paperilappuna, Riitan palaveri, tyhjä muki → mörkötila (piikikäs Ekskyysmi, kärjistyneet vaihtoehdot, pehmeä vaihtoehto lukittu: ”Not enough mug for that.”), iltatäyttö. | M | ✔ 0.64.0 (prototyyppi) |
 | **V2** | Joonas pelaa V1:n. Päätökset: tuntuuko muki oikealta, kahvi vai tee, saako ihminen tiuskaista Sannalle. | Joonas | |
 | **V3** | (aloitettu 0.65.0: torstai kokonaan, romahdus ja kintsugi) Muki viikkoon kohtaus kerrallaan, torstaista alkaen (siellä muki on aina melkein tyhjä). Käsikirjoitettu systeemi: taso rajataan avainkohdissa. Korvaa K8:n (The reply): ruma puoli tulee tyhjästä mukista. | L | |
-| **V4** | Aistit kohtauksiin mukin kautta (korvaa K6c/K6d): maiskutus, hajuvesi hississä, loisteputki. Pienet aisti-ikonit kertyvät pään ympärille. | M | |
+| **V4** (aloitettu 0.69.0: tiistain pesulappu, keskiviikon kaiutinpuhelin) | Aistit kohtauksiin mukin kautta (korvaa K6c/K6d): maiskutus, hajuvesi hississä, loisteputki. Pienet aisti-ikonit kertyvät pään ympärille. | M | |
 | **V5** | **Pino**: vastaamattomat viestit kasvavat lattialla, ihmisen oma kitka; Kaisan ”are you alive??” on osittain ansaittu torjunta. | M–L | |
 | **V6** | **Diilit** (4–6 koko pelissä) paperilappuina; osa hyviä (lepo), osa lainaa huomiselta. Kuitti toimii diilien tilikirjana. Diilit eivät koske Ekskyysmin kokoa. | M | |
-| **V7** | **Kissa maanantaihin**: ihminen piirtää muistilapulle, Ekskyysmi piilottaa; kissa kulkee viikon läpi ryhmächattiin asti. | S–M | |
+| ✔ **V7** (0.69.0) | **Kissa maanantaihin**: ihminen piirtää muistilapulle, Ekskyysmi piilottaa; kissa kulkee viikon läpi ryhmächattiin asti. | S–M | |
 | **V8** | **Majakkakirja = hyperfokus**: täyttää mukin, mutta viesti jää vastaamatta (Pino). Yksi diili, jonka kumpikin puoli on totta. | S–M | |
 | **V9** | **Uusi maanantai -loppu**: sama ”oh, hi.”, vanhat vaihtoehdot + *Stay*, viimeinen diili ja kysymys ”Is that the mug talking, or the door?” (kumpikin vastaus käy), työnkuva pysyy ”Stay with you when it happens.” (VISIO kierros 3 A), ensimmäinen itse arkistoitu kehu. | M | |
 | **V10** | **Ennusteet** kolme kertaa (ma, to, uusi ma), kalibrointirivi kuittiin. | M | |
@@ -355,7 +355,7 @@ Jos nämä ovat ristiriidassa §13:n kanssa, nämä voittavat. Korvautuneet §13
 | ✔ **V18** | Romahdus ja kintsugi torstaina: muki särkyy, ihminen huutaa varjolle, bilehattu lentää, kultasaumat jäävät. | M | 0.65.0 |
 | ✔ **V19** | Hatut (siluetti + reunus, kupla väistää): etsivä, kokki, bile, merirosvo. | S | 0.65.0 |
 | ✔ **V20** | Piikit vain kohtauksen pyynnöstä (`mugSpiky`). | S | 0.65.0 |
-| **V21** | **Muki vai ovi**: diilien kysymys ”Is that the mug talking, or the door?”; kumpikin vastaus on sallittu; kuitissa erittely. Korvaa V6:n sävyn (diili ei ole kauppa vaan perustelu, jonka takaa kuunnellaan). | M | |
+| **V21** (prototyyppi 0.69.0: kysymys kerran, vastaus mukin todellisen tason mukaan) | **Muki vai ovi**: diilien kysymys ”Is that the mug talking, or the door?”; kumpikin vastaus on sallittu; kuitissa erittely. Korvaa V6:n sävyn (diili ei ole kauppa vaan perustelu, jonka takaa kuunnellaan). | M | |
 | ✔ **V22** (0.66.0; perjantain ja ryhmächatin kultasaumat mukana) | Muki maanantaista keskiviikkoon (täysi aamulla, ”oh, hi.” osuu täydellä mukilla: tämä on argumentti, ettei RSD ole väsymystä) ja kultasaumat perjantaihin ja ryhmächattiin. | M–L | |
 | **V23** | Tiuskaisu tyhjällä mukilla viikkoon (Riitta tai Eero; Sanna avoin kysymys). | S–M | |
 | **V24** | Lisää hattuja vain ansaituille hetkille (pipo, kypärä, syntymäpäivä), enintään 5–6 koko pelissä. | S | |
