@@ -4,7 +4,7 @@ var LABS={
   evening:{title:'An ordinary evening',blurb:'Stairs, dishes, a half-hummed line, an overdue book. Nothing happens. On purpose.',script:labEvening},
   glass:{title:'Evidence.',blurb:'Two people stop laughing when you walk in. Ekskyysmi gets out the magnifying glass.',script:labGlass},
   colleagues:{title:'Colleagues.',blurb:'Sanna’s shadow says “oh. hi.” to Ekskyysmi. Now it knows how that felt.',script:labColleagues},
-  epilogue:{title:'Epilogue, first sketch.',blurb:'T10 without music: soft flashes from the week, one receipt line each, then the credit. Timing is a guess until the song exists.',script:labEpilogue},
+  epilogue:{title:'The week, itemised.',blurb:'The epilogue: the week in flashes to the song, then the whole receipt. Tap twice to skip.',script:labEpilogue},
   lampgap:{title:'Lamp gap.',blurb:'Test clone of the walk home. Between the street lamps, the shadow falls behind.',script:labLampGap},
   bag:{title:'The bag.',blurb:'Test clone of Thursday 18:40. A whole day of holding the face, then a bag that will not open.',script:labBag},
   night:{title:'Night shift.',blurb:'The human is asleep and the lamp is off. In the dark every shadow is the same shadow.',script:labNight},
@@ -63,7 +63,7 @@ function showLab(){
   showOv(h+'</div><button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
 }
 function showLabEnd(id){
-  var g=G;g.ended=true;g.labEnd=true;WAIT=null;Q=[];render();
+  var g=G;g.ended=true;g.labEnd=true;WAIT=null;Q=[];epiChrome(false);render();
   showOv('<div class="eyebrow">'+(DEVLAB?'Scenario lab':'Moments')+'</div><h2>'+LABS[id].title+'</h2><p>'+(DEVLAB?'That was the whole scene. Was it funny? Did it land?':'That was the whole moment.')+'</p>'+
    '<button class="go" type="button" data-lab="'+id+'">Play it again →</button><button class="go alt" type="button" data-go="'+(DEVLAB?'lab':'moments')+'">Other moments</button><button class="go alt" type="button" data-go="menu">Title screen</button>','end');
 }

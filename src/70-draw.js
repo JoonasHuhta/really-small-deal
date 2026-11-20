@@ -354,6 +354,7 @@ function drawPair(humanOpts){
   if(up)shadowDrink(q);
   drawGaze();
   if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to: not on the street
+  homeLamp();   // shadow on the wall, then the lamp, then the human
   drawHuman(humanOpts);
   if(up&&ht.front){ctx.save();ctx.globalAlpha*=fa;morkoArms(q,ht);ctx.restore();}
   if(up)drawStamp();
@@ -522,6 +523,7 @@ function draw(){
     if(!g.human.gone)drawPair();
     else if(g.roomFront!=null&&g.set==='room')roomFront(g.roomFront);   // the lamp table is furniture: it is there before the human arrives
     if(g.human.gone&&g.finalFrame){var endQ=geom();morkoBody(endQ);morkoArms(endQ,handTargets(endQ));}
+    if(g.human.gone)homeLamp();
     drawFight();
     drawDish();
     drawHotGlint();

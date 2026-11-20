@@ -14,6 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.58.0 (Claude, 20.11.2026): **epilogi on nyt pelin loppu.**
+- Tarinassa: loppukuva (lamppu ja varjolintu) → ”For now” → **The End. (of the week)** mustalla kappaleen hiljaisen ensimmäisen tahdin ajan → epilogi kappaleen kanssa → *By the radiator.* lopputekstien jälkeen → viikon kuitti. (`AFTER[5]`, `NOCARD.epilogue`.)
+- Epilogin loppu: häivytys mustaan alkaa bändin viimeisestä iskusta (169,4 s, iskuanalyysi) ja on musta ennen jälkikaikua. Ei enää välähdystä eikä kertojan palkkia lopussa; paneeli palaa vasta seuraavan kohtauksen mukana.
+- Napauta kahdesti ohittaaksesi (”Tap again to skip”).
+- Lattialamppu kotona piirretään seinävarjon eteen ja ihmisen taakse: lamppu ja Ekskyysmi eivät enää vaihda paikkaa.
+- Eeron diat kestävät kaksi tahtia, ja lyhyiden kuvien kuittirivi tulee esiin aiemmin ja pysyy leikkaukseen asti.
+- Rullaavaan kuittiin osio *WHAT IT FELT LIKE*: aika epämukavuusalueella (lähde: Eero), pisin uudelleenkelaus pelaajan omasta viikosta, kasvot pidetty pystyssä, anteeksipyynnöt etukäteen, rohkeat teot joita kukaan ei nähnyt (paitsi yksi varjo), kalenteripäivät ja sisällä eletyt päivät. Viimeiset rivit: ”thank you for coming. / no reply needed. / (really.)”
+
 Versio 0.57.0 (Claude, 20.11.2026): **Joonaksen havainnot: nenä, kortit koko näytöllä, ääni, siirtymä, ajokohtaus.**
 - Ihmisten nenä osoittaa nyt katseen suuntaan (ennen aina oikealle).
 - Ulkopuoliset kortit koko näytön / puhelimen vaakatilassa: otsikko ei jää valikkonapin alle, eikä kuvateksti jää paneelin alle (paneeli kantaa sen). Kertojan nauha piirretään vain, kun paneeli ei peitä sitä.

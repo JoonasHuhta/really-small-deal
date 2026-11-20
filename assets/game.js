@@ -333,7 +333,7 @@ elOpts.addEventListener('click',function(e){
   if(i==='go')userAdvance();else choose(+i);
 });
 var swallowClick=false;
-cv.addEventListener('click',function(e){if(swallowClick){swallowClick=false;return;}if(paused&&G.started&&!G.ended){togglePause();return;}if(lensFree()){lensTap(e);return;}if(WAIT==='hold'){holdClick();return;}if(WAIT==='toss')return;if(hotTap(e))return;if(WAIT!=='stretch')userAdvance();});
+cv.addEventListener('click',function(e){if(G&&G.epi&&!paused){epiTap();return;}if(swallowClick){swallowClick=false;return;}if(paused&&G.started&&!G.ended){togglePause();return;}if(lensFree()){lensTap(e);return;}if(WAIT==='hold'){holdClick();return;}if(WAIT==='toss')return;if(hotTap(e))return;if(WAIT!=='stretch')userAdvance();});
 cv.addEventListener('pointerdown',function(e){if(WAIT==='hold'){holdDown();try{cv.setPointerCapture(e.pointerId);}catch(_){}}});
 elOpts.addEventListener('pointerdown',function(e){var t=e.target&&e.target.closest?e.target.closest('[data-i=hold]'):null;if(t)holdDown();});
 window.addEventListener('pointerup',holdUp);window.addEventListener('pointercancel',holdUp);window.addEventListener('blur',holdUp);
@@ -966,7 +966,7 @@ var CHAPTERS=[null,{day:'A MONDAY',title:'Oh, hi.'},{day:'A TUESDAY',title:'Quic
 var RIITTA={body:'#7a6a9c',hair:'#cfc8ba'};
 function dayName(n){return CHAPTERS[n].title;} // kept under its old name: the title is what menus show now
 function scene(o){return function(){
-  var g=G,M=g.morko,Hm=g.human;
+  var g=G,M=g.morko,Hm=g.human;if(!g.epi)epiChrome(false);   // the panel comes back with the next real scene
   music(o.music||o.set||'room');
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
@@ -1461,13 +1461,13 @@ var AFTER={
   2:['enhance','rewind'],
   3:['glass','colleagues','evening'],
   4:['notnow','bar','nothing','form','quiet','library','evenings','night'],
-  5:['comments','radiator']   // after the final image: the next Tuesday, by the radiator
+  5:['comments','epilogue','radiator']   // after the final image: the next Tuesday, by the radiator
 };
 // Extras, not in the story (TYOSUUNNITELMA.md section 4): posting, detail, sometime, reply, voice, footage.
 var WHEN={night:'THAT NIGHT',rewind:'THAT NIGHT, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'THE FIRST MORNING',evenings:'THE SAME DAY, 21:00',posting:'THAT NIGHT, LATE',detail:'THE NEXT AFTERNOON',enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'AN EVENING',
   colleagues:'AFTER LUNCH, SOME DAY',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'AN EVENING AT HOME',voice:'LATER THAT EVENING',library:'A SATURDAY, WEEKS LATER',radiator:'THE NEXT TUESDAY'};
 // Moments that continue the one before them: Night shift is the same evening as Evenings (TYOSUUNNITELMA.md T3).
-var NOCARD={night:1};
+var NOCARD={night:1,epilogue:1};   // the epilogue follows the last image straight away (it opens on its own “The End.”)
 function interlude(id){return function(){G.lab=null;G.moment=id;saveMoment(id);return (id==='nothing'?partCard(2):[]).concat(LABS[id].script());};}
 function momentsAfter(n){return (AFTER[n]||[]).map(interlude);}
 // ---- src/34-response.js ----
@@ -1972,6 +1972,9 @@ function stepEpi(dt){var e=G.epi;if(!e)return;e.ct+=dt;
 function epiFilterOn(){}
 function drawEpi(){
   var e=G.epi;if(!e)return;
+  if(e.theEnd){ctx.fillStyle='#0d1114';ctx.fillRect(0,0,W,H);var a=clamp(e.clock/0.8,0,1);ctx.globalAlpha=a;ctx.fillStyle='#f4eddf';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='500 54px Fraunces,Georgia,serif';ctx.fillText('The End.',W/2,H/2-8);ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('(of the week)',W/2,H/2+40);ctx.globalAlpha=1;return;}
+  epiSkipHint(e);
   if(e.o){epiWorld(e.o,e);if(e.o.rain)epiRain();}
   // a warm wash, a little haze: the week as remembered
   var gr=ctx.createRadialGradient(W/2,H*0.45,H*0.2,W/2,H/2,H*0.9);gr.addColorStop(0,'rgba(255,224,170,0.10)');gr.addColorStop(1,'rgba(30,22,40,0.55)');
@@ -1983,7 +1986,7 @@ function drawEpi(){
   if(o.noCap)return;
   var rows=o.mine?(e.rows||[]):o.l?[{l:o.l,v:o.v}]:[];
   if(!rows.length&&!o.title&&!o.credit)return;
-  var a=clamp((e.ct-0.8)/0.6,0,1)*clamp(((o.secs||5.5)-0.3-e.ct)/0.5,0,1);if(a<=0)return;
+  var lead=Math.min(0.8,(o.secs||5.5)*0.12),a=clamp((e.ct-lead)/0.4,0,1)*clamp(((o.secs||5.5)-0.15-e.ct)/0.35,0,1);if(a<=0)return;   // short shots: caption early and held to the cut
   ctx.save();ctx.globalAlpha=a;ctx.textBaseline='middle';
   if(o.credit){ctx.textAlign='center';ctx.font='500 22px Fraunces,Georgia,serif';ctx.fillStyle='#f4eddf';ctx.fillText(o.credit,W/2,H-58);ctx.restore();return;}
   var note=typeof o.note==='function'?o.note():o.note,mono='"DM Mono",ui-monospace,Menlo,monospace';
@@ -2002,13 +2005,13 @@ function drawEpi(){
 // ---------- timed to the song (Safe At Last, 2:55, ~108 BPM) ----------
 // Bar starts found by beat tracking (librosa) and kept here, so cuts land on bars. Without sound the same clock runs on time.
 var EPIBARS=[0.12,2.37,4.62,6.97,9.31,11.56,13.82,16.04,18.30,20.55,22.99,25.24,27.68,30.12,32.37,34.62,36.87,39.13,41.54,43.79,46.05,48.30,50.55,52.80,55.05,57.28,59.54,61.97,64.23,66.48,68.73,70.96,73.21,75.46,77.72,79.95,82.20,84.45,86.70,88.96,91.18,93.25,95.50,97.76,100.01,102.26,104.49,106.74,108.99,111.22,113.45,115.73,117.96,120.19,122.46,124.71,127.13,129.38,131.63,133.86,136.12,138.37,140.60,142.85,145.08,147.33,149.58,151.81,154.06,156.32,158.55,160.80,163.03];
-var EPISONG=175.2;
+var EPISONG=175.2,EPILAST=169.4;
 function barT(n){return n<EPIBARS.length?EPIBARS[n]:EPIBARS[EPIBARS.length-1]+(n-EPIBARS.length+1)*2.25;}
-function epiClock(){var e=G.epi;return e?e.clock||0:0;}
+function epiClock(){var e=G.epi;return e?(e.skip?1e9:e.clock||0):1e9;}
 function epiAt(t){return function step(){return epiClock()>=t-0.03?[]:[{wait:0.04},step];};}
 // Part A: the montage (31 bars). B: the receipt rolls while they sit on the floor (the song's quieter middle).
 // C: the last chorus: one bar each, no captions, faster. D: the bird and the credit, held to the last note.
-var EPIA=[2,2,1,2,2,2,1,1,1,1,2,1,2,2,1,2,2,1,3];
+var EPIA=[2,2,2,2,2,2,1,1,1,1,2,1,2,2,1,2,2,1,3];
 var EPIC=['LUNCHES','NOS, SAID OUT LOUD','UMBRELLAS, HELD','RIDES HOME','laugh','LIFTS, SHARED','REJECTIONS, SELF-ISSUED','DRAFTS, DELETED','GROUP PHOTOS','POWER CUTS','DRAWINGS SHARED','DAYS LIVED TODAY'];
 function epiCopy(o,extra){var c={},k;for(k in o)c[k]=o[k];for(k in extra)c[k]=extra[k];return c;}
 function epiFind(l){for(var i=0;i<EPI.length;i++)if(l==='laugh'?EPI[i].face==='laugh':EPI[i].l===l)return EPI[i];return null;}
@@ -2016,7 +2019,18 @@ function epiFind(l){for(var i=0;i<EPI.length;i++)if(l==='laugh'?EPI[i].face==='l
 function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · THE WHOLE THING'},{gap:1}];
   EPI.forEach(function(o){if(!o.l)return;r.push({l:o.l,v:o.v});var n=typeof o.note==='function'?o.note():o.note;if(n)r.push({n:n});});
   var mine=mineRows();if(mine.length){r.push({gap:1},{h:'EKSKYYSMI’S METHODS'});mine.forEach(function(m){r.push(m);});}
-  r.push({gap:1},{l:'SUBTOTAL',v:'ONE WEEK'},{l:'DISCOUNTS',v:'NONE NEEDED'},{l:'TOTAL',v:'LIVED ONCE'},{gap:1},{h:'Made by Joonas Huhta'},{h:'MoshBitSurfers'},{gap:1},{n:'thank you. come again.'},{n:'(not in a weird way.)'});
+  // What it felt like from inside: time, effort and bravery nobody else could see. No diagnosis, no advice: bookkeeping.
+  r.push({gap:1},{h:'WHAT IT FELT LIKE'});epiInsideRows().forEach(function(x){r.push(x);});
+  r.push({gap:1},{l:'SUBTOTAL',v:'ONE WEEK'},{l:'DISCOUNTS',v:'NONE NEEDED'},{l:'TOTAL',v:'LIVED ONCE'},{gap:1},{h:'Made by Joonas Huhta'},{h:'MoshBitSurfers'},{gap:1},
+    {n:'thank you for coming.'},{n:'no reply needed.'},{n:'(really.)'});
+  return r;}
+function epiInsideRows(){
+  var g=G,run=(g.run||[]).filter(function(d){return d.label!=='SCENARIO LAB';}),lived=0,cal=run.length,top=null;
+  run.forEach(function(d){lived+=d.ratio;(d.ledger||[]).forEach(function(x){if(!top||x.secs>top.secs)top=x;});});
+  var r=[{l:'TIME OUTSIDE THE COMFORT ZONE',v:'ALL OF IT'},{n:'source: eero.'}];
+  if(top)r.push({l:'LONGEST REPLAY',v:dur(top.secs)},{n:top.label});else r.push({l:'“OH, HI.”, REPLAYED',v:'×41'});
+  r.push({l:'FACE HELD UP',v:'MOST DAYS'},{l:'APOLOGIES, IN ADVANCE',v:'PLENTY'},{l:'BRAVE THINGS NOBODY SAW',v:String(Math.max(3,(g.methods||{}).stay||0))},{n:'seen by: one shadow.'});
+  if(cal)r.push({l:'DAYS ON THE CALENDAR',v:String(cal)},{l:'DAYS LIVED INSIDE',v:lived.toFixed(1)});
   return r;}
 function epiRoll(e){
   if(!e.rows2)e.rows2=epiRollRows();var rows=e.rows2,lh=24,w=350,x=W-w-36,h=rows.length*lh+40,dur=e.o.secs||60,k=clamp(e.ct/dur,0,1);
@@ -2031,9 +2045,15 @@ function epiRoll(e){
 }
 // The epilogue is a film: the panel and the hint line under the scene go away (on a phone they were an unreadable bar).
 function epiChrome(on){try{document.body.classList.toggle('epi-on',on);}catch(e){}}
+// Skip: the first tap asks, a second tap within 2.5 s jumps to the black at the end.
+function epiTap(){var e=G.epi;if(!e)return false;if(e.ask!=null&&G.time-e.ask<2.5){e.skip=true;music(null);return true;}e.ask=G.time;return true;}
+function epiSkipHint(e){if(e.ask==null||G.time-e.ask>2.5||e.skip)return;ctx.save();ctx.globalAlpha=clamp(2.5-(G.time-e.ask),0,1)*0.85;ctx.fillStyle='rgba(13,17,20,.6)';rr(W-196,14,182,30,15);ctx.fill();
+  ctx.fillStyle='#f4eddf';ctx.font='600 13px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Tap again to skip',W-105,29);ctx.restore();}
 function labEpilogue(){
   var steps=[function(){G.epi={started:false,x:0,ct:0,snap:null,o:null,clock:0};G.lines=[];music('epilogue');epiChrome(true);}];
-  var shots=EPI.slice(0,EPIA.length),b=0;
+  var shots=EPI.slice(0,EPIA.length),b=1;
+  steps.push(function(){var g=G;g.epi.theEnd=true;g.fade=0;g.hud=false;g.plan=false;g.lines=[];g.cur=null;g.band=null;});   // bar 0: “The End.” on black, over the song's quiet first bar
+  steps.push(epiAt(barT(1)),function(){G.epi.theEnd=false;});
   shots.forEach(function(o,i){
     var b0=b,n=EPIA[i];b+=n;
     steps.push(epiAt(barT(b0)));
@@ -2047,9 +2067,10 @@ function labEpilogue(){
   EPIC.forEach(function(l,i){var o=epiFind(l);if(!o)return;var b0=rollEnd+i;
     steps.push(epiAt(barT(b0)),epiShot(epiCopy(o,{cut:'hard',noCap:1,secs:barT(b0+1)-barT(b0),cam:[o.cam[3],o.cam[4],o.cam[5],o.cam[3],o.cam[4],o.cam[5]]})));});
   var last=epiFind('DAYS LIVED TODAY'),cred=EPI[EPI.length-1],cb=rollEnd+EPIC.length;
-  steps.push(epiAt(barT(cb)),epiShot(epiCopy(cred,{secs:EPISONG-barT(cb)})),epiAt(EPISONG-2.2),function(){G.fade=0;G.fadeRate=-0.45;},epiAt(EPISONG),
-    function(){G.epi=null;G.fade=1;G.fadeRate=0.5;music(null);epiChrome(false);},{wait:1.2});
-  return labScene({set:'home',title:'Epilogue, first sketch.',plan:'',clock:21*3600}).concat(steps);
+  // the band stops at 169.4 s (onset analysis); the fade starts on that last hit and is black before the ring-out ends.
+  steps.push(epiAt(barT(cb)),epiShot(epiCopy(cred,{secs:EPILAST-barT(cb)})),epiAt(EPILAST),function(){G.fade=0;G.fadeRate=-1/2.8;},epiAt(EPISONG),
+    function(){G.epi=null;G.lines=[];G.cur=null;G.band=null;G.fade=1;G.fadeRate=0.0001;music(null);},{wait:0.8});
+  return labScene({set:'home',title:'The week, itemised.',plan:'',clock:21*3600}).concat(steps);
 }
 // ---- src/40-backdrops.js ----
 /* ================= extra backdrops ================= */
@@ -2061,9 +2082,7 @@ function home(){
   ctx.fillStyle='#f6f1e4';circ(236,134,13);ctx.fill();ctx.fillStyle='#12152a';circ(242,130,11);ctx.fill();
   ctx.fillStyle='#f6f1e4';for(var i=0;i<7;i++){circ(132+i*19,118+(i*41)%96,1.2);ctx.fill();}
   ctx.strokeStyle='#e9e2cf';ctx.lineWidth=5;line(197,104,197,238);
-  if(G.kitchen)kitchen();else{
-  ctx.strokeStyle='#15171f';ctx.lineWidth=4;ctx.lineCap='round';line(520,WALLY+62,520,292);
-  ctx.fillStyle=G.lampOff?'#6f6857':'#f3d27a';ctx.beginPath();ctx.moveTo(500,262);ctx.lineTo(540,262);ctx.lineTo(552,296);ctx.lineTo(488,296);ctx.closePath();ctx.fill();}
+  if(G.kitchen)kitchen();   // the floor lamp is drawn later (homeLamp): it stands in the room, in front of the shadow on the wall
   if(G.basket){var bx=G.human.x+64;ctx.fillStyle='#b99b6b';ctx.beginPath();ctx.moveTo(bx-30,FEETY-34);ctx.lineTo(bx+30,FEETY-34);ctx.lineTo(bx+24,FEETY);ctx.lineTo(bx-24,FEETY);ctx.closePath();ctx.fill();
     ctx.fillStyle='#e9e2cf';ctx.beginPath();ctx.ellipse(bx-6,FEETY-36,22,9,0,Math.PI,0);ctx.fill();ctx.fillStyle='#9fb6c9';ctx.beginPath();ctx.ellipse(bx+12,FEETY-36,14,7,0,Math.PI,0);ctx.fill();}
   drawTable();drawBed();
@@ -2072,6 +2091,11 @@ function home(){
   ctx.fillStyle='#4b3e5b';rr(588,330,30,92,10);ctx.fill();rr(882,330,30,92,10);ctx.fill();
   ctx.fillStyle='#c98f2e';rr(700,322,60,34,8);ctx.fill();}
   if(G.snacks){var cols=['#c9553f','#e2b04a','#62887f'];for(var k=G.torn?1:0;k<11;k++){var b=bagPos(k);ctx.fillStyle=cols[k%3];rr(b.x,b.y,26,34,5);ctx.fill();}}
+}
+function homeLamp(){
+  if(G.set!=='home'||G.kitchen||G.w)return;
+  ctx.strokeStyle='#15171f';ctx.lineWidth=4;ctx.lineCap='round';line(520,WALLY+62,520,292);
+  ctx.fillStyle=G.lampOff?'#6f6857':'#f3d27a';ctx.beginPath();ctx.moveTo(500,262);ctx.lineTo(540,262);ctx.lineTo(552,296);ctx.lineTo(488,296);ctx.closePath();ctx.fill();
 }
 function bagPos(k){var row=k<6?0:1,col=row?k-6:k;return {x:628+col*40+(row?20:0),y:row?372:346};}
 function countBags(){var g=G;for(var k=0;k<11;k++){var b=bagPos(k);g.tics.push(tic(String(k+1),b.x+13,b.y-16,{at:k*0.2,life:k===10?2.4:1.1,size:k===10?20:15,col:k===10?'#9fd3a8':'#f1ebdd'}));}}
@@ -2666,7 +2690,7 @@ var LABS={
   evening:{title:'An ordinary evening',blurb:'Stairs, dishes, a half-hummed line, an overdue book. Nothing happens. On purpose.',script:labEvening},
   glass:{title:'Evidence.',blurb:'Two people stop laughing when you walk in. Ekskyysmi gets out the magnifying glass.',script:labGlass},
   colleagues:{title:'Colleagues.',blurb:'Sanna’s shadow says “oh. hi.” to Ekskyysmi. Now it knows how that felt.',script:labColleagues},
-  epilogue:{title:'Epilogue, first sketch.',blurb:'T10 without music: soft flashes from the week, one receipt line each, then the credit. Timing is a guess until the song exists.',script:labEpilogue},
+  epilogue:{title:'The week, itemised.',blurb:'The epilogue: the week in flashes to the song, then the whole receipt. Tap twice to skip.',script:labEpilogue},
   lampgap:{title:'Lamp gap.',blurb:'Test clone of the walk home. Between the street lamps, the shadow falls behind.',script:labLampGap},
   bag:{title:'The bag.',blurb:'Test clone of Thursday 18:40. A whole day of holding the face, then a bag that will not open.',script:labBag},
   night:{title:'Night shift.',blurb:'The human is asleep and the lamp is off. In the dark every shadow is the same shadow.',script:labNight},
@@ -2725,7 +2749,7 @@ function showLab(){
   showOv(h+'</div><button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
 }
 function showLabEnd(id){
-  var g=G;g.ended=true;g.labEnd=true;WAIT=null;Q=[];render();
+  var g=G;g.ended=true;g.labEnd=true;WAIT=null;Q=[];epiChrome(false);render();
   showOv('<div class="eyebrow">'+(DEVLAB?'Scenario lab':'Moments')+'</div><h2>'+LABS[id].title+'</h2><p>'+(DEVLAB?'That was the whole scene. Was it funny? Did it land?':'That was the whole moment.')+'</p>'+
    '<button class="go" type="button" data-lab="'+id+'">Play it again →</button><button class="go alt" type="button" data-go="'+(DEVLAB?'lab':'moments')+'">Other moments</button><button class="go alt" type="button" data-go="menu">Title screen</button>','end');
 }
@@ -4701,6 +4725,7 @@ function drawPair(humanOpts){
   if(up)shadowDrink(q);
   drawGaze();
   if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to: not on the street
+  homeLamp();   // shadow on the wall, then the lamp, then the human
   drawHuman(humanOpts);
   if(up&&ht.front){ctx.save();ctx.globalAlpha*=fa;morkoArms(q,ht);ctx.restore();}
   if(up)drawStamp();
@@ -4869,6 +4894,7 @@ function draw(){
     if(!g.human.gone)drawPair();
     else if(g.roomFront!=null&&g.set==='room')roomFront(g.roomFront);   // the lamp table is furniture: it is there before the human arrives
     if(g.human.gone&&g.finalFrame){var endQ=geom();morkoBody(endQ);morkoArms(endQ,handTargets(endQ));}
+    if(g.human.gone)homeLamp();
     drawFight();
     drawDish();
     drawHotGlint();

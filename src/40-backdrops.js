@@ -7,9 +7,7 @@ function home(){
   ctx.fillStyle='#f6f1e4';circ(236,134,13);ctx.fill();ctx.fillStyle='#12152a';circ(242,130,11);ctx.fill();
   ctx.fillStyle='#f6f1e4';for(var i=0;i<7;i++){circ(132+i*19,118+(i*41)%96,1.2);ctx.fill();}
   ctx.strokeStyle='#e9e2cf';ctx.lineWidth=5;line(197,104,197,238);
-  if(G.kitchen)kitchen();else{
-  ctx.strokeStyle='#15171f';ctx.lineWidth=4;ctx.lineCap='round';line(520,WALLY+62,520,292);
-  ctx.fillStyle=G.lampOff?'#6f6857':'#f3d27a';ctx.beginPath();ctx.moveTo(500,262);ctx.lineTo(540,262);ctx.lineTo(552,296);ctx.lineTo(488,296);ctx.closePath();ctx.fill();}
+  if(G.kitchen)kitchen();   // the floor lamp is drawn later (homeLamp): it stands in the room, in front of the shadow on the wall
   if(G.basket){var bx=G.human.x+64;ctx.fillStyle='#b99b6b';ctx.beginPath();ctx.moveTo(bx-30,FEETY-34);ctx.lineTo(bx+30,FEETY-34);ctx.lineTo(bx+24,FEETY);ctx.lineTo(bx-24,FEETY);ctx.closePath();ctx.fill();
     ctx.fillStyle='#e9e2cf';ctx.beginPath();ctx.ellipse(bx-6,FEETY-36,22,9,0,Math.PI,0);ctx.fill();ctx.fillStyle='#9fb6c9';ctx.beginPath();ctx.ellipse(bx+12,FEETY-36,14,7,0,Math.PI,0);ctx.fill();}
   drawTable();drawBed();
@@ -18,6 +16,11 @@ function home(){
   ctx.fillStyle='#4b3e5b';rr(588,330,30,92,10);ctx.fill();rr(882,330,30,92,10);ctx.fill();
   ctx.fillStyle='#c98f2e';rr(700,322,60,34,8);ctx.fill();}
   if(G.snacks){var cols=['#c9553f','#e2b04a','#62887f'];for(var k=G.torn?1:0;k<11;k++){var b=bagPos(k);ctx.fillStyle=cols[k%3];rr(b.x,b.y,26,34,5);ctx.fill();}}
+}
+function homeLamp(){
+  if(G.set!=='home'||G.kitchen||G.w)return;
+  ctx.strokeStyle='#15171f';ctx.lineWidth=4;ctx.lineCap='round';line(520,WALLY+62,520,292);
+  ctx.fillStyle=G.lampOff?'#6f6857':'#f3d27a';ctx.beginPath();ctx.moveTo(500,262);ctx.lineTo(540,262);ctx.lineTo(552,296);ctx.lineTo(488,296);ctx.closePath();ctx.fill();
 }
 function bagPos(k){var row=k<6?0:1,col=row?k-6:k;return {x:628+col*40+(row?20:0),y:row?372:346};}
 function countBags(){var g=G;for(var k=0;k<11;k++){var b=bagPos(k);g.tics.push(tic(String(k+1),b.x+13,b.y-16,{at:k*0.2,life:k===10?2.4:1.1,size:k===10?20:15,col:k===10?'#9fd3a8':'#f1ebdd'}));}}

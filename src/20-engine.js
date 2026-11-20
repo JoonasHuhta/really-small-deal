@@ -178,7 +178,7 @@ elOpts.addEventListener('click',function(e){
   if(i==='go')userAdvance();else choose(+i);
 });
 var swallowClick=false;
-cv.addEventListener('click',function(e){if(swallowClick){swallowClick=false;return;}if(paused&&G.started&&!G.ended){togglePause();return;}if(lensFree()){lensTap(e);return;}if(WAIT==='hold'){holdClick();return;}if(WAIT==='toss')return;if(hotTap(e))return;if(WAIT!=='stretch')userAdvance();});
+cv.addEventListener('click',function(e){if(G&&G.epi&&!paused){epiTap();return;}if(swallowClick){swallowClick=false;return;}if(paused&&G.started&&!G.ended){togglePause();return;}if(lensFree()){lensTap(e);return;}if(WAIT==='hold'){holdClick();return;}if(WAIT==='toss')return;if(hotTap(e))return;if(WAIT!=='stretch')userAdvance();});
 cv.addEventListener('pointerdown',function(e){if(WAIT==='hold'){holdDown();try{cv.setPointerCapture(e.pointerId);}catch(_){}}});
 elOpts.addEventListener('pointerdown',function(e){var t=e.target&&e.target.closest?e.target.closest('[data-i=hold]'):null;if(t)holdDown();});
 window.addEventListener('pointerup',holdUp);window.addEventListener('pointercancel',holdUp);window.addEventListener('blur',holdUp);

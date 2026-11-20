@@ -4,7 +4,7 @@ var CHAPTERS=[null,{day:'A MONDAY',title:'Oh, hi.'},{day:'A TUESDAY',title:'Quic
 var RIITTA={body:'#7a6a9c',hair:'#cfc8ba'};
 function dayName(n){return CHAPTERS[n].title;} // kept under its old name: the title is what menus show now
 function scene(o){return function(){
-  var g=G,M=g.morko,Hm=g.human;
+  var g=G,M=g.morko,Hm=g.human;if(!g.epi)epiChrome(false);   // the panel comes back with the next real scene
   music(o.music||o.set||'room');
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
