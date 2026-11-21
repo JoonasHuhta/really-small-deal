@@ -14,6 +14,11 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.79.0 (Claude, 21.11.2026): **epilogin sanat luettavissa omaan tahtiin (saavutettavuus).**
+- **Epilogi piirtää kaiken tekstinsä kankaalle**: kuvatekstit, viestiluonnokset, lomakkeen ja koko rullaavan kuitin. Hitaasti lukeva ei ehtinyt lukea niitä, eikä ruudunlukija nähnyt niitä lainkaan (Codex-arvion kohta 9, ja sama asia, josta Joonas huomautti 21.11.). Nyt jokainen rivi menee myös **Dialogue**-näkymään (valikko → Dialogue), kuitti rivi riviltä, ja piilotettuun live-alueeseen ruudunlukijaa varten. Myös ohitettu epilogi kirjautuu kokonaan. Ohitusvihje kertoo tästä: *Tap again to skip. Every line is in Dialogue.*
+- **Avauskortti:** *That was the week. (Ekskyysmi kept the receipts)*. Versiossa 0.77 kortti oli *The week, itemised.*, ja sama otsikko toistui heti ensimmäisessä kuvassa.
+- **Ei tehty:** Codex ehdotti *#5 Rewind* ja *#7 Evidence* -kohtausten tiivistämistä. Luettuani ne ovat jo tiiviitä (#5 1:08), ja #7:n pituus riippuu pelaajan omista tutkimuksista. Odottavat Joonaksen pelikertaa. Eeron ja Sannan lisärivit jäivät tekemättä: Eero sanoo jo keskiviikkona ”Honestly? I hate presenting.”, ja Sannalla on perjantaina oma yönsä.
+
 Versio 0.78.0 (Claude, 21.11.2026): **rytmikierros 1: *#18 Evenings* tiivistetty, sisältömaininta Abouttiin.**
 - ***#18 Evenings*** kertasi juuri pelatun päivän (lounas, ei, kissa, ”four seconds” kahdesti). Arvioijan halu jatkaa oli tässä 6. Nyt Ekskyysmi kuulee päivän kahdella repliikillä (”I asked Sanna to lunch. Four seconds.” – ”Four. I’d budgeted a week.”), ja valmiin kissan se löytää seisomalla sen päällä. Lomake-liitevitsi (”I’ll need an appendix”) poistettiin. Jäljelle jäivät kohtauksen ydin (”Nobody said ’for the record’. All day.” – ”It’s not the same when I do it.”, ”I missed you. I’m keeping the easier day, though.”) ja loppu (”Did you even REHEARSE?” – ”No.” – ”Amateur.”, joka vastaa #17:n ”Nobody rehearsed anything.”). 1:19 → 1:08.
 - **About:** ”Some moments may land close: being left out, a message left on ’Seen.’, a bad night at home.” Luettavissa, ei pakollinen varoitus pelin alussa. Peli ei edelleenkään neuvo.

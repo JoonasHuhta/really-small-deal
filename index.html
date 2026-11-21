@@ -18,10 +18,10 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/game.css?v=0.78.0">
+  <link rel="stylesheet" href="assets/game.css?v=0.79.0">
   <script>/* the immersive layout, before first paint, so a phone held sideways never flashes the wide one */
     try{if(matchMedia('(orientation:landscape) and (max-height:540px)').matches)document.documentElement.classList.add('immersive');}catch(e){}</script>
-  <script src="assets/game.js?v=0.78.0" defer></script>
+  <script src="assets/game.js?v=0.79.0" defer></script>
 </head>
 <body>
 <main class="wrap">
@@ -46,6 +46,7 @@
     <div class="stage">
       <canvas id="c" aria-label="An animated human and their shadow in an office break room"></canvas>
       <div id="ov" class="ov"></div>
+      <div id="epi-sr" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
     </div>
     <div id="play-panel" class="play-panel">
       <div id="line" class="line" role="status" aria-live="polite" aria-atomic="true"></div>

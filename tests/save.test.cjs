@@ -31,6 +31,11 @@ for(const pick of [0,1]){
  const rolled=roll.find(r=>r.l==='DAYS ON THE CALENDAR');
  assert.ok(rolled&&rolled.v===days(endA),'the epilogue and the last receipt count the same days ('+(rolled&&rolled.v)+' vs '+days(endA)+')');
  assert.equal(days(endA),'5','Monday to Friday: five days on the calendar');
+ // 0.79: everything the epilogue writes on screen can be read again in Dialogue (and reaches a screen reader)
+ {const h=a.T.history().map(x=>x.text);
+  for(const want of ['That was the week. (Ekskyysmi kept the receipts)','Sent: three lines. No apology.','7. How do you usually take criticism?','personally.','Signed: Ekskyysmi','One appointment outstanding.'])assert.ok(h.includes(want),'Dialogue is missing an epilogue line: '+want);
+  assert.ok(h.some(t=>/^DAYS ON THE CALENDAR: 5$/.test(t)),'the rolling receipt is in Dialogue, row by row');
+  assert.ok(h.some(t=>/^CRITICISM, ACTUAL: 1 — /.test(t)),'a receipt row keeps its note');}
  if(a.T.G.posting){assert.ok(roll.some(r=>r.l==='APPLICATIONS, SENT'&&r.v==='1'));assert.match(endA,/applications sent, friday\s+1/,'the last receipt agrees with the epilogue about the application');}
 }
-console.log('PASS: Continue keeps the week (two routes): same receipt, same last note, the epilogue and the end count the same five days, one application sent.');
+console.log('PASS: Continue keeps the week (two routes): same receipt, same last note, the epilogue and the end count the same five days, one application sent; the epilogue’s words are in Dialogue.');

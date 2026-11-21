@@ -15,7 +15,7 @@
 // cam: [z, x, y] start and end; equal = still. at: [seconds, function] beats inside a shot.
 function epiHa(dx,dy){return function(){var g=G,q=geom();g.tics.push(tic(Math.random()<0.5?'ha':'HA',(g.human.x+q.bx)/2+dx,q.hdY+20+dy,{life:1.2,size:15+Math.random()*5}));};}
 function epiSweat(){return function(){var g=G,q=geom();g.tics.push(tic('💧',q.bx+(Math.random()<0.5?-1:1)*(q.hdR+6),q.hdY-6,{life:0.9,size:13}));};}
-function epiLens(x,y,tag,honest){return function(){var q=geom();G.lens={x:q.bx+40,y:q.hdY+60,xT:x,yT:y,mode:'peek',tag:tag,spot:null,done:{},t:0,honest:!!honest};G.morko.pose='lens';};}
+function epiLens(x,y,tag,honest){return function(){var q=geom();epiSay('S',tag);G.lens={x:q.bx+40,y:q.hdY+60,xT:x,yT:y,mode:'peek',tag:tag,spot:null,done:{},t:0,honest:!!honest};G.morko.pose='lens';};}
 function epiStamp(){return function(){var g=G;g.selfStamps=(g.selfStamps||0)+1;sfx('stamp');g.shake=RM?0:0.06;};}
 function epiPunch(z,x,y){return function(){if(RM)return;C.z=z;C.fx=x;C.fy=y;var g=G;g.cz=z;g.cx=x;g.cy=y;sfx('cut');};}   // a snap zoom: the comedy kind
 function epiShake(k){return function(){G.shake=RM?0:k;};}
@@ -27,7 +27,7 @@ function epiLift(){
   ctx.fillStyle='#2b2f33';rr(722,140,46,90,6);ctx.fill();ctx.fillStyle='#e8b04a';ctx.font='700 22px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText('3',745,178);
   ctx.beginPath();ctx.moveTo(745,196);ctx.lineTo(737,208);ctx.lineTo(753,208);ctx.closePath();ctx.fill();
 }
-function epiDraft(t){return function(){var g=G;g.lines=[{who:'P',text:t}];g.cur={who:'P',text:t};g.curT=99;};}
+function epiDraft(t){return function(){var g=G;epiSay('P',t);g.lines=[{who:'P',text:t}];g.cur={who:'P',text:t};g.curT=99;};}
 function epiWorld(o,e){   // things drawn in the room, under the camera: the shadow umbrella, the dark with four eyes
   if(!o.umbrella&&!o.drive&&!o.zone&&!e.dark)return;
   ctx.save();applyCamera();var Hm=G.human,q=geom();
@@ -116,7 +116,22 @@ var EPI=[
 var MINE={worst:'WORST CASES, PREPARED',draft:'SCRIPTS, DRAFTED',please:'YESES, UNMEANT',hide:'EXITS, TAKEN',stay:'TIMES WE STAYED',hush:'SILENCES, KEPT'};
 function mineRows(){var m=G.methods||{};return Object.keys(MINE).filter(function(k){return m[k]>0;}).sort(function(a,b){return m[b]-m[a];}).slice(0,3).map(function(k){return {l:MINE[k],v:'×'+m[k]};});}
 function epiSnap(){try{var c=document.createElement('canvas');c.width=cv.width;c.height=cv.height;c.getContext('2d').drawImage(cv,0,0);return c;}catch(e){return null;}}
+// 0.79 (Codex review: the receipt and the captions were only pixels): everything the epilogue writes on the screen also goes
+// into Dialogue (Menu → Dialogue), to be read at your own pace, and to a screen reader through a hidden live region.
+function epiSay(who,text,quiet){history.push({who:who,text:text});if(!quiet)try{var el=document.getElementById('epi-sr');if(el)el.textContent=text;}catch(e){}}
+function epiTell(o){
+  if(o.title)epiSay('N',o.title);
+  if(o.l&&!o.noCap){var note=typeof o.note==='function'?o.note():o.note;epiSay('N',o.l+': '+o.v+(note?' — '+note:''));}
+  if(o.mine)mineRows().forEach(function(m,i){epiSay('N',m.l+': '+m.v,i>0);});
+  if(o.form){epiSay('N','FORM · PAGE 3 OF 9');EPIFORM.forEach(function(r){epiSay(r[1]==='q'?'N':'S',r[1]==='sig'?'Signed: '+r[2]:r[2],true);});}
+  if(o.roll){epiSay('N','The receipt for the whole week. Every line is here in Dialogue.');var rows=epiRollRows();
+    for(var i=0;i<rows.length;i++){var r=rows[i];if(r.h)epiSay('N',r.h,true);
+      else if(r.l){var v=typeof r.v==='function'?r.v():r.v,n=rows[i+1]&&rows[i+1].n;epiSay('N',r.l+': '+v+(n?' — '+n:''),true);if(n)i++;}
+      else if(r.n)epiSay('N',r.n,true);}}
+  if(o.credit)epiSay('N',o.credit);
+}
 function epiShot(o){return function(){
+  epiTell(o);
   var snap=G.epi&&G.epi.started&&(o.cut||'fade')==='fade'?epiSnap():null;   // hard and smash cuts have no crossfade
   if(o.walk){scene({set:'room',clock:23*3600})();startWalk();G.card=0;G.w.x=520;G.w.speed=o.umbrella?0:o.drive?150:34;G.w.xT=o.drive?99999:G.w.xT;G.clock=23*3600+40*60;}
   else scene({set:o.set,clock:o.clock})();
@@ -157,7 +172,7 @@ function epiFilterOn(){}
 function drawEpi(){
   var e=G.epi;if(!e)return;
   if(e.theEnd){ctx.fillStyle='#0d1114';ctx.fillRect(0,0,W,H);var a=clamp(e.clock/0.8,0,1);ctx.globalAlpha=a;ctx.fillStyle='#f4eddf';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.font='500 54px Fraunces,Georgia,serif';ctx.fillText('The week, itemised.',W/2,H/2-8);ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('(by Ekskyysmi)',W/2,H/2+40);ctx.globalAlpha=1;return;}
+    ctx.font='500 54px Fraunces,Georgia,serif';ctx.fillText('That was the week.',W/2,H/2-8);ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('(Ekskyysmi kept the receipts)',W/2,H/2+40);ctx.globalAlpha=1;return;}
   epiSkipHint(e);
   if(e.o){epiWorld(e.o,e);if(e.o.rain)epiRain();}
   // a warm wash, a little haze: the week as remembered
@@ -281,12 +296,12 @@ function epiForm(e){var t=e.ct,x=560,y=58,w=360,h=300,mono='"DM Mono",ui-monospa
 function epiChrome(on){try{document.body.classList.toggle('epi-on',on);}catch(e){}}
 // Skip: the first tap asks, a second tap within 2.5 s jumps to the black at the end.
 function epiTap(){var e=G.epi;if(!e)return false;if(e.ask!=null&&G.time-e.ask<2.5){e.skip=true;music(null);return true;}e.ask=G.time;return true;}
-function epiSkipHint(e){if(e.ask==null||G.time-e.ask>2.5||e.skip)return;ctx.save();ctx.globalAlpha=clamp(2.5-(G.time-e.ask),0,1)*0.85;ctx.fillStyle='rgba(13,17,20,.6)';rr(W-196,14,182,30,15);ctx.fill();
-  ctx.fillStyle='#f4eddf';ctx.font='600 13px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Tap again to skip',W-105,29);ctx.restore();}
+function epiSkipHint(e){if(e.ask==null||G.time-e.ask>2.5||e.skip)return;ctx.save();ctx.globalAlpha=clamp(2.5-(G.time-e.ask),0,1)*0.85;ctx.fillStyle='rgba(13,17,20,.6)';rr(W-356,14,342,30,15);ctx.fill();
+  ctx.fillStyle='#f4eddf';ctx.font='600 13px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Tap again to skip. Every line is in Dialogue.',W-185,29);ctx.restore();}
 function labEpilogue(){
   var steps=[function(){G.epi={started:false,x:0,ct:0,snap:null,o:null,clock:0};G.lines=[];music('epilogue');epiChrome(true);}];
   var shots=EPI.slice(0,EPIA.length),b=1;
-  steps.push(function(){var g=G;g.epi.theEnd=true;g.fade=0;g.hud=false;g.plan=false;g.lines=[];g.cur=null;g.band=null;});   // bar 0: “The week, itemised.” on black, over the song's quiet first bar (until 0.76 it said “The End.”, and players believed it)
+  steps.push(function(){var g=G;epiSay('N','That was the week. (Ekskyysmi kept the receipts)');g.epi.theEnd=true;g.fade=0;g.hud=false;g.plan=false;g.lines=[];g.cur=null;g.band=null;});   // bar 0: “That was the week.” on black (the first shot's title is “THE WEEK, ITEMISED”, so the card does not repeat it), over the song's quiet first bar (until 0.76 it said “The End.”, and players believed it)
   steps.push(epiAt(barT(1)),function(){G.epi.theEnd=false;});
   shots.forEach(function(o,i){
     var b0=b,n=EPIA[i];b+=n;
