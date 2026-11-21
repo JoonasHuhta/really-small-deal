@@ -983,12 +983,17 @@ function scWalk(){
     function(){return [scene({set:'home',clock:G.clock+25*60})];},set({mood:'care',s:1}),
     refill(2,'home. toast.'),
     // VISIO 6: the drawing is the heart. Planted on Monday night, finished on the quiet day, shared on Sunday.
-    ['N','Inside. Toast. After toast, a cat. On a sticky note. Four legs so far.'],
+    // Joonas 21.11.: the cat was not understandable. It is the drawing thread: Ekskyysmi started its job when somebody
+    // laughed at a drawing (YEAR 2). So the cat is on screen, the fifth leg is the human's own odd idea, and the file is named.
+    ['N','Inside. Toast.'],
+    function(){G.note={legs:4,a:0,aT:1,off:0};},
+    ['N','Then a pen. A cat on a sticky note. Four legs so far.'],
     ['H','It needs one more leg.'],
-    ['S','Cats have four. I checked.',{look:'squint'}],
-    ['H','This one needs five.'],
-    ['S','Then it goes in the drawer. Before somebody sees it.',{quiet:1}],
-    ['H','…For now.'],function(){G.catStarted=true;},
+    ['S','Cats have four. Five gets laughed at.',{look:'squint'}],
+    ['H','This one has five.'],
+    ['S','Then it goes in the drawer. We have a file on drawings.',{quiet:1}],
+    archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.']]),
+    ['H','…For now.'],function(){closeArchive();G.note.aT=0;G.catStarted=true;},
     {wait:0.9},
     showEnd
   ];
@@ -1018,7 +1023,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.mugQuiet=false;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -1061,7 +1066,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   aside(['S','ONE thumb. She has two.']),
   calm,{wait:0.9}
  ],[
-  scene({set:'home',clock:3*3600+7*60}),
+  scene({set:'home',clock:3*3600+7*60}),function(){G.tiredForce=1;},   // 03:07: eye bags, muttering
   ['N','03:07.'],
   ['S','Are you awake?'],
   ['H','I am now. It’s three in the morning.'],
@@ -1181,7 +1186,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   ['H','I’m extremely tired.'],
   ['S','Liked AND tired. The classic combination.',{look:'pleased'}]
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 minutes',cap:'Someone helpful. Possibly too helpful. Nobody checked.',anim:'nod'}),[
-  scene({set:'home',clock:23*3600+15*60}),function(){G.human.grin=0;},
+  scene({set:'home',clock:23*3600+15*60}),function(){G.human.grin=0;G.tiredForce=1;},
   ['N','23:15. Eero’s slides.'],
   ['H','It’s nearly midnight and I’m doing Eero’s slides.'],
   extraWorkCallback,
@@ -1212,6 +1217,8 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   ['H','…Thank you.'],
   ['S','I do have one useful setting.',{look:'pleased'}],
   ['S','It is just very rarely this one.',{quiet:1}],
+  ['H','You look tired.'],
+  ['S','I’m not tired. I’m load-bearing.',{quiet:1}],
   {wait:0.8},
   // Joonas 21.11.: the human is not only on the receiving end. A day of yes for everyone else, and the one person who matters
   // gets what is left: "Fine." With a full stop. Ekskyysmi is asleep and files nothing. Sanna's "fine" thread (Night shift,
@@ -1933,8 +1940,8 @@ function mugQuiet(on){return function(){G.mugQuiet=!!on;};}          // a scene 
 function mugSpiky(on){return function(){if(G.mug)G.mug.spiky=!!on;};}
 function mugEmpty(){return !!(G.mug&&G.mug.v<=1);}
 function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown;m.v=Math.max(Math.min(m.v,m.floor==null?0:m.floor),m.v-n);   // a day can scrape the bottom, only Thursday goes through it
-  m.shown=m.v;m.ghost={from:from,to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:label,t:0,minus:true};sfx('sipOut');};}
-function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:label,t:0,minus:false};sfx('pourIn');};}
+  m.shown=m.v;m.ghost={from:from,to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:label,t:0,minus:true,n:from-m.v};sfx('sipOut');};}
+function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var before=m.v;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:label,t:0,minus:false,n:m.v-before};sfx('pourIn');};}
 // The meltdown: the last drain on an empty mug breaks it. Shards fly; the mug stays broken until it is glued.
 function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.shown=0;m.broken=true;m.seen=0;m.ghost=null;m.last={text:label||'',t:0,minus:true};
   m.shards=[];for(var i=0;i<11;i++)m.shards.push({x:0,y:0,vx:(i%2?1:-1)*(60+((i*53)%160)),vy:-160-((i*71)%170),r:((i*37)%10)/10*6,va:((i%3)-1)*9,t:0});
@@ -1943,13 +1950,37 @@ function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.show
 function mugMend(v){return function(){var m=G.mug;if(!m)return;m.broken=false;m.mended=true;G.mugMended=true;m.shards=null;m.v=v||1;m.shown=0;m.seen=0;m.last={text:'glued. gold seams.',t:0,minus:false};sfx('glue');};}
 function stepMug(dt){var m=G.mug;if(!m)return;m.t+=dt;m.seen+=dt;
   if(m.shown<m.v)m.shown=Math.min(m.v,m.shown+dt*1.6);
-  m.slosh=Math.max(0,m.slosh-dt*0.9);if(m.last){m.last.t+=dt;if(m.last.t>2.6)m.last=null;}
+  m.slosh=Math.max(0,m.slosh-dt*0.9);if(m.last){m.last.t+=dt;if(m.last.t>3.4)m.last=null;}
   if(m.ghost){m.ghost.t+=dt;if(m.ghost.t>1.3)m.ghost=null;}
   if(m.shards)m.shards.forEach(function(sh){sh.t+=dt;sh.x+=sh.vx*dt;sh.y+=sh.vy*dt;sh.vy+=620*dt;sh.r+=sh.va*dt;});
   var want=!G.mugQuiet||m.seen<4||m.v<=1||m.broken?1:0;m.vis+=(want-m.vis)*Math.min(1,dt*(want?4:1.2));
   if(G.deal)G.deal.t+=dt;}
 
 // The mug sits under the HUD pills, top right. A real mug: handle, steam while there is something to steam.
+// Joonas 21.11.: Ekskyysmi gets tired. An empty-ish mug (or a scene that says so) gives it eye bags, heavy lids and a mutter:
+// the week, looping, half a word at a time. Size is still feeling; this is only the face.
+var MUMBLES={1:['…oh, hi…','…with a full stop…','…was it the comma…','…mm.'],2:['…quick chat…','…nine o’clock…','…shorter…','…mm.'],
+  3:['…could you just…','…yes…','…yes. yes…','…slides…'],4:['…seen…','…17:31…','…eleven bags…','…mm.'],5:['…oh, hi. again…','…mm.']};
+function mumbleLine(){var g=G,M=g.morko,l=(!g.moment&&MUMBLES[g.chapter])||['…mm.','…filed…','…where was I…','…define soon…'];M.mumI=(M.mumI||0)+1;return l[M.mumI%l.length];}
+function stepShadowLife(dt){var g=G,M=g.morko;if(!M)return;var m=g.mug,want=g.tiredForce||(m&&!m.broken&&m.v<=1?1:0);
+  if(M.asleep||g.plain||g.epi)want=0;M.tired=(M.tired||0)+(want-(M.tired||0))*Math.min(1,dt*1.4);
+  if(M.mumble){M.mumble.t+=dt;if(M.mumble.t>3)M.mumble=null;}
+  var talking=g.cur&&g.cur.who==='S';
+  if(M.tired>0.6&&!M.mumble&&M.st==='free'&&!talking&&!g.out&&!g.zoom){M.mumT=(M.mumT||0)+dt;if(M.mumT>5.5){M.mumT=0;M.mumble={text:mumbleLine(),t:0};}}
+  else if(talking&&M.mumble)M.mumble=null;
+  var n=g.note;if(n){n.a+=((n.aT==null?1:n.aT)-n.a)*Math.min(1,dt*3);n.off+=((n.offT==null?n.off:n.offT)-n.off)*Math.min(1,dt*2.5);}}
+// The cat (VISIO 6): a sticky note on the wall at home. Four legs on Monday, five on the quiet day, on the wall behind Ekskyysmi in the evenings.
+function drawCatNote(){var g=G,n=g.note;if(!n||g.set!=='home'||n.a<0.02)return;
+  var x,y;if(n.on==='shadow'){var q=geom();x=q.bx+n.off;y=q.shY+30;}else{x=668;y=236;}   // on the wall above the sofa: clear of the lamp (520) and the window
+  var s=COMPACT?1.4:1.18;ctx.save();ctx.globalAlpha*=n.a;ctx.translate(x,y);ctx.rotate(-0.07);ctx.scale(s,s);
+  ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(-19,-17,40,40);ctx.fillStyle='#f2d46b';ctx.fillRect(-21,-20,40,40);
+  ctx.strokeStyle='#3b3242';ctx.fillStyle='#3b3242';ctx.lineWidth=1.6;ctx.lineCap='round';
+  ctx.beginPath();ctx.ellipse(-3,3,10,5.5,0,0,Math.PI*2);ctx.stroke();                 // body
+  circ(9,-4,4.6);ctx.stroke();                                                            // head
+  ctx.beginPath();ctx.moveTo(6,-8);ctx.lineTo(6.5,-12);ctx.lineTo(9,-8.6);ctx.moveTo(10,-8.6);ctx.lineTo(12.5,-12);ctx.lineTo(12.6,-7.4);ctx.stroke();   // ears
+  ctx.beginPath();ctx.moveTo(-13,2);ctx.quadraticCurveTo(-19,-4,-15,-10);ctx.stroke();      // tail
+  var k=n.legs||4;for(var i=0;i<k;i++){var lx=-10+i*(17/(k-1));line(lx,7.5,lx-0.6,14);}     // legs: four, then five
+  ctx.restore();}
 function drawMug(){
   var m=G.mug;if(!m||G.out||G.epi||m.vis<0.02)return;
   var x=W-64,y=COMPACT?156:116,w=40,h=44,lvl=clamp(m.shown/MUGMAX,0,1),wob=RM?0:Math.sin(m.t*9)*3*m.slosh,i;
@@ -1972,9 +2003,11 @@ function drawMug(){
     ctx.fillStyle='#f1ebdd';ctx.beginPath();ctx.moveTo(x,y+h*0.45);ctx.lineTo(x+12,y+h*0.6);ctx.lineTo(x+7,y+h*0.75);ctx.lineTo(x+18,y+h*0.85);ctx.lineTo(x+w-6,y+h*0.62);ctx.lineTo(x+w,y+h*0.7);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.closePath();ctx.fill();
     ctx.fillStyle='rgba(107,68,40,.8)';ctx.beginPath();ctx.ellipse(x+w/2,y+h+8,30,5,0,0,Math.PI*2);ctx.fill();}
   if(m.shards){ctx.fillStyle='#f1ebdd';m.shards.forEach(function(sh){if(sh.t>1.6)return;ctx.save();ctx.globalAlpha=m.vis*clamp(1.6-sh.t,0,1);ctx.translate(x+w/2+sh.x,y+h/2+sh.y);ctx.rotate(sh.r);ctx.beginPath();ctx.moveTo(-5,-3);ctx.lineTo(6,-1);ctx.lineTo(1,6);ctx.closePath();ctx.fill();ctx.restore();});}
-  if(m.last&&m.last.text){var a=clamp(1-(m.last.t-1.8)/0.8,0,1);ctx.globalAlpha=a*m.vis;ctx.font='700 12px system-ui,sans-serif';ctx.textAlign='right';ctx.textBaseline='middle';
-    var lw=ctx.measureText(m.last.text).width+16,ly=y+h/2-m.last.t*6;ctx.fillStyle='rgba(22,19,30,.78)';rr(x-18-lw+8,ly-11,lw,22,11);ctx.fill();   // readable over a bright window
-    ctx.fillStyle=m.last.minus?'#f0a08f':'#9fd3a8';ctx.fillText(m.last.text,x-18,ly);}
+  // Joonas 21.11.: a refill reads as clearly as a hit: a green +1 and the reason, a red −2 and the reason.
+  if(m.last&&m.last.text){var a=clamp(1-(m.last.t-2.6)/0.8,0,1),lt=(m.last.n>0?(m.last.minus?'−':'+')+m.last.n+'  ':'')+m.last.text;
+    ctx.globalAlpha=a*m.vis;ctx.font='700 13px system-ui,sans-serif';ctx.textAlign='right';ctx.textBaseline='middle';
+    var lw=ctx.measureText(lt).width+18,ly=y+h/2-Math.min(m.last.t,2.6)*5;ctx.fillStyle='rgba(22,19,30,.82)';rr(x-18-lw+9,ly-12,lw,24,12);ctx.fill();   // readable over a bright window
+    ctx.fillStyle=m.last.minus?'#ff8f7d':'#86e39a';ctx.fillText(lt,x-18,ly);}
   ctx.restore();
 }
 
@@ -2812,7 +2845,9 @@ function labQuiet(){
   scene({set:'home',clock:18*3600+20*60}),shadowAway,
   ['N','The way home. KIV-304. ROS-151. Two sevens.'],
   ['H','Pair.'],
-  ['N','At home, the half-finished cat gets its last leg.'],
+  function(){G.note={legs:4,a:0,aT:1,off:0};},
+  ['N','At home, the cat from the drawer gets its fifth leg.'],
+  function(){G.note.legs=5;},
   ['H','Five. Excellent. Very stable cat.'],
   function(){G.quietDrawing=true;},
   ['H','For the record.'],
@@ -2827,6 +2862,7 @@ function labQuiet(){
 /* ================= 4. Evenings. ================= */
 function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The lamp.',clock:21*3600}).concat([
   shadowAway,lampOff,
+  function(){G.note={legs:5,on:'shadow',a:1,aT:1,off:12,offT:12};},   // the cat is on the wall now, not in the drawer
   ['N','Nine in the evening. One lamp beside the sofa.'],
   {lamp:true},
   {wait:1.8},
@@ -2856,7 +2892,7 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
   ['S','So I’m not needed.'],
   ['H','Not for every sentence.'],
   {wait:1.0},
-  ['H','Move over. You’re on the cat.'],
+  ['H','Move over. You’re on the cat.'],function(){if(G.note)G.note.offT=84;},
   ['S','It has five legs.'],
   ['H','I know. I like it.'],
   ['S','I’ll allow it. Provisionally.'],
@@ -2908,6 +2944,7 @@ function drawTape(){
   ctx.restore();
 }
 function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',clock:23*3600+40*60}).concat([
+  function(){G.tiredForce=1;},
   ['N','23:40. Lights off. Ekskyysmi has the tape.'],
   ['S','Just once more. For accuracy.'],
   rewindTape(0),
@@ -3552,10 +3589,10 @@ function labEvening(){return labScene({set:'home',title:'An ordinary evening',pl
   aside(['S','…Don’t.']),hat(null),
   addTic('♪ the bus is late, the bus is la—',440,FEETY-250,{life:30}),{wait:1.8},
   function(){var g=G;g.tics=[];sfx('pick');g.human.flinch=0.4;},
-  ['P','Kaisa is calling.'],
-  ['P','Kaisa: “Hey! Quick one. Did I leave my scarf at yours?”'],
+  ['P','Mum is calling.'],
+  ['P','Mum: “Hello, love. Quick one. Did I leave my scarf at yours?”'],
   ['H','Grey one? On the hook.'],
-  ['P','Kaisa: “Lifesaver. Also I ran like twenty kilometres today.”'],
+  ['P','Mum: “Lifesaver. Also I ran twenty kilometres today.”'],
   addTic('(twelve. she posted the map.)',440,FEETY-250,{life:3.2}),
   set({mood:'alert',s:1.4}),
   {choice:[
@@ -3564,14 +3601,14 @@ function labEvening(){return labScene({set:'home',title:'An ordinary evening',pl
     {t:'If you must, add a compliment as a cushion.',f:function(){G.corr='cushion';},then:[]}
   ]},
   function(){return G.corr==='cushion'?[['H','Twelve. Which is a lot!']]:[['H','Twelve.']];},
-  function(){var g=G;return g.corr==='cushion'?[]:[set({mood:'worry',s:1.6}),['S','WHY would you correct a person.',{loud:1}]];},
-  ['P','Kaisa: “…Twelve. FINE. It felt like twenty.” (laughs)'],
-  ['P','Kaisa: “Okay, talk soon!”'],
+  function(){var g=G;return g.corr==='cushion'?[]:[set({mood:'worry',s:1.6}),['S','WHY would you correct your own MOTHER.',{loud:1}]];},
+  ['P','Mum: “…Twelve. FINE. It felt like twenty.” (laughs)'],
+  ['P','Mum: “Okay, talk soon!”'],
   function(){G.human.face='neutral';},
   ['S','She laughed.'],
   ['H','She always laughs. She knows I count.'],
   ['S','And “talk soon”. Define soon.'],
-  ['H','I was about to ask the same thing.'],
+  ['H','Sunday. With her, soon means Sunday.'],
   set({mood:'calm',s:1.15}),
   addTic('—te. ♪',440,FEETY-250,{life:2.4}),{wait:1.6},
   ['S','Thank you. I couldn’t have carried half a word all evening.'],
@@ -4715,7 +4752,7 @@ function update(dt,elapsed){
   if(g.zoom)g.zoom.t+=dt;
   stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);stepToss(dt);stepAuto(dt);if(g.buzz>0)g.buzz=Math.max(0,g.buzz-dt);
   var hk=(g.planText||'')+'|'+g.jobDone+'|'+g.hud+'|'+g.chapter+'|'+g.lab+'|'+g.yes+'|'+(g.w?1:0);if(hk!==g.hudKey){g.hudKey=hk;g.hudAge=0;}g.hudAge=(g.hudAge||0)+dt;
-  stepFeet();stepMug(dt);  stepTics(dt);stepHot(dt);stepEpi(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
+  stepFeet();stepMug(dt);stepShadowLife(dt);  stepTics(dt);stepHot(dt);stepEpi(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
   if(WAIT==='fight'&&g.fight&&!paused)stepFight(elapsed);
   if(WAIT==='hold'&&g.hold){
     var hh=g.hold,hon=hh.on||hh.tap>0;hh.tap=Math.max(0,hh.tap-elapsed);if(hh.on)hh.p+=elapsed;holdStep(hh,hon,elapsed);
@@ -5059,6 +5096,8 @@ function morkoFace(q){
   else if(m==='scared'||m==='surprised'){er=r*0.34;pr=0.24;brow='up';}
   else if(m==='stern'){er=r*0.21;brow='in';}
   else if(m==='care'||m==='worry'){er=r*0.21;brow='out';}
+  var tr=M.tired||0,tiredEyes=tr>0.05&&!lk&&m!=='scared'&&m!=='surprised'&&m!=='pokka'&&m!=='pleased'&&m!=='squint';
+  if(tiredEyes)er=Math.max(er,r*0.22*Math.min(1,tr*1.5));   // big enough to show the heavy lids at game scale
   ctx.lineCap='round';
   for(i=-1;i<=1;i+=2){
     var x=cx+i*ex,y=cy-r*0.05;
@@ -5088,6 +5127,18 @@ function morkoFace(q){
     else if(brow==='out')line(x-i*er*1.0,y-er-r*0.22,x+i*er*1.0,y-er-r*0.08);
   }
   if(m==='pokka'){ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(1.5,r*0.07);circ(cx-r*0.1,cy+r*0.5,r*0.09);ctx.stroke();}
+  // Tired (Joonas 21.11.): heavy lids and eye bags. Fear opens the eyes again, and so do the one-line looks.
+  if(tiredEyes){
+    for(i=-1;i<=1;i+=2){var tx=cx+i*ex,ty=cy-r*0.05;
+      ctx.save();ctx.beginPath();ctx.arc(tx,ty,er+0.6,0,Math.PI*2);ctx.clip();ctx.fillStyle='#14111d';ctx.fillRect(tx-er-1,ty-er-1,2*er+2,er*0.95*tr);ctx.restore();
+      ctx.strokeStyle='rgba(246,241,228,'+(0.9*tr)+')';ctx.lineWidth=Math.max(1.5,r*0.06);line(tx-er*0.92,ty-er+er*0.95*tr,tx+er*0.92,ty-er+er*0.95*tr);
+      ctx.lineWidth=Math.max(2,r*0.08);   // two bags under each eye, clearly below it
+      ctx.strokeStyle='rgba(246,241,228,'+(0.75*tr)+')';ctx.beginPath();ctx.arc(tx,ty+er*0.55,er*1.05,Math.PI*0.2,Math.PI*0.8);ctx.stroke();
+      ctx.strokeStyle='rgba(246,241,228,'+(0.4*tr)+')';ctx.beginPath();ctx.arc(tx,ty+er*1.0,er*1.05,Math.PI*0.25,Math.PI*0.75);ctx.stroke();}}
+  var mu=M.mumble;
+  if(mu&&tr>0.3){var ma=clamp(mu.t/0.35,0,1)*clamp((3-mu.t)/0.6,0,1)*0.8,right=cx<W-230;
+    ctx.save();ctx.globalAlpha=ma;ctx.font='italic 600 '+(COMPACT?15:12)+'px system-ui,sans-serif';ctx.textBaseline='middle';ctx.textAlign=right?'left':'right';
+    ctx.fillStyle='#f1ebdd';ctx.fillText(mu.text,cx+(right?1:-1)*r*1.2,cy-r*0.95-mu.t*5);ctx.restore();}
 }
 function drawCoatFace(q){
   var c=G.morko.coat,p=c.p*c.p*(3-2*c.p),r=q.hdR,blink=c.blink;
@@ -5295,6 +5346,7 @@ function draw(){
   else{
     backdrop(false);
     if(g.dark>0.01){ctx.fillStyle='rgba(18,14,30,'+(0.45*g.dark)+')';ctx.fillRect(-20,-20,W+40,H+40);}
+    drawCatNote();   // on the wall: under the shadow and the human
     if(!g.human.gone)drawPair();
     else if(g.roomFront!=null&&g.set==='room')roomFront(g.roomFront);   // the lamp table is furniture: it is there before the human arrives
     if(g.human.gone&&g.finalFrame){var endQ=geom();morkoBody(endQ);morkoArms(endQ,handTargets(endQ));}

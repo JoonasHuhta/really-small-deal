@@ -2,7 +2,7 @@
 
 **Tämä tiedosto on totuus pelin järjestyksestä ja nimistä.** Kun puhumme kohtauksesta, käytämme tämän kartan numeroa ja kortin otsikkoa, esimerkiksi *#9 An ordinary evening*. Jos järjestys koodissa muuttuu, tämä tiedosto päivitetään samassa muutoksessa. `tests/story.test.cjs` tarkistaa, että alla olevan taulukon järjestys on sama kuin koodin (`src/33-moments.js`, `AFTER`). Jos ne eroavat, build kaatuu.
 
-Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.72.0 suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
+Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.73.0 suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
 
 ---
 
@@ -51,14 +51,14 @@ Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.72.0 suoraan koodis
 | # | Kohtaus (kortin otsikko) | Tyyppi | Kortti sanoo | Kello ja paikat (kuvat) | Mitä vie eteenpäin | Kesto | id |
 |---|---|---|---|---|---|---|---|
 | 1 | *Better safe.* | OSAKORTTI | PART ONE · ”A Monday. One small plan.” | – | Avaa Osan 1 | 0:04 | `part1` |
-| 2 | **Monday** – *Oh, hi.* | PÄIVÄ | A MONDAY | 08:51 taukotila (herätys, kahvi, ”oh, hi.”, Eero, lounas) → 16:42 kotimatka → 17:24 koti (paahtoleipä, kissa) → päivän kuitti | **Halu syntyy:** lounas Sannan kanssa. Valhe: ”My job is simple.” Kissa istutetaan. | 5:32 | `chapter1` |
+| 2 | **Monday** – *Oh, hi.* | PÄIVÄ | A MONDAY | 08:51 taukotila (herätys, kahvi, ”oh, hi.”, Eero, lounas) → 16:42 kotimatka → 17:24 koti (paahtoleipä, kissa) → päivän kuitti | **Halu syntyy:** lounas Sannan kanssa. Valhe: ”My job is simple.” **Kissa ja haamu istutetaan:** neljäjalkainen kissa näkyy lapulla sohvan yläpuolella. ”Five gets laughed at.” ”We have a file on drawings.” Punainen kortti YEAR 2 näkyy ensimmäisen kerran. Lappu menee laatikkoon. | 5:34 | `chapter1` |
 | 3 | **Tuesday** – *Quick chat?* | PÄIVÄ | A TUESDAY | 16:55 taukotila (”No incidents”, Riitan viesti) → 03:07 koti, yö → 09:00 toimisto, palaveri (keskiviikko!) → 09:12 taukotila | Aito osuma: ”Shorter.” Haamu istutetaan arkistokorttina. Kehut löytyvät myöhässä (muki +1). **Musiikki: Ordinary Evening.** | 3:54 | `chapter2` |
 | 4 | *Enhance.* | HETKI | A MEETING, SOME MORNING | 11:56 toimisto | (1) Ekskyysmi tuplaa: zoom yhteen kulmakarvaan | 1:03 | `enhance` |
 | 5 | *Rewind.* | HETKI | THAT NIGHT, 23:40 | 23:40 koti | (1) Uusinta muokkaa itseään joka kerta | 1:09 | `rewind` |
-| 6 | **Wednesday** – *Could you just…* | PÄIVÄ | A WEDNESDAY, PROBABLY | 10:20 taukotila/avokonttori (oma tunti, kaiutinpuhelin, pyynnöt) → 23:15 koti (Eeron kalvot) → 00:12–00:19 (THURSDAY): varjo nukahtaa, Sannan viesti | Kyllä kaikkeen, ja hinta kasvaa. Valittavissa ensimmäinen ”no in a coat”. **Ihminen vastaa Sannalle ”Fine.”**, ja varjo nukkuu, joten kukaan ei huomaa. | 2:34 | `chapter3` |
+| 6 | **Wednesday** – *Could you just…* | PÄIVÄ | A WEDNESDAY, PROBABLY | 10:20 taukotila/avokonttori (oma tunti, kaiutinpuhelin, pyynnöt) → 23:15 koti (Eeron kalvot) → 00:12–00:19 (THURSDAY): varjo nukahtaa, Sannan viesti | Kyllä kaikkeen, ja hinta kasvaa. Valittavissa ensimmäinen ”no in a coat”. **Ihminen vastaa Sannalle ”Fine.”**, ja varjo nukkuu, joten kukaan ei huomaa. | 2:37 | `chapter3` |
 | 7 | *Evidence.* | HETKI | ONE ORDINARY MORNING | 10:02 toimisto | (2) **Keskikohta:** ihminen kääntää suurennuslasin Ekskyysmiin | 2:03 | `glass` |
 | 8 | *Colleagues.* | HETKI | AFTER LUNCH, SOME DAY | 13:10 taukotila | (3)+(2) Sannan varjo sanoo Ekskyysmille ”oh. hi.” Nyt se tietää, miltä se tuntuu. Patteri-treffit sovitaan. | 1:12 | `colleagues` |
-| 9 | *An ordinary evening* | HETKI | AN EVENING AT HOME | 19:05 koti | (3) Ihmissuhde, joka jo toimii (Kaisa puhelimessa). Tyyni ennen myrskyä. Myöhässä oleva kirja istutetaan. | 1:36 | `evening` |
+| 9 | *An ordinary evening* | HETKI | AN EVENING AT HOME | 19:05 koti | (3) Ihmissuhde, joka jo toimii: **äiti** soittaa ja nauraa, kun häntä korjataan (turvallinen nauru, YEAR 2:n vastakohta). Tyyni ennen myrskyä. Myöhässä oleva kirja istutetaan. | 1:35 | `evening` |
 | 10 | **Thursday** – *Seen.* | PÄIVÄ | A THURSDAY | 17:30 koti (bilehattu, ”Seen.”) → 18:40 → pussi, romahdus, muki hajoaa → kultaliima | **Pohja.** Alkuperä paljastuu, ja työnkuva vaihtuu: ”Stay with you when it happens.” Sannan puhelin oli kuollut. | 3:37 | `chapter4` |
 | 11 | *Not now.* | HETKI | AN AFTERNOON | 14:20 toimisto | (2) **Uusi työ koetuksella:** aito torjunta, ”This is the staying part.” Toimii vain torstain jälkeen. | 2:10 | `notnow` |
 | 12 | *A quiet drink.* | HETKI | AN EVENING | 18:12 baari → 07:10 koti, THE NEXT MORNING | (1)+(3) Baarissa yksin, Sanna myöhässä. Baaritarina menee perjantaihin. | 4:04 | `bar` |
@@ -76,7 +76,7 @@ Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.72.0 suoraan koodis
 | 24 | *By the radiator.* | HETKI | THE NEXT TUESDAY | 16:50 taukotila | Seuraava tiistai: varjojen tapaaminen. Loppu jää auki. | 1:11 | `radiator` |
 <!-- KARTTA LOPPUU -->
 
-Yhteensä noin 49:41: Osa 1 noin 30 min, Osa 2 noin 10,5 min, Osa 3 noin 9 min.
+Yhteensä noin 49:46: Osa 1 noin 30 min, Osa 2 noin 10,5 min, Osa 3 noin 9 min.
 
 ---
 
@@ -93,13 +93,14 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 | Kyllät ja ei-lanka | #6 kyllät (−1 muki per kyllä), ”no in a coat”, lisätehtävät | #6 HUD-laskuri; #17 ”No. Sorry.”; #21 ”It’s a no in a coat, Eero.” ja Eeron kiitos monisteesta | `yes`, `coatNo`, `handout`, `afterparty` |
 | Sannan varjo | #8 | #10 ”With a full stop.”; #19 yövuoro; #21 tuttu varjo (haara); #24 patteri | `metSannaShadow` |
 | Työnkuva | #10 uusi työ | #11 ”This is the OLD job…” / ”staying part”; #17 *Vacant.*; #18 *Part-time*; HUD | `jobDone`, `plain`, `evenings` |
-| Kissa | #2 neljä jalkaa, laatikkoon | #17 viides jalka; #22 jaetaan | `quietDrawing` (`catStarted` asetetaan, mutta sitä ei vielä lueta) |
-| Haamu (piirustus, 7 v) | #3 arkistokortti ”YEAR 2” | #10 ”Since a Tuesday. You were seven.”; #22 tiedosto päivitetään | – |
+| Kissa (= piirustuslanka) | #2 lappu sohvan yläpuolella, neljä jalkaa: ”Five gets laughed at.” + YEAR 2 -kortti, lappu laatikkoon | #17 sama lappu takaisin, viides jalka · #18 lappu seinällä, Ekskyysmi seisoo sen päällä: ”Move over. You’re on the cat.” · #22 jaetaan | `note` (näkyvä lappu), `quietDrawing` (`catStarted` asetetaan, mutta sitä ei vielä lueta) |
+| Haamu (piirustus, 7 v) | #2 arkistokortti ”YEAR 2” kissan kohdalla, #3 uudelleen ”Shorter”-hetkellä | #10 ”Since a Tuesday. You were seven.”; #22 tiedosto päivitetään | – |
 | Myöhässä oleva kirja | #9 | #15 palautus | – |
 | Baaritarina | #12 (umbrella/arms/2011) | #21 | `barStory` |
 | Patteri | #8 ”Tuesday. By the radiator.” | #21 ”I checked. Tuesday works.”; #24 | – |
 | Muki | #2 alkaa täynnä (5 → pohja 1 → 3) | #3 4 → 1, kehut +1 → loppuu 2 · #6 jatkaa samasta aamusta 2, oma tunti +1, kaiutin −1, lattia 2 · #10 3 → 0, hajoaa ja liimataan · #21 korjattu · #22 korjattu ja hiljainen. Yön yli +1 (ma→ti, ke→to). **Hetkissä ei mukia.** | `mug`, `mugMended` |
 | ”Fine.” (tiuskaisu Sannalle) | #6 00:19: ihminen vastaa ”Fine.”, Sanna: ”Oh. Okay!” Varjo nukkuu. Muki merkitsee: −1 ”“Fine.”” | #19 Sannan varjo: ”Someone said ’fine’.” (varjo ei tiedä, että se olimme me) · #21 Sanna: ”Someone says ’fine’ and I’m up till three.” → ihminen korjaa: ”That one was all me.” · ”I never noticed one we gave.” | – |
+| Väsymys (Joonas 21.11.) | Muki ≤ 1 tai kohtaus päättää: #3 yö 03:07, #5 Rewind, #6 23:15–00:19 (”I’m not tired. I’m load-bearing.”) | Ekskyysmille raskaat luomet ja silmäpussit sekä mumina päivän sanoista (”…quick chat…”, ”…yes. yes…”). Pelko avaa silmät. Koko pysyy tunteena. | `tiredForce`, `morko.tired` |
 | Musiikki | #1 alkuvalikko | #3 Ordinary Evening, #23 epilogi | – |
 
 **Mukin periaate:** muki liikkuu maailmasta, ei valinnoista. Valinta koskee mukiin vain kun se kuluttaa (jokainen kyllä −1, tiuskaisu −1) tai diilissä, jossa vaihtokauppa näkyy. Piiloutuminen ei koske mukiin missään. Testi vartioi tätä.
@@ -127,7 +128,7 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 | A | **Sanna** | Kollega, ”oh, hi.” Lounas, lautapelit, baari. Valvoo itsekin kolmeen. |
 | B | **Eero** | Kollega: mukavuusalueneuvot, tee, hissi, pelkää esityksiä. |
 | R | **Riitta** | Esihenkilö: ”Quick chat?”, ”Shorter.”, ”Not now.” Yksitoista asiaa listalla. |
-| P | Puhelin | Viestit kirjoituspisteineen. **Kaisa** (ystävä) soittaa kohtauksessa #9. |
+| P | Puhelin | Viestit kirjoituspisteineen. **Äiti** (”Mum”) soittaa kohtauksessa #9 (ennen versiota 0.73 ystävä Kaisa). |
 | Z / Y / W | Sannan, Eeron ja Riitan varjot | #8, #19, #21, #24 |
 | T / L / X | Baarimikko / kirjastonhoitaja / tuntematon | #12 / #15 / satunnaisesti |
 | N | Kertoja | Nimetön kursiivi |

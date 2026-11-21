@@ -246,7 +246,7 @@ Ekskyysmi, eli pelaaja. Ihminen on se, jota tarina koskee, mutta muutos tapahtuu
 | 1. puristus | 37 % | 38 % | ”It works on everyone except me.” Suojelun hinta. |
 | Keskikohta, peili | 50 % | 47 % | Ihminen kääntää suurennuslasin Ekskyysmiin: ”You look smaller.” |
 | 2. puristus | 62 % | 54 % | Sannan varjo sanoo Ekskyysmille ”oh. hi.” Nyt se tietää, miltä se tuntuu. |
-| Tyyni ennen myrskyä | | 59 % | *An ordinary evening*: Kaisa nauraa. ”She knows I count.” |
+| Tyyni ennen myrskyä | | 59 % | *An ordinary evening*: äiti nauraa (ennen 0.73 Kaisa). ”She knows I count.” |
 | 3. käännekohta, pohja | 75 % | 64–68 % | ”You’re just the loudest thing in the room.” → ”With a full stop.” → piirustus → uusi työnkuva |
 | Valheen viimeinen yritys | | 71 % | *The reply*: ”This is the OLD job. I’m working out my notice.” |
 | Uusi työ koetuksella | | 78 % | *Not now.*: oikea torjunta. ”This is the staying part.” – ”It’s mostly standing.” |

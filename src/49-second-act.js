@@ -282,7 +282,9 @@ function labQuiet(){
   scene({set:'home',clock:18*3600+20*60}),shadowAway,
   ['N','The way home. KIV-304. ROS-151. Two sevens.'],
   ['H','Pair.'],
-  ['N','At home, the half-finished cat gets its last leg.'],
+  function(){G.note={legs:4,a:0,aT:1,off:0};},
+  ['N','At home, the cat from the drawer gets its fifth leg.'],
+  function(){G.note.legs=5;},
   ['H','Five. Excellent. Very stable cat.'],
   function(){G.quietDrawing=true;},
   ['H','For the record.'],
@@ -297,6 +299,7 @@ function labQuiet(){
 /* ================= 4. Evenings. ================= */
 function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The lamp.',clock:21*3600}).concat([
   shadowAway,lampOff,
+  function(){G.note={legs:5,on:'shadow',a:1,aT:1,off:12,offT:12};},   // the cat is on the wall now, not in the drawer
   ['N','Nine in the evening. One lamp beside the sofa.'],
   {lamp:true},
   {wait:1.8},
@@ -326,7 +329,7 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
   ['S','So I’m not needed.'],
   ['H','Not for every sentence.'],
   {wait:1.0},
-  ['H','Move over. You’re on the cat.'],
+  ['H','Move over. You’re on the cat.'],function(){if(G.note)G.note.offT=84;},
   ['S','It has five legs.'],
   ['H','I know. I like it.'],
   ['S','I’ll allow it. Provisionally.'],
@@ -378,6 +381,7 @@ function drawTape(){
   ctx.restore();
 }
 function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',clock:23*3600+40*60}).concat([
+  function(){G.tiredForce=1;},
   ['N','23:40. Lights off. Ekskyysmi has the tape.'],
   ['S','Just once more. For accuracy.'],
   rewindTape(0),

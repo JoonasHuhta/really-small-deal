@@ -229,12 +229,17 @@ function scWalk(){
     function(){return [scene({set:'home',clock:G.clock+25*60})];},set({mood:'care',s:1}),
     refill(2,'home. toast.'),
     // VISIO 6: the drawing is the heart. Planted on Monday night, finished on the quiet day, shared on Sunday.
-    ['N','Inside. Toast. After toast, a cat. On a sticky note. Four legs so far.'],
+    // Joonas 21.11.: the cat was not understandable. It is the drawing thread: Ekskyysmi started its job when somebody
+    // laughed at a drawing (YEAR 2). So the cat is on screen, the fifth leg is the human's own odd idea, and the file is named.
+    ['N','Inside. Toast.'],
+    function(){G.note={legs:4,a:0,aT:1,off:0};},
+    ['N','Then a pen. A cat on a sticky note. Four legs so far.'],
     ['H','It needs one more leg.'],
-    ['S','Cats have four. I checked.',{look:'squint'}],
-    ['H','This one needs five.'],
-    ['S','Then it goes in the drawer. Before somebody sees it.',{quiet:1}],
-    ['H','…For now.'],function(){G.catStarted=true;},
+    ['S','Cats have four. Five gets laughed at.',{look:'squint'}],
+    ['H','This one has five.'],
+    ['S','Then it goes in the drawer. We have a file on drawings.',{quiet:1}],
+    archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.']]),
+    ['H','…For now.'],function(){closeArchive();G.note.aT=0;G.catStarted=true;},
     {wait:0.9},
     showEnd
   ];

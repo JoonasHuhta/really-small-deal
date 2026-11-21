@@ -11,8 +11,8 @@ function mugQuiet(on){return function(){G.mugQuiet=!!on;};}          // a scene 
 function mugSpiky(on){return function(){if(G.mug)G.mug.spiky=!!on;};}
 function mugEmpty(){return !!(G.mug&&G.mug.v<=1);}
 function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown;m.v=Math.max(Math.min(m.v,m.floor==null?0:m.floor),m.v-n);   // a day can scrape the bottom, only Thursday goes through it
-  m.shown=m.v;m.ghost={from:from,to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:label,t:0,minus:true};sfx('sipOut');};}
-function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:label,t:0,minus:false};sfx('pourIn');};}
+  m.shown=m.v;m.ghost={from:from,to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:label,t:0,minus:true,n:from-m.v};sfx('sipOut');};}
+function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var before=m.v;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:label,t:0,minus:false,n:m.v-before};sfx('pourIn');};}
 // The meltdown: the last drain on an empty mug breaks it. Shards fly; the mug stays broken until it is glued.
 function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.shown=0;m.broken=true;m.seen=0;m.ghost=null;m.last={text:label||'',t:0,minus:true};
   m.shards=[];for(var i=0;i<11;i++)m.shards.push({x:0,y:0,vx:(i%2?1:-1)*(60+((i*53)%160)),vy:-160-((i*71)%170),r:((i*37)%10)/10*6,va:((i%3)-1)*9,t:0});
@@ -21,13 +21,37 @@ function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.show
 function mugMend(v){return function(){var m=G.mug;if(!m)return;m.broken=false;m.mended=true;G.mugMended=true;m.shards=null;m.v=v||1;m.shown=0;m.seen=0;m.last={text:'glued. gold seams.',t:0,minus:false};sfx('glue');};}
 function stepMug(dt){var m=G.mug;if(!m)return;m.t+=dt;m.seen+=dt;
   if(m.shown<m.v)m.shown=Math.min(m.v,m.shown+dt*1.6);
-  m.slosh=Math.max(0,m.slosh-dt*0.9);if(m.last){m.last.t+=dt;if(m.last.t>2.6)m.last=null;}
+  m.slosh=Math.max(0,m.slosh-dt*0.9);if(m.last){m.last.t+=dt;if(m.last.t>3.4)m.last=null;}
   if(m.ghost){m.ghost.t+=dt;if(m.ghost.t>1.3)m.ghost=null;}
   if(m.shards)m.shards.forEach(function(sh){sh.t+=dt;sh.x+=sh.vx*dt;sh.y+=sh.vy*dt;sh.vy+=620*dt;sh.r+=sh.va*dt;});
   var want=!G.mugQuiet||m.seen<4||m.v<=1||m.broken?1:0;m.vis+=(want-m.vis)*Math.min(1,dt*(want?4:1.2));
   if(G.deal)G.deal.t+=dt;}
 
 // The mug sits under the HUD pills, top right. A real mug: handle, steam while there is something to steam.
+// Joonas 21.11.: Ekskyysmi gets tired. An empty-ish mug (or a scene that says so) gives it eye bags, heavy lids and a mutter:
+// the week, looping, half a word at a time. Size is still feeling; this is only the face.
+var MUMBLES={1:['…oh, hi…','…with a full stop…','…was it the comma…','…mm.'],2:['…quick chat…','…nine o’clock…','…shorter…','…mm.'],
+  3:['…could you just…','…yes…','…yes. yes…','…slides…'],4:['…seen…','…17:31…','…eleven bags…','…mm.'],5:['…oh, hi. again…','…mm.']};
+function mumbleLine(){var g=G,M=g.morko,l=(!g.moment&&MUMBLES[g.chapter])||['…mm.','…filed…','…where was I…','…define soon…'];M.mumI=(M.mumI||0)+1;return l[M.mumI%l.length];}
+function stepShadowLife(dt){var g=G,M=g.morko;if(!M)return;var m=g.mug,want=g.tiredForce||(m&&!m.broken&&m.v<=1?1:0);
+  if(M.asleep||g.plain||g.epi)want=0;M.tired=(M.tired||0)+(want-(M.tired||0))*Math.min(1,dt*1.4);
+  if(M.mumble){M.mumble.t+=dt;if(M.mumble.t>3)M.mumble=null;}
+  var talking=g.cur&&g.cur.who==='S';
+  if(M.tired>0.6&&!M.mumble&&M.st==='free'&&!talking&&!g.out&&!g.zoom){M.mumT=(M.mumT||0)+dt;if(M.mumT>5.5){M.mumT=0;M.mumble={text:mumbleLine(),t:0};}}
+  else if(talking&&M.mumble)M.mumble=null;
+  var n=g.note;if(n){n.a+=((n.aT==null?1:n.aT)-n.a)*Math.min(1,dt*3);n.off+=((n.offT==null?n.off:n.offT)-n.off)*Math.min(1,dt*2.5);}}
+// The cat (VISIO 6): a sticky note on the wall at home. Four legs on Monday, five on the quiet day, on the wall behind Ekskyysmi in the evenings.
+function drawCatNote(){var g=G,n=g.note;if(!n||g.set!=='home'||n.a<0.02)return;
+  var x,y;if(n.on==='shadow'){var q=geom();x=q.bx+n.off;y=q.shY+30;}else{x=668;y=236;}   // on the wall above the sofa: clear of the lamp (520) and the window
+  var s=COMPACT?1.4:1.18;ctx.save();ctx.globalAlpha*=n.a;ctx.translate(x,y);ctx.rotate(-0.07);ctx.scale(s,s);
+  ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(-19,-17,40,40);ctx.fillStyle='#f2d46b';ctx.fillRect(-21,-20,40,40);
+  ctx.strokeStyle='#3b3242';ctx.fillStyle='#3b3242';ctx.lineWidth=1.6;ctx.lineCap='round';
+  ctx.beginPath();ctx.ellipse(-3,3,10,5.5,0,0,Math.PI*2);ctx.stroke();                 // body
+  circ(9,-4,4.6);ctx.stroke();                                                            // head
+  ctx.beginPath();ctx.moveTo(6,-8);ctx.lineTo(6.5,-12);ctx.lineTo(9,-8.6);ctx.moveTo(10,-8.6);ctx.lineTo(12.5,-12);ctx.lineTo(12.6,-7.4);ctx.stroke();   // ears
+  ctx.beginPath();ctx.moveTo(-13,2);ctx.quadraticCurveTo(-19,-4,-15,-10);ctx.stroke();      // tail
+  var k=n.legs||4;for(var i=0;i<k;i++){var lx=-10+i*(17/(k-1));line(lx,7.5,lx-0.6,14);}     // legs: four, then five
+  ctx.restore();}
 function drawMug(){
   var m=G.mug;if(!m||G.out||G.epi||m.vis<0.02)return;
   var x=W-64,y=COMPACT?156:116,w=40,h=44,lvl=clamp(m.shown/MUGMAX,0,1),wob=RM?0:Math.sin(m.t*9)*3*m.slosh,i;
@@ -50,9 +74,11 @@ function drawMug(){
     ctx.fillStyle='#f1ebdd';ctx.beginPath();ctx.moveTo(x,y+h*0.45);ctx.lineTo(x+12,y+h*0.6);ctx.lineTo(x+7,y+h*0.75);ctx.lineTo(x+18,y+h*0.85);ctx.lineTo(x+w-6,y+h*0.62);ctx.lineTo(x+w,y+h*0.7);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.closePath();ctx.fill();
     ctx.fillStyle='rgba(107,68,40,.8)';ctx.beginPath();ctx.ellipse(x+w/2,y+h+8,30,5,0,0,Math.PI*2);ctx.fill();}
   if(m.shards){ctx.fillStyle='#f1ebdd';m.shards.forEach(function(sh){if(sh.t>1.6)return;ctx.save();ctx.globalAlpha=m.vis*clamp(1.6-sh.t,0,1);ctx.translate(x+w/2+sh.x,y+h/2+sh.y);ctx.rotate(sh.r);ctx.beginPath();ctx.moveTo(-5,-3);ctx.lineTo(6,-1);ctx.lineTo(1,6);ctx.closePath();ctx.fill();ctx.restore();});}
-  if(m.last&&m.last.text){var a=clamp(1-(m.last.t-1.8)/0.8,0,1);ctx.globalAlpha=a*m.vis;ctx.font='700 12px system-ui,sans-serif';ctx.textAlign='right';ctx.textBaseline='middle';
-    var lw=ctx.measureText(m.last.text).width+16,ly=y+h/2-m.last.t*6;ctx.fillStyle='rgba(22,19,30,.78)';rr(x-18-lw+8,ly-11,lw,22,11);ctx.fill();   // readable over a bright window
-    ctx.fillStyle=m.last.minus?'#f0a08f':'#9fd3a8';ctx.fillText(m.last.text,x-18,ly);}
+  // Joonas 21.11.: a refill reads as clearly as a hit: a green +1 and the reason, a red −2 and the reason.
+  if(m.last&&m.last.text){var a=clamp(1-(m.last.t-2.6)/0.8,0,1),lt=(m.last.n>0?(m.last.minus?'−':'+')+m.last.n+'  ':'')+m.last.text;
+    ctx.globalAlpha=a*m.vis;ctx.font='700 13px system-ui,sans-serif';ctx.textAlign='right';ctx.textBaseline='middle';
+    var lw=ctx.measureText(lt).width+18,ly=y+h/2-Math.min(m.last.t,2.6)*5;ctx.fillStyle='rgba(22,19,30,.82)';rr(x-18-lw+9,ly-12,lw,24,12);ctx.fill();   // readable over a bright window
+    ctx.fillStyle=m.last.minus?'#ff8f7d':'#86e39a';ctx.fillText(lt,x-18,ly);}
   ctx.restore();
 }
 

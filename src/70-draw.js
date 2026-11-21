@@ -298,6 +298,8 @@ function morkoFace(q){
   else if(m==='scared'||m==='surprised'){er=r*0.34;pr=0.24;brow='up';}
   else if(m==='stern'){er=r*0.21;brow='in';}
   else if(m==='care'||m==='worry'){er=r*0.21;brow='out';}
+  var tr=M.tired||0,tiredEyes=tr>0.05&&!lk&&m!=='scared'&&m!=='surprised'&&m!=='pokka'&&m!=='pleased'&&m!=='squint';
+  if(tiredEyes)er=Math.max(er,r*0.22*Math.min(1,tr*1.5));   // big enough to show the heavy lids at game scale
   ctx.lineCap='round';
   for(i=-1;i<=1;i+=2){
     var x=cx+i*ex,y=cy-r*0.05;
@@ -327,6 +329,18 @@ function morkoFace(q){
     else if(brow==='out')line(x-i*er*1.0,y-er-r*0.22,x+i*er*1.0,y-er-r*0.08);
   }
   if(m==='pokka'){ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(1.5,r*0.07);circ(cx-r*0.1,cy+r*0.5,r*0.09);ctx.stroke();}
+  // Tired (Joonas 21.11.): heavy lids and eye bags. Fear opens the eyes again, and so do the one-line looks.
+  if(tiredEyes){
+    for(i=-1;i<=1;i+=2){var tx=cx+i*ex,ty=cy-r*0.05;
+      ctx.save();ctx.beginPath();ctx.arc(tx,ty,er+0.6,0,Math.PI*2);ctx.clip();ctx.fillStyle='#14111d';ctx.fillRect(tx-er-1,ty-er-1,2*er+2,er*0.95*tr);ctx.restore();
+      ctx.strokeStyle='rgba(246,241,228,'+(0.9*tr)+')';ctx.lineWidth=Math.max(1.5,r*0.06);line(tx-er*0.92,ty-er+er*0.95*tr,tx+er*0.92,ty-er+er*0.95*tr);
+      ctx.lineWidth=Math.max(2,r*0.08);   // two bags under each eye, clearly below it
+      ctx.strokeStyle='rgba(246,241,228,'+(0.75*tr)+')';ctx.beginPath();ctx.arc(tx,ty+er*0.55,er*1.05,Math.PI*0.2,Math.PI*0.8);ctx.stroke();
+      ctx.strokeStyle='rgba(246,241,228,'+(0.4*tr)+')';ctx.beginPath();ctx.arc(tx,ty+er*1.0,er*1.05,Math.PI*0.25,Math.PI*0.75);ctx.stroke();}}
+  var mu=M.mumble;
+  if(mu&&tr>0.3){var ma=clamp(mu.t/0.35,0,1)*clamp((3-mu.t)/0.6,0,1)*0.8,right=cx<W-230;
+    ctx.save();ctx.globalAlpha=ma;ctx.font='italic 600 '+(COMPACT?15:12)+'px system-ui,sans-serif';ctx.textBaseline='middle';ctx.textAlign=right?'left':'right';
+    ctx.fillStyle='#f1ebdd';ctx.fillText(mu.text,cx+(right?1:-1)*r*1.2,cy-r*0.95-mu.t*5);ctx.restore();}
 }
 function drawCoatFace(q){
   var c=G.morko.coat,p=c.p*c.p*(3-2*c.p),r=q.hdR,blink=c.blink;
@@ -534,6 +548,7 @@ function draw(){
   else{
     backdrop(false);
     if(g.dark>0.01){ctx.fillStyle='rgba(18,14,30,'+(0.45*g.dark)+')';ctx.fillRect(-20,-20,W+40,H+40);}
+    drawCatNote();   // on the wall: under the shadow and the human
     if(!g.human.gone)drawPair();
     else if(g.roomFront!=null&&g.set==='room')roomFront(g.roomFront);   // the lamp table is furniture: it is there before the human arrives
     if(g.human.gone&&g.finalFrame){var endQ=geom();morkoBody(endQ);morkoArms(endQ,handTargets(endQ));}
