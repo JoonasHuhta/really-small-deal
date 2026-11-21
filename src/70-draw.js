@@ -538,7 +538,7 @@ function draw(){
   ctx.setTransform(SC,0,0,SC,0,0);VIEW.l=0;VIEW.r=W;VIEW.t=0;VIEW.z=1;   // unzoomed until applyCamera says otherwise
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
   epiFilterOn();   // the closing montage is drawn soft (37-epilogue.js)
-  if(g.chap){chapCard();if(paused)pausedNote();return;}
+  if(g.chap&&!g.chap.moment){chapCard();if(paused)pausedNote();return;}   // a day: the full card. A moment: over its own scene (momentCard, below)
   if(g.out){drawOutside();return;}
   if(g.rep){drawReplay();return;}
   if(g.zoom){drawZoom();return;}
@@ -593,5 +593,6 @@ function draw(){
       ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('Nine minutes, usually.',W/2,106);}
   }
   if(g.band&&!COMPACT)band(g.band,H-18);
+  if(g.chap&&g.chap.moment)momentCard();
   if(paused)pausedNote();
 }

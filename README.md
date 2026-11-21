@@ -14,6 +14,11 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.76.0 (Claude, 21.11.2026): **suunta B toteutettu, taustatutkimus, koko peli läpi selaimessa.**
+- **Hetken kortti** (suunta B): kohtaus näkyy himmennetyn kerroksen läpi, kelluva aika pienellä ja otsikko kursiivilla, 2,4 s. Päivän kortti pysyy täytenä. Pelaaja näkee nyt eron sen välillä, alkaako uusi päivä vai saman elämän hetki.
+- **Taustatutkimus** (EKSKYYSMI.md §9): väitteet tarkistettu. Tahattomat muistot tulevat usein rauhallisissa arkihetkissä ja ovat useimmiten kielteisiä (vakiintunut tutkimus). → #9:ssä vanha kortti keskeyttää hyräilyn: *2014: Waved back at someone. They were waving at the person behind you.* ”Hnngh.” – ”That wasn’t me. I was doing the dishes.” Torjunta ”täsmälleen samoina aivoalueina kuin kipu” on kiistanalaista (Woo ym. 2014), joten peli ei väitä aivotiedettä. Hylätty perustellen: lukukelvottomaksi muuttuva teksti (saavutettavuus), änkytys vitsinä, tic-kuvaukset, uudet päällekkäiset huumorikulmat.
+- **Läpipeluu:** koko tarina pelattu oikeassa selaimessa alusta loppuun kolmella maanantaivariantilla, työpöytä- ja puhelinkoossa, piirtäen koko ajan. 22 kohtausta kartan järjestyksessä, 0 virhettä.
+
 Versio 0.75.0 (Claude, 21.11.2026): **epilogi: jumi korjattu, tempo, kaavake, työhakemus, vauriotilasto.** (Joonaksen palaute)
 - **Jumi:** epilogin kello seurasi suoraan musiikin kohtaa. Jos kappale hyppäsi alkuun (esim. Androidin WebView sovellukseen palatessa), kuvat jäivät odottamaan, kunnes musiikki saavutti vanhan kohdan: musiikki soi, mutta mikään ei liikkunut. Nyt kello ei koskaan kulje taaksepäin, ja musiikki palautetaan kuvien kohtaan. Testattu selaimessa: valikon tauko, Dialogue, Restart → Keep going, asetusnapit, sovelluksen piilotus ja musiikin hyppy.
 - **Tempo:** auto (puoli tahtia) ja juoksija (yksi tahti) näytetään tiukempina lähikuvina. Luonnosviesti ja Riitan viesti näkyvät nyt riittävän kauan luettaviksi. Montaasi on edelleen 32 tahtia, ja testi vartioi tätä.

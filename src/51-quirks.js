@@ -138,6 +138,16 @@ function labEvening(){return labScene({set:'home',title:'An ordinary evening',pl
   ['H','The plate might.'],
   aside(['S','…Don’t.']),hat(null),
   addTic('♪ the bus is late, the bus is la—',440,FEETY-250,{life:30}),{wait:1.8},
+  // Research (EKSKYYSMI.md §9): involuntary memories arrive most often in quiet, undemanding moments, and tend to be the
+  // negative ones. So the archive is not only Ekskyysmi's doing: one old card cuts into the humming on its own.
+  function(){G.tics=[];},
+  archive('bad',[['2014','Waved back at someone. They were waving at the person behind you.']]),
+  function(){G.human.flinch=1;},
+  ['H','Hnngh.'],
+  ['S','That wasn’t me. I was doing the dishes.',{look:'stunned'}],
+  ['H','They just come?'],
+  ['S','The old ones do. Mostly when it’s quiet.',{quiet:1}],
+  closeArchive,{wait:0.6},
   function(){var g=G;g.tics=[];sfx('pick');g.human.flinch=0.4;},
   ['P','Mum is calling.'],
   ['P','Mum: “Hello, love. Quick one. Did I leave my scarf at yours?”'],

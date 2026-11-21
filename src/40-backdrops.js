@@ -100,6 +100,16 @@ function chapCard(){
   ctx.font='650 64px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(c.title,W/2,cy+6);
   ctx.globalAlpha=1;
 }
+// Direction B (TARINAKARTTA §8, 21.11.): a moment is a window into the same life, not a new day. Its card is lighter:
+// the scene stays visible under a veil, the time floats in small letters, the title is smaller and set in italics.
+function momentCard(){
+  var c=G.chap,a=clamp(c.t/0.4,0,1)*clamp((2.4-c.t)/0.45,0,1),cy=COMPACT?H*0.34:H/2;
+  ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.fillStyle='rgba(14,22,25,'+(0.8*Math.max(a,0.35))+')';ctx.fillRect(0,0,W,H);
+  ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='600 '+(COMPACT?17:14)+'px system-ui,sans-serif';ctx.fillStyle='#c9b48a';ctx.fillText(c.day,W/2,cy-36);
+  ctx.fillStyle='rgba(226,176,74,.55)';ctx.fillRect(W/2-22,cy-18,44,2);
+  ctx.font='italic 600 '+(COMPACT?50:44)+'px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(c.title,W/2,cy+18);
+  ctx.restore();}
 function bigNote(){
   var n=G.bigNote,a=clamp(n.t/0.25,0,1)*(1-0.72*clamp((n.t-2.6)/0.8,0,1)),sh=RM?0:Math.sin(G.time*52)*4;
   ctx.save();ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 150px Fraunces,Georgia,serif';

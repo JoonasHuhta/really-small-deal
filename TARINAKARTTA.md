@@ -2,7 +2,7 @@
 
 **Tämä tiedosto on totuus pelin järjestyksestä ja nimistä.** Kun puhumme kohtauksesta, käytämme tämän kartan numeroa ja kortin otsikkoa, esimerkiksi *#9 An ordinary evening*. Jos järjestys koodissa muuttuu, tämä tiedosto päivitetään samassa muutoksessa. `tests/story.test.cjs` tarkistaa, että alla olevan taulukon järjestys on sama kuin koodin (`src/33-moments.js`, `AFTER`). Jos ne eroavat, build kaatuu.
 
-Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.75.0 (hahmo: EKSKYYSMI.md) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
+Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.76.0 (hahmo: EKSKYYSMI.md) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
 
 ---
 
@@ -58,7 +58,7 @@ Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.75.0 (hahmo: EKSKYY
 | 6 | **Wednesday** – *Could you just…* | PÄIVÄ | A WEDNESDAY, PROBABLY | 10:20 taukotila/avokonttori (oma tunti, kaiutinpuhelin, pyynnöt; Ekskyysmi takkina) → 23:15 koti (Eeron kalvot) → 00:12–00:19 (THURSDAY): varjo nukahtaa, Sannan viesti | Kyllä kaikkeen, ja hinta kasvaa. **Takki = maskaaminen:** ”Coat on. Nobody rejects a coat.” Kotona: ”Coat’s off.” Valittavissa ensimmäinen ”no in a coat”. **Ihminen vastaa Sannalle ”Fine.”**, ja varjo nukkuu, joten kukaan ei huomaa. | 2:41 | `chapter3` |
 | 7 | *Evidence.* | HETKI | ONE ORDINARY MORNING | 10:02 toimisto | (2) **Keskikohta:** ihminen kääntää suurennuslasin Ekskyysmiin | 2:03 | `glass` |
 | 8 | *Colleagues.* | HETKI | AFTER LUNCH, SOME DAY | 13:10 taukotila | (3)+(2) Sannan varjo sanoo Ekskyysmille ”oh. hi.” Nyt se tietää, miltä se tuntuu. Patteri-treffit sovitaan. | 1:12 | `colleagues` |
-| 9 | *An ordinary evening* | HETKI | AN EVENING AT HOME | 19:05 koti | (3) Ihmissuhde, joka jo toimii: **äiti** soittaa ja nauraa, kun häntä korjataan (turvallinen nauru, YEAR 2:n vastakohta). Tyyni ennen myrskyä. Myöhässä oleva kirja istutetaan. | 1:35 | `evening` |
+| 9 | *An ordinary evening* | HETKI | AN EVENING AT HOME | 19:05 koti | (1)+(3) Kesken hyräilyn tulee itsestään vanha muisto (2014, ”Hnngh.”, ”That wasn’t me.”). Ihmissuhde, joka jo toimii: **äiti** soittaa ja nauraa, kun häntä korjataan (turvallinen nauru, YEAR 2:n vastakohta). Tyyni ennen myrskyä. Myöhässä oleva kirja istutetaan. | 1:35 | `evening` |
 | 10 | **Thursday** – *Seen.* | PÄIVÄ | A THURSDAY | 17:30 koti (bilehattu, ”Seen.”) → 18:40 → pussi, romahdus, muki hajoaa → kultaliima | **Pohja.** Alkuperä paljastuu, ja työnkuva vaihtuu: ”Stay with you when it happens.” Sannan puhelin oli kuollut. | 3:37 | `chapter4` |
 | 11 | *Not now.* | HETKI | AN AFTERNOON | 14:20 toimisto | (2) **Uusi työ koetuksella:** aito torjunta, ”This is the staying part.” Toimii vain torstain jälkeen. | 2:10 | `notnow` |
 | 12 | *A quiet drink.* | HETKI | AN EVENING | 18:12 baari → 07:10 koti, THE NEXT MORNING | (1)+(3) Baarissa yksin, Sanna myöhässä. Baaritarina menee perjantaihin. | 4:04 | `bar` |
@@ -120,7 +120,7 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 - ~~Keskiviikon kertoja sanoi ”00:12”, mutta leimassa luki 23:15.~~ Kello siirtyy nyt kertojan mukana, ja puolenyön jälkeen leima näyttää THURSDAY. Uusi `tests/clock.test.cjs` tarkistaa koko tarinasta, että jokainen kertojan kellonaika vastaa leimaa.
 
 **Auki:**
-1. **Päivä ja hetki alkavat samannäköisellä kortilla.** Ratkaisu on suunta B (kohta 8).
+1. ~~Päivä ja hetki alkavat samannäköisellä kortilla.~~ Korjattu 0.76 (suunta B).
 2. **Riitta näkyy ensimmäisen kerran vasta viestinä** kohtauksessa #3. Hänet voisi istuttaa yhdellä rivillä #3:n avaukseen haarojen jälkeen.
 3. **KASIKIRJOITUS.md:n rakennetaulukko (0.26) on vanhentunut.** Järjestyksessä tämä kartta on voimassa.
 
@@ -147,7 +147,7 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 **Päätetty 21.11.2026: suunta B.** Peli ei ole kirjaimellisesti yksi viikko. Aika saa kellua, mutta päivät ja hetket erottuvat toisistaan:
 - Päivä pitää nykyisen kortin ja viikonpäivän päiväleimassa.
 - Hetki saa oman, kevyemmän korttinsa. Päiväleima näyttää hetkessä kellonajan ja kelluvan ajan (esimerkiksi ”AN EVENING AT HOME”).
-- **Toteutus odottaa:** hetkikortin ulkoasu ja mahdollinen yhteinen ilmaus (esimerkiksi ”SOMETIME THIS WEEK” Osassa 1, ”LATER” Osassa 2). Ei ”FLASHBACK”, koska hetket eivät ole takaumia.
+- **Toteutettu 0.76:** päivän kortti on täysi tumma kortti (viikonpäivä ja otsikko). Hetken kortti on kevyt: kohtaus näkyy himmennetyn kerroksen läpi, kelluva aika pienellä, ohut viiva ja otsikko kursiivilla. Se kestää 2,4 s (ennen 2,8 s). Ei ”FLASHBACK”, koska hetket eivät ole takaumia.
 
 **Päätetty 21.11.2026** (Joonas antoi päätösvallan, perustelut ovat README.md:n versiossa 0.72.0):
 - **Kaupungin nimi:** ei nimeä. Paikat ovat tuttuja ilman nimeäkin (Joonas).

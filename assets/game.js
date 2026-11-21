@@ -2539,6 +2539,16 @@ function chapCard(){
   ctx.font='650 64px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(c.title,W/2,cy+6);
   ctx.globalAlpha=1;
 }
+// Direction B (TARINAKARTTA §8, 21.11.): a moment is a window into the same life, not a new day. Its card is lighter:
+// the scene stays visible under a veil, the time floats in small letters, the title is smaller and set in italics.
+function momentCard(){
+  var c=G.chap,a=clamp(c.t/0.4,0,1)*clamp((2.4-c.t)/0.45,0,1),cy=COMPACT?H*0.34:H/2;
+  ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.fillStyle='rgba(14,22,25,'+(0.8*Math.max(a,0.35))+')';ctx.fillRect(0,0,W,H);
+  ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='600 '+(COMPACT?17:14)+'px system-ui,sans-serif';ctx.fillStyle='#c9b48a';ctx.fillText(c.day,W/2,cy-36);
+  ctx.fillStyle='rgba(226,176,74,.55)';ctx.fillRect(W/2-22,cy-18,44,2);
+  ctx.font='italic 600 '+(COMPACT?50:44)+'px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(c.title,W/2,cy+18);
+  ctx.restore();}
 function bigNote(){
   var n=G.bigNote,a=clamp(n.t/0.25,0,1)*(1-0.72*clamp((n.t-2.6)/0.8,0,1)),sh=RM?0:Math.sin(G.time*52)*4;
   ctx.save();ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 150px Fraunces,Georgia,serif';
@@ -3162,8 +3172,8 @@ function labScene(o){return [function(){G.chapMusic=null;},scene(o),function(){
   if(g.lab){g.label=(DEVLAB?'Scenario lab / ':'Moments / ')+o.title;newDay();return;}
   // In the story the same scene opens with a card, like any other moment.
   g.label=o.title;if(NOCARD[g.moment]){g.fade=1;return;}   // continues the moment before it, without a new card
-  g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0};stopVoice();sfx('card');
- },function(){return G.lab||NOCARD[G.moment]?[]:[{wait:2.8},function(){G.chap=null;G.fade=1;}];}];}
+  g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0,moment:true};stopVoice();sfx('card');
+ },function(){return G.lab||NOCARD[G.moment]?[]:[{wait:2.4},function(){G.chap=null;G.fade=1;}];}];}
 function startLab(id){hotReset();
   reset('B');var g=G;g.started=true;g.lab=id;
   Q=LABS[id].script().concat([function(){showLabEnd(id);}]);run();
@@ -3635,6 +3645,16 @@ function labEvening(){return labScene({set:'home',title:'An ordinary evening',pl
   ['H','The plate might.'],
   aside(['S','…Don’t.']),hat(null),
   addTic('♪ the bus is late, the bus is la—',440,FEETY-250,{life:30}),{wait:1.8},
+  // Research (EKSKYYSMI.md §9): involuntary memories arrive most often in quiet, undemanding moments, and tend to be the
+  // negative ones. So the archive is not only Ekskyysmi's doing: one old card cuts into the humming on its own.
+  function(){G.tics=[];},
+  archive('bad',[['2014','Waved back at someone. They were waving at the person behind you.']]),
+  function(){G.human.flinch=1;},
+  ['H','Hnngh.'],
+  ['S','That wasn’t me. I was doing the dishes.',{look:'stunned'}],
+  ['H','They just come?'],
+  ['S','The old ones do. Mostly when it’s quiet.',{quiet:1}],
+  closeArchive,{wait:0.6},
   function(){var g=G;g.tics=[];sfx('pick');g.human.flinch=0.4;},
   ['P','Mum is calling.'],
   ['P','Mum: “Hello, love. Quick one. Did I leave my scarf at yours?”'],
@@ -5396,7 +5416,7 @@ function draw(){
   ctx.setTransform(SC,0,0,SC,0,0);VIEW.l=0;VIEW.r=W;VIEW.t=0;VIEW.z=1;   // unzoomed until applyCamera says otherwise
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
   epiFilterOn();   // the closing montage is drawn soft (37-epilogue.js)
-  if(g.chap){chapCard();if(paused)pausedNote();return;}
+  if(g.chap&&!g.chap.moment){chapCard();if(paused)pausedNote();return;}   // a day: the full card. A moment: over its own scene (momentCard, below)
   if(g.out){drawOutside();return;}
   if(g.rep){drawReplay();return;}
   if(g.zoom){drawZoom();return;}
@@ -5451,6 +5471,7 @@ function draw(){
       ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('Nine minutes, usually.',W/2,106);}
   }
   if(g.band&&!COMPACT)band(g.band,H-18);
+  if(g.chap&&g.chap.moment)momentCard();
   if(paused)pausedNote();
 }
 // ---- src/80-ui.js ----

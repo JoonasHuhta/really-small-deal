@@ -105,3 +105,25 @@ Kun mukissa on 1 tai vähemmän, tai kohtaus niin päättää (#3 yö 03:07, #5 
 - **Ekskyysmin oma ”oh”.** Patterilla se kokee itse sen, mitä ihminen koki maanantaina (”She said it with a FULL STOP.”). Tämän voi syventää.
 - **Muiden varjojen erilaisuus.** Muiden varjot ovat aina pienempiä ja laskevat vuoronsa yöksi, eli ero on voimakkuudessa, ei siinä onko varjoa. Tämä pidetään.
 - **Hyvä arkisto.** Laatikko, joka jätetään raolleen (”Leave it open a crack.”), on varjon kasvun mittari. Voisiko se näkyä kuitissa?
+
+---
+
+## 9. Taustatutkimus ja mitä siitä seuraa (21.11.2026)
+
+Joonas toi laajan tekstin RSD:n kehollisista oireista ja huumorikulmista. Tarkistin keskeiset väitteet lähteistä. Tässä se, mikä pitää, mikä ei, ja mitä peliin seuraa.
+
+**Mikä pitää:**
+- RSD ei ole diagnoosi, ja tutkimus on vähäistä ja pääosin laadullista. Uusi laadullinen tutkimus (BSMS 2026) on otsikoitu suoraan osallistujien sanoin: *”It hurts in your body”*. Tämä tukee repliikkiä *”It’s my chest.”* kokemuksena.
+- **Tahattomat omaelämäkerralliset muistot** ovat vakiintunut tutkimusaihe (Berntsen ym.). Ne tulevat usein vaativuudeltaan kevyissä arkihetkissä, ja ne ovat keskimäärin kielteisempiä kuin tahalliset muistot. → **Toteutettu 0.76:** #9:ssä tiskien ja hyräilyn keskelle tulee itsestään vanha kortti (*2014: Waved back at someone. They were waving at the person behind you.*). Ihminen: ”Hnngh.” Ekskyysmi: ”That wasn’t me. I was doing the dishes.” – ”They just come?” – ”The old ones do. Mostly when it’s quiet.” Arkisto ei ole pelkästään Ekskyysmin tekemää.
+
+**Mikä on liioiteltua, eikä sitä käytetä peliteksteissä:**
+- ”Torjunta aktivoi täsmälleen samat aivoalueet kuin fyysinen kipu.” Tämä on kiistanalaista. Woo ym. (Nature Communications 2014) löysivät karkean päällekkäisyyden alta erilliset hermostolliset edustukset. Peli saa sanoa, että se tuntuu kehossa, mutta ei väitä aivotiedettä.
+- Esiintyvyysluvut (”60–70 %”) ja välittäjäaineselitykset (”dopamiini palaa loppuun, siitä krapula”) ovat ilman näyttöä.
+
+**Mitä ei tehdä, ja miksi:**
+- **Tahallisesti lukukelvottomaksi muuttuvaa tekstiä** (pätkivät vaihtoehdot, ”uiva” lomake) ei tehdä. Kohdeyleisö on neurokirjo, ja moni lukee hitaasti tai on lukivaikeuksinen. Peli tarjoaa päinvastoin tekstikoon ja tekstin alle -valinnan.
+- **Änkytystä ei kirjoiteta auki vitsiksi,** koska se voi pilkata änkyttäviä. Puheen katkeaminen näytetään katkenneena repliikkinä tai hiljaisuutena (”You t—”, hush-valinnat), kuten nyt.
+- **Ei ”ticejä” eikä ”Don’t twitch, they’re looking” -repliikkiä.** Tic-häiriöitä ei kuvata (sääntö: ei diagnooseja). Kaikille tuttu nolouksien säpsähdys (”Hnngh.”) on eri asia, ja sitä käytetään.
+- **Lisää samoja huumorikulmia ei tarvita.** Ne ovat jo pelissä: ylivalppaus (”A full stop is a slammed door.”), kirjoituspisteiden tulkinta, ”ok 👍”, harjoiteltu repliikki vs. todellisuus (”You t—”, *rehearsed 3 h 10 min / actual 4 s*), ”Walk normally” (#15), aikavääristymä (ulkoversion *duration: 2 seconds*, kuitin *days lived*), uupumus (muki, väsymys), aistikuorma (mukin siemaukset). Peli on 51 minuuttia; lisäys korvaa, ei kasaa.
+
+**Varalle, ei toteutettu:** interoseptio (nälkä luetaan maailmanlopuksi). Enintään yksi repliikki, eikä se saa näyttää neuvolta.

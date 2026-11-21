@@ -32,8 +32,8 @@ function labScene(o){return [function(){G.chapMusic=null;},scene(o),function(){
   if(g.lab){g.label=(DEVLAB?'Scenario lab / ':'Moments / ')+o.title;newDay();return;}
   // In the story the same scene opens with a card, like any other moment.
   g.label=o.title;if(NOCARD[g.moment]){g.fade=1;return;}   // continues the moment before it, without a new card
-  g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0};stopVoice();sfx('card');
- },function(){return G.lab||NOCARD[G.moment]?[]:[{wait:2.8},function(){G.chap=null;G.fade=1;}];}];}
+  g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0,moment:true};stopVoice();sfx('card');
+ },function(){return G.lab||NOCARD[G.moment]?[]:[{wait:2.4},function(){G.chap=null;G.fade=1;}];}];}
 function startLab(id){hotReset();
   reset('B');var g=G;g.started=true;g.lab=id;
   Q=LABS[id].script().concat([function(){showLabEnd(id);}]);run();
