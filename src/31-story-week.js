@@ -222,7 +222,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   function(){G.clock=19*60;},['N','00:19. Ekskyysmi has dozed off.'],
   {wait:0.8},
   ['P','Sanna: “Still up?? Game night tomorrow! You don’t have to bring anything.”'],
-  ['P','You: “Fine.”'],drain(1,'“Fine.”'),
+  ['P','You: “Fine.”'],drain(1,'“Fine.”'),function(){G.fineSent=true;},
   {wait:1.4},
   ['P','Sanna: “Oh. Okay!”'],
   ['N','The phone goes face down. Nothing gets filed.'],

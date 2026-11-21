@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.75.0 (Claude, 21.11.2026): **epilogi: jumi korjattu, tempo, kaavake, työhakemus, vauriotilasto.** (Joonaksen palaute)
+- **Jumi:** epilogin kello seurasi suoraan musiikin kohtaa. Jos kappale hyppäsi alkuun (esim. Androidin WebView sovellukseen palatessa), kuvat jäivät odottamaan, kunnes musiikki saavutti vanhan kohdan: musiikki soi, mutta mikään ei liikkunut. Nyt kello ei koskaan kulje taaksepäin, ja musiikki palautetaan kuvien kohtaan. Testattu selaimessa: valikon tauko, Dialogue, Restart → Keep going, asetusnapit, sovelluksen piilotus ja musiikin hyppy.
+- **Tempo:** auto (puoli tahtia) ja juoksija (yksi tahti) näytetään tiukempina lähikuvina. Luonnosviesti ja Riitan viesti näkyvät nyt riittävän kauan luettaviksi. Montaasi on edelleen 32 tahtia, ja testi vartioi tätä.
+- **Hissi (epäselvä) korvattiin työhakemuksella** (*The posting*, #19): ”Ekskyysmi’s draft: page 4 of 4. ’…and in conclusion, sorry.’” → ”Sent: three lines. No apology.” Kuittiin rivi APPLICATIONS, SENT · 1 · drafted by one. sent by the other.
+- **Vastaanoton vuoronumerot korvattiin kaavakkeella:** FORM · PAGE 3 OF 9. ”How do you usually take criticism?” → *personally.* ”Do you replay conversations afterwards?” → *only the ones that happened.* ”Anything else we should know?” → *it was a FULL STOP.* Ekskyysmi allekirjoittaa (”signature (the shadow)”). Kolme tahtia, ja lintu saa lopussa silti 6,4 s.
+- **Kuitissa on nyt DAMAGE REPORT**, ettei kaikki ole ykkösiä: CRITICISM, ACTUAL · 1 (”shorter.” it was real. it was one word.); CRITICISM, IMAGINED · pahimmat skenaariot + avatut tiedostot (esim. 19); OLD FILES, REOPENED (esim. 13, the oldest one: year 2); SIPS LOST (esim. 13, the biggest: ”oh, hi.” −2); MUGS BROKEN · 1 (repaired: gold.); ”FINE.”S SENT · 1 (repaired on a friday). Luvut lasketaan pelatusta viikosta ja tallentuvat jatkokohtiin.
+
 Versio 0.74.0 (Claude, 21.11.2026): ***The posting* tarinaan ja Ekskyysmin viisi linkkiä.** Uusi hahmodokumentti EKSKYYSMI.md kertoo synnyn, suhteen RSD:hen, symbolit, oppimisjärjestyksen ja linkit.
 - ***The posting* on nyt tarinassa (#19, Joonas: hauska, koskettava, samaistuttava).** Se on osa-aikatyön ensimmäinen ilta, klo 22:47 saman päivän iltana (*Evenings* 21:00 → *The posting* 22:47 → *Night shift* 23:50, jolla on nyt oma kortti ”THAT NIGHT”). Hakuaika päättyy perjantaina, ja perjantai lunastaa valinnan.
 - **Takki = maskaaminen:** keskiviikon kyllä-päivä kuluu takiksi naamioituneena (”Coat on. Nobody rejects a coat.”), ja Sanna kutsuu lautapeleihin takille. Kotona: ”Coat’s off. Nobody’s looking.”

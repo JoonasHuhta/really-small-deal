@@ -170,7 +170,7 @@ const checkpointFixture={version:2,ch:5,unlocked:5,chapters:{
   1:{day:'A'},
   3:{day:'A',lunch:1,leak:'cover',fear:2,fb:'ask',yes:0},
   4:{day:'B',lunch:2,leak:'grow',yes:5,handout:true,afterparty:true,fb:'explain'},
-  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true,coatNo:true,methods:{worst:4,please:3,hush:1},kept:['hi','eero']}
+  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true,coatNo:true,methods:{worst:4,please:3,hush:1},kept:['hi','eero'],fineSent:false,sips:0,files:0,bigSip:null}
 }};
 savedItems.set(saveKey,JSON.stringify(checkpointFixture));
 T.chapter(3);
@@ -666,4 +666,9 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
   for(const line of src(f).split('\n'))if(/m:'hide'/.test(line))assert.ok(!/drain\(|refill\(/.test(line),f+': a hide option touches the mug: '+line.trim().slice(0,90));
  // 7. The "Fine." thread (21.11.): sent on Wednesday night while Ekskyysmi sleeps, heard by Sanna's shadow, repaired on Friday.
  assert.ok(week.includes("['P','You: “Fine.”']")&&second.includes('Someone said “fine”.')&&week.includes("['H','You were asleep. That one was all me.']"),'the Fine. thread is broken');
- console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle, the Fine. thread.');}
+ // 8. The epilogue is cut to the song: the montage stays 32 bars and the bird keeps at least five seconds before the last hit.
+ {const ep=src('37-epilogue.js'),B=Function('return '+ep.match(/var EPIBARS=(\[[^\]]*\])/)[1])(),A=Function('return '+ep.match(/var EPIA=(\[[^\]]*\])/)[1])();
+  const nb=[...ep.slice(ep.indexOf('var EPIN=')).matchAll(/^\s*\{bars:(\d)/gm)].reduce((a,m)=>a+ +m[1],0),bt=k=>k<B.length?B[k]:B[B.length-1]+(k-B.length+1)*2.25;
+  assert.equal(A.reduce((a,b)=>a+b,0),32,'the montage must stay 32 bars (the receipt rolls on the song’s quiet middle)');
+  assert.ok(169.4-bt(59+nb)>=5,'the bird and the credit need at least five seconds before the last hit');}
+ console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle, the Fine. thread, epilogue bars.');}

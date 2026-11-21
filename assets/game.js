@@ -183,7 +183,7 @@ function reset(day){
      cz:1.025,cx:W/2,cy:H/2,
      lines:[],band:null,out:null,w:null,card:0,
      hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0};
-  G.handout=false;G.afterparty=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.coatNo=false;G.kept=[];G.methods={};G.endSeen=false;G.stamp=null;
+  G.handout=false;G.afterparty=false;G.sips=0;G.files=0;G.bigSip=null;G.fineSent=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.coatNo=false;G.kept=[];G.methods={};G.endSeen=false;G.stamp=null;
   G.choiceWho='S';G.finalFrame=false;G.barStory=null;G.quietDrawing=false;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
   document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
@@ -455,7 +455,7 @@ function hit(k,from){return function(){
 function archive(kind,items){return function(){
   var g=G;for(var i=0;i<items.length;i++)g.cards.push({kind:kind,year:items[i][0],text:items[i][1],t:-i*0.45,life:null,
     x:kind==='good'?790:170+i*310,y:kind==='good'?178:150+(i%2)*46,rot:kind==='good'?-0.03:((i%2?1:-1)*(0.06+i*0.02))});
-  if(kind==='bad')addLived('archive visits',LIVED.archive);
+  if(kind==='bad'){addLived('archive visits',LIVED.archive);g.files=(g.files||0)+items.length;}   // old files reopened, for the receipt
   if(kind!=='bad')sfx('card');   // red cards make their own bang as each one lands (update loop)
 };}
 // The other drawer. All week Ekskyysmi files the good things it calls irrelevant. Nobody sees where. (TYOSUUNNITELMA.md, section 2)
@@ -552,7 +552,9 @@ function checkpoint(g){
     handout:!!g.handout,afterparty:!!g.afterparty,reflected:!!g.reflected,peeked:!!g.peeked,metSannaShadow:!!g.metSannaShadow,
     posting:['archived','rejected','open'].indexOf(g.posting)>=0?g.posting:null,
     nothings:Number.isFinite(g.nothings)?clamp(Math.floor(g.nothings),0,20):0,rehearsal:!!g.rehearsal,
-    barStory:['umbrella','arms','2011'].indexOf(g.barStory)>=0?g.barStory:null,quietDrawing:!!g.quietDrawing,coatNo:!!g.coatNo,methods:cleanMethods(g.methods),kept:Array.isArray(g.kept)?g.kept.filter(function(k){return typeof k==='string'&&KEPT[k];}).slice(0,12):[]};
+    barStory:['umbrella','arms','2011'].indexOf(g.barStory)>=0?g.barStory:null,quietDrawing:!!g.quietDrawing,coatNo:!!g.coatNo,fineSent:!!g.fineSent,
+    sips:Number.isFinite(g.sips)?clamp(Math.floor(g.sips),0,99):0,files:Number.isFinite(g.files)?clamp(Math.floor(g.files),0,99):0,
+    bigSip:g.bigSip&&typeof g.bigSip.t==='string'?{t:g.bigSip.t.slice(0,40),n:clamp(Math.floor(g.bigSip.n)||0,0,5)}:null,methods:cleanMethods(g.methods),kept:Array.isArray(g.kept)?g.kept.filter(function(k){return typeof k==='string'&&KEPT[k];}).slice(0,12):[]};
 }
 function loadProgress(){
   try{
@@ -1231,7 +1233,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   function(){G.clock=19*60;},['N','00:19. Ekskyysmi has dozed off.'],
   {wait:0.8},
   ['P','Sanna: “Still up?? Game night tomorrow! You don’t have to bring anything.”'],
-  ['P','You: “Fine.”'],drain(1,'“Fine.”'),
+  ['P','You: “Fine.”'],drain(1,'“Fine.”'),function(){G.fineSent=true;},
   {wait:1.4},
   ['P','Sanna: “Oh. Okay!”'],
   ['N','The phone goes face down. Nothing gets filed.'],
@@ -1945,7 +1947,8 @@ function mugQuiet(on){return function(){G.mugQuiet=!!on;};}          // a scene 
 function mugSpiky(on){return function(){if(G.mug)G.mug.spiky=!!on;};}
 function mugEmpty(){return !!(G.mug&&G.mug.v<=1);}
 function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown;m.v=Math.max(Math.min(m.v,m.floor==null?0:m.floor),m.v-n);   // a day can scrape the bottom, only Thursday goes through it
-  m.shown=m.v;m.ghost={from:from,to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:label,t:0,minus:true,n:from-m.v};sfx('sipOut');};}
+  m.shown=m.v;m.ghost={from:from,to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:label,t:0,minus:true,n:from-m.v};sfx('sipOut');
+  var lost=from-m.v;G.sips=(G.sips||0)+lost;if(lost>0&&(!G.bigSip||lost>G.bigSip.n))G.bigSip={t:label,n:lost};};}   // for the receipt's damage report
 function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var before=m.v;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:label,t:0,minus:false,n:m.v-before};sfx('pourIn');};}
 // The meltdown: the last drain on an empty mug breaks it. Shards fly; the mug stays broken until it is glued.
 function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.shown=0;m.broken=true;m.seen=0;m.ghost=null;m.last={text:label||'',t:0,minus:true};
@@ -2200,19 +2203,20 @@ var EPI=[
   {cut:'fade',set:'bar',clock:21*3600+30*60,s:1.0,mood:'calm',hx:430,bar:1,cam:[1.75,420,250, 1.75,420,250],secs:3.4,
     l:'UMBRELLA STORIES, TOLD',v:'1',note:'classified: not any more'},
   // invented: the ride home, in two close-ups (a wide shot stretched the floor shadow between them): the driver, then the runner.
-  {cut:'hard',walk:1,drive:1,s:0.5,mood:'alert',off:-300,cam:[2.3,470,362, 2.3,470,362]},
-  {cut:'hard',walk:1,drive:1,s:0.5,mood:'alert',off:-300,follow:'S',cam:[2.5,200,220, 2.5,200,220],
-    at:[[0.3,epiSweat()],[0.7,epiSweat()],[1.1,epiSweat()],[1.5,epiSweat()],[1.9,epiSweat()]],
+  {cut:'hard',walk:1,drive:1,s:0.5,mood:'alert',off:-300,cam:[2.9,436,360, 3.0,436,360]},
+  {cut:'hard',walk:1,drive:1,s:0.5,mood:'alert',off:-300,follow:'S',cam:[3.2,200,230, 3.3,200,230],
+    at:[[0.15,epiSweat()],[0.45,epiSweat()],[0.75,epiSweat()],[1.05,epiSweat()],[1.35,epiSweat()]],
     l:'RIDES HOME',v:'1',note:'one in the car. one running behind.'},
   // a flash, no caption: the story again at home, and they cannot stop laughing
   {cut:'hard',set:'home',clock:22*3600+20*60,s:1.05,mood:'pleased',hx:500,face:'laugh',facing:-1,cam:[1.85,455,250, 1.85,455,250],secs:1.6,
     at:[[0.2,epiHa(-60,0)],[0.6,epiHa(40,-20)],[1.0,epiHa(-90,-30)]]},
   {cut:'hard',set:'library',clock:15*3600,s:0.8,mood:'calm',hx:430,cam:[1.25,460,266, 1.25,460,266],secs:4,
     at:[[0.8,epiLens(560,300,'PAGE 212. NOBODY HAS DIED YET.')]],l:'LATE FEES',v:'€4.60',note:'lighthouses: a shared interest'},
-  // invented: the lift. Eero, the human, and two shadows trying very hard not to touch.
-  {cut:'hard',set:'lift',clock:8*3600+55*60,s:0.72,mood:'worry',hx:420,b:540,bFace:-1,eeroShadow:470,cam:[1.5,470,262, 1.5,470,262],secs:3.2,
-    at:[[1.6,function(){G.morko.sT=0.66;G.tics.push(tic('(sorry.)',360,170,{life:1.3,size:14}));}]],
-    l:'LIFTS, SHARED',v:'1',note:'shadows touching: 0 (narrowly)'},
+  // The posting (#19): the application goes. Ekskyysmi drafts four pages; the human sends three lines. (Replaced the lift, 21.11.)
+  {cut:'hard',set:'home',clock:22*3600+47*60,s:1.15,mood:'alert',hx:470,cam:[1.4,500,262, 1.5,500,258],secs:3.4,
+    at:[[0.1,epiDraft('Ekskyysmi’s draft: page 4 of 4. “…and in conclusion, sorry.”')],
+        [1.9,epiDraft('Sent: three lines. No apology.')],[1.95,function(){sfx('pop');var M=G.morko;M.mood='surprised';M.sT=0.8;}]],
+    l:'APPLICATIONS, SENT',v:'1',note:'drafted by one. sent by the other.'},
   // invented: Ekskyysmi has been stamping itself. Ten times. The human looks; it looks back.
   {cut:'hard',set:'home',clock:19*3600,s:1.15,mood:'surprised',hx:520,facing:-1,face:'stiff',cam:[1.45,440,250, 1.45,440,250],secs:3.6,
     at:[[0.2,epiStamp()],[0.42,epiStamp()],[0.62,epiStamp()],[0.8,epiStamp()],[0.96,epiStamp()],[1.1,epiStamp()],[1.22,epiStamp()],[1.33,epiStamp()],[1.43,epiStamp()],[1.52,epiStamp()],
@@ -2220,9 +2224,9 @@ var EPI=[
     l:'REJECTIONS, SELF-ISSUED',v:'10',note:'all of them overturned on appeal.'},
   // invented: a long careful draft; the human deletes it and sends two characters. Ekskyysmi faints.
   {cut:'hard',set:'home',clock:21*3600+10*60,s:1.05,mood:'alert',hx:430,cam:[1.3,520,270, 1.3,520,270],secs:3.6,
-    at:[[0.15,epiDraft('Hi!! Just checking you’re okay, not that you aren’t, sorry if this is weird, totally fine if not, no worries, ignore this')],
-        [1.5,epiDraft('ok 👍')],[1.55,function(){sfx('pop');}],
-        [2.1,function(){var g=G,M=g.morko;M.sT=0.32;M.mood='surprised';g.human.face='smile';g.tics.push(tic('thud.',g.human.x-70,FEETY-60,{life:1.3,size:15}));sfx('drip');}]],
+    at:[[0.1,epiDraft('Hi!! Just checking you’re okay, not that you aren’t, sorry if this is weird, totally fine if not, no worries, ignore this')],
+        [2.5,epiDraft('ok 👍')],[2.55,function(){sfx('pop');}],
+        [3.1,function(){var g=G,M=g.morko;M.sT=0.32;M.mood='surprised';g.human.face='smile';g.tics.push(tic('thud.',g.human.x-70,FEETY-60,{life:1.3,size:15}));sfx('drip');}]],
     l:'DRAFTS, DELETED',v:'1',note:'sent instead: ok 👍'},
   // smash: the group photo. A flash, everyone smiling, and one enormous shadow that was not invited.
   {cut:'smash',set:'room',clock:17*3600,s:1.9,mood:'pleased',hx:360,a:460,b:560,r:660,pose:'grow',flash:1,cam:[1.15,500,265, 1.15,500,265],secs:2.4,
@@ -2270,7 +2274,12 @@ function epiShot(o){return function(){
 };}
 function stepEpi(dt){var e=G.epi;if(!e)return;e.ct+=dt;
   if(e.o&&e.o.follow==='S'){var q=geom();G.cx=q.bx;G.cy=q.hdY+60;G.camRate=RM?40:6;}   // keep the running shadow in frame
-  var el=musicEl;e.clock=el&&musicName==='epilogue'&&!el.paused&&el.currentTime>0?el.currentTime:(e.clock||0)+dt;e.dark=approach(e.dark||0,e.darkT||0,(RM?3:2.4)*dt);
+  // The montage is cut to the song, so its clock follows the music. But the clock never runs backwards: if the song
+  // restarts under us (an Android WebView back from the background, a reloaded element), the music is put back where
+  // the pictures are, instead of the pictures waiting a minute for the music (Joonas 21.11.: "music plays, nothing moves").
+  var el=musicEl,prev=e.clock||0,live=el&&musicName==='epilogue'&&!el.paused&&el.currentTime>0;
+  if(live&&el.currentTime<prev-0.5){try{el.currentTime=prev;}catch(_){}e.clock=prev+dt;}
+  else e.clock=live?Math.max(prev,el.currentTime):prev+dt;e.dark=approach(e.dark||0,e.darkT||0,(RM?3:2.4)*dt);
   while(e.at&&e.at.length&&e.at[0][0]<=e.ct)e.at.shift()[1]();if(e.x>0)e.x=Math.max(0,e.x-dt/(RM?2.2:1.3));}
 // No canvas blur filter: it is slow on phones and in software rendering (the montage ran at a fifth of its speed).
 // The softness comes from a haze layer in drawEpi instead.
@@ -2287,6 +2296,7 @@ function drawEpi(){
   epiEyes(e);
   if(e.snap&&e.x>0){ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=e.x;ctx.drawImage(e.snap,0,0);ctx.restore();ctx.setTransform(SC,0,0,SC,0,0);}
   var o=e.o;if(!o)return;
+  if(o.form)epiForm(e);
   if(o.roll){epiRoll(e);return;}
   if(o.noCap)return;
   var rows=o.mine?(e.rows||[]):o.l?[{l:o.l,v:o.v}]:[];
@@ -2311,26 +2321,28 @@ function drawEpi(){
 // Bar starts found by beat tracking (librosa) and kept here, so cuts land on bars. Without sound the same clock runs on time.
 var EPIBARS=[0.12,2.37,4.62,6.97,9.31,11.56,13.82,16.04,18.30,20.55,22.99,25.24,27.68,30.12,32.37,34.62,36.87,39.13,41.54,43.79,46.05,48.30,50.55,52.80,55.05,57.28,59.54,61.97,64.23,66.48,68.73,70.96,73.21,75.46,77.72,79.95,82.20,84.45,86.70,88.96,91.18,93.25,95.50,97.76,100.01,102.26,104.49,106.74,108.99,111.22,113.45,115.73,117.96,120.19,122.46,124.71,127.13,129.38,131.63,133.86,136.12,138.37,140.60,142.85,145.08,147.33,149.58,151.81,154.06,156.32,158.55,160.80,163.03];
 var EPISONG=175.2,EPILAST=169.4;
-function barT(n){return n<EPIBARS.length?EPIBARS[n]:EPIBARS[EPIBARS.length-1]+(n-EPIBARS.length+1)*2.25;}
+function barT0(n){return n<EPIBARS.length?EPIBARS[n]:EPIBARS[EPIBARS.length-1]+(n-EPIBARS.length+1)*2.25;}
+function barT(n){var i=Math.floor(n),f=n-i;return f?barT0(i)+(barT0(i+1)-barT0(i))*f:barT0(i);}   // half bars for the fast cuts
 function epiClock(){var e=G.epi;return e?(e.skip?1e9:e.clock||0):1e9;}
 function epiAt(t){return function step(){return epiClock()>=t-0.03?[]:[{wait:0.04},step];};}
 // Part A: the montage (31 bars). B: the receipt rolls while they sit on the floor (the song's quieter middle).
 // C: the last chorus: one bar each, no captions, faster. D: the bird and the credit, held to the last note.
-var EPIA=[2,2,2,2,2,2,1,1,1,1,2,1,2,2,1,2,2,1,3];
+var EPIA=[2,2,2,2,2,2,1,0.5,1,1,2,1.5,2,2,1,2,2,1,3];   // still 32 bars: the car is half a bar, the application one and a half
 // Twelve bars after the receipt, all new: Ekskyysmi in its headband, and two places from part two seen from another angle.
 function epiTic(t,x,y,o){return function(){G.tics.push(tic(t,x,y,o||{life:1.6,size:18}));};}
 var EPIN=[
   {bars:1,cut:'smash',set:'home',clock:20*3600,s:1.25,mood:'stern',hx:560,ninja:1,pose:'five',five:{dx:20,dy:-60},cam:[1.5,420,250, 1.6,410,245],
     at:[[0.5,epiTic('HI-YA.',300,150)]]},
-  {bars:2,cut:'hard',set:'clinic',clock:14*3600+10*60,s:1.45,mood:'worry',hx:480,cam:[1.3,470,260, 1.4,460,255],
-    at:[[0.3,epiTic('NOW SERVING: 12',620,140,{life:4,size:18})],[1.4,epiTic('YOUR NUMBER: 47',330,200,{life:3,size:18})],[2.6,function(){G.morko.sT=1.7;}]]},
+  // The form, page 3 (Joonas 21.11.: questions and scribbled answers, and Ekskyysmi signs). No diagnosis, no advice.
+  {bars:3,cut:'hard',set:'clinic',clock:14*3600+10*60,s:1.3,mood:'worry',hx:330,cam:[1.15,480,262, 1.2,480,262],form:1,
+    at:[[2.2,function(){G.morko.sT=1.6;G.morko.mood='scared';}],[3.6,function(){G.morko.sT=1.1;G.morko.mood='alert';}],[5.4,function(){G.morko.mood='pleased';G.morko.sT=1.25;sfx('stamp');}]]},
   {bars:1,cut:'hard',set:'home',clock:22*3600,s:0.42,mood:'alert',hx:330,ninja:1,off:190,cam:[1.7,520,240, 1.7,520,240],
     at:[[0.6,epiTic('(stealth.)',560,150,{life:1.4,size:15})]]},
   {bars:2,cut:'hard',set:'clinic',clock:9*3600+5*60,s:1.2,mood:'scared',hx:470,face:'stiff',cam:[1.45,450,250, 1.45,450,250],
     at:[[0.6,epiTic('SMALL SCRATCH.',520,170,{life:1.8,size:18})],[1.7,function(){var g=G,M=g.morko;M.sT=0.32;M.mood='surprised';g.human.face='smile';g.tics.push(tic('thud.',g.human.x-80,FEETY-60,{life:1.6,size:15}));}],
         [2.8,epiTic('brave things nobody saw: +1',300,120,{life:1.8,size:15})]]},
   {bars:2,cut:'hard',set:'home',clock:9*3600,s:1.3,mood:'stern',hx:470,ninja:1,pose:'five',five:{dx:60,dy:-30},cam:[1.35,470,255, 1.45,480,250],
-    at:[[0.2,epiDraft('Riitta: “Quick chat?”')],[1.2,epiTic('CHOP.',560,210)],[1.5,epiDraft('Riitta: “Quick chat? Good news, actually.”')],[2.4,function(){var M=G.morko;M.mood='surprised';M.sT=0.9;}]]},
+    at:[[0.1,epiDraft('Riitta: “Quick chat?”')],[1.5,epiTic('CHOP.',560,210)],[1.8,epiDraft('Riitta: “Quick chat? Good news, actually.”')],[2.9,function(){var M=G.morko;M.mood='surprised';M.sT=0.9;}]]},
   {bars:2,cut:'hard',set:'room',clock:16*3600,s:0.95,mood:'worry',hx:430,zone:1,cam:[1.3,480,290, 1.3,480,290],
     at:[[0.4,epiTic('COMFORT ZONE',430,440,{life:3.6,size:15})],[1.3,function(){G.human.xT=G.human.x+120;G.morko.sT=1.25;G.morko.mood='alert';}],[2.6,function(){G.morko.sT=0.95;G.morko.mood='pleased';G.tics.push(tic('one step out. filed.',300,190,{life:1.8,size:15}));}]]},
   {bars:2,cut:'fade',set:'home',clock:21*3600,s:1.0,mood:'pleased',hx:470,face:'smile',ninja:1,pose:'shoulder',cam:[1.6,460,280, 1.45,465,285],
@@ -2342,6 +2354,13 @@ function epiFind(l){for(var i=0;i<EPI.length;i++)if(l==='laugh'?EPI[i].face==='l
 // The whole receipt, rolling up like credits: every row of the week, the player's methods, the total, the maker.
 function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · THE WHOLE THING'},{gap:1}];
   EPI.forEach(function(o){if(!o.l)return;r.push({l:o.l,v:o.v});var n=typeof o.note==='function'?o.note():o.note;if(n)r.push({n:n});});
+  var g=G,m=g.methods||{},imagined=(m.worst||0)+(g.files||0);
+  r.push({gap:1},{h:'DAMAGE REPORT'},{l:'CRITICISM, ACTUAL',v:'1'},{n:'“shorter.” it was real. it was one word.'});
+  if(imagined)r.push({l:'CRITICISM, IMAGINED',v:String(imagined)},{n:'all of it rehearsed. some of it twice.'});
+  if(g.files)r.push({l:'OLD FILES, REOPENED',v:String(g.files)},{n:'the oldest one: year 2. a drawing.'});
+  if(g.sips)r.push({l:'SIPS LOST',v:String(g.sips)},{n:g.bigSip?'the biggest: '+g.bigSip.t+' (−'+g.bigSip.n+')':'one at a time.'});
+  if(g.mugMended)r.push({l:'MUGS BROKEN',v:'1'},{n:'repaired: gold.'});
+  if(g.fineSent)r.push({l:'“FINE.”S SENT',v:'1'},{n:'repaired on a friday. in person.'});
   var mine=mineRows();if(mine.length){r.push({gap:1},{h:'EKSKYYSMI’S METHODS'});mine.forEach(function(m){r.push(m);});}
   // What it felt like from inside: time, effort and bravery nobody else could see. No diagnosis, no advice: bookkeeping.
   r.push({gap:1},{h:'WHAT IT FELT LIKE'});epiInsideRows().forEach(function(x){r.push(x);});
@@ -2373,6 +2392,21 @@ function epiRoll(e){
   ctx.restore();
 }
 // The epilogue is a film: the panel and the hint line under the scene go away (on a phone they were an unreadable bar).
+var EPIFORM=[[0.3,'q','7. How do you usually take criticism?'],[1.0,'a','personally.'],
+  [2.0,'q','12. Do you replay conversations afterwards?'],[2.7,'a','only the ones that happened.'],
+  [3.8,'q','18. Anything else we should know?'],[4.5,'a','it was a FULL STOP.'],[5.4,'sig','Ekskyysmi']];
+function epiForm(e){var t=e.ct,x=560,y=58,w=360,h=300,mono='"DM Mono",ui-monospace,Menlo,monospace',hand='"Segoe Print","Bradley Hand","Comic Sans MS",cursive';
+  ctx.save();ctx.translate(x+w/2,y+h/2);ctx.rotate(0.018);ctx.translate(-(x+w/2),-(y+h/2));
+  ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(x+6,y+8,w,h);ctx.fillStyle='#f4eddf';ctx.fillRect(x,y,w,h);
+  ctx.fillStyle='#2b2733';ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 12px '+mono;ctx.fillText('FORM · PAGE 3 OF 9',x+18,y+22);
+  ctx.fillStyle='#c9c0ad';ctx.fillRect(x+18,y+34,w-36,1);var yy=y+58;
+  EPIFORM.forEach(function(r){if(t<r[0])return;var a=clamp((t-r[0])/0.3,0,1);ctx.globalAlpha=a;
+    if(r[1]==='q'){ctx.fillStyle='#2b2733';ctx.font='500 13px '+mono;ctx.fillText(r[2],x+18,yy);yy+=26;}
+    else if(r[1]==='a'){ctx.fillStyle='#24408f';ctx.font='italic 600 17px '+hand;ctx.fillText(r[2],x+34,yy);yy+=34;}
+    else{ctx.fillStyle='#c9c0ad';ctx.fillRect(x+18,y+h-48,w-36,1);ctx.fillStyle='#24408f';ctx.font='italic 700 24px '+hand;ctx.fillText(r[2],x+30,y+h-62);
+      ctx.fillStyle='#6b6470';ctx.font='500 11px '+mono;ctx.fillText('signature (the shadow)',x+18,y+h-34);}
+    ctx.globalAlpha=1;});
+  ctx.restore();}
 function epiChrome(on){try{document.body.classList.toggle('epi-on',on);}catch(e){}}
 // Skip: the first tap asks, a second tap within 2.5 s jumps to the black at the end.
 function epiTap(){var e=G.epi;if(!e)return false;if(e.ask!=null&&G.time-e.ask<2.5){e.skip=true;music(null);return true;}e.ask=G.time;return true;}
@@ -4557,7 +4591,7 @@ function postingPayoff(){
 function storyRows(){
   var g=G,rows=[];
   if(g.rehearsal)rows.push(['“not now”, rehearsed','3 h 10 min'],['“not now”, actual','4 s']);
-  if(g.posting&&g.posting!=='open')rows.push(['applications sent','0'],['rejections avoided','1'],['success rate','100 %']);
+  if(g.posting&&g.posting!=='open')rows.push(['applications sent','0 (yet)'],['rejections avoided','1'],['success rate','100 %']);
   if(g.posting==='open')rows.push(['applications','pending']);
   if(g.quiet)rows.push(['one quiet Monday, lived','1.0 days']);
   if(g.nothings)rows.push(['“it’s nothing”, said','×'+g.nothings]);
@@ -5674,6 +5708,6 @@ function frame(ts){
   window.requestAnimationFrame(frame);
 }
 syncImmersive();reset(null);showTitle();
-window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,inside:{run:function(){return G.run;},day:function(){return G.day0;},mult:function(){return G.mult;},add:addLived,cameBack:cameBack,receipt:function(){return G.receiptText;}},qteKey:function(k){return qteKey({key:k});},qte:function(){return G.qte;},full:toggleFull,immersive:function(){return htmlEl.classList.contains('immersive');},chapters:showChapters,hotScreen:function(x,y){var r=cv.getBoundingClientRect(),z=C.z,hw=W/(2*z),hh=H/(2*z),fx=clamp(C.fx,hw,W-hw),fy=clamp(C.fy,hh,H-hh);return [r.left+((x-fx)*z+W/2)/W*r.width,r.top+((y-fy)*z+H/2)/H*r.height];},labList:showLab,moments:showMoments,about:showAbout,lensTap:lensTap,back:backButton,sound:{load:loadSound,has:function(k){return !!BUF[k];},music:function(){return {name:musicName,playing:!!(musicEl&&!musicEl.paused),t:musicEl?musicEl.currentTime:0,vol:musicEl?musicEl.volume:0};},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
+window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,inside:{run:function(){return G.run;},day:function(){return G.day0;},mult:function(){return G.mult;},add:addLived,cameBack:cameBack,receipt:function(){return G.receiptText;}},qteKey:function(k){return qteKey({key:k});},qte:function(){return G.qte;},full:toggleFull,immersive:function(){return htmlEl.classList.contains('immersive');},chapters:showChapters,hotScreen:function(x,y){var r=cv.getBoundingClientRect(),z=C.z,hw=W/(2*z),hh=H/(2*z),fx=clamp(C.fx,hw,W-hw),fy=clamp(C.fy,hh,H-hh);return [r.left+((x-fx)*z+W/2)/W*r.width,r.top+((y-fy)*z+H/2)/H*r.height];},labList:showLab,moments:showMoments,about:showAbout,lensTap:lensTap,back:backButton,sound:{load:loadSound,has:function(k){return !!BUF[k];},music:function(){return {name:musicName,playing:!!(musicEl&&!musicEl.paused),t:musicEl?musicEl.currentTime:0,vol:musicEl?musicEl.volume:0};},seek:function(t){if(musicEl)musicEl.currentTime=t;},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
 window.requestAnimationFrame(frame);
 })();

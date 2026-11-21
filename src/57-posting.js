@@ -85,7 +85,7 @@ function postingPayoff(){
 function storyRows(){
   var g=G,rows=[];
   if(g.rehearsal)rows.push(['“not now”, rehearsed','3 h 10 min'],['“not now”, actual','4 s']);
-  if(g.posting&&g.posting!=='open')rows.push(['applications sent','0'],['rejections avoided','1'],['success rate','100 %']);
+  if(g.posting&&g.posting!=='open')rows.push(['applications sent','0 (yet)'],['rejections avoided','1'],['success rate','100 %']);
   if(g.posting==='open')rows.push(['applications','pending']);
   if(g.quiet)rows.push(['one quiet Monday, lived','1.0 days']);
   if(g.nothings)rows.push(['“it’s nothing”, said','×'+g.nothings]);
