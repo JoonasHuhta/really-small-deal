@@ -1893,7 +1893,7 @@ function labDetail(){return labScene({set:'office',title:'One small thing.',plan
 // ---- src/36-mug.js ----
 /* ================= The mug (VISIO.md, V1 prototype) =================
    The human's coffee mug is how much of them is left today. Social load and the senses drain it; quiet refills it.
-   No numbers on screen: only the level of coffee. An empty mug is the door to the ugly side: Ekskyysmi goes spiky,
+   No numbers on screen: only the level of coffee. An empty mug wakes the ugly side: Ekskyysmi goes spiky,
    answers get short, the soft option is locked. The size of Ekskyysmi is still feeling; the mug is capacity. */
 var MUGMAX=5;
 // v: the real level. shown: what is drawn (drops at once, rises slowly). ghost: the part just lost, flickering out (Joonas 20.11.).
@@ -2051,9 +2051,9 @@ function labMug(){return labScene({set:'room',title:'A Tuesday, with a mug.',pla
 function dealOptions(canAsk){
   var o=[{t:'Take the deal. Save the mug.',m:'hide',f:function(){G.lunchSkipped=1;},then:[dealSign(true),hat(null),refill(1,'a quiet hour'),['S','Signed. Witnessed. Filed.'],['H','…She did ask twice.'],['S','That’s a LATER problem. Later is a different department.']]},
     {t:'No deal. Lunch with Sanna.',m:'stay',f:function(){G.lunchSkipped=0;},then:[dealSign(false),hat(null),drain(1,'lunch, worth it'),['S','That will cost a sip.'],['H','Then it costs a sip.'],['S','…Was it worth it?',{quiet:1}],['H','Ask me after.']]}];
-  if(canAsk)o.push({t:'Ask: is that the mug talking, or the door?',m:'stay',then:function(){
+  if(canAsk)o.push({t:'Ask: is that the mug talking, or the door?',m:'stay',hush:true,then:function(){
     var low=G.mug&&G.mug.v<=2;
-    return (low?[['S','…The mug. Honestly. It’s low.',{quiet:1}],['H','Then it’s a fair deal.'],['S','I do write fair ones. Occasionally.']]:
+    return [['H','Is that the mug talking, or the door?']].concat(low?[['S','…The mug. Honestly. It’s low.',{quiet:1}],['H','Then it’s a fair deal.'],['S','I do write fair ones. Occasionally.']]:
       [{wait:0.8},['S','…The door.',{quiet:1}],['H','Thought so.'],['S','The mug was a very convenient witness.']]).concat([{choice:function(){return dealOptions(false);}}]);}});
   return o;
 }

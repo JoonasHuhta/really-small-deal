@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.71.0 (Claude, 21.11.2026): **tarinakartta ja suojatestit.**
+- Uusi TARINAKARTTA.md on totuus pelin järjestyksestä ja nimistä. Siinä on 24 riviä numeroituna (päivät, hetket ja osakortit), kunkin kortti, kello ja paikat, mitä kohtaus vie eteenpäin ja kesto. Mukana ovat myös nimisopimus, kolme kohtaustyyppiä (hetket eivät ole takaumia), kolme aikaa, langat ja liput, löydetyt aukot, hahmot sekä päätetty suunta B. story.test tarkistaa, että kartan järjestys on sama kuin koodin.
+- Suojatestit: maanantain ja perjantain ulkoversioriimi, *Not now* heti torstain jälkeen uuden työn haaroineen, ei-lanka, kissa ja mukin periaate (piiloutumisvaihtoehto ei koske mukiin). Kokeiltu rikkomalla tahallaan: build kaatuu.
+- Labraprototyyppi *A Tuesday, with a mug.*: kysymys ”Is that the mug talking, or the door?” on nyt ihmisen repliikki eikä kaiu Ekskyysmin suussa ”Ask:”-sanoineen. Tarinaan ei muutoksia.
+- VISIO.md: otsikko ”Tyhjä muki herättää RSD:n ruman puolen”. Ovi tarkoittaa pelissä aina torjuntaa.
+- Löydetty eikä korjattu (TARINAKARTTA §6): *Evenings* ”THE SAME DAY” kertoo hiljaisesta maanantaista, mutta edellä on kirjasto ”A SATURDAY, WEEKS LATER”. Lisäksi muki täyttyy 1 → 4 keskiviikkoaamuna klo 9:12–10:20.
+
 Versio 0.70.0 (Claude, 20.11.2026): **tiistain musiikki, päiväleima, maanantai päättyy sisällä.**
 - Musiikki: Joonaksen *Ordinary Evening* (assets/audio/ordinary-evening.mp3, kansikuva riisuttu) soi koko tiistain (luku 2) ajan: alkaa 1,5 s viiveellä, nousee 2 s:ssa, voimakkuus 0.2, ei väisty puheen eikä iskujen alta, looppaa (190 s), jatkuu kohtausvaihtojen yli (klo 16:55 → 03:07 → 9:00) ja häivyttyy, kun seuraava hetki alkaa. Mekanismi: CHAPTERS[n].music → G.chapMusic; MUSICDELAY, MUSICNODUCK.
 - Päiväleima: vasemmassa yläkulmassa pieni ”TUESDAY · 16:55”. Kirkkaampi 4 s leikkauksen jälkeen, sitten himmeä. Kello kulkee. Puolenyön yli leikattaessa viikonpäivä vaihtuu itse (tiistain yö ja ”quick chat” ovat siis WEDNESDAY). Hetkissä leimana on hetken oma aika (”A SUNDAY, LATE AFTERNOON”, ilman kellonaikaa tekstissä). Baarin jälkeinen aamu: THE NEXT MORNING. Hiljaisen päivän toimisto: MONDAY.

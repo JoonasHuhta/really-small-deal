@@ -19,7 +19,8 @@ Ihmisellä on kädessä kahvimuki koko pelin ajan, ja toimiston seinällä on ju
 
 **Suunta on Joonaksen, ja se on parempi kuin minun.** Ehdotin ensin kuppia, joka täyttyy ja valuu yli. Joonaksen versiossa **muki tyhjenee: kun itsestä ei ole enää mitään annettavaa, päälle tulee epäsosiaalinen mörkö**. Juuri tämän jokainen nepsy tunnistaa.
 
-### 2. Tyhjä muki on ovi RSD:n rumaan puoleen
+### 2. Tyhjä muki herättää RSD:n ruman puolen
+*(Otsikko korjattu 21.11.2026. Pelin teksteissä **ovi** tarkoittaa aina torjuntaa, sulkeutumista ja sitä, mitä Ekskyysmi vartioi. Siksi kysymys kuuluu ”Is that the mug talking, or the door?”. Tyhjä muki ei ole ovi, se herättää piikikkään mörön.)*
 ANALYYSI 2.1:n suurin aukko oli ärtymys, tiuskiminen ja itseinho. Niille ei tarvita erillistä ”raivokohtausta”. Ne tulevat tyhjästä mukista:
 - Ekskyysmin ääriviiva muuttuu piikikkääksi möröksi.
 - Vastausvaihtoehdot lyhenevät ja kärjistyvät (”k.”, ”Fine.”).

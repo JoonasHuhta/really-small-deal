@@ -642,3 +642,26 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
 {const fs3=require('fs'),p3=require('path'),root=p3.join(__dirname,'..');
  for(const d of ['tests','tools','src'])for(const f of fs3.readdirSync(p3.join(root,d)))if(/\.(c?js|cmd|py|html)$/.test(f))
   assert.ok(!/\/home\/claude|\/mnt\/user-data/.test(fs3.readFileSync(p3.join(root,d,f),'utf8')),d+'/'+f+' has a machine-specific path');}
+// ===== Guards (TARINAKARTTA.md, 21.11.2026): working structures that must not break by accident =====
+{const fs4=require('fs'),p4=require('path'),root=p4.join(__dirname,'..'),src=f=>fs4.readFileSync(p4.join(root,'src',f),'utf8');
+ // 1. The story map lists the scenes in the same order as the code.
+ const AFTER=Function('return {'+src('33-moments.js').split('var AFTER={')[1].split('};')[0].replace(/\/\/[^\n]*/g,'')+'}')();
+ const order=['part1','chapter1','chapter2',...AFTER[2],'chapter3',...AFTER[3],'chapter4'];
+ for(const id of AFTER[4]){if(id==='nothing')order.push('part2');order.push(id);}
+ order.push('part3','chapter5',...AFTER[5]);
+ const map=fs4.readFileSync(p4.join(root,'TARINAKARTTA.md'),'utf8').split('<!-- KARTTA ALKAA -->')[1].split('<!-- KARTTA LOPPUU -->')[0];
+ assert.deepEqual([...map.matchAll(/\|\s*`([a-z0-9]+)`\s*\|\s*$/gm)].map(m=>m[1]),order,'TARINAKARTTA.md lists a different order than AFTER: update the map in the same change');
+ const mon=src('30-story-monday.js'),week=src('31-story-week.js'),second=src('49-second-act.js');
+ // 2. Monday and Friday cutaways rhyme: same title, same two seconds; on Friday the caption is plain.
+ assert.ok(/outside\(\{title:'WHAT THE OTHERS SAW',dur:'duration: 2 seconds',cap:OUTCAP/.test(mon)&&/outside\(\{title:'WHAT THE OTHERS SAW',dur:'duration: 2 seconds',cap:'Two colleagues going to lunch\.'/.test(week),'the Monday/Friday cutaway rhyme is broken');
+ // 3. Not now comes right after Thursday: it is the first test of the new job and needs jobDone.
+ assert.equal(AFTER[4][0],'notnow','Not now must follow Thursday');
+ assert.ok(src('29-prelude.js').includes('This is the OLD job')&&src('29-prelude.js').includes('This is the staying part.'),'Not now lost its new-job branch');
+ // 4. The "no" thread: Wednesday's coat, the quiet day's no, Friday's no to Eero.
+ assert.ok(week.includes('It’s a no in a coat.')&&second.includes("['H','No. Sorry.']")&&week.includes('It’s a no in a coat, Eero.'),'the no thread is broken');
+ // 5. The cat: planted on Monday, finished on the quiet day, shared in the group chat.
+ assert.ok(mon.includes('Four legs so far')&&/quietDrawing=true/.test(second)&&/quietDrawing\?/.test(src('50-lab.js')),'the cat thread is broken');
+ // 6. Mug principle: hiding never touches the mug (a deal in 36-mug.js shows its trade and is the exception).
+ for(const f of fs4.readdirSync(p4.join(root,'src')).filter(f=>f.endsWith('.js')&&f!=='36-mug.js'))
+  for(const line of src(f).split('\n'))if(/m:'hide'/.test(line))assert.ok(!/drain\(|refill\(/.test(line),f+': a hide option touches the mug: '+line.trim().slice(0,90));
+ console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle.');}
