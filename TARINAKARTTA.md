@@ -2,7 +2,7 @@
 
 **Tämä tiedosto on totuus pelin järjestyksestä ja nimistä.** Kun puhumme kohtauksesta, käytämme tämän kartan numeroa ja kortin otsikkoa, esimerkiksi *#9 An ordinary evening*. Jos järjestys koodissa muuttuu, tämä tiedosto päivitetään samassa muutoksessa. `tests/story.test.cjs` tarkistaa, että alla olevan taulukon järjestys on sama kuin koodin (`src/33-moments.js`, `AFTER`). Jos ne eroavat, build kaatuu.
 
-Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.79.0 (hahmo: EKSKYYSMI.md; ulkopuolinen arvio: Codex/Astra 21.11.) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
+Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.80.0 (hahmo: EKSKYYSMI.md; ulkopuolinen arvio: Codex/Astra 21.11.) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
 
 ---
 
@@ -52,7 +52,7 @@ Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.79.0 (hahmo: EKSKYY
 |---|---|---|---|---|---|---|---|
 | 1 | *Better safe.* | OSAKORTTI | PART ONE · ”A Monday. One small plan.” | – | Avaa Osan 1 | 0:04 | `part1` |
 | 2 | **Monday** – *Oh, hi.* | PÄIVÄ | A MONDAY | 08:51 taukotila (herätys, kahvi, ”oh, hi.”, Eero, lounas) → 16:42 kotimatka → 17:24 koti (paahtoleipä, kissa) → päivän kuitti | **Halu syntyy:** lounas Sannan kanssa. Valhe: ”My job is simple.” **Kissa ja haamu istutetaan:** neljäjalkainen kissa näkyy lapulla sohvan yläpuolella. ”Five gets laughed at.” ”We have a file on drawings.” Punainen kortti YEAR 2 näkyy ensimmäisen kerran. Lappu menee laatikkoon. | 5:34 | `chapter1` |
-| 3 | **Tuesday** – *Quick chat?* | PÄIVÄ | A TUESDAY | 16:55 taukotila (”No incidents”, Riitan viesti) → 03:07 koti, yö → 09:00 toimisto, palaveri (keskiviikko!) → 09:12 taukotila | Aito osuma: ”Shorter.” Haamu istutetaan arkistokorttina. Kehut löytyvät myöhässä (muki +1). **Musiikki: Ordinary Evening.** | 3:54 | `chapter2` |
+| 3 | **Tuesday** – *Quick chat?* | PÄIVÄ | A TUESDAY | 16:55 taukotila (”No incidents”, Riitta kahvikoneella, sitten hänen viestinsä) → 03:07 koti, yö → 09:00 toimisto, palaveri (keskiviikko!) → 09:12 taukotila | Aito osuma: ”Shorter.” Haamu istutetaan arkistokorttina. Kehut löytyvät myöhässä (muki +1). **Riitta nähdään ennen kuin hän on viesti** (0.80): kahvikoneella, ”Eleven things on her mind”, ja kolmen metrin päästä hän kirjoittaa: ”She chose to WRITE it.” **Musiikki: Ordinary Evening.** | 4:03 | `chapter2` |
 | 4 | *Enhance.* | HETKI | A MEETING, SOME MORNING | 11:56 toimisto | (1) Ekskyysmi tuplaa: zoom yhteen kulmakarvaan | 1:03 | `enhance` |
 | 5 | *Rewind.* | HETKI | THAT NIGHT, 23:40 | 23:40 koti | (1) Uusinta muokkaa itseään joka kerta | 1:09 | `rewind` |
 | 6 | **Wednesday** – *Could you just…* | PÄIVÄ | A WEDNESDAY, PROBABLY | 10:20 taukotila/avokonttori (oma tunti, kaiutinpuhelin, pyynnöt; Ekskyysmi takkina) → 23:15 koti (Eeron kalvot) → 00:12–00:19 (THURSDAY): varjo nukahtaa, Sannan viesti | Kyllä kaikkeen, ja hinta kasvaa. **Takki = maskaaminen:** ”Coat on. Nobody rejects a coat.” Kotona: ”Coat’s off.” Valittavissa ensimmäinen ”no in a coat”. **Ihminen vastaa Sannalle ”Fine.”**, ja varjo nukkuu, joten kukaan ei huomaa. | 2:41 | `chapter3` |
@@ -77,7 +77,7 @@ Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.79.0 (hahmo: EKSKYY
 | 25 | *By the radiator.* | HETKI | THE NEXT TUESDAY | 16:50 taukotila | Seuraava tiistai: varjojen tapaaminen. **Ekskyysmi näyttää lintunsa,** eikä kukaan naura. ”It was a Tuesday, you know. The drawing.” – ”Now it’s also the radiator.” Loppu jää auki. | 1:29 | `radiator` |
 <!-- KARTTA LOPPUU -->
 
-Yhteensä noin 51:22: Osa 1 noin 30 min, Osa 2 noin 10 min, Osa 3 noin 9 min.
+Yhteensä noin 51:31: Osa 1 noin 30 min, Osa 2 noin 10 min, Osa 3 noin 9 min.
 
 ---
 
@@ -131,7 +131,7 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 
 **Auki:**
 1. ~~Päivä ja hetki alkavat samannäköisellä kortilla.~~ Korjattu 0.76 (suunta B).
-2. **Riitta näkyy ensimmäisen kerran vasta viestinä** kohtauksessa #3. Hänet voisi istuttaa yhdellä rivillä #3:n avaukseen haarojen jälkeen.
+2. ~~**Riitta näkyy ensimmäisen kerran vasta viestinä** kohtauksessa #3.~~ Korjattu 0.80: hän seisoo kahvikoneella juuri ennen viestiä, ja ”eleven things” (#11, #20) istutetaan jo tässä.
 3. **KASIKIRJOITUS.md:n rakennetaulukko (0.26) on vanhentunut.** Järjestyksessä tämä kartta on voimassa.
 
 ## 7. Hahmot

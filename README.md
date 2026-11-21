@@ -14,6 +14,10 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.80.0 (Claude, 21.11.2026): **Riitta istutetaan ennen kuin hän on viesti** (TARINAKARTTA §6, avoin aukko 2).
+- *#3 Tuesday*: ennen viestiä *”Quick chat tomorrow at 9?”* Riitta seisoo taukotilan kahvikoneella: *”Riitta, at the coffee machine. Eleven things on her mind. All of them today.”* Hän ei sano mitään, ja viesti tulee hetken päästä. Ekskyysmi: *”And she was RIGHT THERE. Three metres away. She chose to WRITE it.”*
+- **Miksi:** pelaaja näkee Riitan kiireisenä eikä julmana ennen kuin hänestä tulee uhka. Hänen piirteensä *”eleven things”* (#11 *Not now*, #20 *Night shift*: ”Eleven things. I put them down at night.”) istutetaan näin jo ensimmäisessä kohtaamisessa. Uusi väärintulkinta (kirjoitti, vaikka oli paikalla) kuuluu samaan sarjaan kuin piste ja yksi peukalo. Tiistai pitenee 9 s (3:54 → 4:03).
+
 Versio 0.79.0 (Claude, 21.11.2026): **epilogin sanat luettavissa omaan tahtiin (saavutettavuus).**
 - **Epilogi piirtää kaiken tekstinsä kankaalle**: kuvatekstit, viestiluonnokset, lomakkeen ja koko rullaavan kuitin. Hitaasti lukeva ei ehtinyt lukea niitä, eikä ruudunlukija nähnyt niitä lainkaan (Codex-arvion kohta 9, ja sama asia, josta Joonas huomautti 21.11.). Nyt jokainen rivi menee myös **Dialogue**-näkymään (valikko → Dialogue), kuitti rivi riviltä, ja piilotettuun live-alueeseen ruudunlukijaa varten. Myös ohitettu epilogi kirjautuu kokonaan. Ohitusvihje kertoo tästä: *Tap again to skip. Every line is in Dialogue.*
 - **Avauskortti:** *That was the week. (Ekskyysmi kept the receipts)*. Versiossa 0.77 kortti oli *The week, itemised.*, ja sama otsikko toistui heti ensimmäisessä kuvassa.

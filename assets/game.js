@@ -1058,11 +1058,16 @@ function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',3
 function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60}).concat([
   mugOn(4),
   tuesdayOpening,
+  // 0.80 (TARINAKARTTA §6, open hole 2): Riitta is seen before she is a message. Busy, not cruel: eleven things, none of them you.
+  function(){var g=G;g.cowR=true;g.rx=860;},
+  ['N','Riitta, at the coffee machine. Eleven things on her mind. All of them today.'],
+  function(){G.cowR=false;},
   {wait:0.6},
   ['P','Riitta: “Quick chat tomorrow at 9?”'],
   hit(0.9,'P'),drain(2,'“quick chat?”'),set({sweat:0.7}),{wait:1.2},
   ['S','“Quick.”',{look:'squint'}],
   ['S','Nobody says “quick” about good news. Good news takes its time. Good news has cake.'],
+  ['S','And she was RIGHT THERE. Three metres away. She chose to WRITE it.'],
   ['H','It’s probably nothing.'],
   ['S','It’s five words and a question mark. It’s EVERYTHING.'],
   {choice:[
