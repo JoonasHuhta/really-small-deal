@@ -329,8 +329,8 @@ function playLab(id,mode){
   t2=playLab('evenings');
   assert.match(t2,/Am I allowed\?/);assert.match(t2,/I missed you/);assert.equal(T.G.morko.asleep,false,'the lamp brings it back');assert.equal(T.G.lampOff,false);
 }
-// The second act sits between Thursday's moments and Friday, in this order.
-assert.match(require('fs').readFileSync(require('path').join(__dirname,'..','src','33-moments.js'),'utf8'),/4:\['notnow','bar','nothing','form','quiet','library','evenings','night'\]/);
+// The second act sits between Thursday's moments and Friday, in this order (21.11.: the library moved before the form, so Evenings is THE SAME DAY as Quiet).
+assert.match(require('fs').readFileSync(require('path').join(__dirname,'..','src','33-moments.js'),'utf8'),/4:\['notnow','bar','nothing','library','form','quiet','evenings','night'\]/);
 // Nothing in the game names a condition, a drug or a profession. The player works it out, or does not.
 {
   const fs2=require('fs'),path2=require('path'),dir=path2.join(__dirname,'..','src');
@@ -664,4 +664,6 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
  // 6. Mug principle: hiding never touches the mug (a deal in 36-mug.js shows its trade and is the exception).
  for(const f of fs4.readdirSync(p4.join(root,'src')).filter(f=>f.endsWith('.js')&&f!=='36-mug.js'))
   for(const line of src(f).split('\n'))if(/m:'hide'/.test(line))assert.ok(!/drain\(|refill\(/.test(line),f+': a hide option touches the mug: '+line.trim().slice(0,90));
- console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle.');}
+ // 7. The "Fine." thread (21.11.): sent on Wednesday night while Ekskyysmi sleeps, heard by Sanna's shadow, repaired on Friday.
+ assert.ok(week.includes("['P','You: “Fine.”']")&&second.includes('Someone said “fine”.')&&week.includes("['H','You were asleep. That one was all me.']"),'the Fine. thread is broken');
+ console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle, the Fine. thread.');}

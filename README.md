@@ -14,6 +14,14 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.72.0 (Claude, 21.11.2026): **”Fine.”, kirjasto paikalleen, mukin ja kellon jatkuvuus.** Joonas antoi päätösvallan avoimissa kohdissa.
+- **Tiuskaisu Sannalle (Joonas: pakko tapahtua, koska RSD:stä ja maskaamisesta ei pääse, jos aina miellyttää muita):** keskiviikkona ihminen sanoo kyllä kaikille muille. Klo 00:19 varjo on nukahtanut, ja Sanna viestittää: ”Still up?? Game night tomorrow! You don’t have to bring anything.” Ihminen vastaa ”Fine.” pisteellä. Sanna: ”Oh. Okay!”, eli nyt Sanna saa oman ”oh”-hetkensä. Kertoja: ”Nothing gets filed.” Pelissä jo olleelle langalle tuli lähettäjä: yövuorossa Sannan varjo sanoo ”Someone said ’fine’”, eikä Ekskyysmi tiedä, että se olimme me. Perjantaina Sanna: ”Someone says ’fine’ and I’m up till three.”, ja ihminen korjaa omin sanoin: ”That one was all me. I had nothing left that night. It wasn’t about you.” Ekskyysmi: ”I file every ’oh’ we get. I never noticed one we gave.” Tiuskaisu ei ole valinta, ja korjaus on ihmisen, ei varjon.
+- **Kirjasto (#15 A fine.) siirtyi ennen lomaketta.** *Evenings* (”THE SAME DAY”) on taas hiljaisen maanantain ilta.
+- **Muki:** tiistai päättyy siihen, että kehut löytyvät (+1, taso 2). Keskiviikko alkaa samasta tasosta tuntia myöhemmin, saa oman tunnin kuulokkeilla (+1), ja sitten kaiutinpuhelin vie sen (−1). Yön yli tulee aina +1.
+- **Kello:** keskiviikon 00:12 ja 00:19 näkyvät myös leimassa (THURSDAY). Uusi testi `tests/clock.test.cjs` pelaa koko tarinan ja vaatii, että jokainen kertojan kellonaika vastaa leimaa.
+- **Päätökset (TARINAKARTTA §8):** ei kaupungin nimeä; ihmisellä kahvi ja Eerolla tee, eikä kahvi koskaan täytä mukia; hetkissä ei mukia; ensimmäinen diili tulee päivään; ”mug or door?” on ihmisen oma keksintö.
+- Kesto 49:41.
+
 Versio 0.71.0 (Claude, 21.11.2026): **tarinakartta ja suojatestit.**
 - Uusi TARINAKARTTA.md on totuus pelin järjestyksestä ja nimistä. Siinä on 24 riviä numeroituna (päivät, hetket ja osakortit), kunkin kortti, kello ja paikat, mitä kohtaus vie eteenpäin ja kesto. Mukana ovat myös nimisopimus, kolme kohtaustyyppiä (hetket eivät ole takaumia), kolme aikaa, langat ja liput, löydetyt aukot, hahmot sekä päätetty suunta B. story.test tarkistaa, että kartan järjestys on sama kuin koodin.
 - Suojatestit: maanantain ja perjantain ulkoversioriimi, *Not now* heti torstain jälkeen uuden työn haaroineen, ei-lanka, kissa ja mukin periaate (piiloutumisvaihtoehto ei koske mukiin). Kokeiltu rikkomalla tahallaan: build kaatuu.

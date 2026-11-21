@@ -7,14 +7,14 @@
 //            says "oh. hi." to Ekskyysmi itself, so it walks into Thursday knowing how that lands;
 //            last, an evening where nothing happens (a friend who already knows you count): the calm before Thursday
 //   after 4: the job description has changed. A relapse, a real one survived, an evening of nothing.
-//            Then part two (TOINEN_NAYTOS.md): a hit with no sender, asking for help,
+//            Then part two (TOINEN_NAYTOS.md): a hit with no sender, a seven-week debt paid in person (the library), asking for help,
 //            a genuinely easier day, and a lamp with room for a quieter companion.
 //            That night, in the dark, it learns that every shadow in town does the same job.
 //   after 5: the drawing. The oldest file gets updated.
 var AFTER={
   2:['enhance','rewind'],
   3:['glass','colleagues','evening'],
-  4:['notnow','bar','nothing','form','quiet','library','evenings','night'],
+  4:['notnow','bar','nothing','library','form','quiet','evenings','night'],   // the library before the form (21.11.): Evenings is THE SAME DAY as Quiet
   5:['comments','epilogue','radiator']   // after the final image: the next Tuesday, by the radiator
 };
 // Extras, not in the story (TYOSUUNNITELMA.md section 4): posting, detail, sometime, reply, voice, footage.

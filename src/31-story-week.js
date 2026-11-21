@@ -127,6 +127,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['H','That’s the trouble with your filing system.'],
   ['S','It’s not a filing system. It’s a smoke alarm. It doesn’t have a setting for “nice”.'],
   function(){G.pop={text:'Filed: 1 note. Misplaced: 3 compliments.',t:0};},keep('compliments'),
+  refill(1,'three compliments, found'),   // praise lands late, when somebody finds it (21.11.: Tuesday ends at 2, so Wednesday 10:20 follows on)
   {wait:1.6},
   ['S','…Look at that stapler.',{look:'up'}],
   ['H','What about it?'],
@@ -144,9 +145,12 @@ function yesMenu(s,extra,extraKey){return {choice:[
   {t:'No.',off:true}
 ]};}
 function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600+20*60}).concat([
-  mugOn(4,2),   // Wednesday leaks slowly: every yes costs a sip, the bill arrives on Thursday
+  // Wednesday 10:20 is an hour after Tuesday's 9:12 meeting: the mug carries on from there (2), gets one good hour,
+  // then the open office takes it back. Every yes costs a sip, down to the floor (2); the bill arrives on Thursday.
+  mugOn(2,2),
+  ['N','An hour of your own work. Headphones on. Nobody needed anything.'],refill(1,'an hour, headphones on'),
   // VISIO V4: the senses take from the mug too. An open office, a speakerphone, since nine.
-  ['N','The open office. Someone is on speakerphone. Since nine.'],drain(1,'speakerphone'),
+  ['N','Then the headphones die. Someone is on speakerphone. Has been since nine.'],drain(1,'speakerphone'),
   ['S','He has said “can you hear me now” forty times. We can. We all can.'],
   set({cowB:1,bx:880}),{wait:1.6},
   ['B','Hey! Quick favour. Could you take my slides for Friday? I’m swamped.'],
@@ -191,6 +195,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   shot('push',{who:'H',z:1.28}),['S','I only have the one move, you know. Keep everyone pleased. It works.'],
   ['H','It works on everyone except me.'],
   {wait:1.2},
+  function(){G.clock=12*60;G.dayTag='THURSDAY';G.stampT=0;},   // past midnight: the stamp says so too
   ['N','00:12. The slides are done. The email is written: “Slides for Eero’s talk. He hates presenting, lol. Don’t tell him I said.”'],
   set({mood:'alert',s:1.35}),shot('wide',{rate:9}),
   ['S','Stop. That is going to ALL STAFF.',{loud:1}],
@@ -203,6 +208,19 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   ['H','…Thank you.'],
   ['S','I do have one useful setting.',{look:'pleased'}],
   ['S','It is just very rarely this one.',{quiet:1}],
+  {wait:0.8},
+  // Joonas 21.11.: the human is not only on the receiving end. A day of yes for everyone else, and the one person who matters
+  // gets what is left: "Fine." With a full stop. Ekskyysmi is asleep and files nothing. Sanna's "fine" thread (Night shift,
+  // Friday) now has a sender, and Friday repairs it in the human's own words.
+  function(){var M=G.morko;M.asleep=true;M.wake=0;M.mood='calm';M.pose=null;},   // asleep = back in the floor shadow (the bar's language)
+  function(){var x=G.human.x;G.tics.push(tic('z',x-70,WALLY-150,{life:2.4}));G.tics.push(tic('z',x-58,WALLY-172,{at:0.8,life:2.4}));},
+  function(){G.clock=19*60;},['N','00:19. Ekskyysmi has dozed off.'],
+  {wait:0.8},
+  ['P','Sanna: “Still up?? Game night tomorrow! You don’t have to bring anything.”'],
+  ['P','You: “Fine.”'],drain(1,'“Fine.”'),
+  {wait:1.4},
+  ['P','Sanna: “Oh. Okay!”'],
+  ['N','The phone goes face down. Nothing gets filed.'],
   {wait:0.8}
  ]);}
 
@@ -389,6 +407,17 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   set({aSweat:0.55,sweat:0}),
   ['A','I do that with “fine”. Someone says “fine” and I’m up till three.'],
   lensPeek(function(){return {x:G.ax,y:FEETY-150};},'SANNA: ALSO UP TILL THREE.'),
+  {wait:1.0},
+  ['H','…I said “fine” to you once. The night before board games.'],
+  ['A','You did. Full stop and everything.'],
+  ['S','We did WHAT?',{look:'stunned'}],
+  ['H','You were asleep. That one was all me.'],
+  ['H','I had nothing left that night. It wasn’t about you.'],
+  ['A','…I was up till three.'],
+  ['H','I know. Sorry.'],
+  ['A','Okay.',{quiet:1}],
+  ['A','Thanks for saying it.'],
+  aside(['S','I file every “oh” we get. I never noticed one we gave.',{quiet:1}]),
   function(){G.zT=1;},{wait:1.6},
   fridayShadow,
   archive('good',[['2026','She told me herself.']]),
