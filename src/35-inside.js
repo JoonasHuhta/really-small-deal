@@ -54,6 +54,12 @@ function closeDay(){
   d.ratio=(d.outside+d.extra)/d.outside;
   g.run.push(d);g.day0=null;g.mult=1;return d;
 }
+// What closeDay would print for a day still open, without closing it. The epilogue rolls before Friday is over (0.77).
+function dayRatio(d){
+  if(!d)return 1;if(Number.isFinite(d.ratio))return d.ratio;
+  var dbl=doubledUntil(d,AWAKE),extra=spikes(d)+(d.hits?Math.min(180,LIVED.tonight*d.hits+30)*60:0)+(dbl>59?dbl:0);
+  return (AWAKE+extra)/AWAKE;
+}
 function dur(secs){
   secs=Math.round(secs);if(secs<60)return secs+' s';
   var h=Math.floor(secs/3600),m=Math.round((secs%3600)/60);if(m===60){h++;m=0;}

@@ -480,7 +480,10 @@ function startChapter(n,at){
   var saved=loadProgress(),sv=saved&&saved.chapters[n]||{};
   if(at&&at.ch===n&&n>1){   // Continue, in the middle of a chapter
     reset(at.state.day||'B');var h=G;Object.keys(at.state).forEach(function(k){h[k]=at.state[k];});
-    h.started=true;h.jobDone=at.jobDone;h.chapter=n;newDay();Q=chain(n,at.moment);run();return;
+    h.started=true;h.jobDone=at.jobDone;h.chapter=n;
+    // the day in progress comes back with the save; a fresh one only if the save is older than 0.77
+    if(h.day0){h.mult=h.day0.trigAt!=null?Math.min(h.day0.trigMult||DOUBLE,h.jobDone?STAY:DOUBLE):1;h.prevClock=h.clock;h.livedShown=0;}else newDay();
+    Q=chain(n,at.moment);run();return;
   }
   if(n<=1){startGame(sv.day||null,false);return;}
   reset(sv.day||'B');var g=G,c=checkpoint(sv);Object.keys(c).forEach(function(k){g[k]=c[k];});g.started=true;g.jobDone=n>4;

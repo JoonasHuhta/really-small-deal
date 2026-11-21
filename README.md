@@ -14,6 +14,18 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.77.0 (Claude, 21.11.2026): **ulkopuolisen arvion (Codex/Astra, versio 0.76.0) korjaukset ja yksi tarinamuutos: epilogi ei enää ole loppu.** Jokainen raportin väite tarkistettiin koodista ennen korjausta.
+- **Tarinamuutos (yksi):** epilogi alkoi kortilla ”The End.” ja päättyi tekijäkiitokseen, vaikka *#25 By the radiator* oli vielä edessä. Arvioijan halu jatkaa putosi kohdassa #24 neljään. Nyt avauskortti on *The week, itemised. (by Ekskyysmi)*, ja viimeinen kortti linnun päällä on Ekskyysmin oma merkintä **”One appointment outstanding.”** Patteri pysyy yllätyksenä, mutta pelaaja tietää, että jotain on kesken. Järjestys ja musiikin kesto ennallaan. Tekijä mainitaan edelleen rullaavassa kuitissa.
+- **Continue ei enää kirjoita viikkoa uudelleen.** Jatkokohta tallentaa nyt perjantain ”no”:n, hiljaisen maanantain, liimatun mukin, lähetetyn hakemuksen ja eletyt päivät (myös kesken olevan). Ennen patterilta jatkettu loppukuitti näytti 1 päivän 5:n sijaan ja ”no” palasi laatikkoon. Uusi `tests/save.test.cjs` pelaa tarinan kahdesti (suoraan ja jatkaen) ja vaatii saman kuitin. Testi kaatuu versiolla 0.76.
+- **Hakemus:** epilogi ja loppukuitti ovat nyt samaa mieltä. Illan nolla jää Ekskyysmin vitsiksi päivättynä (*applications sent, that night · 0*, *success rate, that night · 100 %*), ja perjantai kirjataan (*applications sent, friday · 1*).
+- **Päivät:** epilogin kuitti laski 4 päivää ja loppukuitti 5. Perjantai lasketaan nyt mukaan jo epilogissa.
+- **Puhelimen valikko:** viisi nappia (Sound, Less motion, Slow reality, Dialogue, Restart) leikkautui vasemmasta reunasta kaikilla viidellä testikoolla. Nyt kaksi tasaleveää saraketta, kielivalinta koko leveydeltä. `tools/audit_layout.py` ei löydä ongelmia yhdeltäkään koolta.
+- **Osamerkintä:** *A fine.* ja *The posting.* näkyivät osana I, ja osan II kortissa näkyi baarin otsikko. Osa luetaan nyt tarinan järjestyksestä.
+- **Patteri:** neuvot (”Have you tried leaving your comfort zone?”) olivat Ekskyysmin suussa, vaikka ihminen neuvoo. Nyt ihminen sanoo ne, ja kehote: *The roles swap. Pick the human’s advice.*
+- **Muki:** keskiviikon lattialla (2) kyllät ja ”Fine.” eivät vie mitään, joten niiden merkintä lukee nyt *saying yes (on the tab)*: lasku tulee torstaina. Samalla merkinnän luku lasketaan mukin todellisesta tasosta: kaiutin näytti ennen nopeasti klikatessa −0.
+- **Moments** ei enää tarjoa epilogia ennen tarinaa (keskeneräiset vain `?lab`-tilassa). **About:** 50 minuuttia.
+- **Ei tehty (odottaa Joonasta):** dialogin tiivistys (#18 ensin), sisältöhuomautus Abouttiin, epilogin kuitti ruudunlukijalle, käännösvalmius, Codexin repliikkiehdotukset.
+
 Versio 0.76.0 (Claude, 21.11.2026): **suunta B toteutettu, taustatutkimus, koko peli läpi selaimessa.**
 - **Hetken kortti** (suunta B): kohtaus näkyy himmennetyn kerroksen läpi, kelluva aika pienellä ja otsikko kursiivilla, 2,4 s. Päivän kortti pysyy täytenä. Pelaaja näkee nyt eron sen välillä, alkaako uusi päivä vai saman elämän hetki.
 - **Taustatutkimus** (EKSKYYSMI.md §9): väitteet tarkistettu. Tahattomat muistot tulevat usein rauhallisissa arkihetkissä ja ovat useimmiten kielteisiä (vakiintunut tutkimus). → #9:ssä vanha kortti keskeyttää hyräilyn: *2014: Waved back at someone. They were waving at the person behind you.* ”Hnngh.” – ”That wasn’t me. I was doing the dishes.” Torjunta ”täsmälleen samoina aivoalueina kuin kipu” on kiistanalaista (Woo ym. 2014), joten peli ei väitä aivotiedettä. Hylätty perustellen: lukukelvottomaksi muuttuva teksti (saavutettavuus), änkytys vitsinä, tic-kuvaukset, uudet päällekkäiset huumorikulmat.

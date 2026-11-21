@@ -2,7 +2,7 @@
 
 **Tämä tiedosto on totuus pelin järjestyksestä ja nimistä.** Kun puhumme kohtauksesta, käytämme tämän kartan numeroa ja kortin otsikkoa, esimerkiksi *#9 An ordinary evening*. Jos järjestys koodissa muuttuu, tämä tiedosto päivitetään samassa muutoksessa. `tests/story.test.cjs` tarkistaa, että alla olevan taulukon järjestys on sama kuin koodin (`src/33-moments.js`, `AFTER`). Jos ne eroavat, build kaatuu.
 
-Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.76.0 (hahmo: EKSKYYSMI.md) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
+Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.77.0 (hahmo: EKSKYYSMI.md; ulkopuolinen arvio: Codex/Astra 21.11.) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
 
 ---
 
@@ -73,7 +73,7 @@ Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.76.0 (hahmo: EKSKYY
 | 21 | *Still here.* | OSAKORTTI | PART THREE · ”A Friday. Not necessarily that one.” | – | Avaa Osan 3 | 0:04 | `part3` |
 | 22 | **Friday** – *Oh, hi. Again.* | PÄIVÄ | A FRIDAY. NOT NECESSARILY THAT ONE. | 09:41 taukotila → lounas | **Huipennus ja ratkaisu.** Hälytys soi silti, ja pysytään. Sanna kertoo itse (”up till three”), ja **ihminen korjaa keskiviikon ”Fine.” omin sanoin** (”That was a real sorry. Not one of mine.”). *The posting* lunastetaan. ”Lunch.” | 3:39 | `chapter5` |
 | 23 | *The group chat* | HETKI | A SUNDAY EVENING | 20:14 koti | Piirustus jaetaan (boss fight). Vanhin arkistokortti päivitetään (”This time I left it up.” / ”…I’ll update the file.”). Hyvä arkisto jätetään raolleen (”Leave it open a crack.”). Muki korjattuna. | 2:31 | `comments` |
-| 24 | *The week, itemised.* | EPILOGI (ei korttia) | – | montaasi + koko viikon kuitti | Viikko välähdyksinä musiikkiin (32 tahtia: auto ja juoksija lähikuvina, työhakemus lähtee, luonnos ehtii lukea), sitten koko viikon kuitti ja **DAMAGE REPORT** (kritiikki: aito 1, kuviteltu N; vanhat tiedostot; menetetyt siemaukset ja isoin; rikkoutuneet mukit; lähetetyt ”Fine.”t). Kuitin jälkeen: lomake, sivu 3, kysymykset ja raapustetut vastaukset, Ekskyysmi allekirjoittaa. Viimeinen rivi: *ekskyysmi: finnish for “excuse me”.* **Musiikki.** | 2:56 | `epilogue` |
+| 24 | *The week, itemised.* | EPILOGI (oma avauskortti) | ”The week, itemised. (by Ekskyysmi)” (ennen 0.77: ”The End.”) | montaasi + koko viikon kuitti | Viikko välähdyksinä musiikkiin (32 tahtia: auto ja juoksija lähikuvina, työhakemus lähtee, luonnos ehtii lukea), sitten koko viikon kuitti ja **DAMAGE REPORT** (kritiikki: aito 1, kuviteltu N; vanhat tiedostot; menetetyt siemaukset ja isoin; rikkoutuneet mukit; lähetetyt ”Fine.”t). Kuitin jälkeen: lomake, sivu 3, kysymykset ja raapustetut vastaukset, Ekskyysmi allekirjoittaa. Viimeinen rivi: *ekskyysmi: finnish for “excuse me”.* Viimeinen kortti linnun päällä: **”One appointment outstanding.”** (ennen 0.77 tekijäkiitos: pelaajat lopettivat tähän, vaikka #25 oli vielä edessä). **Musiikki.** | 2:56 | `epilogue` |
 | 25 | *By the radiator.* | HETKI | THE NEXT TUESDAY | 16:50 taukotila | Seuraava tiistai: varjojen tapaaminen. **Ekskyysmi näyttää lintunsa,** eikä kukaan naura. ”It was a Tuesday, you know. The drawing.” – ”Now it’s also the radiator.” Loppu jää auki. | 1:29 | `radiator` |
 <!-- KARTTA LOPPUU -->
 
@@ -89,7 +89,7 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 |---|---|---|---|
 | Lounas Sannan kanssa (halu) | #2: onnistuu ikkunassa = 1, sovitaan viestillä = 2, muuten 0 | #2 kuitti; #3 avaus haarautuu kolmeen; #22 ”It’s Friday. No dentist.” (jos 2) | `lunch` |
 | ”oh, hi.” -reaktio | #2 (stay/grow/cover/exit) | #2 ulkoversio ja kuitti, #3 takauma, #22 refleksi | `leak` |
-| Maanantain ja perjantain ulkoversioriimi | #2 WHAT THE OTHERS SAW, 2 seconds | #22 sama otsikko ja kesto, kuvateksti lattea. **Kasvu ilman sanoja, ei saa rikkoa.** | – |
+| Maanantain ja perjantain ulkoversioriimi | #2 WHAT THE OTHERS SAW, 2 seconds (onnistuneen QTE:n palkintona 1 second, tarkoituksella) | #22 sama otsikko ja kesto, kuvateksti lattea. **Kasvu ilman sanoja, ei saa rikkoa.** | – |
 | Puraisu | #2 Eero (valinta) | #2 kotimatkan anteeksipyyntö, #3 takauma. #10 ”???” asettaa saman lipun (piilevä riski). | `bit` |
 | Kyllät ja ei-lanka | #6 kyllät (−1 muki per kyllä), ”no in a coat”, lisätehtävät | #6 HUD-laskuri; #17 ”No. Sorry.”; #22 ”It’s a no in a coat, Eero.” ja Eeron kiitos monisteesta | `yes`, `coatNo`, `handout`, `afterparty` |
 | Sannan varjo | #8 | #10 ”With a full stop.”; #20 yövuoro; #22 tuttu varjo (haara); #25 patteri | `metSannaShadow` |
@@ -99,10 +99,11 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 | Myöhässä oleva kirja | #9 | #15 palautus | – |
 | Baaritarina | #12 (umbrella/arms/2011) | #22 | `barStory` |
 | Patteri | #8 ”Tuesday. By the radiator.” | #22 ”I checked. Tuesday works.”; #25 | – |
-| Muki | #2 alkaa täynnä (5 → pohja 1 → 3) | #3 4 → 1, kehut +1 → loppuu 2 · #6 jatkaa samasta aamusta 2, oma tunti +1, kaiutin −1, lattia 2 · #10 3 → 0, hajoaa ja liimataan · #22 korjattu · #23 korjattu ja hiljainen. Yön yli +1 (ma→ti, ke→to). **Hetkissä ei mukia.** | `mug`, `mugMended` |
-| ”Fine.” (tiuskaisu Sannalle) | #6 00:19 (takki juuri riisuttu): ihminen vastaa ”Fine.”, Sanna: ”Oh. Okay!” Varjo nukkuu. Muki merkitsee: −1 ”“Fine.”” | #20 Sannan varjo: ”Someone said ’fine’.” (varjo ei tiedä, että se olimme me) · #22 Sanna: ”Someone says ’fine’ and I’m up till three.” → ihminen korjaa: ”That one was all me.” · ”I never noticed one we gave.” | – |
+| Muki | #2 alkaa täynnä (5 → pohja 1 → 3) | #3 4 → 1, kehut +1 → loppuu 2 · #6 jatkaa samasta aamusta 2, oma tunti +1, kaiutin −1, lattia 2: kyllät ja ”Fine.” kirjataan merkinnällä *(on the tab)*, ja lasku tulee torstaina (0.77) · #10 3 → 0, hajoaa ja liimataan · #22 korjattu · #23 korjattu ja hiljainen. Yön yli +1 (ma→ti, ke→to). **Hetkissä ei mukia.** | `mug`, `mugMended` |
+| ”Fine.” (tiuskaisu Sannalle) | #6 00:19 (takki juuri riisuttu): ihminen vastaa ”Fine.”, Sanna: ”Oh. Okay!” Varjo nukkuu. Muki merkitsee: ”“Fine.” (on the tab)” (keskiviikon lattia 2) | #20 Sannan varjo: ”Someone said ’fine’.” (varjo ei tiedä, että se olimme me) · #22 Sanna: ”Someone says ’fine’ and I’m up till three.” → ihminen korjaa: ”That one was all me.” · ”I never noticed one we gave.” | – |
 | Väsymys (Joonas 21.11.) | Muki ≤ 1 tai kohtaus päättää: #3 yö 03:07, #5 Rewind, #6 23:15–00:19 (”I’m not tired. I’m load-bearing.”) | Ekskyysmille raskaat luomet ja silmäpussit sekä mumina päivän sanoista (”…quick chat…”, ”…yes. yes…”). Pelko avaa silmät. Koko pysyy tunteena. | `tiredForce`, `morko.tired` |
-| Takki (maskaaminen) | #8 valinnainen: ”Pretend to be a coat.” Sannan varjo: ”…I can see your eyes.” | #6 koko kyllä-päivä takkina, kotona pois · #6 ”It’s a no in a coat.” · #22 ”It’s a no in a coat, Eero.” | `coatNo`, `morko.coat` |
+| Takki (maskaaminen) | #6 koko kyllä-päivä takkina (”Coat on. Nobody rejects a coat.”), kotona pois | #6 ”It’s a no in a coat.” · #8 valinnainen: ”Pretend to be a coat.” Sannan varjo: ”…I can see your eyes.” · #22 ”It’s a no in a coat, Eero.” | `coatNo`, `morko.coat` |
+| Työpaikkailmoitus | #19 arkistoi / hylkäys valmiiksi / kysy (”Applications by Friday.”) | #22 ihminen ottaa sen esiin (kaikilla haaroilla) · #24 ”Sent: three lines. No apology.” APPLICATIONS, SENT 1 · loppukuitti: illan nolla päivättynä (*applications sent, that night 0*) ja *applications sent, friday 1* (0.77: ennen kuitit olivat eri mieltä) | `posting`, `applied` |
 | Lintu (Ekskyysmin oma piirustus) | #9 ”It’s a hobby. Shadows are allowed one. Don’t tell the office.” | #25 näytetään Sannan varjolle: ”Do it again.” / ”…Nobody laughed.” · loppukuva | `pose:'puppet'` |
 | Tiistai (haavan päivä) | #10 ”Since a Tuesday. You were seven.” | #3 quick chat · #16 tuoli joka toinen tiistai · #8/#22 ”Tuesday works.” · #25 ”It was a Tuesday, you know. The drawing.” | – |
 | Vuoronvaihto | #10 ”Nobody came to relieve me.” · väsymys | #20 Sannan varjo ottaa oven, Ekskyysmi nukkuu · aamulla ”Somebody had the door.” | `night.sleepS` |
@@ -118,6 +119,15 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 - ~~#18 Evenings ”THE SAME DAY” kirjaston jälkeen.~~ *A fine.* siirtyi kohdan #14 *Nothing.* jälkeen (nyt #15). *Evenings* on taas saman päivän ilta kuin *Quiet.*
 - ~~Muki 1 → 4 keskiviikkoaamuna.~~ Tiistai päättyy kehuihin (+1, taso 2), ja keskiviikko jatkaa samasta tasosta. Mukitesti vartioi tätä.
 - ~~Keskiviikon kertoja sanoi ”00:12”, mutta leimassa luki 23:15.~~ Kello siirtyy nyt kertojan mukana, ja puolenyön jälkeen leima näyttää THURSDAY. Uusi `tests/clock.test.cjs` tarkistaa koko tarinasta, että jokainen kertojan kellonaika vastaa leimaa.
+
+**Korjattu versiossa 0.77.0 (Codex/Astra-arvio 21.11., jokainen havainto tarkistettu koodista ennen korjausta):**
+- **Continue kirjoitti viikon uudelleen.** Jatkokohta ei tallentanut perjantain ”no”:ta, hiljaista maanantaita, liimattua mukia eikä elettyjä päiviä: patterilta jatkettu loppukuitti näytti 1 päivän 5:n sijaan ja ”no” palasi laatikkoon. Nyt ne tallentuvat, ja uusi `tests/save.test.cjs` vertaa suoraan pelattua ja jatkettua loppua.
+- **Hakemuksella oli kaksi totuutta.** Epilogi: lähetetty 1, loppukuitti: 0 tai pending. Nyt illan nolla on päivätty ja perjantai kirjataan.
+- **Epilogi laski 4 päivää, loppukuitti 5.** Perjantai on vielä auki epilogin aikana, ja nyt se lasketaan mukaan.
+- **Puhelimen valikko leikkasi viisi nappia** (Sound, Less motion, Slow reality, Dialogue, Restart) kaikilla viidellä koolla. Nyt kaksi tasaleveää saraketta, kieli koko leveydeltä.
+- **Osamerkintä:** *A fine.* ja *The posting.* näkyivät osana I. Osa luetaan nyt järjestyksestä, ja osakortti näyttää oman otsikkonsa.
+- **Patteri:** neuvot olivat Ekskyysmin suussa, vaikka ihminen neuvoo. Nyt ihminen sanoo ne, ja kehote kertoo roolien vaihdosta.
+- **Moments ei enää tarjoa epilogia ennen tarinaa** (keskeneräiset vain `?lab`-tilassa). About: 50 minuuttia.
 
 **Auki:**
 1. ~~Päivä ja hetki alkavat samannäköisellä kortilla.~~ Korjattu 0.76 (suunta B).

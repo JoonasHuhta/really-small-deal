@@ -48,7 +48,7 @@ var SITUATION={detail:'One small thing in a good review.',sometime:'“We should
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
 var WIP=['epilogue','mug'];
-function wipList(){var h='<div class="eyebrow">Work in progress</div><div class="lab-list">';for(var i=0;i<WIP.length;i++)if(LABS[WIP[i]])h+=momentButton(WIP[i],LABS[WIP[i]].blurb);return h+'</div>';}
+function wipList(){if(!DEVLAB)return '';var h='<div class="eyebrow">Work in progress</div><div class="lab-list">';for(var i=0;i<WIP.length;i++)if(LABS[WIP[i]])h+=momentButton(WIP[i],LABS[WIP[i]].blurb);return h+'</div>';}
 function showMoments(){
   var sv=loadProgress(),top=sv?sv.unlocked||1:1,h='<div class="eyebrow">Moments</div>';
   if(top<2){showOv(h+'<h2>Not yet.</h2><p>More moments open after the first day.</p>'+wipList()+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');return;}

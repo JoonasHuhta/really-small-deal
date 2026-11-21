@@ -110,7 +110,7 @@ var EPI=[
   {cut:'hard',set:'home',clock:22*3600,s:0.95,mood:'calm',hx:470,mine:1,pose:'selfmouth',cam:[1.55,450,250, 1.55,450,250],secs:3.4},
   {cut:'fade',set:'home',clock:23*3600,s:0.95,mood:'calm',hx:520,sitting:1,cam:[1.8,450,380, 1.05,475,290],secs:7,
     l:'DAYS LIVED TODAY',v:'1.0',note:'inside and outside, the same day. a first.'},
-  {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,pose:'puppet',cam:[1.05,475,290, 1.05,475,290],secs:6,credit:'Made by Joonas Huhta (MoshBitSurfers)'}
+  {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,pose:'puppet',cam:[1.05,475,290, 1.05,475,290],secs:6,credit:'One appointment outstanding.'}   // 0.77 (Codex review): the last card before the radiator promises it; “The End.” and a maker credit here made players stop one scene early. The maker is in the roll.
 ];
 // The player's own top methods, as rows. In the lab (or a week with no choices) the shot is skipped.
 var MINE={worst:'WORST CASES, PREPARED',draft:'SCRIPTS, DRAFTED',please:'YESES, UNMEANT',hide:'EXITS, TAKEN',stay:'TIMES WE STAYED',hush:'SILENCES, KEPT'};
@@ -157,7 +157,7 @@ function epiFilterOn(){}
 function drawEpi(){
   var e=G.epi;if(!e)return;
   if(e.theEnd){ctx.fillStyle='#0d1114';ctx.fillRect(0,0,W,H);var a=clamp(e.clock/0.8,0,1);ctx.globalAlpha=a;ctx.fillStyle='#f4eddf';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.font='500 54px Fraunces,Georgia,serif';ctx.fillText('The End.',W/2,H/2-8);ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('(of the week)',W/2,H/2+40);ctx.globalAlpha=1;return;}
+    ctx.font='500 54px Fraunces,Georgia,serif';ctx.fillText('The week, itemised.',W/2,H/2-8);ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('(by Ekskyysmi)',W/2,H/2+40);ctx.globalAlpha=1;return;}
   epiSkipHint(e);
   if(e.o){epiWorld(e.o,e);if(e.o.rain)epiRain();}
   // a warm wash, a little haze: the week as remembered
@@ -238,8 +238,9 @@ function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · THE WHOLE T
     {n:'thank you for coming.'},{n:'no reply needed.'},{n:'(really.)'},{gap:1},{n:'ekskyysmi: finnish for “excuse me”.'});
   return r;}
 function epiInsideRows(){
-  var g=G,run=(g.run||[]).filter(function(d){return d.label!=='SCENARIO LAB';}),lived=0,cal=run.length,top=null;
-  run.forEach(function(d){lived+=d.ratio;(d.ledger||[]).forEach(function(x){if(!top||x.secs>top.secs)top=x;});});
+  // Friday is still open while the epilogue rolls: count it, as the receipt after the radiator will (Codex review, 0.77)
+  var g=G,run=(g.run||[]).concat(g.day0?[g.day0]:[]).filter(function(d){return d.label!=='SCENARIO LAB';}),lived=0,cal=run.length,top=null;
+  run.forEach(function(d){lived+=dayRatio(d);(d.ledger||[]).forEach(function(x){if(!top||x.secs>top.secs)top=x;});});
   // The inside of the week: senses first, then the head, then other people. One row each, no advice.
   var r=[{l:'TIME OUTSIDE THE COMFORT ZONE',v:'ALL OF IT'},{n:'source: eero.'},
     {l:'COLLAR LABEL, FELT',v:'ALL DAY'},{l:'CHEWING, NEXT TO ME',v:'DEAFENING'},{l:'PERFUME, IN THE LIFT',v:'ALL THE AIR'},
@@ -285,7 +286,7 @@ function epiSkipHint(e){if(e.ask==null||G.time-e.ask>2.5||e.skip)return;ctx.save
 function labEpilogue(){
   var steps=[function(){G.epi={started:false,x:0,ct:0,snap:null,o:null,clock:0};G.lines=[];music('epilogue');epiChrome(true);}];
   var shots=EPI.slice(0,EPIA.length),b=1;
-  steps.push(function(){var g=G;g.epi.theEnd=true;g.fade=0;g.hud=false;g.plan=false;g.lines=[];g.cur=null;g.band=null;});   // bar 0: “The End.” on black, over the song's quiet first bar
+  steps.push(function(){var g=G;g.epi.theEnd=true;g.fade=0;g.hud=false;g.plan=false;g.lines=[];g.cur=null;g.band=null;});   // bar 0: “The week, itemised.” on black, over the song's quiet first bar (until 0.76 it said “The End.”, and players believed it)
   steps.push(epiAt(barT(1)),function(){G.epi.theEnd=false;});
   shots.forEach(function(o,i){
     var b0=b,n=EPIA[i];b+=n;

@@ -59,7 +59,7 @@ function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Rea
 
 // Friday, after lunch is agreed: the posting comes back, whatever drawer it went into.
 function postingPayoff(){
-  var p=G.posting;
+  var p=G.posting;if(p)G.applied=true;   // decided on Friday, sent that night (#24): the receipts after this agree
   if(p==='open')return [
     ['H','And tonight I’m sending that application.'],
     set({mood:'alert'}),
@@ -85,8 +85,10 @@ function postingPayoff(){
 function storyRows(){
   var g=G,rows=[];
   if(g.rehearsal)rows.push(['“not now”, rehearsed','3 h 10 min'],['“not now”, actual','4 s']);
-  if(g.posting&&g.posting!=='open')rows.push(['applications sent','0 (yet)'],['rejections avoided','1'],['success rate','100 %']);
-  if(g.posting==='open')rows.push(['applications','pending']);
+  // The night of the posting keeps its zero (the joke is Ekskyysmi's), dated. After Friday the receipt says what happened.
+  if(g.posting&&g.posting!=='open')rows.push(['applications sent, that night','0'],['rejections avoided, that night','1'],['success rate, that night','100 %']);
+  if(g.posting==='open')rows.push(['tab left open, that night','1']);
+  if(g.posting)rows.push(g.applied?['applications sent, friday','1']:['applications sent','0 (yet)']);
   if(g.quiet)rows.push(['one quiet Monday, lived','1.0 days']);
   if(g.nothings)rows.push(['“it’s nothing”, said','×'+g.nothings]);
   // Ekskyysmi’s methods this week: what the player chose, counted. The choices were the joke; this is the bill.

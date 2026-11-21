@@ -170,7 +170,7 @@ const checkpointFixture={version:2,ch:5,unlocked:5,chapters:{
   1:{day:'A'},
   3:{day:'A',lunch:1,leak:'cover',fear:2,fb:'ask',yes:0},
   4:{day:'B',lunch:2,leak:'grow',yes:5,handout:true,afterparty:true,fb:'explain'},
-  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true,coatNo:true,methods:{worst:4,please:3,hush:1},kept:['hi','eero'],fineSent:false,sips:0,files:0,bigSip:null}
+  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true,coatNo:true,methods:{worst:4,please:3,hush:1},kept:['hi','eero'],fineSent:false,sips:0,files:0,bigSip:null,no:true,quiet:true,mugMended:true,applied:false,run:[{label:'A MONDAY',start:30660,outside:57600,extra:12000,hits:2,trigAt:5000,stayAt:null,ledger:[{label:'replays',n:2,secs:3000}],trigMult:2,ratio:1.21}],day0:null}
 }};
 savedItems.set(saveKey,JSON.stringify(checkpointFixture));
 T.chapter(3);
@@ -186,14 +186,14 @@ T.chapters();assert.match(element('ov').innerHTML,/data-ch="5"/);assert.match(el
  T.moments();let h=element('ov').innerHTML;assert.match(h,/data-lab="sometime"/);assert.match(h,/data-lab="glass"/);assert.match(h,/data-lab="library"/);
  assert.doesNotMatch(h,/data-lab="radiator"|data-lab="comments"/,'the ending stays hidden until it has been played');
  const done=JSON.parse(keep);done.done=true;savedItems.set(saveKey,JSON.stringify(done));T.moments();assert.match(element('ov').innerHTML,/data-lab="radiator"/);
- savedItems.set(saveKey,JSON.stringify({version:2,ch:1,unlocked:1,chapters:{1:{}}}));T.moments();assert.match(element('ov').innerHTML,/Not yet\./);
+ savedItems.set(saveKey,JSON.stringify({version:2,ch:1,unlocked:1,chapters:{1:{}}}));T.moments();assert.match(element('ov').innerHTML,/Not yet\./);assert.doesNotMatch(element('ov').innerHTML,/data-lab="epilogue"|Work in progress/,'public Moments never offers the ending before the story (0.77)');
  savedItems.set(saveKey,keep);}
 T.chapter(4);assert.equal(T.G.day,'B');assert.equal(T.G.yes,5);assert.equal(T.G.afterparty,true);
 T.chapter(5);assert.equal(T.G.leak,'exit');assert.equal(T.G.real,1);assert.equal(T.G.txt,'cancel');assert.equal(T.G.handout,true);
 assert.equal(T.G.metSannaShadow,true,'Friday restores the earlier meeting');assert.equal(T.G.posting,'open');assert.equal(T.G.nothings,2);
 {T.history().length=0;playOn(()=>0);const ft=T.history().map(x=>x.text).join('\n');
  assert.match(ft,/It’s something\. Small\. Give me a minute\./);assert.match(ft,/We’ve said it twice this week/);assert.match(ft,/You can draft\. I’ll send\./);
- const rc=T.inside.receipt();assert.match(rc,/applications\s+pending/);assert.match(rc,/“it’s nothing”, said\s+×2/);assert.match(rc,/“not now”, actual\s+4 s/);}
+ const rc=T.inside.receipt();assert.match(rc,/tab left open, that night\s+1/);assert.match(rc,/applications sent, friday\s+1/,'Friday sends the application; the last receipt agrees with the epilogue (0.77)');assert.match(rc,/“it’s nothing”, said\s+×2/);assert.match(rc,/“not now”, actual\s+4 s/);}
 const fridayStart=savedItems.get(saveKey);playOn(()=>1);
 assert.equal(savedItems.get(saveKey),fridayStart,'finishing Friday must not overwrite its starting checkpoint with end-of-day choices');
 assert.doesNotMatch(T.history().map(x=>x.text).join('\n'),/Monday stung, though/);
@@ -671,4 +671,19 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
   const nb=[...ep.slice(ep.indexOf('var EPIN=')).matchAll(/^\s*\{bars:(\d)/gm)].reduce((a,m)=>a+ +m[1],0),bt=k=>k<B.length?B[k]:B[B.length-1]+(k-B.length+1)*2.25;
   assert.equal(A.reduce((a,b)=>a+b,0),32,'the montage must stay 32 bars (the receipt rolls on the song’s quiet middle)');
   assert.ok(169.4-bt(59+nb)>=5,'the bird and the credit need at least five seconds before the last hit');}
- console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle, the Fine. thread, epilogue bars.');}
+ // 9. Codex review of 0.76 (21.11.): the part label follows the map, and a part card names itself.
+ {T.chapter(4);const seen={};let k=0;
+  while(T.G.chapter===4&&!T.G.ended&&k++<40000){T.unlock();T.draw();const g=T.G;if(g.moment)seen[g.moment]=element('chapter').textContent;if(g.chap&&g.chap.part===2)seen.part2=element('chapter').textContent;
+   const st=T.state();if(st==='choice')T.choose(T.options().findIndex(o=>!o.off));else if(st==='fight'){if(g.fight.paced)T.swat();T.tick(0.6);}
+   else if(['time','auto','qte'].includes(st))T.tick(1);else if(st==='view'){T.advance();T.tick(6);T.advance();}else if(st==='toss'){T.advance();T.tick(0.4);}
+   else if(g.dayEnd)fire(element('ov'),'click',{target:{getAttribute(x){return x==='data-go'?'next':null}}});else T.advance();}
+  const i=AFTER[4].indexOf('nothing');
+  AFTER[4].forEach((id,j)=>assert.ok(seen[id]&&seen[id].startsWith(j>=i?'II · ':'I · '),'#'+id+' is labelled “'+seen[id]+'”: the part label must follow the map'));
+  assert.equal(seen.part2,'II · A little room.','the part two card names itself, not the bar before it');}
+ // 10. The radiator: the human coaches, so the advice is the human's line, not Ekskyysmi's.
+ assert.ok(/\{who:'H',ask:'[^']+',choice:\[[^\n]*\n\s*\{t:'Have you tried leaving your comfort zone\?'/.test(src('52-radiator.js')),'the radiator advice must be spoken by the human');
+ // 11. The phone menu: two equal columns, the language row spans both (five buttons were cut off on every phone size).
+ {const css=fs4.readFileSync(p4.join(root,'assets','game.css'),'utf8');assert.ok(css.includes('grid-template-columns:minmax(0,1fr) minmax(0,1fr)')&&css.includes('nav .lang-row{grid-column:1/-1}'),'the immersive menu grid lost its fix');}
+ // 12. The epilogue is not the end: no “The End.” card, and the last card before the radiator promises it.
+ {const ep=src('37-epilogue.js');assert.ok(!ep.includes("fillText('The End.'")&&ep.includes("credit:'One appointment outstanding.'"),'players stopped at the epilogue: keep the radiator promised');}
+ console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle, the Fine. thread, epilogue bars, part labels, radiator speakers, phone menu, the appointment.');}

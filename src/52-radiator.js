@@ -13,7 +13,7 @@ function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan
   ['H','Go on, then. The topics.'],
   ['S','One. Walls. Two. Other walls. Three—'],
   ['S','…Three was the weather. I’ve used the fallback already.',{quiet:1}],
-  {choice:[
+  {who:'H',ask:'The roles swap. Pick the human’s advice.',choice:[   // the human says these (Codex review, 0.77: they were in Ekskyysmi's mouth)
     {t:'Have you tried leaving your comfort zone?',then:[['S','Don’t you DARE.',{loud:1}],['H','Eero says it works.'],['S','Eero has never met a radiator in his life.']]},
     {t:'Just say hi.',then:[['S','“Just say hi.” As if it’s nothing.'],['H','It is nothing.'],['S','It is a WHOLE WORD.']]},
     {t:'What if she doesn’t come?',then:[['S','Then it’s a radiator. I’ve spent time with worse.'],['H','You’re doing my voice.'],['S','I learned from the best. Unfortunately.']]}

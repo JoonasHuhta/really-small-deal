@@ -14,7 +14,21 @@ function checkpoint(g){
     nothings:Number.isFinite(g.nothings)?clamp(Math.floor(g.nothings),0,20):0,rehearsal:!!g.rehearsal,
     barStory:['umbrella','arms','2011'].indexOf(g.barStory)>=0?g.barStory:null,quietDrawing:!!g.quietDrawing,coatNo:!!g.coatNo,fineSent:!!g.fineSent,
     sips:Number.isFinite(g.sips)?clamp(Math.floor(g.sips),0,99):0,files:Number.isFinite(g.files)?clamp(Math.floor(g.files),0,99):0,
-    bigSip:g.bigSip&&typeof g.bigSip.t==='string'?{t:g.bigSip.t.slice(0,40),n:clamp(Math.floor(g.bigSip.n)||0,0,5)}:null,methods:cleanMethods(g.methods),kept:Array.isArray(g.kept)?g.kept.filter(function(k){return typeof k==='string'&&KEPT[k];}).slice(0,12):[]};
+    bigSip:g.bigSip&&typeof g.bigSip.t==='string'?{t:g.bigSip.t.slice(0,40),n:clamp(Math.floor(g.bigSip.n)||0,0,5)}:null,methods:cleanMethods(g.methods),kept:Array.isArray(g.kept)?g.kept.filter(function(k){return typeof k==='string'&&KEPT[k];}).slice(0,12):[],
+    // 0.77 (Codex review): what the end screens read. Without these, Continue rewrote the week: five days became one, Friday's "no" went back in its box.
+    no:!!g.no,quiet:!!g.quiet,mugMended:!!g.mugMended,applied:!!g.applied,
+    run:Array.isArray(g.run)?g.run.map(cleanDay).filter(Boolean).slice(0,40):[],day0:cleanDay(g.day0)};
+}
+// A lived day, as the receipts need it (35-inside.js). Storage can be old or edited, so every field is checked.
+function cleanDay(d){
+  if(!d||typeof d!=='object'||typeof d.label!=='string')return null;
+  function n(v,hi){return Number.isFinite(v)?clamp(v,0,hi):0;}
+  var o={label:d.label.slice(0,80),start:n(d.start,864000),outside:n(d.outside,864000),extra:n(d.extra,8640000),hits:Math.floor(n(d.hits,999)),
+    trigAt:Number.isFinite(d.trigAt)?d.trigAt:null,stayAt:Number.isFinite(d.stayAt)?d.stayAt:null,
+    ledger:Array.isArray(d.ledger)?d.ledger.filter(function(e){return e&&typeof e.label==='string';}).slice(0,40).map(function(e){return {label:e.label.slice(0,80),n:Math.floor(n(e.n,999)),secs:n(e.secs,8640000)};}):[]};
+  if(Number.isFinite(d.trigMult))o.trigMult=clamp(d.trigMult,1,2);
+  if(Number.isFinite(d.ratio))o.ratio=clamp(d.ratio,0,99);
+  return o;
 }
 function loadProgress(){
   try{

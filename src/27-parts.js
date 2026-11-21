@@ -9,8 +9,11 @@ function partCard(n){return [function(){
   stopVoice();sfx('card');
 },['N',PARTS[n].caption],function(){G.chap=null;G.band=null;G.cur=null;}];}
 function storyPart(){
-  if(G.chapter>=5)return 3;
-  return G.chapter===4&&['nothing','form','quiet','evenings','night'].indexOf(G.moment)>=0?2:1;
+  var g=G;if(g.chap&&g.chap.part)return g.chap.part;
+  if(g.chapter>=5)return 3;
+  // Part two is every moment from Nothing. on, read from the story order, so a moved moment cannot fall back into part one (Codex review, 0.77)
+  var a=AFTER[4]||[],i=a.indexOf(g.moment);
+  return g.chapter===4&&i>=0&&i>=a.indexOf('nothing')?2:1;
 }
 // The last image belongs to the existing group-chat scene, not to an extra chapter.
 function nightlightEnding(){return [scene({set:'home',clock:23*3600+10*60}),function(){

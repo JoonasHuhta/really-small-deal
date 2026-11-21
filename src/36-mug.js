@@ -10,9 +10,9 @@ function mugOff(){G.mug=null;G.deal=null;}
 function mugQuiet(on){return function(){G.mugQuiet=!!on;};}          // a scene for the atmosphere: the mug steps out unless something happens to it
 function mugSpiky(on){return function(){if(G.mug)G.mug.spiky=!!on;};}
 function mugEmpty(){return !!(G.mug&&G.mug.v<=1);}
-function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown;m.v=Math.max(Math.min(m.v,m.floor==null?0:m.floor),m.v-n);   // a day can scrape the bottom, only Thursday goes through it
-  m.shown=m.v;m.ghost={from:from,to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:label,t:0,minus:true,n:from-m.v};sfx('sipOut');
-  var lost=from-m.v;G.sips=(G.sips||0)+lost;if(lost>0&&(!G.bigSip||lost>G.bigSip.n))G.bigSip={t:label,n:lost};};}   // for the receipt's damage report
+function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown,before=m.v;m.v=Math.max(Math.min(m.v,m.floor==null?0:m.floor),m.v-n);   // a day can scrape the bottom, only Thursday goes through it
+  // the label counts what the mug really lost (not the drawn level, which may still be filling): at a day's floor the cost is written down, not taken. Wednesday's yeses are paid on Thursday.
+  var lost=before-m.v;m.shown=m.v;m.ghost={from:Math.max(from,m.v),to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:lost>0?label:label+' (on the tab)',t:0,minus:true,n:lost};sfx('sipOut');G.sips=(G.sips||0)+lost;if(lost>0&&(!G.bigSip||lost>G.bigSip.n))G.bigSip={t:label,n:lost};};}   // for the receipt's damage report
 function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var before=m.v;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:label,t:0,minus:false,n:m.v-before};sfx('pourIn');};}
 // The meltdown: the last drain on an empty mug breaks it. Shards fly; the mug stays broken until it is glued.
 function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.shown=0;m.broken=true;m.seen=0;m.ghost=null;m.last={text:label||'',t:0,minus:true};

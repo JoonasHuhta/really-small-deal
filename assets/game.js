@@ -183,7 +183,7 @@ function reset(day){
      cz:1.025,cx:W/2,cy:H/2,
      lines:[],band:null,out:null,w:null,card:0,
      hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0};
-  G.handout=false;G.afterparty=false;G.sips=0;G.files=0;G.bigSip=null;G.fineSent=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.coatNo=false;G.kept=[];G.methods={};G.endSeen=false;G.stamp=null;
+  G.handout=false;G.afterparty=false;G.sips=0;G.files=0;G.bigSip=null;G.fineSent=false;G.applied=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.coatNo=false;G.kept=[];G.methods={};G.endSeen=false;G.stamp=null;
   G.choiceWho='S';G.finalFrame=false;G.barStory=null;G.quietDrawing=false;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
   document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
@@ -214,7 +214,7 @@ function run(){
     if(s.still){G.lines=[];G.cur=null;G.band=null;WAIT='click';LOCK=0.6;render();return;}
     if(s.qte){startQte();return;}
     if(s.fight){startFight(s.fight);return;}
-    if(s.choice){G.bick=0;G.nopeMsg=null;G.choiceWho=s.who||'S';CH=typeof s.choice==='function'?s.choice():s.choice;WAIT='choice';LOCK=0.4;render();return;}
+    if(s.choice){G.bick=0;G.nopeMsg=null;G.choiceWho=s.who||'S';G.choiceAsk=s.ask||null;CH=typeof s.choice==='function'?s.choice():s.choice;WAIT='choice';LOCK=0.4;render();return;}
   }
 }
 // advance: on a part card an early click shows the whole card; the next click goes on.
@@ -260,12 +260,12 @@ function render(){
   document.getElementById('play-panel').classList.toggle('hidden',!g.started||g.ended);
   document.getElementById('pause').disabled=!g.started||g.ended;
   document.getElementById('journal').disabled=!history.length;
-  document.getElementById('chapter').textContent=g.ended?(g.labEnd?(DEVLAB?'Scenario lab':'Moments'):g.dayEnd?'End of Monday':'For now'):g.started?(g.lab?'':['','I · ','II · ','III · '][storyPart()])+(g.label|| (g.w?'The walk home':'Oh, hi.')):'A small social adventure';
+  document.getElementById('chapter').textContent=g.ended?(g.labEnd?(DEVLAB?'Scenario lab':'Moments'):g.dayEnd?'End of Monday':'For now'):g.started?(g.lab?'':['','I · ','II · ','III · '][storyPart()])+(g.chap&&g.chap.part?g.chap.title:g.label|| (g.w?'The walk home':'Oh, hi.')):'A small social adventure';
   document.getElementById('perspective').textContent=g.chap&&g.chap.part?g.chap.day:g.finalFrame?'FOR NOW':g.out?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION';
   cv.classList.toggle('stretching',WAIT==='stretch');
   cv.setAttribute('aria-label',g.chap&&g.chap.part?g.chap.day+'. '+g.chap.title:g.finalFrame?'The human is asleep. A lamp stays on. Ekskyysmi makes a bird with its hands.':'A human and a very large shadow');
   if(WAIT==='choice'&&CH){
-    speaker=g.choiceWho||'S';text=g.nopeMsg||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':g.chapter===1&&!g.lab&&!g.firstPick?'You’re Ekskyysmi. Pick what I say.':'What do we do with this?');   // the very first choice says who the player is
+    speaker=g.choiceWho||'S';text=g.nopeMsg||g.choiceAsk||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':g.chapter===1&&!g.lab&&!g.firstPick?'You’re Ekskyysmi. Pick what I say.':'What do we do with this?');   // the very first choice says who the player is
     if(g.form&&g.form.i>=0){speaker='N';text=FORM_Q[g.form.i].q;}
     for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(CH[i].t)+' <em>Not a setting. Yet.</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>':CH[i].off&&CH[i].note?'<button class="opt off'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>'+esc(CH[i].note)+'</em></button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>';
   }else if(WAIT==='stretch'){
@@ -528,8 +528,11 @@ function partCard(n){return [function(){
   stopVoice();sfx('card');
 },['N',PARTS[n].caption],function(){G.chap=null;G.band=null;G.cur=null;}];}
 function storyPart(){
-  if(G.chapter>=5)return 3;
-  return G.chapter===4&&['nothing','form','quiet','evenings','night'].indexOf(G.moment)>=0?2:1;
+  var g=G;if(g.chap&&g.chap.part)return g.chap.part;
+  if(g.chapter>=5)return 3;
+  // Part two is every moment from Nothing. on, read from the story order, so a moved moment cannot fall back into part one (Codex review, 0.77)
+  var a=AFTER[4]||[],i=a.indexOf(g.moment);
+  return g.chapter===4&&i>=0&&i>=a.indexOf('nothing')?2:1;
 }
 // The last image belongs to the existing group-chat scene, not to an extra chapter.
 function nightlightEnding(){return [scene({set:'home',clock:23*3600+10*60}),function(){
@@ -554,7 +557,21 @@ function checkpoint(g){
     nothings:Number.isFinite(g.nothings)?clamp(Math.floor(g.nothings),0,20):0,rehearsal:!!g.rehearsal,
     barStory:['umbrella','arms','2011'].indexOf(g.barStory)>=0?g.barStory:null,quietDrawing:!!g.quietDrawing,coatNo:!!g.coatNo,fineSent:!!g.fineSent,
     sips:Number.isFinite(g.sips)?clamp(Math.floor(g.sips),0,99):0,files:Number.isFinite(g.files)?clamp(Math.floor(g.files),0,99):0,
-    bigSip:g.bigSip&&typeof g.bigSip.t==='string'?{t:g.bigSip.t.slice(0,40),n:clamp(Math.floor(g.bigSip.n)||0,0,5)}:null,methods:cleanMethods(g.methods),kept:Array.isArray(g.kept)?g.kept.filter(function(k){return typeof k==='string'&&KEPT[k];}).slice(0,12):[]};
+    bigSip:g.bigSip&&typeof g.bigSip.t==='string'?{t:g.bigSip.t.slice(0,40),n:clamp(Math.floor(g.bigSip.n)||0,0,5)}:null,methods:cleanMethods(g.methods),kept:Array.isArray(g.kept)?g.kept.filter(function(k){return typeof k==='string'&&KEPT[k];}).slice(0,12):[],
+    // 0.77 (Codex review): what the end screens read. Without these, Continue rewrote the week: five days became one, Friday's "no" went back in its box.
+    no:!!g.no,quiet:!!g.quiet,mugMended:!!g.mugMended,applied:!!g.applied,
+    run:Array.isArray(g.run)?g.run.map(cleanDay).filter(Boolean).slice(0,40):[],day0:cleanDay(g.day0)};
+}
+// A lived day, as the receipts need it (35-inside.js). Storage can be old or edited, so every field is checked.
+function cleanDay(d){
+  if(!d||typeof d!=='object'||typeof d.label!=='string')return null;
+  function n(v,hi){return Number.isFinite(v)?clamp(v,0,hi):0;}
+  var o={label:d.label.slice(0,80),start:n(d.start,864000),outside:n(d.outside,864000),extra:n(d.extra,8640000),hits:Math.floor(n(d.hits,999)),
+    trigAt:Number.isFinite(d.trigAt)?d.trigAt:null,stayAt:Number.isFinite(d.stayAt)?d.stayAt:null,
+    ledger:Array.isArray(d.ledger)?d.ledger.filter(function(e){return e&&typeof e.label==='string';}).slice(0,40).map(function(e){return {label:e.label.slice(0,80),n:Math.floor(n(e.n,999)),secs:n(e.secs,8640000)};}):[]};
+  if(Number.isFinite(d.trigMult))o.trigMult=clamp(d.trigMult,1,2);
+  if(Number.isFinite(d.ratio))o.ratio=clamp(d.ratio,0,99);
+  return o;
 }
 function loadProgress(){
   try{
@@ -1491,7 +1508,10 @@ function startChapter(n,at){
   var saved=loadProgress(),sv=saved&&saved.chapters[n]||{};
   if(at&&at.ch===n&&n>1){   // Continue, in the middle of a chapter
     reset(at.state.day||'B');var h=G;Object.keys(at.state).forEach(function(k){h[k]=at.state[k];});
-    h.started=true;h.jobDone=at.jobDone;h.chapter=n;newDay();Q=chain(n,at.moment);run();return;
+    h.started=true;h.jobDone=at.jobDone;h.chapter=n;
+    // the day in progress comes back with the save; a fresh one only if the save is older than 0.77
+    if(h.day0){h.mult=h.day0.trigAt!=null?Math.min(h.day0.trigMult||DOUBLE,h.jobDone?STAY:DOUBLE):1;h.prevClock=h.clock;h.livedShown=0;}else newDay();
+    Q=chain(n,at.moment);run();return;
   }
   if(n<=1){startGame(sv.day||null,false);return;}
   reset(sv.day||'B');var g=G,c=checkpoint(sv);Object.keys(c).forEach(function(k){g[k]=c[k];});g.started=true;g.jobDone=n>4;
@@ -1579,7 +1599,7 @@ var AFTER={
 var WHEN={night:'THAT NIGHT',rewind:'THAT NIGHT, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'THE FIRST MORNING',evenings:'THE SAME DAY, 21:00',posting:'LATER THAT EVENING',detail:'THE NEXT AFTERNOON',enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'AN EVENING',
   colleagues:'AFTER LUNCH, SOME DAY',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'AN EVENING AT HOME',voice:'LATER THAT EVENING',library:'A SATURDAY, WEEKS LATER',radiator:'THE NEXT TUESDAY'};
 // Moments that continue the one before them: Night shift is the same evening as Evenings (TYOSUUNNITELMA.md T3).
-var NOCARD={epilogue:1};   // the night has its own card since The posting sits between Evenings and the night   // the epilogue follows the last image straight away (it opens on its own “The End.”)
+var NOCARD={epilogue:1};   // the night has its own card since The posting sits between Evenings and the night   // the epilogue follows the last image straight away (it opens on its own card, “The week, itemised.”)
 function interlude(id){return function(){G.lab=null;G.moment=id;saveMoment(id);return (id==='nothing'?partCard(2):[]).concat(LABS[id].script());};}
 function momentsAfter(n){return (AFTER[n]||[]).map(interlude);}
 // ---- src/34-response.js ----
@@ -1730,6 +1750,12 @@ function closeDay(){
   d.outside=AWAKE;d.extra=spikes(d);
   d.ratio=(d.outside+d.extra)/d.outside;
   g.run.push(d);g.day0=null;g.mult=1;return d;
+}
+// What closeDay would print for a day still open, without closing it. The epilogue rolls before Friday is over (0.77).
+function dayRatio(d){
+  if(!d)return 1;if(Number.isFinite(d.ratio))return d.ratio;
+  var dbl=doubledUntil(d,AWAKE),extra=spikes(d)+(d.hits?Math.min(180,LIVED.tonight*d.hits+30)*60:0)+(dbl>59?dbl:0);
+  return (AWAKE+extra)/AWAKE;
 }
 function dur(secs){
   secs=Math.round(secs);if(secs<60)return secs+' s';
@@ -1946,9 +1972,9 @@ function mugOff(){G.mug=null;G.deal=null;}
 function mugQuiet(on){return function(){G.mugQuiet=!!on;};}          // a scene for the atmosphere: the mug steps out unless something happens to it
 function mugSpiky(on){return function(){if(G.mug)G.mug.spiky=!!on;};}
 function mugEmpty(){return !!(G.mug&&G.mug.v<=1);}
-function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown;m.v=Math.max(Math.min(m.v,m.floor==null?0:m.floor),m.v-n);   // a day can scrape the bottom, only Thursday goes through it
-  m.shown=m.v;m.ghost={from:from,to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:label,t:0,minus:true,n:from-m.v};sfx('sipOut');
-  var lost=from-m.v;G.sips=(G.sips||0)+lost;if(lost>0&&(!G.bigSip||lost>G.bigSip.n))G.bigSip={t:label,n:lost};};}   // for the receipt's damage report
+function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown,before=m.v;m.v=Math.max(Math.min(m.v,m.floor==null?0:m.floor),m.v-n);   // a day can scrape the bottom, only Thursday goes through it
+  // the label counts what the mug really lost (not the drawn level, which may still be filling): at a day's floor the cost is written down, not taken. Wednesday's yeses are paid on Thursday.
+  var lost=before-m.v;m.shown=m.v;m.ghost={from:Math.max(from,m.v),to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:lost>0?label:label+' (on the tab)',t:0,minus:true,n:lost};sfx('sipOut');G.sips=(G.sips||0)+lost;if(lost>0&&(!G.bigSip||lost>G.bigSip.n))G.bigSip={t:label,n:lost};};}   // for the receipt's damage report
 function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var before=m.v;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:label,t:0,minus:false,n:m.v-before};sfx('pourIn');};}
 // The meltdown: the last drain on an empty mug breaks it. Shards fly; the mug stays broken until it is glued.
 function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.shown=0;m.broken=true;m.seen=0;m.ghost=null;m.last={text:label||'',t:0,minus:true};
@@ -2240,7 +2266,7 @@ var EPI=[
   {cut:'hard',set:'home',clock:22*3600,s:0.95,mood:'calm',hx:470,mine:1,pose:'selfmouth',cam:[1.55,450,250, 1.55,450,250],secs:3.4},
   {cut:'fade',set:'home',clock:23*3600,s:0.95,mood:'calm',hx:520,sitting:1,cam:[1.8,450,380, 1.05,475,290],secs:7,
     l:'DAYS LIVED TODAY',v:'1.0',note:'inside and outside, the same day. a first.'},
-  {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,pose:'puppet',cam:[1.05,475,290, 1.05,475,290],secs:6,credit:'Made by Joonas Huhta (MoshBitSurfers)'}
+  {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,pose:'puppet',cam:[1.05,475,290, 1.05,475,290],secs:6,credit:'One appointment outstanding.'}   // 0.77 (Codex review): the last card before the radiator promises it; “The End.” and a maker credit here made players stop one scene early. The maker is in the roll.
 ];
 // The player's own top methods, as rows. In the lab (or a week with no choices) the shot is skipped.
 var MINE={worst:'WORST CASES, PREPARED',draft:'SCRIPTS, DRAFTED',please:'YESES, UNMEANT',hide:'EXITS, TAKEN',stay:'TIMES WE STAYED',hush:'SILENCES, KEPT'};
@@ -2287,7 +2313,7 @@ function epiFilterOn(){}
 function drawEpi(){
   var e=G.epi;if(!e)return;
   if(e.theEnd){ctx.fillStyle='#0d1114';ctx.fillRect(0,0,W,H);var a=clamp(e.clock/0.8,0,1);ctx.globalAlpha=a;ctx.fillStyle='#f4eddf';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.font='500 54px Fraunces,Georgia,serif';ctx.fillText('The End.',W/2,H/2-8);ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('(of the week)',W/2,H/2+40);ctx.globalAlpha=1;return;}
+    ctx.font='500 54px Fraunces,Georgia,serif';ctx.fillText('The week, itemised.',W/2,H/2-8);ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('(by Ekskyysmi)',W/2,H/2+40);ctx.globalAlpha=1;return;}
   epiSkipHint(e);
   if(e.o){epiWorld(e.o,e);if(e.o.rain)epiRain();}
   // a warm wash, a little haze: the week as remembered
@@ -2368,8 +2394,9 @@ function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · THE WHOLE T
     {n:'thank you for coming.'},{n:'no reply needed.'},{n:'(really.)'},{gap:1},{n:'ekskyysmi: finnish for “excuse me”.'});
   return r;}
 function epiInsideRows(){
-  var g=G,run=(g.run||[]).filter(function(d){return d.label!=='SCENARIO LAB';}),lived=0,cal=run.length,top=null;
-  run.forEach(function(d){lived+=d.ratio;(d.ledger||[]).forEach(function(x){if(!top||x.secs>top.secs)top=x;});});
+  // Friday is still open while the epilogue rolls: count it, as the receipt after the radiator will (Codex review, 0.77)
+  var g=G,run=(g.run||[]).concat(g.day0?[g.day0]:[]).filter(function(d){return d.label!=='SCENARIO LAB';}),lived=0,cal=run.length,top=null;
+  run.forEach(function(d){lived+=dayRatio(d);(d.ledger||[]).forEach(function(x){if(!top||x.secs>top.secs)top=x;});});
   // The inside of the week: senses first, then the head, then other people. One row each, no advice.
   var r=[{l:'TIME OUTSIDE THE COMFORT ZONE',v:'ALL OF IT'},{n:'source: eero.'},
     {l:'COLLAR LABEL, FELT',v:'ALL DAY'},{l:'CHEWING, NEXT TO ME',v:'DEAFENING'},{l:'PERFUME, IN THE LIFT',v:'ALL THE AIR'},
@@ -2415,7 +2442,7 @@ function epiSkipHint(e){if(e.ask==null||G.time-e.ask>2.5||e.skip)return;ctx.save
 function labEpilogue(){
   var steps=[function(){G.epi={started:false,x:0,ct:0,snap:null,o:null,clock:0};G.lines=[];music('epilogue');epiChrome(true);}];
   var shots=EPI.slice(0,EPIA.length),b=1;
-  steps.push(function(){var g=G;g.epi.theEnd=true;g.fade=0;g.hud=false;g.plan=false;g.lines=[];g.cur=null;g.band=null;});   // bar 0: “The End.” on black, over the song's quiet first bar
+  steps.push(function(){var g=G;g.epi.theEnd=true;g.fade=0;g.hud=false;g.plan=false;g.lines=[];g.cur=null;g.band=null;});   // bar 0: “The week, itemised.” on black, over the song's quiet first bar (until 0.76 it said “The End.”, and players believed it)
   steps.push(epiAt(barT(1)),function(){G.epi.theEnd=false;});
   shots.forEach(function(o,i){
     var b0=b,n=EPIA[i];b+=n;
@@ -3188,7 +3215,7 @@ var SITUATION={detail:'One small thing in a good review.',sometime:'“We should
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
 var WIP=['epilogue','mug'];
-function wipList(){var h='<div class="eyebrow">Work in progress</div><div class="lab-list">';for(var i=0;i<WIP.length;i++)if(LABS[WIP[i]])h+=momentButton(WIP[i],LABS[WIP[i]].blurb);return h+'</div>';}
+function wipList(){if(!DEVLAB)return '';var h='<div class="eyebrow">Work in progress</div><div class="lab-list">';for(var i=0;i<WIP.length;i++)if(LABS[WIP[i]])h+=momentButton(WIP[i],LABS[WIP[i]].blurb);return h+'</div>';}
 function showMoments(){
   var sv=loadProgress(),top=sv?sv.unlocked||1:1,h='<div class="eyebrow">Moments</div>';
   if(top<2){showOv(h+'<h2>Not yet.</h2><p>More moments open after the first day.</p>'+wipList()+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');return;}
@@ -3946,7 +3973,7 @@ function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan
   ['H','Go on, then. The topics.'],
   ['S','One. Walls. Two. Other walls. Three—'],
   ['S','…Three was the weather. I’ve used the fallback already.',{quiet:1}],
-  {choice:[
+  {who:'H',ask:'The roles swap. Pick the human’s advice.',choice:[   // the human says these (Codex review, 0.77: they were in Ekskyysmi's mouth)
     {t:'Have you tried leaving your comfort zone?',then:[['S','Don’t you DARE.',{loud:1}],['H','Eero says it works.'],['S','Eero has never met a radiator in his life.']]},
     {t:'Just say hi.',then:[['S','“Just say hi.” As if it’s nothing.'],['H','It is nothing.'],['S','It is a WHOLE WORD.']]},
     {t:'What if she doesn’t come?',then:[['S','Then it’s a radiator. I’ve spent time with worse.'],['H','You’re doing my voice.'],['S','I learned from the best. Unfortunately.']]}
@@ -4585,7 +4612,7 @@ function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Rea
 
 // Friday, after lunch is agreed: the posting comes back, whatever drawer it went into.
 function postingPayoff(){
-  var p=G.posting;
+  var p=G.posting;if(p)G.applied=true;   // decided on Friday, sent that night (#24): the receipts after this agree
   if(p==='open')return [
     ['H','And tonight I’m sending that application.'],
     set({mood:'alert'}),
@@ -4611,8 +4638,10 @@ function postingPayoff(){
 function storyRows(){
   var g=G,rows=[];
   if(g.rehearsal)rows.push(['“not now”, rehearsed','3 h 10 min'],['“not now”, actual','4 s']);
-  if(g.posting&&g.posting!=='open')rows.push(['applications sent','0 (yet)'],['rejections avoided','1'],['success rate','100 %']);
-  if(g.posting==='open')rows.push(['applications','pending']);
+  // The night of the posting keeps its zero (the joke is Ekskyysmi's), dated. After Friday the receipt says what happened.
+  if(g.posting&&g.posting!=='open')rows.push(['applications sent, that night','0'],['rejections avoided, that night','1'],['success rate, that night','100 %']);
+  if(g.posting==='open')rows.push(['tab left open, that night','1']);
+  if(g.posting)rows.push(g.applied?['applications sent, friday','1']:['applications sent','0 (yet)']);
   if(g.quiet)rows.push(['one quiet Monday, lived','1.0 days']);
   if(g.nothings)rows.push(['“it’s nothing”, said','×'+g.nothings]);
   // Ekskyysmi’s methods this week: what the player chose, counted. The choices were the joke; this is the bill.
@@ -5488,7 +5517,7 @@ function gameVersion(){var e=document.querySelector&&document.querySelector('scr
 function showAbout(){
   showOv('<div class="eyebrow">About</div><h2>What is this?</h2>'+
    '<p>You play Ekskyysmi, the overprotective shadow of a perfectly ordinary human. The human has one small plan: ask Sanna from work to lunch. You have concerns.</p>'+
-   '<p>About 45 minutes. Read at your own pace: almost nothing is timed. The one thing that is, is unfair on purpose. Conversations don’t wait either.</p>'+
+   '<p>About 50 minutes. Read at your own pace: almost nothing is timed. The one thing that is, is unfair on purpose. Conversations don’t wait either.</p>'+
    '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice. Some moments may land close.</p>'+
    '<p class="small">Alpha'+gameVersion()+', still changing. Made by Joonas Huhta (MoshBitSurfers).</p>'+
    '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
