@@ -2,7 +2,7 @@
 
 **Tämä tiedosto on totuus pelin järjestyksestä ja nimistä.** Kun puhumme kohtauksesta, käytämme tämän kartan numeroa ja kortin otsikkoa, esimerkiksi *#9 An ordinary evening*. Jos järjestys koodissa muuttuu, tämä tiedosto päivitetään samassa muutoksessa. `tests/story.test.cjs` tarkistaa, että alla olevan taulukon järjestys on sama kuin koodin (`src/33-moments.js`, `AFTER`). Jos ne eroavat, build kaatuu.
 
-Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.77.0 (hahmo: EKSKYYSMI.md; ulkopuolinen arvio: Codex/Astra 21.11.) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
+Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.78.0 (hahmo: EKSKYYSMI.md; ulkopuolinen arvio: Codex/Astra 21.11.) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
 
 ---
 
@@ -67,7 +67,7 @@ Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.77.0 (hahmo: EKSKYY
 | 15 | *A fine.* | HETKI | A SATURDAY, WEEKS LATER | 15:40 kirjasto | (1)+(3) Seitsemän viikon pelko. Kirjastonhoitajan lämpö. Majakka, sivu 212. | 1:49 | `library` |
 | 16 | *The form.* | HETKI | A WEEKDAY, 14:10 | 14:10 klinikka → 18:40 koti, ”that evening” | (2) Avun hakeminen. Ekskyysmi löytää itsensä lomakkeesta (”I thought I was bespoke.”). Pussi ja tuoli. | 2:46 | `form` |
 | 17 | *Quiet.* | HETKI | THE FIRST MORNING | 07:40 koti → 08:52 taukotila (MONDAY) → 18:20 kotimatka | (2) Helpompi päivä, varjo poissa (*Vacant.*). Kissa valmistuu. ”No. Sorry.” | 1:18 | `quiet` |
-| 18 | *Evenings.* | HETKI | THE SAME DAY, 21:00 | 21:00 koti | (2) Osa-aikatyö: ”Not for every sentence.” Sama päivä kuin *#17 Quiet.* | 1:20 | `evenings` |
+| 18 | *Evenings.* | HETKI | THE SAME DAY, 21:00 | 21:00 koti | (2) Osa-aikatyö: ”Not for every sentence.” Ihminen on kaivannut varjoaan ja pitää silti helpomman päivän: ”I missed you. I’m keeping the easier day, though.” Ekskyysmi löytää valmiin kissan seisomalla sen päällä. Sama päivä kuin *#17 Quiet.* (0.78: päivän kertaus tiivistetty) | 1:08 | `evenings` |
 | 19 | *The posting.* | HETKI | LATER THAT EVENING | 22:47 koti, sohva | (1)+(2) Osa-aikatyön ensimmäinen ilta. Työpaikkailmoitus (”this is SO you”, haku perjantaihin), ja Ekskyysmi vetää esiin vanhat työhakutiedostot (2019, 2021, 2023). Valinta: arkistoi, kirjoita hylkäys valmiiksi tai kysy, mitä ihminen haluaa. Perjantai lunastaa. | 0:54 | `posting` |
 | 20 | *Night shift.* | HETKI | THAT NIGHT | 23:50 koti, pimeä | (3) Pimeässä kaikki varjot tekevät saman työn. **Vuoronvaihto:** Sannan varjo: ”Go on. Sleep. I’ll watch your door too.” Ekskyysmi nukahtaa ensimmäistä kertaa vuosiin. | 2:22 | `night` |
 | 21 | *Still here.* | OSAKORTTI | PART THREE · ”A Friday. Not necessarily that one.” | – | Avaa Osan 3 | 0:04 | `part3` |
@@ -77,7 +77,7 @@ Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.77.0 (hahmo: EKSKYY
 | 25 | *By the radiator.* | HETKI | THE NEXT TUESDAY | 16:50 taukotila | Seuraava tiistai: varjojen tapaaminen. **Ekskyysmi näyttää lintunsa,** eikä kukaan naura. ”It was a Tuesday, you know. The drawing.” – ”Now it’s also the radiator.” Loppu jää auki. | 1:29 | `radiator` |
 <!-- KARTTA LOPPUU -->
 
-Yhteensä noin 51:31: Osa 1 noin 30 min, Osa 2 noin 10,5 min, Osa 3 noin 9 min.
+Yhteensä noin 51:22: Osa 1 noin 30 min, Osa 2 noin 10 min, Osa 3 noin 9 min.
 
 ---
 

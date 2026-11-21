@@ -2946,14 +2946,10 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
   ['H','It’s nine. You’re on.'],
   ['S','I’ve gone part-time?'],
   ['H','Evenings.'],
-  ['S','Was that on the form?'],
-  ['H','I don’t remember.'],
-  ['S','I’ll need an appendix. Just a little one.'],
   set({s:0.8}),
+  // 0.78 (Codex review: the evening retold the day the player had just played). Ekskyysmi learns it in two beats; the cat it finds by standing on it.
   ['S','What happened today? Without me.'],
-  ['H','I had lunch. Said no to a shift. Finished the cat.'],
-  ['S','…Oh.',{look:'soft'}],
-  ['H','I asked her to lunch. It took four seconds.'],
+  ['H','I asked Sanna to lunch. Four seconds.'],
   ['S','Four. I’d budgeted a week.'],
   ['H','Riitta said “not now”. I said “okay”.'],
   ['S','And then?'],
@@ -2978,7 +2974,7 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
   ['H','Go on.'],
   ['S','—I have several things to say about the lunch.',{look:'pleased'}],
   ['H','I thought you might.'],
-  ['S','Four seconds. Did you even REHEARSE?'],
+  ['S','Did you even REHEARSE?'],
   ['H','No.'],
   ['S','Amateur.'],
   function(){addLived('one evening, annotated',25);G.evenings=true;},
@@ -5518,7 +5514,7 @@ function showAbout(){
   showOv('<div class="eyebrow">About</div><h2>What is this?</h2>'+
    '<p>You play Ekskyysmi, the overprotective shadow of a perfectly ordinary human. The human has one small plan: ask Sanna from work to lunch. You have concerns.</p>'+
    '<p>About 50 minutes. Read at your own pace: almost nothing is timed. The one thing that is, is unfair on purpose. Conversations don’t wait either.</p>'+
-   '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice. Some moments may land close.</p>'+
+   '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice. Some moments may land close: being left out, a message left on “Seen.”, a bad night at home.</p>'+
    '<p class="small">Alpha'+gameVersion()+', still changing. Made by Joonas Huhta (MoshBitSurfers).</p>'+
    '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
 }
