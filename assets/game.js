@@ -1996,12 +1996,13 @@ function stepMug(dt){var m=G.mug;if(!m)return;m.t+=dt;m.seen+=dt;
   if(G.deal)G.deal.t+=dt;}
 
 // The mug sits under the HUD pills, top right. A real mug: handle, steam while there is something to steam.
-// Joonas 21.11.: Ekskyysmi gets tired. An empty-ish mug (or a scene that says so) gives it eye bags, heavy lids and a mutter:
+// Joonas 21.11.: Ekskyysmi gets tired. A night that says so gives it eye bags, heavy lids and a mutter
+// (0.81, Joonas: "a bit too often": no longer on every low mug in daylight, only the three nights: Tuesday 03:07, after the replays in Rewind, Wednesday 23:15):
 // the week, looping, half a word at a time. Size is still feeling; this is only the face.
 var MUMBLES={1:['…oh, hi…','…with a full stop…','…was it the comma…','…mm.'],2:['…quick chat…','…nine o’clock…','…shorter…','…mm.'],
   3:['…could you just…','…yes…','…yes. yes…','…slides…'],4:['…seen…','…17:31…','…eleven bags…','…mm.'],5:['…oh, hi. again…','…mm.']};
 function mumbleLine(){var g=G,M=g.morko,l=(!g.moment&&MUMBLES[g.chapter])||['…mm.','…filed…','…where was I…','…define soon…'];M.mumI=(M.mumI||0)+1;return l[M.mumI%l.length];}
-function stepShadowLife(dt){var g=G,M=g.morko;if(!M)return;var m=g.mug,want=g.tiredForce||(m&&!m.broken&&m.v<=1?1:0);
+function stepShadowLife(dt){var g=G,M=g.morko;if(!M)return;var want=g.tiredForce?1:0;
   if(M.asleep||g.plain||g.epi)want=0;M.tired=(M.tired||0)+(want-(M.tired||0))*Math.min(1,dt*1.4);
   if(M.mumble){M.mumble.t+=dt;if(M.mumble.t>3)M.mumble=null;}
   var talking=g.cur&&g.cur.who==='S';
@@ -3036,7 +3037,6 @@ function drawTape(){
   ctx.restore();
 }
 function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',clock:23*3600+40*60}).concat([
-  function(){G.tiredForce=1;},
   ['N','23:40. Lights off. Ekskyysmi has the tape.'],
   ['S','Just once more. For accuracy.'],
   rewindTape(0),
@@ -3063,7 +3063,7 @@ function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',c
       ['H','Play the one from this morning. The actual one.'],
       ['S','That one’s in the archive. Nobody watches it. It’s very boring.']]}
   ]},
-  function(){G.tape=null;addLived('one “oh, hi.”, replayed',40);}
+  function(){G.tape=null;G.tiredForce=1;addLived('one “oh, hi.”, replayed',40);}   // 0.81: the bags arrive after the replays, as their price
  ],outside({title:'WHAT WAS RECORDED',dur:'duration: 0 seconds',cap:'No camera. No recording. One greeting, remembered differently at 23:40.',anim:'text'}),[
   ['S','…I remember a smile. Somewhere under the horns.',{look:'soft'}],
   ['H','I don’t remember the exact face anymore.'],

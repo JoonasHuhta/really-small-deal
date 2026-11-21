@@ -83,9 +83,11 @@ RSD:ssä torjunnan tai kritiikin tuntu, todellinen tai kuviteltu, iskee nopeasti
 
 ---
 
-## 6. Väsymys (0.73.0)
+## 6. Väsymys (0.73.0, harvennettu 0.81.0)
 
-Kun mukissa on 1 tai vähemmän, tai kohtaus niin päättää (#3 yö 03:07, #5 *Rewind*, #6 23:15–00:19), Ekskyysmille tulevat raskaat luomet ja silmäpussit, ja pään vieressä leijuu mumina päivän sanoista. Pelko avaa silmät. Väsymys antaa painoa repliikille ”Nobody came to relieve me.”, ja vuoronvaihto (linkki 5) on sen vastaus. Keskiviikkoyönä: ”You look tired.” – ”I’m not tired. I’m load-bearing.” Sama ilmaus kuin päivällä hymystä (”That’s the smile. It’s load-bearing.”).
+Vain kolmena yönä (#3 yö 03:07, #5 *Rewind* uusintojen jälkeen, #6 23:15–00:19) Ekskyysmille tulevat raskaat luomet ja silmäpussit, ja pään vieressä leijuu mumina päivän sanoista. Pelko avaa silmät. Väsymys antaa painoa repliikille ”Nobody came to relieve me.”, ja vuoronvaihto (linkki 5) on sen vastaus. Keskiviikkoyönä: ”You look tired.” – ”I’m not tired. I’m load-bearing.” Sama ilmaus kuin päivällä hymystä (”That’s the smile. It’s load-bearing.”).
+
+0.81.0 (Joonas: ”ehkä vähän liian usein sillä on silmäpussit”): matala muki ei enää yksin tuo väsymystä. Ennen silmäpussit näkyivät 12 %:ssa repliikeistä, myös maanantai- ja tiistaipäivänä. Nyt ne näkyvät 5 %:ssa, ja vain öisin. Väsymys on yön merkki eikä pysyvä ilme. Sama periaate kuin erityisilmeissä: harvinainen merkitsee enemmän.
 
 ---
 

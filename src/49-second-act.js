@@ -377,7 +377,6 @@ function drawTape(){
   ctx.restore();
 }
 function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',clock:23*3600+40*60}).concat([
-  function(){G.tiredForce=1;},
   ['N','23:40. Lights off. Ekskyysmi has the tape.'],
   ['S','Just once more. For accuracy.'],
   rewindTape(0),
@@ -404,7 +403,7 @@ function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',c
       ['H','Play the one from this morning. The actual one.'],
       ['S','That one’s in the archive. Nobody watches it. It’s very boring.']]}
   ]},
-  function(){G.tape=null;addLived('one “oh, hi.”, replayed',40);}
+  function(){G.tape=null;G.tiredForce=1;addLived('one “oh, hi.”, replayed',40);}   // 0.81: the bags arrive after the replays, as their price
  ],outside({title:'WHAT WAS RECORDED',dur:'duration: 0 seconds',cap:'No camera. No recording. One greeting, remembered differently at 23:40.',anim:'text'}),[
   ['S','…I remember a smile. Somewhere under the horns.',{look:'soft'}],
   ['H','I don’t remember the exact face anymore.'],

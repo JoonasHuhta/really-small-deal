@@ -2,7 +2,7 @@
 
 **Tämä tiedosto on totuus pelin järjestyksestä ja nimistä.** Kun puhumme kohtauksesta, käytämme tämän kartan numeroa ja kortin otsikkoa, esimerkiksi *#9 An ordinary evening*. Jos järjestys koodissa muuttuu, tämä tiedosto päivitetään samassa muutoksessa. `tests/story.test.cjs` tarkistaa, että alla olevan taulukon järjestys on sama kuin koodin (`src/33-moments.js`, `AFTER`). Jos ne eroavat, build kaatuu.
 
-Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.80.0 (hahmo: EKSKYYSMI.md; ulkopuolinen arvio: Codex/Astra 21.11.) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
+Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.81.0 (hahmo: EKSKYYSMI.md; ulkopuolinen arvio: Codex/Astra 21.11.) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
 
 ---
 
@@ -101,7 +101,7 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 | Patteri | #8 ”Tuesday. By the radiator.” | #22 ”I checked. Tuesday works.”; #25 | – |
 | Muki | #2 alkaa täynnä (5 → pohja 1 → 3) | #3 4 → 1, kehut +1 → loppuu 2 · #6 jatkaa samasta aamusta 2, oma tunti +1, kaiutin −1, lattia 2: kyllät ja ”Fine.” kirjataan merkinnällä *(on the tab)*, ja lasku tulee torstaina (0.77) · #10 3 → 0, hajoaa ja liimataan · #22 korjattu · #23 korjattu ja hiljainen. Yön yli +1 (ma→ti, ke→to). **Hetkissä ei mukia.** | `mug`, `mugMended` |
 | ”Fine.” (tiuskaisu Sannalle) | #6 00:19 (takki juuri riisuttu): ihminen vastaa ”Fine.”, Sanna: ”Oh. Okay!” Varjo nukkuu. Muki merkitsee: ”“Fine.” (on the tab)” (keskiviikon lattia 2) | #20 Sannan varjo: ”Someone said ’fine’.” (varjo ei tiedä, että se olimme me) · #22 Sanna: ”Someone says ’fine’ and I’m up till three.” → ihminen korjaa: ”That one was all me.” · ”I never noticed one we gave.” | – |
-| Väsymys (Joonas 21.11.) | Muki ≤ 1 tai kohtaus päättää: #3 yö 03:07, #5 Rewind, #6 23:15–00:19 (”I’m not tired. I’m load-bearing.”) | Ekskyysmille raskaat luomet ja silmäpussit sekä mumina päivän sanoista (”…quick chat…”, ”…yes. yes…”). Pelko avaa silmät. Koko pysyy tunteena. | `tiredForce`, `morko.tired` |
+| Väsymys (Joonas 21.11.) | Vain kolme yötä (0.81, Joonas: ”vähän liian usein”): #3 yö 03:07, #5 *Rewind* vasta uusintojen jälkeen (niiden hinta), #6 23:15–00:19 (”I’m not tired. I’m load-bearing.”). Matala muki päivällä ei enää tuo silmäpusseja (ennen 12 % repliikeistä, nyt 5 %). | Ekskyysmille raskaat luomet ja silmäpussit sekä mumina päivän sanoista (”…quick chat…”, ”…yes. yes…”). Pelko avaa silmät. Koko pysyy tunteena. | `tiredForce`, `morko.tired` |
 | Takki (maskaaminen) | #6 koko kyllä-päivä takkina (”Coat on. Nobody rejects a coat.”), kotona pois | #6 ”It’s a no in a coat.” · #8 valinnainen: ”Pretend to be a coat.” Sannan varjo: ”…I can see your eyes.” · #22 ”It’s a no in a coat, Eero.” | `coatNo`, `morko.coat` |
 | Työpaikkailmoitus | #19 arkistoi / hylkäys valmiiksi / kysy (”Applications by Friday.”) | #22 ihminen ottaa sen esiin (kaikilla haaroilla) · #24 ”Sent: three lines. No apology.” APPLICATIONS, SENT 1 · loppukuitti: illan nolla päivättynä (*applications sent, that night 0*) ja *applications sent, friday 1* (0.77: ennen kuitit olivat eri mieltä) | `posting`, `applied` |
 | Lintu (Ekskyysmin oma piirustus) | #9 ”It’s a hobby. Shadows are allowed one. Don’t tell the office.” | #25 näytetään Sannan varjolle: ”Do it again.” / ”…Nobody laughed.” · loppukuva | `pose:'puppet'` |

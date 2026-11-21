@@ -14,6 +14,9 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.81.0 (Claude, 21.11.2026): **silmäpussit harvemmin** (Joonas: ”ehkä vähän liian usein”).
+- Ennen väsymys tuli aina, kun mukissa oli 1 tai vähemmän, eli myös maanantai- ja tiistaipäivänä. Silmäpussit näkyivät 12 %:ssa repliikeistä. Nyt ne tulevat vain kolmena yönä: tiistaina 03:07, *Rewind*-kohtauksessa vasta uusintojen jälkeen (niiden hintana) ja keskiviikkona 23:15–00:19. Osuus on nyt 5 %. Mumina seuraa samaa sääntöä.
+
 Versio 0.80.0 (Claude, 21.11.2026): **Riitta istutetaan ennen kuin hän on viesti** (TARINAKARTTA §6, avoin aukko 2).
 - *#3 Tuesday*: ennen viestiä *”Quick chat tomorrow at 9?”* Riitta seisoo taukotilan kahvikoneella: *”Riitta, at the coffee machine. Eleven things on her mind. All of them today.”* Hän ei sano mitään, ja viesti tulee hetken päästä. Ekskyysmi: *”And she was RIGHT THERE. Three metres away. She chose to WRITE it.”*
 - **Miksi:** pelaaja näkee Riitan kiireisenä eikä julmana ennen kuin hänestä tulee uhka. Hänen piirteensä *”eleven things”* (#11 *Not now*, #20 *Night shift*: ”Eleven things. I put them down at night.”) istutetaan näin jo ensimmäisessä kohtaamisessa. Uusi väärintulkinta (kirjoitti, vaikka oli paikalla) kuuluu samaan sarjaan kuin piste ja yksi peukalo. Tiistai pitenee 9 s (3:54 → 4:03).
