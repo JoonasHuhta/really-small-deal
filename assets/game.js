@@ -1167,6 +1167,8 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   ['S','Careful. A “no” is a rejection. Of HIM. Then he rejects us back. It’s a rejection exchange programme.'],
   yesMenu(['Clean. Safe. Nobody is upset.','An exclamation mark. Out loud. Bold.','We volunteered for a second thing to apologise for hesitating on the first. Textbook.'],'Sure — and I can do the handout too.','handout'),
   ['B','Legend.'],
+  // EKSKYYSMI.md, link 4: the coat is masking. A whole day of yes, disguised as something nobody rejects.
+  ['S','Coat on. Nobody rejects a coat.'],coatOn,{wait:0.9},coatButtons,
   shot('close',{who:'B'}),['B','Honestly? I hate presenting. You’re good at it.'],keep('eero'),
   ['S','…He’s afraid of slides.',{quiet:1}],
   shot('wide'),['S','I’m not saying I respect him more. I’m saying I’ve opened a file.'],
@@ -1188,6 +1190,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 minutes',cap:'Someone helpful. Possibly too helpful. Nobody checked.',anim:'nod'}),[
   scene({set:'home',clock:23*3600+15*60}),function(){G.human.grin=0;G.tiredForce=1;},
   ['N','23:15. Eero’s slides.'],
+  ['S','Coat’s off. Nobody’s looking.',{quiet:1}],
   ['H','It’s nearly midnight and I’m doing Eero’s slides.'],
   extraWorkCallback,
   ['S','And nobody is angry with us.'],
@@ -1428,6 +1431,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','I know. Sorry.'],
   ['A','Okay.',{quiet:1}],
   ['A','Thanks for saying it.'],
+  aside(['S','That was a real sorry. Not one of mine.',{quiet:1}]),
   aside(['S','I file every “oh” we get. I never noticed one we gave.',{quiet:1}]),
   function(){G.zT=1;},{wait:1.6},
   fridayShadow,
@@ -1565,14 +1569,15 @@ function mondayRepair(){
 var AFTER={
   2:['enhance','rewind'],
   3:['glass','colleagues','evening'],
-  4:['notnow','bar','nothing','library','form','quiet','evenings','night'],   // the library before the form (21.11.): Evenings is THE SAME DAY as Quiet
+  4:['notnow','bar','nothing','library','form','quiet','evenings','posting','night'],   // the library before the form (21.11.): Evenings is THE SAME DAY as Quiet.
+     // The posting (21.11., Joonas: into the story): the first evening of the part-time job, 22:47, between Evenings and the night.
   5:['comments','epilogue','radiator']   // after the final image: the next Tuesday, by the radiator
 };
-// Extras, not in the story (TYOSUUNNITELMA.md section 4): posting, detail, sometime, reply, voice, footage.
-var WHEN={night:'THAT NIGHT',rewind:'THAT NIGHT, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'THE FIRST MORNING',evenings:'THE SAME DAY, 21:00',posting:'THAT NIGHT, LATE',detail:'THE NEXT AFTERNOON',enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'AN EVENING',
+// Extras, not in the story (TYOSUUNNITELMA.md section 4): detail, sometime, reply, voice, footage. (The posting joined the story 21.11.)
+var WHEN={night:'THAT NIGHT',rewind:'THAT NIGHT, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'THE FIRST MORNING',evenings:'THE SAME DAY, 21:00',posting:'LATER THAT EVENING',detail:'THE NEXT AFTERNOON',enhance:'A MEETING, SOME MORNING',glass:'ONE ORDINARY MORNING',notnow:'AN AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'AN EVENING',
   colleagues:'AFTER LUNCH, SOME DAY',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'AN EVENING AT HOME',voice:'LATER THAT EVENING',library:'A SATURDAY, WEEKS LATER',radiator:'THE NEXT TUESDAY'};
 // Moments that continue the one before them: Night shift is the same evening as Evenings (TYOSUUNNITELMA.md T3).
-var NOCARD={night:1,epilogue:1};   // the epilogue follows the last image straight away (it opens on its own “The End.”)
+var NOCARD={epilogue:1};   // the night has its own card since The posting sits between Evenings and the night   // the epilogue follows the last image straight away (it opens on its own “The End.”)
 function interlude(id){return function(){G.lab=null;G.moment=id;saveMoment(id);return (id==='nothing'?partCard(2):[]).concat(LABS[id].script());};}
 function momentsAfter(n){return (AFTER[n]||[]).map(interlude);}
 // ---- src/34-response.js ----
@@ -2341,7 +2346,7 @@ function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · THE WHOLE T
   // What it felt like from inside: time, effort and bravery nobody else could see. No diagnosis, no advice: bookkeeping.
   r.push({gap:1},{h:'WHAT IT FELT LIKE'});epiInsideRows().forEach(function(x){r.push(x);});
   r.push({gap:1},{l:'SUBTOTAL',v:'ONE WEEK'},{l:'DISCOUNTS',v:'NONE NEEDED'},{l:'TOTAL',v:'LIVED ONCE'},{gap:1},{h:'Made by Joonas Huhta'},{h:'MoshBitSurfers'},{gap:1},
-    {n:'thank you for coming.'},{n:'no reply needed.'},{n:'(really.)'});
+    {n:'thank you for coming.'},{n:'no reply needed.'},{n:'(really.)'},{gap:1},{n:'ekskyysmi: finnish for “excuse me”.'});
   return r;}
 function epiInsideRows(){
   var g=G,run=(g.run||[]).filter(function(d){return d.label!=='SCENARIO LAB';}),lived=0,cal=run.length,top=null;
@@ -3010,6 +3015,7 @@ function drawNight(){
     var sx=-160+f*(W+320);ctx.fillStyle='rgba(255,236,190,.16)';ctx.beginPath();ctx.moveTo(sx-60,0);ctx.lineTo(sx+60,0);ctx.lineTo(sx+150,WALLY);ctx.lineTo(sx+30,WALLY);ctx.closePath();ctx.fill();
     ctx.fillStyle='rgba(20,16,30,.9)';ctx.beginPath();ctx.moveTo(sx+40,WALLY);ctx.lineTo(sx+110,WALLY);ctx.lineTo(sx-20,10);ctx.lineTo(sx-150,10);ctx.closePath();ctx.fill();}
   for(var k in NIGHT_EYES){if(!n.eyes[k])continue;var p=k==='S'?(function(){var q=geom();return {x:q.bx,y:q.hdY};})():NIGHT_EYES[k],bl=Math.sin(n.t*0.9+p.x)>0.985;
+    if(k==='S'&&n.sleepS)bl=true;   // asleep: eyes shut (somebody else has the door)
     ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';for(i=-1;i<=1;i+=2){if(bl){ctx.fillRect(p.x+i*8-5,p.y,10,1.6);continue;}circ(p.x+i*8,p.y,4.6);ctx.fill();}
     if(!bl){ctx.fillStyle='#06060f';for(i=-1;i<=1;i+=2){circ(p.x+i*8+1.4,p.y+0.6,2);ctx.fill();}ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';}}
 }
@@ -3061,21 +3067,28 @@ function labNight(){return labScene({set:'home',title:'Night shift.',plan:'Sleep
   ['Z','Same time tomorrow.'],
   ['S','There’s a meeting? Every night?'],
   ['Z','There’s no meeting. It’s just dark. We’re always here.'],
-  eyesOff,{wait:1.6},
+  // EKSKYYSMI.md, link 5: "Nobody came to relieve me." Somebody does.
+  ['Z','Go on. Sleep. I’ll watch your door too.'],
+  ['S','Nobody has ever—',{quiet:1}],
+  ['Z','I know. Go.'],
+  function(){var e=G.night.eyes;for(var k in e)if(k!=='S'&&k!=='Z')e[k]=0;sfx('dotsOff');},{wait:1.6},
   ['S','…Huh.',{quiet:1}],
   {wait:1.0},
   ['S','You’ve gone somewhere again. I can’t follow. There’s no light in there.'],
   ['S','I’ll wait by the bed. You always come back.'],
-  ['S','I check. Twice.',{quiet:1}],
-  {wait:1.2},
+  ['S','I check. Tw—',{quiet:1}],
+  function(){var g=G,q=geom();g.night.sleepS=true;g.tics.push(tic('z',q.bx+22,q.hdY-26,{life:2.6}));g.tics.push(tic('z',q.bx+34,q.hdY-48,{at:0.9,life:2.6}));},
+  {wait:1.6},
+  ['N','For the first time in years, somebody else has the door.'],
+  {wait:1.6},eyesOff,{wait:0.6},
   function(){G.clock=6*3600+40*60;},dawn,{wait:1.6},
   ['N','06:40.'],
   ['S','Morning. I’m reassembling.'],
   ['S','One arm is still under the bed.'],
   wakeUp,{wait:0.8},
   ['H','Did you sleep?'],
-  ['S','I had a meeting.'],
-  ['H','With whom?'],
+  ['S','…I did. Somebody had the door.',{look:'soft'}],
+  ['H','Who?'],
   ['S','The others. Different departments. Same hours.',{look:'soft'}],
   ['H','…You talked?'],
   ['S','It was dark. Nobody could see my filing.',{look:'pleased'}]
@@ -3125,7 +3138,7 @@ function startLab(id){hotReset();
 // hurts right now; they open after the first day, because Monday teaches the language. Story moments appear once played,
 // so the ending is never spoiled. The full Scenario lab is a development tool: index.html?lab.
 var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}catch(e){return false;}})();
-var EXTRAS=['detail','sometime','reply','voice','posting','footage'];
+var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
 var SITUATION={detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
@@ -3893,6 +3906,13 @@ function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan
   ['S','…I like your radiator.'],
   ['Z','It’s the building’s.'],
   ['S','I KNOW. Yes. The building has excellent taste.'],
+  // EKSKYYSMI.md, link 1: born from a drawing somebody laughed at, it has kept its own art hidden ("Don't tell the office").
+  // Out of topics, it does the only other thing it knows. Nobody laughs.
+  {wait:0.8},set({pose:'puppet',mood:'care'}),{wait:1.6},
+  ['Z','…Is that a bird?'],
+  ['S','It’s a hobby. Shadows are allowed one.',{quiet:1}],
+  ['Z','Do it again.'],
+  {wait:1.4},set({pose:null}),
   {wait:0.9},
   ['A','Kettle’s done!'],
   function(){G.zT=0;}
@@ -3903,8 +3923,14 @@ function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan
   ['S','She said it with a FULL STOP.'],
   ['H','You told her you like her radiator.'],
   ['S','I panicked. It was the nearest thing.'],
+  ['H','You showed her the bird.'],
+  ['S','…Nobody laughed.',{look:'soft'}],
   ['H','Same time next week?'],
-  ['S','…Tuesday works.',{look:'soft'}]
+  ['S','…Tuesday works.',{look:'soft'}],
+  // link 2: Tuesday is the game's hidden calendar (the drawing, the quick chat, the chair, the radiator). Said once, here.
+  ['S','It was a Tuesday, you know. The drawing.',{quiet:1}],
+  ['H','I know.'],
+  ['S','Now it’s also the radiator.']
  ]);}
 // ---- src/53-bar.js ----
 /* ================= the bar: seen from behind the counter, so everyone is half hidden for once ================= */
@@ -4019,7 +4045,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   function(){var b=G.bar;b.sT=700;},{wait:2.4},
   function(){G.bar.polish=false;},
   ['X','Excuse me?'],
-  ['S','Yes?'],   // its name is “excuse me”. Nobody explains this. Ever.
+  ['S','Yes?'],   // its name is “excuse me”. Explained once, on the last line of the receipt (EKSKYYSMI.md)
   {wait:0.7},
   ['T','Evening! What can I get you?'],
   ['X','Two lagers, thanks.'],

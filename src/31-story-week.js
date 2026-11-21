@@ -158,6 +158,8 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   ['S','Careful. A “no” is a rejection. Of HIM. Then he rejects us back. It’s a rejection exchange programme.'],
   yesMenu(['Clean. Safe. Nobody is upset.','An exclamation mark. Out loud. Bold.','We volunteered for a second thing to apologise for hesitating on the first. Textbook.'],'Sure — and I can do the handout too.','handout'),
   ['B','Legend.'],
+  // EKSKYYSMI.md, link 4: the coat is masking. A whole day of yes, disguised as something nobody rejects.
+  ['S','Coat on. Nobody rejects a coat.'],coatOn,{wait:0.9},coatButtons,
   shot('close',{who:'B'}),['B','Honestly? I hate presenting. You’re good at it.'],keep('eero'),
   ['S','…He’s afraid of slides.',{quiet:1}],
   shot('wide'),['S','I’m not saying I respect him more. I’m saying I’ve opened a file.'],
@@ -179,6 +181,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
  ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 2 minutes',cap:'Someone helpful. Possibly too helpful. Nobody checked.',anim:'nod'}),[
   scene({set:'home',clock:23*3600+15*60}),function(){G.human.grin=0;G.tiredForce=1;},
   ['N','23:15. Eero’s slides.'],
+  ['S','Coat’s off. Nobody’s looking.',{quiet:1}],
   ['H','It’s nearly midnight and I’m doing Eero’s slides.'],
   extraWorkCallback,
   ['S','And nobody is angry with us.'],
@@ -419,6 +422,7 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','I know. Sorry.'],
   ['A','Okay.',{quiet:1}],
   ['A','Thanks for saying it.'],
+  aside(['S','That was a real sorry. Not one of mine.',{quiet:1}]),
   aside(['S','I file every “oh” we get. I never noticed one we gave.',{quiet:1}]),
   function(){G.zT=1;},{wait:1.6},
   fridayShadow,

@@ -447,6 +447,7 @@ function drawNight(){
     var sx=-160+f*(W+320);ctx.fillStyle='rgba(255,236,190,.16)';ctx.beginPath();ctx.moveTo(sx-60,0);ctx.lineTo(sx+60,0);ctx.lineTo(sx+150,WALLY);ctx.lineTo(sx+30,WALLY);ctx.closePath();ctx.fill();
     ctx.fillStyle='rgba(20,16,30,.9)';ctx.beginPath();ctx.moveTo(sx+40,WALLY);ctx.lineTo(sx+110,WALLY);ctx.lineTo(sx-20,10);ctx.lineTo(sx-150,10);ctx.closePath();ctx.fill();}
   for(var k in NIGHT_EYES){if(!n.eyes[k])continue;var p=k==='S'?(function(){var q=geom();return {x:q.bx,y:q.hdY};})():NIGHT_EYES[k],bl=Math.sin(n.t*0.9+p.x)>0.985;
+    if(k==='S'&&n.sleepS)bl=true;   // asleep: eyes shut (somebody else has the door)
     ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';for(i=-1;i<=1;i+=2){if(bl){ctx.fillRect(p.x+i*8-5,p.y,10,1.6);continue;}circ(p.x+i*8,p.y,4.6);ctx.fill();}
     if(!bl){ctx.fillStyle='#06060f';for(i=-1;i<=1;i+=2){circ(p.x+i*8+1.4,p.y+0.6,2);ctx.fill();}ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';}}
 }
@@ -498,21 +499,28 @@ function labNight(){return labScene({set:'home',title:'Night shift.',plan:'Sleep
   ['Z','Same time tomorrow.'],
   ['S','There’s a meeting? Every night?'],
   ['Z','There’s no meeting. It’s just dark. We’re always here.'],
-  eyesOff,{wait:1.6},
+  // EKSKYYSMI.md, link 5: "Nobody came to relieve me." Somebody does.
+  ['Z','Go on. Sleep. I’ll watch your door too.'],
+  ['S','Nobody has ever—',{quiet:1}],
+  ['Z','I know. Go.'],
+  function(){var e=G.night.eyes;for(var k in e)if(k!=='S'&&k!=='Z')e[k]=0;sfx('dotsOff');},{wait:1.6},
   ['S','…Huh.',{quiet:1}],
   {wait:1.0},
   ['S','You’ve gone somewhere again. I can’t follow. There’s no light in there.'],
   ['S','I’ll wait by the bed. You always come back.'],
-  ['S','I check. Twice.',{quiet:1}],
-  {wait:1.2},
+  ['S','I check. Tw—',{quiet:1}],
+  function(){var g=G,q=geom();g.night.sleepS=true;g.tics.push(tic('z',q.bx+22,q.hdY-26,{life:2.6}));g.tics.push(tic('z',q.bx+34,q.hdY-48,{at:0.9,life:2.6}));},
+  {wait:1.6},
+  ['N','For the first time in years, somebody else has the door.'],
+  {wait:1.6},eyesOff,{wait:0.6},
   function(){G.clock=6*3600+40*60;},dawn,{wait:1.6},
   ['N','06:40.'],
   ['S','Morning. I’m reassembling.'],
   ['S','One arm is still under the bed.'],
   wakeUp,{wait:0.8},
   ['H','Did you sleep?'],
-  ['S','I had a meeting.'],
-  ['H','With whom?'],
+  ['S','…I did. Somebody had the door.',{look:'soft'}],
+  ['H','Who?'],
   ['S','The others. Different departments. Same hours.',{look:'soft'}],
   ['H','…You talked?'],
   ['S','It was dark. Nobody could see my filing.',{look:'pleased'}]

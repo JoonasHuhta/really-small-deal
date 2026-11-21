@@ -14,6 +14,15 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.74.0 (Claude, 21.11.2026): ***The posting* tarinaan ja Ekskyysmin viisi linkkiä.** Uusi hahmodokumentti EKSKYYSMI.md kertoo synnyn, suhteen RSD:hen, symbolit, oppimisjärjestyksen ja linkit.
+- ***The posting* on nyt tarinassa (#19, Joonas: hauska, koskettava, samaistuttava).** Se on osa-aikatyön ensimmäinen ilta, klo 22:47 saman päivän iltana (*Evenings* 21:00 → *The posting* 22:47 → *Night shift* 23:50, jolla on nyt oma kortti ”THAT NIGHT”). Hakuaika päättyy perjantaina, ja perjantai lunastaa valinnan.
+- **Takki = maskaaminen:** keskiviikon kyllä-päivä kuluu takiksi naamioituneena (”Coat on. Nobody rejects a coat.”), ja Sanna kutsuu lautapeleihin takille. Kotona: ”Coat’s off. Nobody’s looking.”
+- **Lintu:** patterilla Ekskyysmi näyttää oman piirustuksensa (linnun) Sannan varjolle: ”…Is that a bird?” ”Do it again.” → ”You showed her the bird.” ”…Nobody laughed.”
+- **Tiistai:** ”It was a Tuesday, you know. The drawing.” – ”I know.” – ”Now it’s also the radiator.”
+- **Vuoronvaihto:** yövuorossa Sannan varjo sanoo ”Go on. Sleep. I’ll watch your door too.”, ja Ekskyysmi nukahtaa kesken lauseen. Sen silmät ovat kiinni, ja Sannan varjon silmät jäävät auki. ”For the first time in years, somebody else has the door.” Aamulla: ”…I did. Somebody had the door.”
+- **Kaksi anteeksipyyntöä:** perjantaina ”That was a real sorry. Not one of mine.” Kuitin viimeinen rivi: *ekskyysmi: finnish for “excuse me”.*
+- Kesto 51:31.
+
 Versio 0.73.0 (Claude, 21.11.2026): **väsynyt Ekskyysmi, kissa näkyviin, äiti, vihreä plussa.** (Joonaksen palaute)
 - **Ekskyysmi väsyy.** Kun mukissa on 1 tai vähemmän, tai kohtaus niin päättää (tiistain yö 03:07, *Rewind*, keskiviikko 23:15–00:19), Ekskyysmille tulevat raskaat luomet ja silmäpussit. Pään vieressä leijuu mumina päivän sanoista: ”…quick chat…”, ”…nine o’clock…”, ”…yes. yes…”, ”…with a full stop…”. Mieli jumittaa omissa sanoissaan. Pelko avaa silmät, ja yhden repliikin ilmeet ohittavat väsymyksen. Koko pysyy tunteena, joten tämä koskee vain kasvoja. Keskiviikkoyönä ihminen sanoo ”You look tired.”, ja Ekskyysmi vastaa: ”I’m not tired. I’m load-bearing.”
 - **Kissa on nyt ymmärrettävä.** Se on piirustuslanka (YEAR 2: ”Showed someone a drawing. Somebody laughed.”), mutta maanantaina sitä ei selitetty eikä kissaa näkynyt. Nyt neljäjalkainen kissa näkyy keltaisella lapulla sohvan yläpuolella. Ekskyysmi sanoo ”Cats have four. Five gets laughed at.” ja ”We have a file on drawings.”, ja punainen YEAR 2 -kortti näkyy ensimmäisen kerran jo maanantaina. Lappu menee laatikkoon. Hiljaisena päivänä sama lappu palaa ja saa viidennen jalan. Illalla lappu on seinällä Ekskyysmin takana (”Move over. You’re on the cat.”), ja Ekskyysmi siirtyy.

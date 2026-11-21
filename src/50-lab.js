@@ -42,7 +42,7 @@ function startLab(id){hotReset();
 // hurts right now; they open after the first day, because Monday teaches the language. Story moments appear once played,
 // so the ending is never spoiled. The full Scenario lab is a development tool: index.html?lab.
 var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}catch(e){return false;}})();
-var EXTRAS=['detail','sometime','reply','voice','posting','footage'];
+var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
 var SITUATION={detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}

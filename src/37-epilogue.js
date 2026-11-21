@@ -219,7 +219,7 @@ function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · THE WHOLE T
   // What it felt like from inside: time, effort and bravery nobody else could see. No diagnosis, no advice: bookkeeping.
   r.push({gap:1},{h:'WHAT IT FELT LIKE'});epiInsideRows().forEach(function(x){r.push(x);});
   r.push({gap:1},{l:'SUBTOTAL',v:'ONE WEEK'},{l:'DISCOUNTS',v:'NONE NEEDED'},{l:'TOTAL',v:'LIVED ONCE'},{gap:1},{h:'Made by Joonas Huhta'},{h:'MoshBitSurfers'},{gap:1},
-    {n:'thank you for coming.'},{n:'no reply needed.'},{n:'(really.)'});
+    {n:'thank you for coming.'},{n:'no reply needed.'},{n:'(really.)'},{gap:1},{n:'ekskyysmi: finnish for “excuse me”.'});
   return r;}
 function epiInsideRows(){
   var g=G,run=(g.run||[]).filter(function(d){return d.label!=='SCENARIO LAB';}),lived=0,cal=run.length,top=null;

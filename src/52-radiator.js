@@ -27,6 +27,13 @@ function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan
   ['S','…I like your radiator.'],
   ['Z','It’s the building’s.'],
   ['S','I KNOW. Yes. The building has excellent taste.'],
+  // EKSKYYSMI.md, link 1: born from a drawing somebody laughed at, it has kept its own art hidden ("Don't tell the office").
+  // Out of topics, it does the only other thing it knows. Nobody laughs.
+  {wait:0.8},set({pose:'puppet',mood:'care'}),{wait:1.6},
+  ['Z','…Is that a bird?'],
+  ['S','It’s a hobby. Shadows are allowed one.',{quiet:1}],
+  ['Z','Do it again.'],
+  {wait:1.4},set({pose:null}),
   {wait:0.9},
   ['A','Kettle’s done!'],
   function(){G.zT=0;}
@@ -37,6 +44,12 @@ function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan
   ['S','She said it with a FULL STOP.'],
   ['H','You told her you like her radiator.'],
   ['S','I panicked. It was the nearest thing.'],
+  ['H','You showed her the bird.'],
+  ['S','…Nobody laughed.',{look:'soft'}],
   ['H','Same time next week?'],
-  ['S','…Tuesday works.',{look:'soft'}]
+  ['S','…Tuesday works.',{look:'soft'}],
+  // link 2: Tuesday is the game's hidden calendar (the drawing, the quick chat, the chair, the radiator). Said once, here.
+  ['S','It was a Tuesday, you know. The drawing.',{quiet:1}],
+  ['H','I know.'],
+  ['S','Now it’s also the radiator.']
  ]);}
