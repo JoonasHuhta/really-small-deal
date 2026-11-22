@@ -692,4 +692,7 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
   assert.ok(!fr.includes("I’ll ask Riitta.']"),'Friday: the free “I’ll ask Riitta” is back');
   assert.ok(fr.includes('Soup? The one with too much dill.')&&fr.includes("['H','Oh, good. That one.']"),'Friday: why lunch with Sanna');
   assert.ok(!fr.includes('I never noticed one we gave'),'Friday: the sorry is explained twice again');}
+ // 14. Every sound the story asks for exists (0.86 added grow, shrink, scribble, flutter and a new glue).
+ {const au=src('10-audio.js'),names=new Set();for(const f of fs4.readdirSync(p4.join(root,'src')))for(const m of src(f).matchAll(/sfx\('([a-zA-Z0-9]+)'\)/g))names.add(m[1]);
+  for(const n of names)assert.ok(au.includes("k==='"+n+"'")||new RegExp('\\b'+n+'\\s*:').test(au.split('function sfx')[0]),'sfx(\''+n+'\') has no sound');}
  console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle, the Fine. thread, epilogue bars, part labels, radiator speakers, phone menu, the appointment.');}

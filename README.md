@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.86.0 (Claude, 22.11.2026): **ääniä pelin sielulle** (Joonas: ”Ekskyysmi on pelin sielu… paisuu tai kutistuu, voisi olla äänitehosteita”).
+- **Ekskyysmi paisuu ja kutistuu kuuluvasti.** Iso koon muutos (vähintään 0,35) kuuluu: paisuessa pehmeä *fwoomp* ylöspäin, kutistuessa ilma pihisee ulos. Rajoitin: korkeintaan kerran 1,5 sekunnissa, ei koskaan osuman (hit) päälle eikä epilogissa, jonka ääni on pelkkä kappale. Noin kerran minuutissa koko pelin aikana.
+- **Mukin korjaus: ta-daa ja hohde.** Ensin kimallus (seitsemän nousevaa korkeaa säveltä), sitten *ta–DAA* (C ja C-duurisointu). Kultaiset saumat syttyvät hetkeksi ja niihin välähtää kaksi tähteä, toinen hieman myöhemmin.
+- **Kynä paperilla:** maanantain kissa ja *#17 Quiet* -kohtauksen viides jalka kuuluvat piirrettäessä.
+- **Varjolintu lepattaa:** *An ordinary evening* (”Is that a bird?”) ja patteri. Patterilla toinen lepatus tulee heti ”Do it again.” -repliikin jälkeen, eli Ekskyysmi tekee sen uudestaan.
+- **Testi:** jokaisella äänellä, jota tarina pyytää, on oltava määritelmä (29 ääntä). Kirjoitusvirhe äänen nimessä kaatuu nyt testiin eikä jää hiljaiseksi.
+
 Versio 0.85.0 (Claude, 22.11.2026): **pieniä korjauksia Joonaksen kuvista.**
 - **Kukaan ei kävele enää takaperin.** Kenkien kärjet piirrettiin aina oikealle, joten vasemmalle kävelevä hahmo näytti kävelevän takaperin. Nyt kärjet seuraavat kasvoja kaikilla hahmoilla. Myös maanantain ulkoversiossa poistuva ihminen katsoo kulkusuuntaansa.
 - **Kukaan ei kävele pöydän päältä.** Taukotilan lamppupöytä piirrettiin ihmisen alle, vaikka sen jalat ovat lähempänä katsojaa. Nyt ohi kulkeva menee pöydän taakse.

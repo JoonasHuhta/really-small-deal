@@ -143,7 +143,14 @@ function sfx(k){if(G&&G.epi)return;   // the epilogue is the song alone: no effe
   else if(k==='crack'){noise(t,0.09,0.32,'highpass',3200,0.7);tone(2300,t,0.05,'square',0.03,900);}
   else if(k==='shatter'){duckMusic();tone(62,t,0.55,'sine',0.32,30);noise(t,0.8,0.5,'bandpass',2600,0.8);noise(t+0.05,0.4,0.25,'lowpass',700,0.8);
     for(var si=0;si<10;si++)tone(2300+((si*577)%1900),t+0.03+si*0.04,0.09,'triangle',0.035,1700);}
-  else if(k==='glue'){tone(523,t,0.45,'sine',0.045);tone(784,t+0.22,0.55,'sine',0.04);tone(1046,t+0.45,0.6,'sine',0.03);}
+  else if(k==='glue'){   // 0.86 (Joonas: "a ta-daa or a shimmer"): the mug is mended. A run of glints, then ta–DAA.
+    var gl=[1568,1760,2093,2349,2637,3136,3520];for(var gi=0;gi<gl.length;gi++)tone(gl[gi],t+gi*0.035,0.2,'sine',0.017);
+    tone(523,t+0.32,0.13,'triangle',0.05);tone(659,t+0.47,0.75,'sine',0.045);tone(784,t+0.47,0.75,'sine',0.04);tone(1046,t+0.47,0.85,'sine',0.03);}
+  // 0.86 (Joonas: "Ekskyysmi is the soul of the game"): it swells with a soft fwoomp and lets the air out when it shrinks
+  else if(k==='grow'){tone(105,t,0.34,'sine',0.075,190);tone(210,t+0.02,0.3,'triangle',0.022,370);noise(t,0.26,0.035,'lowpass',520,0.7);}
+  else if(k==='shrink'){tone(250,t,0.38,'sine',0.05,92);noise(t,0.36,0.06,'bandpass',1500,1.4);}
+  else if(k==='scribble'){for(var sc=0;sc<4;sc++)noise(t+sc*0.1,0.07+(sc%2)*0.03,0.11,'bandpass',3000+sc*350,2.5);}   // a pen on a sticky note
+  else if(k==='flutter'){for(var fu=0;fu<6;fu++){noise(t+fu*0.075,0.05,0.1,'lowpass',1150-fu*45,0.8);tone(640+fu*45,t+fu*0.075,0.035,'sine',0.012);}}   // a hand-shadow bird
   else if(k==='step'||k==='step2'){var sf=k==='step'?1:0.9;tone(105*sf,t,0.08,'sine',0.045,58*sf);tone(1500*sf,t,0.014,'triangle',0.005,900);}   // soft shoes on a hard floor, left and right a little different
   else if(k==='pop'){tone(380,t,0.05,'sine',0.035,720);}
   else if(k==='popS'){tone(170,t,0.07,'sine',0.05,310);}
@@ -438,7 +445,10 @@ function holdRing(){
 function set(o){return function(){
   var g=G,M=g.morko,Hm=g.human;
   if(o.clr){g.lines=[];g.band=null;}
-  if(o.s!=null)M.sT=o.s;if(o.mood)M.mood=o.mood;if('pose' in o)M.pose=o.pose;if(o.st)M.st=o.st;
+  if(o.s!=null){var ds=o.s-M.sT;   // 0.86: a big change in size is heard; at most once a second and a half, never on top of a hit, never in the epilogue (its song)
+    if(Math.abs(ds)>=0.35&&!g.epi&&g.time-(g.sizeSfxT==null?-9:g.sizeSfxT)>1.5&&g.time-(g.hitT==null?-9:g.hitT)>0.8){g.sizeSfxT=g.time;sfx(ds>0?'grow':'shrink');}
+    M.sT=o.s;}
+  if(o.mood)M.mood=o.mood;if('pose' in o)M.pose=o.pose;if(o.st)M.st=o.st;
   if(o.face)Hm.face=o.face;if('back' in o)Hm.back=o.back;if(o.flinch)Hm.flinch=o.flinch;if(o.hx!=null)Hm.xT=o.hx;
   if(o.anx!=null)g.anx=o.anx;if(o.ax!=null)g.axT=o.ax;if(o.bx!=null)g.bxT=o.bx;if(o.near)g.axT=Hm.x+92;
   if(o.aFace)g.aFace=o.aFace;if(o.bFace)g.bFace=o.bFace;if('aWave' in o)g.aWave=o.aWave;
@@ -448,7 +458,7 @@ function set(o){return function(){
 };}
 function hit(k,from){return function(){
   var g=G;g.lines=[];g.band=null;g.cur=null;g.flash=k;g.human.flinch=1;g.human.face='stiff';
-  g.morko.sT=1.45+0.55*k;g.morko.mood='scared';g.anx=k;g.pulse=k;g.shake=RM?0:k;g.gazeFrom=from==='A'?'after':(from||'A');g.gazeT=from==='P'?0:0.85*k;sfx('hit');g.darkT=0.95*k;
+  g.hitT=g.time;g.morko.sT=1.45+0.55*k;g.morko.mood='scared';g.anx=k;g.pulse=k;g.shake=RM?0:k;g.gazeFrom=from==='A'?'after':(from||'A');g.gazeT=from==='P'?0:0.85*k;sfx('hit');g.darkT=0.95*k;
   g.camRate=null;if(!hitFrame(k,from)){g.cz=1.05+0.06*k;g.cx=W/2+10;g.cy=258;}g.human.blush=Math.max(g.human.blush,k);
   trigger();addLived('jolts to the chest',Math.round(LIVED.hit*k));
 };}
@@ -1005,7 +1015,7 @@ function scWalk(){
     // Joonas 21.11.: the cat was not understandable. It is the drawing thread: Ekskyysmi started its job when somebody
     // laughed at a drawing (YEAR 2). So the cat is on screen, the fifth leg is the human's own odd idea, and the file is named.
     ['N','Inside. Toast.'],
-    function(){G.note={legs:4,a:0,aT:1,off:0};},
+    function(){G.note={legs:4,a:0,aT:1,off:0};sfx('scribble');},
     ['N','Then a pen. A cat on a sticky note. Four legs so far.'],
     ['H','It needs one more leg.'],
     ['S','Cats have four. Five gets laughed at.',{look:'squint'}],
@@ -2002,8 +2012,8 @@ function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.show
   m.shards=[];for(var i=0;i<11;i++)m.shards.push({x:0,y:0,vx:(i%2?1:-1)*(60+((i*53)%160)),vy:-160-((i*71)%170),r:((i*37)%10)/10*6,va:((i%3)-1)*9,t:0});
   G.shake=RM?0:1;G.pulse=1;sfx('crack');sfx('shatter');};}
 // Glued with gold, because it was the only glue in the drawer. The seams stay for the rest of the game.
-function mugMend(v){return function(){var m=G.mug;if(!m)return;m.broken=false;m.mended=true;G.mugMended=true;m.shards=null;m.v=v||1;m.shown=0;m.seen=0;m.last={text:'glued. gold seams.',t:0,minus:false};sfx('glue');};}
-function stepMug(dt){var m=G.mug;if(!m)return;m.t+=dt;m.seen+=dt;
+function mugMend(v){return function(){var m=G.mug;if(!m)return;m.broken=false;m.mended=true;G.mugMended=true;m.shards=null;m.v=v||1;m.shown=0;m.seen=0;m.last={text:'glued. gold seams.',t:0,minus:false};m.gleam=0;sfx('glue');};}   // 0.86: the gold catches the light once
+function stepMug(dt){var m=G.mug;if(!m)return;m.t+=dt;m.seen+=dt;if(m.gleam!=null){m.gleam+=dt;if(m.gleam>1.8)m.gleam=null;}
   if(m.shown<m.v)m.shown=Math.min(m.v,m.shown+dt*1.6);
   m.slosh=Math.max(0,m.slosh-dt*0.9);if(m.last){m.last.t+=dt;if(m.last.t>3.4)m.last=null;}
   if(m.ghost){m.ghost.t+=dt;if(m.ghost.t>1.3)m.ghost=null;}
@@ -2037,6 +2047,7 @@ function drawCatNote(){var g=G,n=g.note;if(!n||g.set!=='home'||n.a<0.02)return;
   ctx.beginPath();ctx.moveTo(-13,2);ctx.quadraticCurveTo(-19,-4,-15,-10);ctx.stroke();      // tail
   var k=n.legs||4;for(var i=0;i<k;i++){var lx=-10+i*(17/(k-1));line(lx,7.5,lx-0.6,14);}     // legs: four, then five
   ctx.restore();}
+function mugGlint(cx,cy,r){if(r<0.5)return;ctx.beginPath();ctx.moveTo(cx,cy-r);ctx.quadraticCurveTo(cx,cy,cx+r,cy);ctx.quadraticCurveTo(cx,cy,cx,cy+r);ctx.quadraticCurveTo(cx,cy,cx-r,cy);ctx.quadraticCurveTo(cx,cy,cx,cy-r);ctx.fill();}
 function drawMug(){
   var m=G.mug;if(!m||G.out||G.epi||m.vis<0.02)return;
   var x=W-64,y=COMPACT?156:116,w=40,h=44,lvl=clamp(m.shown/MUGMAX,0,1),wob=RM?0:Math.sin(m.t*9)*3*m.slosh,i;
@@ -2053,7 +2064,10 @@ function drawMug(){
     ctx.fillStyle=lvl<0.25?'#7a3b2a':'#6b4428';ctx.beginPath();ctx.moveTo(x,top+wob);ctx.quadraticCurveTo(x+w/2,top-wob,x+w,top+wob);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.closePath();ctx.fill();
     ctx.restore();
     if(m.mended){ctx.strokeStyle='#d9a93a';ctx.lineWidth=2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x+8,y);ctx.lineTo(x+14,y+12);ctx.lineTo(x+11,y+22);ctx.lineTo(x+19,y+33);ctx.lineTo(x+16,y+h);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(x+w,y+18);ctx.lineTo(x+28,y+24);ctx.lineTo(x+31,y+30);ctx.stroke();}   // kintsugi
+      ctx.beginPath();ctx.moveTo(x+w,y+18);ctx.lineTo(x+28,y+24);ctx.lineTo(x+31,y+30);ctx.stroke();   // kintsugi
+      if(m.gleam!=null){var gk=m.gleam,ga=Math.sin(Math.PI*clamp(gk/1.8,0,1));   // 0.86: the seams light up, and two glints, the second a beat later
+        ctx.strokeStyle='rgba(255,226,140,'+(0.9*ga)+')';ctx.lineWidth=3.5;ctx.beginPath();ctx.moveTo(x+8,y);ctx.lineTo(x+14,y+12);ctx.lineTo(x+11,y+22);ctx.lineTo(x+19,y+33);ctx.lineTo(x+16,y+h);ctx.stroke();
+        ctx.fillStyle='rgba(255,240,190,'+ga+')';mugGlint(x+14,y+12,12*ga);var gb=Math.sin(Math.PI*clamp((gk-0.3)/1.5,0,1));ctx.fillStyle='rgba(255,240,190,'+gb+')';mugGlint(x+31,y+30,9*gb);}}
     if(lvl>0.55&&!RM){ctx.strokeStyle='rgba(241,235,221,.45)';ctx.lineWidth=2;for(i=0;i<2;i++){var sx=x+12+i*14,ph=m.t*2+i;ctx.beginPath();ctx.moveTo(sx,y-4);ctx.quadraticCurveTo(sx+Math.sin(ph)*5,y-12,sx,y-20);ctx.stroke();}}
   }else{   // broken: the base and two halves, coffee on the floor
     ctx.fillStyle='#f1ebdd';ctx.beginPath();ctx.moveTo(x,y+h*0.45);ctx.lineTo(x+12,y+h*0.6);ctx.lineTo(x+7,y+h*0.75);ctx.lineTo(x+18,y+h*0.85);ctx.lineTo(x+w-6,y+h*0.62);ctx.lineTo(x+w,y+h*0.7);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.closePath();ctx.fill();
@@ -2969,7 +2983,7 @@ function labQuiet(){
   ['H','Pair.'],
   function(){G.note={legs:4,a:0,aT:1,off:0};},
   ['N','At home, the cat from the drawer gets its fifth leg.'],
-  function(){G.note.legs=5;},
+  function(){G.note.legs=5;sfx('scribble');},   // 0.86: the fifth leg is heard being drawn
   ['H','Five. Excellent. Very stable cat.'],
   function(){G.quietDrawing=true;},
   ['H','For the record.'],
@@ -3747,7 +3761,7 @@ function labEvening(){return labScene({set:'home',title:'An ordinary evening',pl
   set({mood:'calm',s:1.15}),
   addTic('—te. ♪',440,FEETY-250,{life:2.4}),{wait:1.6},
   ['S','Thank you. I couldn’t have carried half a word all evening.'],
-  set({pose:'puppet'}),{wait:1.4},
+  set({pose:'puppet'}),function(){sfx('flutter');},{wait:1.4},
   ['H','Is that a bird?'],
   aside(['S','No.']),
   ['H','It’s flapping.'],
@@ -4030,10 +4044,11 @@ function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan
   ['S','I KNOW. Yes. The building has excellent taste.'],
   // EKSKYYSMI.md, link 1: born from a drawing somebody laughed at, it has kept its own art hidden ("Don't tell the office").
   // Out of topics, it does the only other thing it knows. Nobody laughs.
-  {wait:0.8},set({pose:'puppet',mood:'care'}),{wait:1.6},
+  {wait:0.8},set({pose:'puppet',mood:'care'}),function(){sfx('flutter');},{wait:1.6},
   ['Z','…Is that a bird?'],
   ['S','It’s a hobby. Shadows are allowed one.',{quiet:1}],
   ['Z','Do it again.'],
+  function(){sfx('flutter');},   // 0.86: and it does
   {wait:1.4},set({pose:null}),
   {wait:0.9},
   ['A','Kettle’s done!'],

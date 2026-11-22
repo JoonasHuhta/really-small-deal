@@ -232,7 +232,7 @@ function scWalk(){
     // Joonas 21.11.: the cat was not understandable. It is the drawing thread: Ekskyysmi started its job when somebody
     // laughed at a drawing (YEAR 2). So the cat is on screen, the fifth leg is the human's own odd idea, and the file is named.
     ['N','Inside. Toast.'],
-    function(){G.note={legs:4,a:0,aT:1,off:0};},
+    function(){G.note={legs:4,a:0,aT:1,off:0};sfx('scribble');},
     ['N','Then a pen. A cat on a sticky note. Four legs so far.'],
     ['H','It needs one more leg.'],
     ['S','Cats have four. Five gets laughed at.',{look:'squint'}],

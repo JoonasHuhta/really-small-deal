@@ -112,7 +112,14 @@ function sfx(k){if(G&&G.epi)return;   // the epilogue is the song alone: no effe
   else if(k==='crack'){noise(t,0.09,0.32,'highpass',3200,0.7);tone(2300,t,0.05,'square',0.03,900);}
   else if(k==='shatter'){duckMusic();tone(62,t,0.55,'sine',0.32,30);noise(t,0.8,0.5,'bandpass',2600,0.8);noise(t+0.05,0.4,0.25,'lowpass',700,0.8);
     for(var si=0;si<10;si++)tone(2300+((si*577)%1900),t+0.03+si*0.04,0.09,'triangle',0.035,1700);}
-  else if(k==='glue'){tone(523,t,0.45,'sine',0.045);tone(784,t+0.22,0.55,'sine',0.04);tone(1046,t+0.45,0.6,'sine',0.03);}
+  else if(k==='glue'){   // 0.86 (Joonas: "a ta-daa or a shimmer"): the mug is mended. A run of glints, then ta–DAA.
+    var gl=[1568,1760,2093,2349,2637,3136,3520];for(var gi=0;gi<gl.length;gi++)tone(gl[gi],t+gi*0.035,0.2,'sine',0.017);
+    tone(523,t+0.32,0.13,'triangle',0.05);tone(659,t+0.47,0.75,'sine',0.045);tone(784,t+0.47,0.75,'sine',0.04);tone(1046,t+0.47,0.85,'sine',0.03);}
+  // 0.86 (Joonas: "Ekskyysmi is the soul of the game"): it swells with a soft fwoomp and lets the air out when it shrinks
+  else if(k==='grow'){tone(105,t,0.34,'sine',0.075,190);tone(210,t+0.02,0.3,'triangle',0.022,370);noise(t,0.26,0.035,'lowpass',520,0.7);}
+  else if(k==='shrink'){tone(250,t,0.38,'sine',0.05,92);noise(t,0.36,0.06,'bandpass',1500,1.4);}
+  else if(k==='scribble'){for(var sc=0;sc<4;sc++)noise(t+sc*0.1,0.07+(sc%2)*0.03,0.11,'bandpass',3000+sc*350,2.5);}   // a pen on a sticky note
+  else if(k==='flutter'){for(var fu=0;fu<6;fu++){noise(t+fu*0.075,0.05,0.1,'lowpass',1150-fu*45,0.8);tone(640+fu*45,t+fu*0.075,0.035,'sine',0.012);}}   // a hand-shadow bird
   else if(k==='step'||k==='step2'){var sf=k==='step'?1:0.9;tone(105*sf,t,0.08,'sine',0.045,58*sf);tone(1500*sf,t,0.014,'triangle',0.005,900);}   // soft shoes on a hard floor, left and right a little different
   else if(k==='pop'){tone(380,t,0.05,'sine',0.035,720);}
   else if(k==='popS'){tone(170,t,0.07,'sine',0.05,310);}

@@ -267,7 +267,10 @@ function holdRing(){
 function set(o){return function(){
   var g=G,M=g.morko,Hm=g.human;
   if(o.clr){g.lines=[];g.band=null;}
-  if(o.s!=null)M.sT=o.s;if(o.mood)M.mood=o.mood;if('pose' in o)M.pose=o.pose;if(o.st)M.st=o.st;
+  if(o.s!=null){var ds=o.s-M.sT;   // 0.86: a big change in size is heard; at most once a second and a half, never on top of a hit, never in the epilogue (its song)
+    if(Math.abs(ds)>=0.35&&!g.epi&&g.time-(g.sizeSfxT==null?-9:g.sizeSfxT)>1.5&&g.time-(g.hitT==null?-9:g.hitT)>0.8){g.sizeSfxT=g.time;sfx(ds>0?'grow':'shrink');}
+    M.sT=o.s;}
+  if(o.mood)M.mood=o.mood;if('pose' in o)M.pose=o.pose;if(o.st)M.st=o.st;
   if(o.face)Hm.face=o.face;if('back' in o)Hm.back=o.back;if(o.flinch)Hm.flinch=o.flinch;if(o.hx!=null)Hm.xT=o.hx;
   if(o.anx!=null)g.anx=o.anx;if(o.ax!=null)g.axT=o.ax;if(o.bx!=null)g.bxT=o.bx;if(o.near)g.axT=Hm.x+92;
   if(o.aFace)g.aFace=o.aFace;if(o.bFace)g.bFace=o.bFace;if('aWave' in o)g.aWave=o.aWave;
@@ -277,7 +280,7 @@ function set(o){return function(){
 };}
 function hit(k,from){return function(){
   var g=G;g.lines=[];g.band=null;g.cur=null;g.flash=k;g.human.flinch=1;g.human.face='stiff';
-  g.morko.sT=1.45+0.55*k;g.morko.mood='scared';g.anx=k;g.pulse=k;g.shake=RM?0:k;g.gazeFrom=from==='A'?'after':(from||'A');g.gazeT=from==='P'?0:0.85*k;sfx('hit');g.darkT=0.95*k;
+  g.hitT=g.time;g.morko.sT=1.45+0.55*k;g.morko.mood='scared';g.anx=k;g.pulse=k;g.shake=RM?0:k;g.gazeFrom=from==='A'?'after':(from||'A');g.gazeT=from==='P'?0:0.85*k;sfx('hit');g.darkT=0.95*k;
   g.camRate=null;if(!hitFrame(k,from)){g.cz=1.05+0.06*k;g.cx=W/2+10;g.cy=258;}g.human.blush=Math.max(g.human.blush,k);
   trigger();addLived('jolts to the chest',Math.round(LIVED.hit*k));
 };}

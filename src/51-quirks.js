@@ -172,7 +172,7 @@ function labEvening(){return labScene({set:'home',title:'An ordinary evening',pl
   set({mood:'calm',s:1.15}),
   addTic('—te. ♪',440,FEETY-250,{life:2.4}),{wait:1.6},
   ['S','Thank you. I couldn’t have carried half a word all evening.'],
-  set({pose:'puppet'}),{wait:1.4},
+  set({pose:'puppet'}),function(){sfx('flutter');},{wait:1.4},
   ['H','Is that a bird?'],
   aside(['S','No.']),
   ['H','It’s flapping.'],

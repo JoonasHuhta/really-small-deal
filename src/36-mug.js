@@ -19,8 +19,8 @@ function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.show
   m.shards=[];for(var i=0;i<11;i++)m.shards.push({x:0,y:0,vx:(i%2?1:-1)*(60+((i*53)%160)),vy:-160-((i*71)%170),r:((i*37)%10)/10*6,va:((i%3)-1)*9,t:0});
   G.shake=RM?0:1;G.pulse=1;sfx('crack');sfx('shatter');};}
 // Glued with gold, because it was the only glue in the drawer. The seams stay for the rest of the game.
-function mugMend(v){return function(){var m=G.mug;if(!m)return;m.broken=false;m.mended=true;G.mugMended=true;m.shards=null;m.v=v||1;m.shown=0;m.seen=0;m.last={text:'glued. gold seams.',t:0,minus:false};sfx('glue');};}
-function stepMug(dt){var m=G.mug;if(!m)return;m.t+=dt;m.seen+=dt;
+function mugMend(v){return function(){var m=G.mug;if(!m)return;m.broken=false;m.mended=true;G.mugMended=true;m.shards=null;m.v=v||1;m.shown=0;m.seen=0;m.last={text:'glued. gold seams.',t:0,minus:false};m.gleam=0;sfx('glue');};}   // 0.86: the gold catches the light once
+function stepMug(dt){var m=G.mug;if(!m)return;m.t+=dt;m.seen+=dt;if(m.gleam!=null){m.gleam+=dt;if(m.gleam>1.8)m.gleam=null;}
   if(m.shown<m.v)m.shown=Math.min(m.v,m.shown+dt*1.6);
   m.slosh=Math.max(0,m.slosh-dt*0.9);if(m.last){m.last.t+=dt;if(m.last.t>3.4)m.last=null;}
   if(m.ghost){m.ghost.t+=dt;if(m.ghost.t>1.3)m.ghost=null;}
@@ -54,6 +54,7 @@ function drawCatNote(){var g=G,n=g.note;if(!n||g.set!=='home'||n.a<0.02)return;
   ctx.beginPath();ctx.moveTo(-13,2);ctx.quadraticCurveTo(-19,-4,-15,-10);ctx.stroke();      // tail
   var k=n.legs||4;for(var i=0;i<k;i++){var lx=-10+i*(17/(k-1));line(lx,7.5,lx-0.6,14);}     // legs: four, then five
   ctx.restore();}
+function mugGlint(cx,cy,r){if(r<0.5)return;ctx.beginPath();ctx.moveTo(cx,cy-r);ctx.quadraticCurveTo(cx,cy,cx+r,cy);ctx.quadraticCurveTo(cx,cy,cx,cy+r);ctx.quadraticCurveTo(cx,cy,cx-r,cy);ctx.quadraticCurveTo(cx,cy,cx,cy-r);ctx.fill();}
 function drawMug(){
   var m=G.mug;if(!m||G.out||G.epi||m.vis<0.02)return;
   var x=W-64,y=COMPACT?156:116,w=40,h=44,lvl=clamp(m.shown/MUGMAX,0,1),wob=RM?0:Math.sin(m.t*9)*3*m.slosh,i;
@@ -70,7 +71,10 @@ function drawMug(){
     ctx.fillStyle=lvl<0.25?'#7a3b2a':'#6b4428';ctx.beginPath();ctx.moveTo(x,top+wob);ctx.quadraticCurveTo(x+w/2,top-wob,x+w,top+wob);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.closePath();ctx.fill();
     ctx.restore();
     if(m.mended){ctx.strokeStyle='#d9a93a';ctx.lineWidth=2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x+8,y);ctx.lineTo(x+14,y+12);ctx.lineTo(x+11,y+22);ctx.lineTo(x+19,y+33);ctx.lineTo(x+16,y+h);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(x+w,y+18);ctx.lineTo(x+28,y+24);ctx.lineTo(x+31,y+30);ctx.stroke();}   // kintsugi
+      ctx.beginPath();ctx.moveTo(x+w,y+18);ctx.lineTo(x+28,y+24);ctx.lineTo(x+31,y+30);ctx.stroke();   // kintsugi
+      if(m.gleam!=null){var gk=m.gleam,ga=Math.sin(Math.PI*clamp(gk/1.8,0,1));   // 0.86: the seams light up, and two glints, the second a beat later
+        ctx.strokeStyle='rgba(255,226,140,'+(0.9*ga)+')';ctx.lineWidth=3.5;ctx.beginPath();ctx.moveTo(x+8,y);ctx.lineTo(x+14,y+12);ctx.lineTo(x+11,y+22);ctx.lineTo(x+19,y+33);ctx.lineTo(x+16,y+h);ctx.stroke();
+        ctx.fillStyle='rgba(255,240,190,'+ga+')';mugGlint(x+14,y+12,12*ga);var gb=Math.sin(Math.PI*clamp((gk-0.3)/1.5,0,1));ctx.fillStyle='rgba(255,240,190,'+gb+')';mugGlint(x+31,y+30,9*gb);}}
     if(lvl>0.55&&!RM){ctx.strokeStyle='rgba(241,235,221,.45)';ctx.lineWidth=2;for(i=0;i<2;i++){var sx=x+12+i*14,ph=m.t*2+i;ctx.beginPath();ctx.moveTo(sx,y-4);ctx.quadraticCurveTo(sx+Math.sin(ph)*5,y-12,sx,y-20);ctx.stroke();}}
   }else{   // broken: the base and two halves, coffee on the floor
     ctx.fillStyle='#f1ebdd';ctx.beginPath();ctx.moveTo(x,y+h*0.45);ctx.lineTo(x+12,y+h*0.6);ctx.lineTo(x+7,y+h*0.75);ctx.lineTo(x+18,y+h*0.85);ctx.lineTo(x+w-6,y+h*0.62);ctx.lineTo(x+w,y+h*0.7);ctx.lineTo(x+w,y+h);ctx.lineTo(x,y+h);ctx.closePath();ctx.fill();
