@@ -12,7 +12,7 @@ function scene(o){return function(){
   if(o.day!==undefined)g.dayTag=o.day;else if(o.clock!=null&&g.clock!=null&&o.clock<g.clock-3600)g.dayTag=nextDay(g.dayTag);   // past midnight: the next day
   g.stampT=0;
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
-  g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
+  g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.rxT=null;g.rPhone=false;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
@@ -31,15 +31,17 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   mugOn(4),
   tuesdayOpening,
   // 0.80 (TARINAKARTTA §6, open hole 2): Riitta is seen before she is a message. Busy, not cruel: eleven things, none of them you.
-  function(){var g=G;g.cowR=true;g.rx=860;},
+  // 0.88 (Joonas: "she appears for a moment and then calls from further away?"): she stays in the picture with her phone, so the
+  // message visibly comes from three metres away, and walks off after Ekskyysmi has noticed it.
+  function(){var g=G;g.cowR=true;g.rx=860;g.rxT=null;g.rPhone=true;},
   ['N','Riitta, at the coffee machine. Eleven things on her mind. All of them today.'],
-  function(){G.cowR=false;},
   {wait:0.6},
   ['P','Riitta: “Quick chat tomorrow at 9?”'],
   hit(0.9,'P'),drain(2,'“quick chat?”'),set({sweat:0.7}),{wait:1.2},
   ['S','“Quick.”',{look:'squint'}],
   ['S','Nobody says “quick” about good news. Good news takes its time. Good news has cake.'],
   ['S','And she was RIGHT THERE. Three metres away. She chose to WRITE it.'],
+  function(){var g=G;g.rPhone=false;g.rxT=1080;},
   ['H','It’s probably nothing.'],
   ['S','It’s five words and a question mark. It’s EVERYTHING.'],
   {choice:[

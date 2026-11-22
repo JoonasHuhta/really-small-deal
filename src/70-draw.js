@@ -193,7 +193,7 @@ function person(x,o){
 }
 var SANNA={body:'#62887f',hair:'#463b38'},MIKA={body:'#ac8277',hair:'#895e41'};
 function drawHuman(extra){
-  var Hm=G.human,o={body:'#c98f2e',hair:'#4a3b32',facing:Hm.facing||1,cup:!G.cupLeft&&!G.w&&!G.noCup,phone:!G.w&&!Hm.gone&&((G.phoneN||0)>0||WAIT==='fight'||!!(G.draft&&!G.draft.sent)),buzz:G.buzz||0,sip:Hm.sip||0,flinch:Hm.flinch,face:Hm.face,back:Hm.back,sweat:Hm.sweat,blush:Hm.blush,grin:Hm.grin,puddle:Hm.puddle,reach:Hm.reach||null,wet:!!Hm.wet};
+  var Hm=G.human,o={body:'#c98f2e',hair:'#4a3b32',facing:Hm.facing||1,cup:!G.cupLeft&&!G.w&&!G.noCup,phone:!Hm.gone&&((G.phoneN||0)>0||WAIT==='fight'||!!(G.draft&&!G.draft.sent)),buzz:G.buzz||0,sip:Hm.sip||0,flinch:Hm.flinch,face:Hm.face,back:Hm.back,sweat:Hm.sweat,blush:Hm.blush,grin:Hm.grin,puddle:Hm.puddle,reach:Hm.reach||null,wet:!!Hm.wet};
   if(o.face==='down')o.down=true;
   if(!G.w&&Math.abs(Hm.x-Hm.xT)>1){o.walk=true;if(!Hm.back)o.facing=Hm.xT>Hm.x?1:-1;}   // nobody walks backwards
   else if(G.w&&G.walking&&!Hm.back)o.facing=G.w.xT>G.w.x?1:-1;                          // not on the way home either
@@ -214,7 +214,7 @@ function drawCoworkers(alpha){
   var lf=g.lensView?(g.lens&&g.lens.honest?'smile':'frown'):undefined;   // the glass makes faces worse; an honest glass (epilogue) shows the smile that was there
   if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:Math.abs(g.ax-g.axT)>1?(g.axT>g.ax?1:-1):g.aFace,face:lf,wave:g.aWave,alpha:alpha,walk:Math.abs(g.ax-g.axT)>1,sweat:g.aSweat});
   if(g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:Math.abs(g.bx2-g.bxT)>1?(g.bxT>g.bx2?1:-1):g.bFace,face:lf,alpha:alpha,cup:Math.abs(g.bx2-g.bxT)<1&&g.bxT<1000,walk:Math.abs(g.bx2-g.bxT)>1});
-  if(g.cowR)person(g.rx,{body:RIITTA.body,hair:RIITTA.hair,facing:-1,alpha:alpha,brow:g.rBrow});
+  if(g.cowR&&g.rx<W+60){var rMove=g.rxT!=null&&Math.abs(g.rx-g.rxT)>1;person(g.rx,{body:RIITTA.body,hair:RIITTA.hair,facing:rMove?(g.rxT>g.rx?1:-1):-1,alpha:alpha,brow:g.rBrow,walk:rMove,phone:!!g.rPhone&&!rMove});}   // 0.88: Riitta can walk, and hold a phone
 }
 
 /* ================= drawing: the shadow ================= */

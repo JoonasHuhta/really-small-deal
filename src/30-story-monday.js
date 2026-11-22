@@ -171,9 +171,9 @@ function realObs(){
   if(g.leak==='exit')return [['S','We left. I don’t know what happened after that.'],['H','I still felt left out.'],['S','I’d like to fill in the missing bits.'],['H','Let’s call someone first.'],['P','You: “Rough day. Call?”'],['P','Reply: “Calling.”'],set({pose:'comfort'}),['S','Can I come?'],['H','You’re attached to my feet.']];
   return [['S','They said: no need to ask the others. That happened. I’m not doing a bit.'],['H','I know.'],['P','You: “Rough day. Call?”'],['P','Reply: “Calling.”'],['S','…Who is that?'],['H','Someone who asks.'],['S','I’d like to vet them.'],['H','You’ve met. You hid.']];
 }
-function walkMenu(done){return function(){
-  var g=G,o=[];
-  if(!done.oh)o.push({t:'Review the “oh”. Again.',m:'worst',f:function(){done.oh=1;g.w.speed=0;g.morko.sT=1.7;g.morko.mood='stern';},then:function(){return [
+// The review of the "oh" (Joonas 22.11.: "it's so funny, everybody should get it"). Chosen on the walk, or, if not, it happens anyway at the door:
+// you cannot walk away from a replay.
+function ohReview(g){return [
     ['S','Exhibit A. I’ve had it restored.'],
     replay(1),['A','oh, hi.'],['S','Note the comma.'],['H','People don’t say commas.'],
     replay(2),['A','ohhh. …hi.'],['S','Enhanced. Look at the eyebrows.'],['H','You drew those.'],['S','I RESTORED those.'],
@@ -184,7 +184,10 @@ function walkMenu(done){return function(){
    ].concat(outside({title:'THE ORIGINAL TAPE',dur:'duration: 2 seconds',cap:'Sanna said hi. Nobody else was in the room. Literally nobody.',anim:'tape'}),[
     ['S','…It’s shorter than I remember.'],['H','It’s two seconds.'],['S','Mine has an intermission.'],
     function(){g.morko.sT=1;g.morko.mood='calm';g.clock+=8*60;g.w.late+=8;g.w.speed=34;},
-    ['H','That took eight minutes.'],['S','Of a nine-minute walk. Efficient.']]);}});
+    ['H','That took eight minutes.'],['S','Of a nine-minute walk. Efficient.']]);}
+function walkMenu(done){return function(){
+  var g=G,o=[];
+  if(!done.oh)o.push({t:'Review the “oh”. Again.',m:'worst',f:function(){done.oh=1;g.w.speed=0;g.morko.sT=1.7;g.morko.mood='stern';},then:function(){return ohReview(g);}});
   if(!done.real)o.push({t:'Mention what I actually saw.',m:'stay',f:function(){done.real=1;g.reflected=true;g.morko.mood='care';},then:function(){return realObs().concat([set({mood:'calm',face:'neutral'})]);}});
   if(!done.zone)o.push({t:'Bring up the comfort zone thing.',f:function(){done.zone=1;g.morko.mood='stern';},then:[
     ['H','Mm.'],['S','I’ve done the maths. Today: one break room, two conversations, one lunch decision. Three expeditions. Eero took the lift.'],
@@ -217,6 +220,8 @@ function scWalk(){
     keep('hi'),
     {choice:walkMenu(done)},
     moreWalk,
+    function(){if(done.oh)return [];done.oh=1;var g=G;g.w.speed=0;g.morko.sT=1.7;g.morko.mood='stern';   // 0.88: never skipped
+      return [['S','Wait. Before the door.'],['H','No.'],['S','One look. For the archive.']].concat(ohReview(g));},
     function(){var w=G.w;w.xT=HOMEX;w.speed=Math.max(60,(HOMEX-w.x)/2.6);G.lines=[];},
     {wait:3},
     function(){G.clock=G.w.start+(9+G.w.late)*60;},
@@ -232,14 +237,18 @@ function scWalk(){
     // Joonas 21.11.: the cat was not understandable. It is the drawing thread: Ekskyysmi started its job when somebody
     // laughed at a drawing (YEAR 2). So the cat is on screen, the fifth leg is the human's own odd idea, and the file is named.
     ['N','Inside. Toast.'],
+    // 0.88 (Joonas 22.11.: "why a cat, why now, do they have a cat?"): after a loud day the human draws, small things on sticky notes.
+    // There is no cat; that is why there is a drawing of one. The wall is where you show a drawing; the drawer is where Ekskyysmi files it.
+    ['N','After a loud day, the human draws. Small things, on sticky notes.'],
     function(){G.note={legs:4,a:0,aT:1,off:0};sfx('scribble');},
-    ['N','Then a pen. A cat on a sticky note. Four legs so far.'],
-    ['H','It needs one more leg.'],
-    ['S','Cats have four. Five gets laughed at.',{look:'squint'}],
-    ['H','This one has five.'],
-    ['S','Then it goes in the drawer. We have a file on drawings.',{quiet:1}],
+    ['N','Tonight: a cat. Four legs so far.'],
+    ['S','We don’t have a cat.',{look:'squint'}],
+    ['H','That’s why I draw them.'],
+    ['H','It needs one more leg. And it goes on the wall.'],
+    ['S','Cats have four. Five gets laughed at.'],
+    ['S','It goes in the drawer. We have a file on drawings.',{quiet:1}],
     archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.']]),
-    ['H','…For now.'],function(){closeArchive();G.note.aT=0;G.catStarted=true;},
+    ['H','…Drawer. For now.'],function(){closeArchive();G.note.aT=0;G.catStarted=true;},
     {wait:0.9},
     showEnd
   ];

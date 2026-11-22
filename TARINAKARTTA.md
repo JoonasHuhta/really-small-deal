@@ -2,7 +2,7 @@
 
 **Tämä tiedosto on totuus pelin järjestyksestä ja nimistä.** Kun puhumme kohtauksesta, käytämme tämän kartan numeroa ja kortin otsikkoa, esimerkiksi *#9 An ordinary evening*. Jos järjestys koodissa muuttuu, tämä tiedosto päivitetään samassa muutoksessa. `tests/story.test.cjs` tarkistaa, että alla olevan taulukon järjestys on sama kuin koodin (`src/33-moments.js`, `AFTER`). Jos ne eroavat, build kaatuu.
 
-Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.87.0 (hahmo: EKSKYYSMI.md; ulkopuolinen arvio: Codex/Astra 21.11.) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
+Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.88.0 (hahmo: EKSKYYSMI.md; ulkopuolinen arvio: Codex/Astra 21.11.) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
 
 ---
 
@@ -51,7 +51,7 @@ Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.87.0 (hahmo: EKSKYY
 | # | Kohtaus (kortin otsikko) | Tyyppi | Kortti sanoo | Kello ja paikat (kuvat) | Mitä vie eteenpäin | Kesto | id |
 |---|---|---|---|---|---|---|---|
 | 1 | *Better safe.* | OSAKORTTI | PART ONE · ”A Monday. One small plan.” | – | Avaa Osan 1 | 0:04 | `part1` |
-| 2 | **Monday** – *Oh, hi.* | PÄIVÄ | A MONDAY | 08:51 taukotila (herätys, kahvi, ”oh, hi.”, Eero, lounas) → 16:42 kotimatka → 17:24 koti (paahtoleipä, kissa) → päivän kuitti | **Halu syntyy:** lounas Sannan kanssa. Valhe: ”My job is simple.” **Kissa ja haamu istutetaan:** neljäjalkainen kissa näkyy lapulla sohvan yläpuolella. ”Five gets laughed at.” ”We have a file on drawings.” Punainen kortti YEAR 2 näkyy ensimmäisen kerran. Lappu menee laatikkoon. | 5:34 | `chapter1` |
+| 2 | **Monday** – *Oh, hi.* | PÄIVÄ | A MONDAY | 08:51 taukotila (herätys, kahvi, ”oh, hi.”, Eero, lounas) → 16:42 kotimatka → 17:24 koti (paahtoleipä, kissa) → päivän kuitti | **Halu syntyy:** lounas Sannan kanssa. Valhe: ”My job is simple.” **Kissa ja haamu istutetaan:** neljäjalkainen kissa näkyy lapulla sohvan yläpuolella. ”Five gets laughed at.” ”We have a file on drawings.” Punainen kortti YEAR 2 näkyy ensimmäisen kerran. Lappu menee laatikkoon. **Kotimatkan uusinta (0.88) tulee aina:** jos pelaaja ei valitse sitä, Ekskyysmi tekee sen ovella (”Wait. Before the door.”). | 5:34 | `chapter1` |
 | 3 | **Tuesday** – *Quick chat?* | PÄIVÄ | A TUESDAY | 16:55 taukotila (”No incidents”, Riitta kahvikoneella, sitten hänen viestinsä) → 03:07 koti, yö → 09:00 toimisto, palaveri (keskiviikko!) → 09:12 taukotila | Aito osuma: ”Shorter.” Haamu istutetaan arkistokorttina. Kehut löytyvät myöhässä (muki +1). **Riitta nähdään ennen kuin hän on viesti** (0.80): kahvikoneella, ”Eleven things on her mind”, ja kolmen metrin päästä hän kirjoittaa: ”She chose to WRITE it.” **Musiikki: Ordinary Evening.** | 4:03 | `chapter2` |
 | 4 | *Enhance.* | HETKI | A MEETING, SOME MORNING | 11:56 toimisto | (1) Ekskyysmi tuplaa: zoom yhteen kulmakarvaan | 1:03 | `enhance` |
 | 5 | *Rewind.* | HETKI | THAT NIGHT, 23:40 | 23:40 koti | (1) Uusinta muokkaa itseään joka kerta | 1:09 | `rewind` |
@@ -94,7 +94,7 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 | Kyllät ja ei-lanka | #6 kyllät (−1 muki per kyllä), ”no in a coat”, lisätehtävät | #6 HUD-laskuri; #17 ”No. Sorry.”; #22 ”It’s a no in a coat, Eero.” ja Eeron kiitos monisteesta · #22 ei maksaa (0.84): Eero oli jo luvannut vuoron Riitalle, ja ihminen pitää kieltäytymisensä, vaikka Ekskyysmi saattaa painostaa perumaan | `yes`, `coatNo`, `handout`, `afterparty` |
 | Sannan varjo | #8 | #10 ”With a full stop.”; #20 yövuoro; #22 tuttu varjo (haara); #25 patteri | `metSannaShadow` |
 | Työnkuva | #10 uusi työ | #11 ”This is the OLD job…” / ”staying part”; #17 *Vacant.*; #18 *Part-time*; HUD | `jobDone`, `plain`, `evenings` |
-| Kissa (= piirustuslanka) | #2 lappu sohvan yläpuolella, neljä jalkaa: ”Five gets laughed at.” + YEAR 2 -kortti, lappu laatikkoon | #17 sama lappu takaisin, viides jalka · #18 lappu seinällä, Ekskyysmi seisoo sen päällä: ”Move over. You’re on the cat.” · #23 jaetaan | `note` (näkyvä lappu), `quietDrawing` (`catStarted` asetetaan, mutta sitä ei vielä lueta) |
+| Kissa (= piirustuslanka) | #2 syy (0.88): ”After a loud day, the human draws.” Kissaa ei ole: ”We don’t have a cat.” – ”That’s why I draw them.” Ihminen haluaa sen seinälle, Ekskyysmi laatikkoon (”Five gets laughed at.” + YEAR 2 -kortti) → ”…Drawer. For now.” | #17 sama lappu takaisin, viides jalka: ”It stays on the wall.” · #18 lappu seinällä, Ekskyysmi seisoo sen päällä: ”Move over. You’re on the cat.” · #23 jaetaan | `note` (näkyvä lappu), `quietDrawing` (`catStarted` asetetaan, mutta sitä ei vielä lueta) |
 | Haamu (piirustus, 7 v) | #2 arkistokortti ”YEAR 2” kissan kohdalla, #3 uudelleen ”Shorter”-hetkellä | #10 ”Since a Tuesday. You were seven.”; #23 tiedosto päivitetään | – |
 | Myöhässä oleva kirja | #9 | #15 palautus | – |
 | Baaritarina | #12 (umbrella/arms/2011) | #22 | `barStory` |

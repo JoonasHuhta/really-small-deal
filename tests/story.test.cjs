@@ -700,4 +700,8 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
  {for(const f of fs4.readdirSync(p4.join(root,'src')))for(const m of src(f).matchAll(/outside\(\{title:'([^']*)',dur:'([^']*)'/g)){
    const [,t,d]=m;if(t.startsWith('RECEIPT')||t==='THE ORIGINAL TAPE')continue;
    assert.ok(/^WHAT /.test(t),f+': outside title “'+t+'” should start WHAT …');assert.ok(/^duration: /.test(d),f+': “'+t+'” should say duration: …');}}
+ // 16. Joonas 22.11. (0.88): the review of the "oh" happens on every walk home (at the door if not chosen); the cat has a reason.
+ {const mo=src('30-story-monday.js');
+  assert.ok(mo.includes("['S','Wait. Before the door.']")&&/if\(done\.oh\)return \[\];/.test(mo),'the walk home must end with the review if the player did not choose it');
+  assert.ok(mo.includes("['N','After a loud day, the human draws. Small things, on sticky notes.']")&&mo.includes("['H','That’s why I draw them.']"),'the cat needs its reason');}
  console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle, the Fine. thread, epilogue bars, part labels, radiator speakers, phone menu, the appointment.');}

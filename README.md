@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.88.0 (Claude, 22.11.2026): **Joonaksen pelikerran huomiot.**
+- **Kotimatkan ”oh”-uusinta tulee aina** (Joonas: ”niin hauska, että pitää käydä läpi joka tapauksessa”). Jos pelaaja ei valitse sitä matkalla, Ekskyysmi tekee sen ovella: *”Wait. Before the door.”* – *”No.”* – *”One look. For the archive.”*, ja sitten koko uusinta. Uusintaa ei voi kävellä karkuun. Tarkistettu: kaikki 192 maanantaireittiä sisältävät uusinnan, eikä yksikään kahdesti.
+- **Kissalla on syy** (Joonas: ”miksi kissa, miksi nyt, onko heillä kissaa?”). *”After a loud day, the human draws. Small things, on sticky notes.”* Sitten *”Tonight: a cat. Four legs so far.”* – *”We don’t have a cat.”* – *”That’s why I draw them.”* Ihminen haluaa lapun seinälle, Ekskyysmi laatikkoon (*”Five gets laughed at.”*, YEAR 2 -kortti) → *”…Drawer. For now.”* Hiljaisena päivänä (#17): *”It stays on the wall.”* Seinä tarkoittaa näytettyä, laatikko piilotettua.
+- **Riitta tiistaina** (Joonas: ”ilmestyy hetkeksi ja soittaa sitten kauempaa? bugi”): hän pysyy kuvassa puhelin kädessä, kun viesti tulee, joten viesti näkyvästi lähtee kolmen metrin päästä. Hän kävelee pois, kun Ekskyysmi on huomannut asian (*”She chose to WRITE it.”*). Riitta osaa nyt kävellä ja pitää puhelinta.
+- **Puhelin näkyy kotimatkalla** kädessä, kun viestejä kulkee. Ennen se oli piilotettu kaikilta kävelyiltä.
+- Maanantai 5:34 → 5:40 (reitillä B), ja ovella tuleva uusinta lisää noin 40 s niillä reiteillä, joilla sitä ei valittu.
+
 Versio 0.87.0 (Claude, 22.11.2026): **kävely, valikko ja ulkonäkymien yksi kielioppi.**
 - **Kävely korjattu.** Versio 0.85 käänsi kenkien kärjet, mutta vasemmalle katsottaessa kengät vaihtoivat jalkaa ja heiluivat niitä vastaan (Joonas: ”jalat menee vastakkain”). Nyt kumpikin kenkä pysyy oman jalkansa alla ja kärki osoittaa kulkusuuntaan. Kävelysykli tarkistettu kuvista molempiin suuntiin.
 - **Työpöydän valikko:** kielirivi levensi saraketta, ja kaikki napit valuivat 27 px yli paneelin vasemmasta reunasta. Nyt paneeli on 250 px, sarake ei kasva sisällön mukana ja kielivalinta mahtuu. Tarkistettu neljällä leveydellä. Puhelinten layout-tarkistus on edelleen puhdas.

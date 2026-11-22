@@ -19,7 +19,7 @@ function update(dt,elapsed){
   if(WAIT==='time'){TIMER-=elapsed;if(TIMER<=0)run();}
   else if(WAIT==='view'&&TIMER>0){TIMER-=elapsed;if(TIMER<=0)render();}
   g.clock+=dt*g.rate;
-  g.ax=approach(g.ax,g.axT,150*dt);g.bx2=approach(g.bx2,g.bxT,150*dt);
+  g.ax=approach(g.ax,g.axT,150*dt);g.bx2=approach(g.bx2,g.bxT,150*dt);if(g.rxT!=null)g.rx=approach(g.rx,g.rxT,130*dt);
   if(!g.w){Hm.x=approach(Hm.x,Hm.xT,125*dt);if(Hm.xT<0&&Hm.x<-40)Hm.gone=true;}
   Hm.flinch=Math.max(0,Hm.flinch-dt*0.7);
   g.gaze=ease(g.gaze,g.gazeT,6*dt);g.dark=ease(g.dark,g.darkT,3*dt);g.flash=Math.max(0,g.flash-dt*2.2);

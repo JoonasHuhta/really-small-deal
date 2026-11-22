@@ -285,7 +285,7 @@ function labQuiet(){
   function(){G.note={legs:4,a:0,aT:1,off:0};},
   ['N','At home, the cat from the drawer gets its fifth leg.'],
   function(){G.note.legs=5;sfx('scribble');},   // 0.86: the fifth leg is heard being drawn
-  ['H','Five. Excellent. Very stable cat.'],
+  ['H','Five. Excellent. Very stable cat. It stays on the wall.'],   // 0.88: Monday said "drawer, for now"
   function(){G.quietDrawing=true;},
   ['H','For the record.'],
   {wait:1.6},
