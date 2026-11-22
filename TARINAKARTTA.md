@@ -2,7 +2,7 @@
 
 **Tämä tiedosto on totuus pelin järjestyksestä ja nimistä.** Kun puhumme kohtauksesta, käytämme tämän kartan numeroa ja kortin otsikkoa, esimerkiksi *#9 An ordinary evening*. Jos järjestys koodissa muuttuu, tämä tiedosto päivitetään samassa muutoksessa. `tests/story.test.cjs` tarkistaa, että alla olevan taulukon järjestys on sama kuin koodin (`src/33-moments.js`, `AFTER`). Jos ne eroavat, build kaatuu.
 
-Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.81.0 (hahmo: EKSKYYSMI.md; ulkopuolinen arvio: Codex/Astra 21.11.) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
+Laadittu 21.11.2026 versiosta 0.71.0, päivitetty versioon 0.83.1 (hahmo: EKSKYYSMI.md; ulkopuolinen arvio: Codex/Astra 21.11.) suoraan koodista: järjestys, kortit, kellonajat, paikat ja kestot (`npm run pace`). Kohta ”Mitä vie eteenpäin” on käsin kirjoitettu.
 
 ---
 
@@ -147,6 +147,8 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 | Z / Y / W | Sannan, Eeron ja Riitan varjot | #8, #20, #22, #25 |
 | T / L / X | Baarimikko / kirjastonhoitaja / tuntematon | #12 / #15 / satunnaisesti |
 | N | Kertoja | Nimetön kursiivi |
+
+Maanantain (#2) alussa ihmisen muki nousee huulelle ennen kuin Ekskyysmi herää. Mukia pitelevä käsi näkyy kupin ulkoreunalla koko liikkeen ajan. Sannan tervehdyksessä kämmen näkyy kasvojen sivulla. Epilogin (#24) ylävitosessa ihminen pitää kätensä posken korkeudella samalla kun Ekskyysmi korjaa tähtäystään.
 
 **Eivät tarinassa** (Moments-valikossa ensimmäisen päivän jälkeen): *Sometime.*, *One small thing.*, *The reply*, *The voice message*, *Footage.* (*The posting.* siirtyi tarinaan 0.74:ssä, #19.) **Vain labrassa:** testikloonit (*Lamp gap.*, *The bag.*) ja prototyyppi *A Tuesday, with a mug.* (merirosvohattu, diili, ”mug or door?”).
 

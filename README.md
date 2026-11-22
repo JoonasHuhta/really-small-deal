@@ -14,6 +14,10 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+**Versio 0.83.1 (22.11.2026).** Mukia pitelevä käsi on nyt kupin ulkoreunalla myös siemaisun aikana. Kyynärvarsi liittyy samaan kohtaan. Ote peilautuu hahmon kääntyessä.
+
+**Versio 0.83.0 (22.11.2026).** Maanantaiaamuna mukin reuna käy ihmisen huulella. Pieni peukalo näkyy sekä mukin että puhelimen reunalla. Sannan vilkuttava käsi erottuu kasvoista ja kaulus peittää kaulan alareunan. Epilogin ylävitosessa Ekskyysmi tähtää ensin ohi ja osuu sitten ihmisen nostettuun käteen posken korkeudella.
+
 Versio 0.82.0 (Claude, 22.11.2026): **pieniä kuvakorjauksia Codexin kuva-arviosta, alkuperäinen tyyli säilyy** (Joonas: ”default alkuperäinen oli selkeästi paras”).
 - **Käytön jäljet, yksi esinettä kohden** (Codexin suunta B, mutta vain jäljet): kotisohvassa on paikka ja harsittu ommel, taukotilan korkkitaululla yksi lappu on kiinnitetty uudelleen vinoon ja sen kulma käpristyy, ja kahvipisteen seinällä on kaksi vanhaa teipinpalaa paikassa, jossa oli joskus lappu. Huoneilla on nyt eilinen.
 - **Päiväleima on luettava:** ennen se himmeni leikkauksen jälkeen 55 %:iin, ja vaaleaa seinää vasten se näytti pois käytöstä olevalta säätimeltä. Nyt sillä on peittävä tumma pohja (#36343b, teksti #f2ece0, noin 10:1), ja se himmenee enintään 86 %:iin.
