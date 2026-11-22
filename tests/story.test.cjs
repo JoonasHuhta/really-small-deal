@@ -695,4 +695,9 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
  // 14. Every sound the story asks for exists (0.86 added grow, shrink, scribble, flutter and a new glue).
  {const au=src('10-audio.js'),names=new Set();for(const f of fs4.readdirSync(p4.join(root,'src')))for(const m of src(f).matchAll(/sfx\('([a-zA-Z0-9]+)'\)/g))names.add(m[1]);
   for(const n of names)assert.ok(au.includes("k==='"+n+"'")||new RegExp('\\b'+n+'\\s*:').test(au.split('function sfx')[0]),'sfx(\''+n+'\') has no sound');}
+ // 15. The outside view speaks one grammar (Joonas 22.11.: "what does FROM THE OTHER SIDE OF THE ROOM mean?"):
+ //     WHAT <someone> SAW / HEARD / READ / …, and "duration: …". Two named exceptions: the receipt, and the tape the human asks for.
+ {for(const f of fs4.readdirSync(p4.join(root,'src')))for(const m of src(f).matchAll(/outside\(\{title:'([^']*)',dur:'([^']*)'/g)){
+   const [,t,d]=m;if(t.startsWith('RECEIPT')||t==='THE ORIGINAL TAPE')continue;
+   assert.ok(/^WHAT /.test(t),f+': outside title “'+t+'” should start WHAT …');assert.ok(/^duration: /.test(d),f+': “'+t+'” should say duration: …');}}
  console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle, the Fine. thread, epilogue bars, part labels, radiator speakers, phone menu, the appointment.');}

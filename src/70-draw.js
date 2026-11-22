@@ -114,7 +114,8 @@ function person(x,o){
   ctx.fillStyle='#3a3944';rr(x-15+lg,FEETY-54,12,54,4);ctx.fill();rr(x+3-lg,FEETY-54,12,54,4);ctx.fill();
   var skin=o.body===SANNA.body?'#c9957a':o.body===MIKA.body?'#e5c4a1':'#e4bba2';
   ctx.fillStyle='#263639';if(f>0){rr(x-19+lg,FEETY-8,20,10,4);ctx.fill();rr(x+1-lg,FEETY-8,23,10,4);ctx.fill();}
-  else{rr(x-1+lg,FEETY-8,20,10,4);ctx.fill();rr(x-24-lg,FEETY-8,23,10,4);ctx.fill();}   // 0.85: the toes follow the face (Joonas: "they walk backwards")
+  else{rr(x-24+lg,FEETY-8,23,10,4);ctx.fill();rr(x-1-lg,FEETY-8,20,10,4);ctx.fill();}   // 0.85: the toes follow the face (Joonas: "they walk backwards").
+  // 0.87: each shoe stays under its own leg (legs swing +lg / −lg); in 0.85 the shoes swapped legs and walked against them
   var hy=FEETY-150+(o.nod||0)*5+fl*3+(o.down?4:0)-(o.walk?Math.abs(Math.sin(G.time*8))*1.5:0)+(o.face==='laugh'&&!RM?Math.abs(Math.sin(G.time*13))*-3:0),hx=x+(o.back?0:f*2);
   if(o.body===SANNA.body){ctx.fillStyle=o.hair;rr(hx-23,hy-17,45,45,18);ctx.fill();}
   ctx.fillStyle=skin;rr(x-7,top-14,14,23,4);ctx.fill();

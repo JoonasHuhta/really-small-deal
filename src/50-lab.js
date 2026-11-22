@@ -311,7 +311,7 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
     return o;
   },
   function(){G.fightLog.forEach(function(m){history.push({who:'P',text:m.full+' — '+(m.state==='swatted'?(m.wasOpen?'read, then swatted':'swatted before reading'):'reached your human')});});}
- ],outside({title:'WHAT WAS ACTUALLY SENT',dur:'eleven people, one evening',cap:'Seven nice things. One opinion about colours.',anim:'chatlog'}),[
+ ],outside({title:'WHAT THE OTHERS WROTE',dur:'duration: one evening, eleven people',cap:'Seven nice things. One opinion about colours.',anim:'chatlog'}),[
   function(){
     var r=G.fightRes,o=[];
     if(r.noteDelivered)o.push(['H','One of them didn’t like the colours.'],['S','A DAGGER. I KNEW it.'],['H','It stings. I keep looking at that one.'],['S','Shall I get the headband tighter?'],['H','I’m leaving the drawing up.'],['S','…Then I’ll loosen it. One notch.']);

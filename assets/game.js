@@ -728,7 +728,7 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   set({mood:'surprised'}),
   ['S','…You agree?'],
   ['H','She was short with me. It happened.']
- ],outside({title:'WHAT HAPPENED',dur:'duration: 4 seconds',cap:'Riitta cut you off. The meeting moved on. Nobody explained the tone.',anim:'text'}),[
+ ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 4 seconds',cap:'Riitta cut you off. The meeting moved on. Nobody explained the tone.',anim:'text'}),[
   calm,
   ['S','So I was right.'],
   ['H','That it happened. Yes.'],
@@ -850,7 +850,7 @@ function scIntro(){return [
     ['S','He doesn’t HAVE a coffee. He’s drinking TEA.'],
     ['H','I know.'],
     ['S','I didn’t do that one. That was all you.',{look:'squint'}]
-  ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'4 seconds',cap:'Two nods. One sip. One “you too”. A perfectly ordinary pause.',anim:'nod'},4.4),[
+  ].concat(outside({title:'WHAT THE OTHERS SAW',dur:'duration: 4 seconds',cap:'Two nods. One sip. One “you too”. A perfectly ordinary pause.',anim:'nod'},4.4),[
     calm,
     ['S','Rejection prevented.'],prevent('nodded'),
     ['H','That wasn’t a rejection.'],
@@ -861,7 +861,7 @@ function scBite(){return [
   ['H','Maybe YOUR comfort zone could use a walk, Eero.'],
   set({bFace:-1}),{wait:0.7},
   ['B','…Ha. Fair.']
- ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'3 seconds',cap:'One slightly sharp joke. Eero laughed a beat too late.',anim:'bite'},4.4),[
+ ].concat(outside({title:'WHAT THE OTHERS SAW',dur:'duration: 3 seconds',cap:'One slightly sharp joke. Eero laughed a beat too late.',anim:'bite'},4.4),[
   calm,set({pose:'selfmouth',mood:'scared',s:1.3}),
   ['S','…Did we just bite Eero?'],
   ['H','We bit Eero.'],drain(1,'the snap'),   // biting costs a sip too
@@ -2898,7 +2898,7 @@ function labForm(){
   ['H','You’ve gone into the margin.'],
   ['S','The margin needed a witness too.'],
   function(){G.form=null;}
- ],outside({title:'WHAT THE APPOINTMENT WAS',dur:'duration: 40 minutes',cap:'An appointment. A form with eighteen questions. A small paper bag.',anim:'text'}),afterForm());
+ ],outside({title:'WHAT THE WAITING ROOM SAW',dur:'duration: 40 minutes',cap:'An appointment. A form with eighteen questions. A small paper bag.',anim:'text'}),afterForm());
 }
 // After the appointment: what the help is, what it does, what it doesn't, and whether the human is glad.
 // No names of medicines or professions: a small paper bag, and a chair every other Tuesday (Joonas 20.11.: the player must not be left guessing).
@@ -3103,7 +3103,7 @@ function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',c
       ['S','That one’s in the archive. Nobody watches it. It’s very boring.']]}
   ]},
   function(){G.tape=null;G.tiredForce=1;addLived('one “oh, hi.”, replayed',40);}   // 0.81: the bags arrive after the replays, as their price
- ],outside({title:'WHAT WAS RECORDED',dur:'duration: 0 seconds',cap:'No camera. No recording. One greeting, remembered differently at 23:40.',anim:'text'}),[
+ ],outside({title:'WHAT THE CAMERA SAW',dur:'duration: 0 seconds',cap:'No camera. No recording. One greeting, remembered differently at 23:40.',anim:'text'}),[
   ['S','…I remember a smile. Somewhere under the horns.',{look:'soft'}],
   ['H','I don’t remember the exact face anymore.'],
   ['S','I’ll file it next to the other one.'],
@@ -3533,7 +3533,7 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
     return o;
   },
   function(){G.fightLog.forEach(function(m){history.push({who:'P',text:m.full+' — '+(m.state==='swatted'?(m.wasOpen?'read, then swatted':'swatted before reading'):'reached your human')});});}
- ],outside({title:'WHAT WAS ACTUALLY SENT',dur:'eleven people, one evening',cap:'Seven nice things. One opinion about colours.',anim:'chatlog'}),[
+ ],outside({title:'WHAT THE OTHERS WROTE',dur:'duration: one evening, eleven people',cap:'Seven nice things. One opinion about colours.',anim:'chatlog'}),[
   function(){
     var r=G.fightRes,o=[];
     if(r.noteDelivered)o.push(['H','One of them didn’t like the colours.'],['S','A DAGGER. I KNEW it.'],['H','It stings. I keep looking at that one.'],['S','Shall I get the headband tighter?'],['H','I’m leaving the drawing up.'],['S','…Then I’ll loosen it. One notch.']);
@@ -3676,7 +3676,7 @@ function labSometime(){return labScene({set:'office',title:'Sometime.',plan:'Lea
   ['S','I just want to know if he meant it.'],
   ['H','Same question.'],
   ['S','Very different departments.']
- ],outside({title:'MEANWHILE, IN THE LIFT',dur:'floors 4 to 1',cap:'Eero is thinking about coffee. He meant it. He just never books anything.',anim:'text'}),[
+ ],outside({title:'WHAT EERO WAS THINKING',dur:'duration: floors 4 to 1',cap:'Eero is thinking about coffee. He meant it. He just never books anything.',anim:'text'}),[
   calm,
   function(){var g=G;g.yx=g.yxT=800;g.yT=1;},{wait:1.5},
   set({mood:'surprised'}),
@@ -4649,7 +4649,7 @@ function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Rea
       ['H','You can supervise. Just don’t close it.']]}
   ]},
   function(){if(G.posting!=='open')addLived('the application, not sent',45);
-    return outside({title:'WHAT ACTUALLY HAPPENED',dur:'0 applications',anim:'text',
+    return outside({title:'WHAT THE EMPLOYER SAW',dur:'duration: 0 seconds',anim:'text',
       cap:G.posting==='open'?'Nobody rejected you tonight. The tab is still open.':'Nobody rejected you tonight. Nobody got the chance.'});},
   calm,
   function(){return G.posting==='open'?[
@@ -5077,7 +5077,8 @@ function person(x,o){
   ctx.fillStyle='#3a3944';rr(x-15+lg,FEETY-54,12,54,4);ctx.fill();rr(x+3-lg,FEETY-54,12,54,4);ctx.fill();
   var skin=o.body===SANNA.body?'#c9957a':o.body===MIKA.body?'#e5c4a1':'#e4bba2';
   ctx.fillStyle='#263639';if(f>0){rr(x-19+lg,FEETY-8,20,10,4);ctx.fill();rr(x+1-lg,FEETY-8,23,10,4);ctx.fill();}
-  else{rr(x-1+lg,FEETY-8,20,10,4);ctx.fill();rr(x-24-lg,FEETY-8,23,10,4);ctx.fill();}   // 0.85: the toes follow the face (Joonas: "they walk backwards")
+  else{rr(x-24+lg,FEETY-8,23,10,4);ctx.fill();rr(x-1-lg,FEETY-8,20,10,4);ctx.fill();}   // 0.85: the toes follow the face (Joonas: "they walk backwards").
+  // 0.87: each shoe stays under its own leg (legs swing +lg / −lg); in 0.85 the shoes swapped legs and walked against them
   var hy=FEETY-150+(o.nod||0)*5+fl*3+(o.down?4:0)-(o.walk?Math.abs(Math.sin(G.time*8))*1.5:0)+(o.face==='laugh'&&!RM?Math.abs(Math.sin(G.time*13))*-3:0),hx=x+(o.back?0:f*2);
   if(o.body===SANNA.body){ctx.fillStyle=o.hair;rr(hx-23,hy-17,45,45,18);ctx.fill();}
   ctx.fillStyle=skin;rr(x-7,top-14,14,23,4);ctx.fill();

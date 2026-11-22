@@ -67,7 +67,7 @@ function scIntro(){return [
     ['S','He doesn’t HAVE a coffee. He’s drinking TEA.'],
     ['H','I know.'],
     ['S','I didn’t do that one. That was all you.',{look:'squint'}]
-  ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'4 seconds',cap:'Two nods. One sip. One “you too”. A perfectly ordinary pause.',anim:'nod'},4.4),[
+  ].concat(outside({title:'WHAT THE OTHERS SAW',dur:'duration: 4 seconds',cap:'Two nods. One sip. One “you too”. A perfectly ordinary pause.',anim:'nod'},4.4),[
     calm,
     ['S','Rejection prevented.'],prevent('nodded'),
     ['H','That wasn’t a rejection.'],
@@ -78,7 +78,7 @@ function scBite(){return [
   ['H','Maybe YOUR comfort zone could use a walk, Eero.'],
   set({bFace:-1}),{wait:0.7},
   ['B','…Ha. Fair.']
- ].concat(outside({title:'FROM THE OTHER SIDE OF THE ROOM',dur:'3 seconds',cap:'One slightly sharp joke. Eero laughed a beat too late.',anim:'bite'},4.4),[
+ ].concat(outside({title:'WHAT THE OTHERS SAW',dur:'duration: 3 seconds',cap:'One slightly sharp joke. Eero laughed a beat too late.',anim:'bite'},4.4),[
   calm,set({pose:'selfmouth',mood:'scared',s:1.3}),
   ['S','…Did we just bite Eero?'],
   ['H','We bit Eero.'],drain(1,'the snap'),   // biting costs a sip too

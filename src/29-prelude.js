@@ -107,7 +107,7 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
   set({mood:'surprised'}),
   ['S','…You agree?'],
   ['H','She was short with me. It happened.']
- ],outside({title:'WHAT HAPPENED',dur:'duration: 4 seconds',cap:'Riitta cut you off. The meeting moved on. Nobody explained the tone.',anim:'text'}),[
+ ],outside({title:'WHAT THE OTHERS SAW',dur:'duration: 4 seconds',cap:'Riitta cut you off. The meeting moved on. Nobody explained the tone.',anim:'text'}),[
   calm,
   ['S','So I was right.'],
   ['H','That it happened. Yes.'],

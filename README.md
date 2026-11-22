@@ -14,6 +14,11 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.87.0 (Claude, 22.11.2026): **kävely, valikko ja ulkonäkymien yksi kielioppi.**
+- **Kävely korjattu.** Versio 0.85 käänsi kenkien kärjet, mutta vasemmalle katsottaessa kengät vaihtoivat jalkaa ja heiluivat niitä vastaan (Joonas: ”jalat menee vastakkain”). Nyt kumpikin kenkä pysyy oman jalkansa alla ja kärki osoittaa kulkusuuntaan. Kävelysykli tarkistettu kuvista molempiin suuntiin.
+- **Työpöydän valikko:** kielirivi levensi saraketta, ja kaikki napit valuivat 27 px yli paneelin vasemmasta reunasta. Nyt paneeli on 250 px, sarake ei kasva sisällön mukana ja kielivalinta mahtuu. Tarkistettu neljällä leveydellä. Puhelinten layout-tarkistus on edelleen puhdas.
+- **Ulkonäkymällä on yksi kielioppi.** Sama näkymä kulki eri nimillä: ”FROM THE OTHER SIDE OF THE ROOM”, ”WHAT HAPPENED”, ”WHAT WAS RECORDED”, ”WHAT THE APPOINTMENT WAS”, ”WHAT ACTUALLY HAPPENED” jne. Nyt otsikko on aina **WHAT [joku] SAW / HEARD / READ / …** ja kesto aina **duration: …**. Maanantain kaksi otsikkoa ja #11 ovat nyt *WHAT THE OTHERS SAW*. *Rewind*: *WHAT THE CAMERA SAW* (”No camera.”). Lomake: *WHAT THE WAITING ROOM SAW*. Ilmoitus: *WHAT THE EMPLOYER SAW · duration: 0 seconds*. Ryhmächatti: *WHAT THE OTHERS WROTE*. Poikkeuksia on kaksi, ja ne ovat tarkoituksellisia: kuitti sekä *THE ORIGINAL TAPE*, joka vastaa suoraan ihmisen kysymykseen ”Can we watch the original?”. Testi vartioi kielioppia.
+
 Versio 0.86.0 (Claude, 22.11.2026): **ääniä pelin sielulle** (Joonas: ”Ekskyysmi on pelin sielu… paisuu tai kutistuu, voisi olla äänitehosteita”).
 - **Ekskyysmi paisuu ja kutistuu kuuluvasti.** Iso koon muutos (vähintään 0,35) kuuluu: paisuessa pehmeä *fwoomp* ylöspäin, kutistuessa ilma pihisee ulos. Rajoitin: korkeintaan kerran 1,5 sekunnissa, ei koskaan osuman (hit) päälle eikä epilogissa, jonka ääni on pelkkä kappale. Noin kerran minuutissa koko pelin aikana.
 - **Mukin korjaus: ta-daa ja hohde.** Ensin kimallus (seitsemän nousevaa korkeaa säveltä), sitten *ta–DAA* (C ja C-duurisointu). Kultaiset saumat syttyvät hetkeksi ja niihin välähtää kaksi tähteä, toinen hieman myöhemmin.

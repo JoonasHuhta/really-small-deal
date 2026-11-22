@@ -40,7 +40,7 @@ function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Rea
       ['H','You can supervise. Just don’t close it.']]}
   ]},
   function(){if(G.posting!=='open')addLived('the application, not sent',45);
-    return outside({title:'WHAT ACTUALLY HAPPENED',dur:'0 applications',anim:'text',
+    return outside({title:'WHAT THE EMPLOYER SAW',dur:'duration: 0 seconds',anim:'text',
       cap:G.posting==='open'?'Nobody rejected you tonight. The tab is still open.':'Nobody rejected you tonight. Nobody got the chance.'});},
   calm,
   function(){return G.posting==='open'?[

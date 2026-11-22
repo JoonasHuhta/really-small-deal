@@ -142,8 +142,8 @@ html.immersive .menu-label{display:none}
 html:not(.immersive) header{position:relative}
 html:not(.immersive) #menu{display:inline-flex;align-items:center;margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:8px 12px;font-size:15px;line-height:1}
 html:not(.immersive) #menu:hover,html:not(.immersive) body.menu-open #menu{background:#ffffff0d;border-color:#7d8a80}
-html:not(.immersive) nav{display:none;position:absolute;z-index:9;right:0;top:calc(100% + 6px);margin:0;width:210px;padding:6px;gap:2px;background:#1b2328f7;border:1px solid #ffffff30;border-radius:12px;box-shadow:0 12px 30px #0008}
-html:not(.immersive) body.menu-open nav{display:grid;grid-template-columns:1fr}
+html:not(.immersive) nav{display:none;position:absolute;z-index:9;right:0;top:calc(100% + 6px);margin:0;width:250px;max-width:calc(100vw - 24px);padding:6px;gap:2px;background:#1b2328f7;border:1px solid #ffffff30;border-radius:12px;box-shadow:0 12px 30px #0008}
+html:not(.immersive) body.menu-open nav{display:grid;grid-template-columns:minmax(0,1fr)}   /* 0.87: the language row no longer widens the column past the panel (the buttons spilled 27 px over its left edge) */
 html:not(.immersive) nav button{text-align:left;font-size:14px;padding:9px 12px;color:var(--ink);min-height:38px}
 nav button:disabled{display:none}
 body:not(.playing) #restart{display:none}
@@ -182,7 +182,7 @@ html.immersive body.playing .line p.loud{font-size:calc(18px * var(--ts,1))}html
 
 /* Language: only English for now; Finnish and Swedish are listed so the menu is ready (TYOSUUNNITELMA K12) */
 .lang-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:14px;padding:6px 12px;color:var(--ink)}
-.lang-row select{font:inherit;background:transparent;color:inherit;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:5px 8px}
+.lang-row select{min-width:0;max-width:62%;font:inherit;background:transparent;color:inherit;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:5px 8px}
 .lang-row option{color:#14111d}
 
 /* Options never run off the screen: count-based columns that do not depend on :has (Joonas 20.11.: the fourth option was cut off on the phone) */

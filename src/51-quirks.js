@@ -87,7 +87,7 @@ function labSometime(){return labScene({set:'office',title:'Sometime.',plan:'Lea
   ['S','I just want to know if he meant it.'],
   ['H','Same question.'],
   ['S','Very different departments.']
- ],outside({title:'MEANWHILE, IN THE LIFT',dur:'floors 4 to 1',cap:'Eero is thinking about coffee. He meant it. He just never books anything.',anim:'text'}),[
+ ],outside({title:'WHAT EERO WAS THINKING',dur:'duration: floors 4 to 1',cap:'Eero is thinking about coffee. He meant it. He just never books anything.',anim:'text'}),[
   calm,
   function(){var g=G;g.yx=g.yxT=800;g.yT=1;},{wait:1.5},
   set({mood:'surprised'}),

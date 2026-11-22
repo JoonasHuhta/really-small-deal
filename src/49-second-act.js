@@ -199,7 +199,7 @@ function labForm(){
   ['H','You’ve gone into the margin.'],
   ['S','The margin needed a witness too.'],
   function(){G.form=null;}
- ],outside({title:'WHAT THE APPOINTMENT WAS',dur:'duration: 40 minutes',cap:'An appointment. A form with eighteen questions. A small paper bag.',anim:'text'}),afterForm());
+ ],outside({title:'WHAT THE WAITING ROOM SAW',dur:'duration: 40 minutes',cap:'An appointment. A form with eighteen questions. A small paper bag.',anim:'text'}),afterForm());
 }
 // After the appointment: what the help is, what it does, what it doesn't, and whether the human is glad.
 // No names of medicines or professions: a small paper bag, and a chair every other Tuesday (Joonas 20.11.: the player must not be left guessing).
@@ -404,7 +404,7 @@ function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',c
       ['S','That one’s in the archive. Nobody watches it. It’s very boring.']]}
   ]},
   function(){G.tape=null;G.tiredForce=1;addLived('one “oh, hi.”, replayed',40);}   // 0.81: the bags arrive after the replays, as their price
- ],outside({title:'WHAT WAS RECORDED',dur:'duration: 0 seconds',cap:'No camera. No recording. One greeting, remembered differently at 23:40.',anim:'text'}),[
+ ],outside({title:'WHAT THE CAMERA SAW',dur:'duration: 0 seconds',cap:'No camera. No recording. One greeting, remembered differently at 23:40.',anim:'text'}),[
   ['S','…I remember a smile. Somewhere under the horns.',{look:'soft'}],
   ['H','I don’t remember the exact face anymore.'],
   ['S','I’ll file it next to the other one.'],
