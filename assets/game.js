@@ -828,7 +828,7 @@ elOpts.addEventListener('pointerdown',function(e){var t=e.target&&e.target.close
 window.addEventListener('pointerup',holdUp);window.addEventListener('pointercancel',holdUp);window.addEventListener('blur',holdUp);
 
 /* ================= hands-on moments: used sparingly, about one a day ================= */
-var HOLD_LABEL={cover:'Hold: cover the eyes',pull:'Hold: walk out',still:'Hold: keep perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign'};
+var HOLD_LABEL={rewind:'Hold: rewind',cover:'Hold: cover the eyes',pull:'Hold: walk out',still:'Hold: keep perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign'};
 var NOPE=['That one isn’t available. I’m sitting on it.','Still sitting on it.','It’s very comfortable, actually.','Press it all day. I have nowhere to be.'];
 // “(Say nothing.)” is on the menu all week and greyed out until Thursday rewrites the job: the arc, shown in the interface.
 // hush(then) opens it, hush() keeps it shut. It is always the last option.
@@ -846,6 +846,7 @@ function lineInBubble(l){var g=G;
 function nope(i){var o=CH[i],L=o.hush?HUSHNOPE:NOPE;o.tried=(o.tried||0)+1;G.nopeMsg=o.note||L[Math.min(o.tried-1,L.length-1)];G.morko.mood='stern';sfx('nope');render();}
 function holdText(){
   var h=G.hold,on=h.on||h.tap>0;
+  if(h.kind==='rewind')return on?'Back… back… to the end of it.':'Rewind. Just the last bit.';
   if(h.kind==='sit')return on?h.o.text:'Hold to sit down. Do nothing else.';
   if(h.kind==='sign')return on?h.o.text:'Hold to sign.';
   if(h.kind==='cover')return h.wave?'Sanna is waving. Your human can’t see it.':on?'Hands over the eyes. Nothing gets in.':'Hold to keep the eyes covered.';
@@ -859,7 +860,9 @@ function holdClick(){var h=G.hold;if(!h||paused)return;if(h.long){h.long=false;r
 function holdTap(){var h=G.hold;if(!h)return;h.p+=0.9;h.tap=0.6;holdStep(h,true,0);if(G.hold===h&&h.p>=h.secs)finishHold();}
 function holdStep(h,on,dt){
   var g=G,M=g.morko,Hm=g.human,f=clamp(h.p/h.secs,0,1);
-  if(h.kind==='cover'){
+  if(h.kind==='rewind'){
+    if(g.tape)g.tape.rw=on;if(on&&!h.snd){h.snd=1;sfx('rewind');}M.mood='alert';
+  }else if(h.kind==='cover'){
     M.pose=on?'cover':null;
     var win=g.day!=='C'&&h.p>1&&h.p<2.5;
     if(win!==!!h.wave){h.wave=win;g.aWave=win;g.aFace=win?-1:1;}
@@ -883,6 +886,7 @@ function holdStep(h,on,dt){
 function finishHold(){
   var g=G,h=g.hold,M=g.morko,Hm=g.human;g.hold=null;WAIT=null;
   if(h.on)swallowClick=true; // the release of this press must not also count as "continue"
+  if(h.kind==='rewind'&&g.tape)g.tape.rw=false;
   if(h.kind==='cover'){g.aWave=false;g.aFace=1;
     if(g.peeked){M.pose=null;g.leak='none';Q=[['H','…She’s waving.'],['S','I looked away for ONE second.'],['H','Hi.']].concat(Q);}else M.pose='cover';}
   else if(h.kind==='pull'){M.pose='pull';Hm.xT=-90;Hm.back=true;g.cupLeft=true;g.lines=[];}
@@ -1531,21 +1535,23 @@ function fib(){var M=G.morko;M.s=Math.max(0.3,M.s-0.07);}
 function shadowHit(){var g=G;trigger();addLived('the one that landed',LIVED.shadowHit);sfx('hit');g.pulse=0.9;g.shake=RM?0:0.8;g.lines=[];g.cur=null;g.flash=0.8;g.morko.sT=0.62;g.morko.mood='scared';g.morko.pose=null;g.anx=0.9;g.cz=1.08;g.cx=W/2-30;g.cy=300;}
 function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);if(G.mug)drain(1,'saying yes')();}   // every yes costs a sip, down to the last one: only Thursday gets to empty the mug (VISIO V22)
 
+function riittaArrives(){var g=G;return Math.abs(g.rx-g.rxT)>2?[{wait:0.1},riittaArrives]:[];}   // the phone comes out when she has stopped walking
 function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60}).concat([
   mugOn(4),
   tuesdayOpening,
   // 0.80 (TARINAKARTTA §6, open hole 2): Riitta is seen before she is a message. Busy, not cruel: eleven things, none of them you.
-  // 0.88 (Joonas: "she appears for a moment and then calls from further away?"): she stays in the picture with her phone, so the
-  // message visibly comes from three metres away, and walks off after Ekskyysmi has noticed it.
-  function(){var g=G;g.cowR=true;g.rx=860;g.rxT=null;g.rPhone=true;},
+  // 0.94 (Joonas, twice: "why does she appear with a phone, and then vanish?"): she walks in, types where she stands (the dots
+  // are over HER phone, three metres from yours) and is gone before the message lands. Busy, not cruel. "She WAS right there."
+  function(){var g=G;g.cowR=true;g.rx=1010;g.rxT=830;g.rPhone=false;},
   ['N','Riitta, at the coffee machine. Eleven things on her mind. All of them today.'],
-  {wait:0.6},
+  riittaArrives,function(){G.rPhone=true;},{wait:0.6},
+  function(){G.dots={t:0,at:'R'};sfx('pop');},{wait:1.6},
+  function(){var g=G;g.dots=null;g.dotsAt=g.time;g.rxT=1090;sfx('dotsOff');},
   ['P','Riitta: “Quick chat tomorrow at 9?”'],
   hit(0.9,'P'),drain(2,'“quick chat?”'),set({sweat:0.7}),{wait:1.2},
   ['S','“Quick.”',{look:'squint'}],
   ['S','Nobody says “quick” about good news. Good news takes its time. Good news has cake.'],
   ['S','And she was RIGHT THERE. Three metres away. She chose to WRITE it.'],
-  function(){var g=G;g.rPhone=false;g.rxT=1080;},
   ['H','It’s probably nothing.'],
   ['S','It’s five words and a question mark. It’s EVERYTHING.'],
   {choice:[
@@ -3519,20 +3525,21 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
 function typingDots(secs){return function(){return [function(){G.dots={t:0};sfx('pop');},{wait:secs},function(){G.dots=null;G.dotsAt=G.time;sfx('dotsOff');},{wait:0.7}];};}
 function drawDots(){
   var d=G.dots;if(!d)return;var x=(G.w||!G.human.gone?G.human.x+178:138),y=G.w?324:346,i;
+  if(d.at==='R'){x=G.rx-32;y=FEETY-232;}   // typed over the sender's phone: Riitta, three metres away (0.94)
   ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=2;rr(x,y,64,32,16);ctx.fill();ctx.stroke();
   for(i=0;i<3;i++){var b=RM?0:Math.max(0,Math.sin(d.t*7-i*0.9))*4;ctx.fillStyle='#8b8070';circ(x+18+i*14,y+16-b,4.2);ctx.fill();}
 }
 
 /* ================= Rewind. Memory edits. Every replay of the same "oh, hi." is a little worse than the last. ================= */
 var TAPE_SAYS=['oh, hi.','oh. hi.','Oh. Hi.','OH. HI.','OH. HI.'];
-function rewindTape(n){return function(){return [function(){G.tape={n:n,t:0};G.lines=[];G.cur=null;sfx('rewind');},{wait:2.3}];};}
+function rewindTape(n,quiet){return function(){return [function(){G.tape={n:n,t:0};G.lines=[];G.cur=null;if(!quiet)sfx('rewind');},{wait:2.3}];};}
 function drawTape(){
   var tp=G.tape;if(!tp)return;
   var x=610,y=96,w=250,h=176,cx=x+w/2,cy=y+76,a=Math.min(tp.n,4),wob=RM?0:Math.max(0,0.5-tp.t)*6,i;
   ctx.save();
   ctx.fillStyle='#14111d';rr(x-12,y-12,w+24,h+24,14);ctx.fill();ctx.fillStyle='#232733';rr(x+w/2-30,y+h+12,60,14,4);ctx.fill();   // the set and its stand
   ctx.fillStyle=a>=3?'#3a2a34':'#2f3a40';ctx.fillRect(x,y,w,h);
-  ctx.translate(Math.sin(tp.t*60)*wob,0);
+  ctx.translate(Math.sin(tp.t*60)*wob,tp.rw&&!RM?Math.sin(G.time*31)*3:0);
   // Sanna, as remembered
   var skin='#c9957a';ctx.fillStyle='#463b38';ctx.beginPath();ctx.arc(cx,cy-4,48,Math.PI,0);ctx.fill();ctx.fillRect(cx-48,cy-4,96,40);
   if(a>=4){ctx.fillStyle='#e0563e';ctx.beginPath();ctx.moveTo(cx-38,cy-34);ctx.lineTo(cx-30,cy-70);ctx.lineTo(cx-18,cy-40);ctx.closePath();ctx.fill();
@@ -3545,8 +3552,10 @@ function drawTape(){
   // scan lines, a counter, and the line itself
   ctx.fillStyle='rgba(0,0,0,.16)';for(i=0;i<h;i+=4)ctx.fillRect(x,y+i,w,1.5);
   ctx.fillStyle='#f6f1e4';ctx.font='700 11px ui-monospace,Menlo,Consolas,monospace';ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.fillText('◀◀ REPLAY #'+(tp.n+1),x+10,y+14);if(Math.floor(tp.t*2)%2===0){ctx.fillStyle='#e0563e';circ(x+w-16,y+14,4.5);ctx.fill();}
-  ctx.textAlign='center';ctx.fillStyle='#f6f1e4';ctx.font=(a>=3?'800 ':'600 ')+(16+a*2)+'px system-ui,sans-serif';ctx.fillText(TAPE_SAYS[a],cx,y+h-20);
+  ctx.fillText(tp.rw?'◀◀ REWIND':'◀◀ REPLAY #'+(tp.n+1),x+10,y+14);if(Math.floor(tp.t*2)%2===0){ctx.fillStyle='#e0563e';circ(x+w-16,y+14,4.5);ctx.fill();}
+  if(tp.rw){var rt=G.time*9;ctx.fillStyle='rgba(246,241,228,.5)';for(i=0;i<3;i++){var ry=y+((rt*40+i*61)%h);ctx.fillRect(x,ry,w,5);}   // rewinding: tracking bars run up the picture
+    ctx.textAlign='center';ctx.fillStyle='#f6f1e4';ctx.font='700 20px system-ui,sans-serif';ctx.fillText('◀◀',cx,y+h-20);}
+  else{ctx.textAlign='center';ctx.fillStyle='#f6f1e4';ctx.font=(a>=3?'800 ':'600 ')+(16+a*2)+'px system-ui,sans-serif';ctx.fillText(TAPE_SAYS[a],cx,y+h-20);}
   ctx.restore();
 }
 function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',clock:23*3600+40*60}).concat([
@@ -3554,7 +3563,10 @@ function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',c
   ['S','Just once more. For accuracy.'],
   rewindTape(0),
   ['S','Friendly. Suspiciously friendly.',{look:'squint'}],
-  rewindTape(1),
+  // 0.94 (Codex): the tape is the player's, once. Rewinding it is how the greeting picks up its full stop. One pull is enough;
+  // the rest stays automatic, or the player only learns to wait for the next step.
+  {hold:{kind:'rewind',secs:0.9}},
+  rewindTape(1,true),
   ['S','Did you hear the full stop that time?'],
   ['H','There wasn’t one.'],
   ['S','There is NOW.'],

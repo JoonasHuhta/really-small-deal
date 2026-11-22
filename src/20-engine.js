@@ -195,7 +195,7 @@ elOpts.addEventListener('pointerdown',function(e){var t=e.target&&e.target.close
 window.addEventListener('pointerup',holdUp);window.addEventListener('pointercancel',holdUp);window.addEventListener('blur',holdUp);
 
 /* ================= hands-on moments: used sparingly, about one a day ================= */
-var HOLD_LABEL={cover:'Hold: cover the eyes',pull:'Hold: walk out',still:'Hold: keep perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign'};
+var HOLD_LABEL={rewind:'Hold: rewind',cover:'Hold: cover the eyes',pull:'Hold: walk out',still:'Hold: keep perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign'};
 var NOPE=['That one isn’t available. I’m sitting on it.','Still sitting on it.','It’s very comfortable, actually.','Press it all day. I have nowhere to be.'];
 // “(Say nothing.)” is on the menu all week and greyed out until Thursday rewrites the job: the arc, shown in the interface.
 // hush(then) opens it, hush() keeps it shut. It is always the last option.
@@ -213,6 +213,7 @@ function lineInBubble(l){var g=G;
 function nope(i){var o=CH[i],L=o.hush?HUSHNOPE:NOPE;o.tried=(o.tried||0)+1;G.nopeMsg=o.note||L[Math.min(o.tried-1,L.length-1)];G.morko.mood='stern';sfx('nope');render();}
 function holdText(){
   var h=G.hold,on=h.on||h.tap>0;
+  if(h.kind==='rewind')return on?'Back… back… to the end of it.':'Rewind. Just the last bit.';
   if(h.kind==='sit')return on?h.o.text:'Hold to sit down. Do nothing else.';
   if(h.kind==='sign')return on?h.o.text:'Hold to sign.';
   if(h.kind==='cover')return h.wave?'Sanna is waving. Your human can’t see it.':on?'Hands over the eyes. Nothing gets in.':'Hold to keep the eyes covered.';
@@ -226,7 +227,9 @@ function holdClick(){var h=G.hold;if(!h||paused)return;if(h.long){h.long=false;r
 function holdTap(){var h=G.hold;if(!h)return;h.p+=0.9;h.tap=0.6;holdStep(h,true,0);if(G.hold===h&&h.p>=h.secs)finishHold();}
 function holdStep(h,on,dt){
   var g=G,M=g.morko,Hm=g.human,f=clamp(h.p/h.secs,0,1);
-  if(h.kind==='cover'){
+  if(h.kind==='rewind'){
+    if(g.tape)g.tape.rw=on;if(on&&!h.snd){h.snd=1;sfx('rewind');}M.mood='alert';
+  }else if(h.kind==='cover'){
     M.pose=on?'cover':null;
     var win=g.day!=='C'&&h.p>1&&h.p<2.5;
     if(win!==!!h.wave){h.wave=win;g.aWave=win;g.aFace=win?-1:1;}
@@ -250,6 +253,7 @@ function holdStep(h,on,dt){
 function finishHold(){
   var g=G,h=g.hold,M=g.morko,Hm=g.human;g.hold=null;WAIT=null;
   if(h.on)swallowClick=true; // the release of this press must not also count as "continue"
+  if(h.kind==='rewind'&&g.tape)g.tape.rw=false;
   if(h.kind==='cover'){g.aWave=false;g.aFace=1;
     if(g.peeked){M.pose=null;g.leak='none';Q=[['H','…She’s waving.'],['S','I looked away for ONE second.'],['H','Hi.']].concat(Q);}else M.pose='cover';}
   else if(h.kind==='pull'){M.pose='pull';Hm.xT=-90;Hm.back=true;g.cupLeft=true;g.lines=[];}

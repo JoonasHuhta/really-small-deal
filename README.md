@@ -14,6 +14,16 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.94.0 (Claude, 22.11.2026): **Riitta kirjoittaa siinä missä seisoo, ja pelaaja kelaa nauhan itse.**
+- **Tiistain Riitta (#3), kolmas yritys** (Joonas: ”miksi hän ilmestyy puhelimen kanssa ja häviää?”). Aiemmin Riitta ilmestyi kuvaan valmiiksi puhelin kädessä, ja kirjoituspisteet näkyivät ihmisen kohdalla, joten mikään ei kertonut, että viesti tuli häneltä. Nyt:
+  1. Riitta kävelee sisään kahvinkeittimelle (*”Riitta, at the coffee machine. Eleven things on her mind.”*).
+  2. Hän pysähtyy ja ottaa puhelimen esiin.
+  3. Kirjoituspisteet näkyvät hänen yläpuolellaan, kolmen metrin päässä ihmisestä.
+  4. Hän lähtee ennen kuin viesti tulee perille.
+
+  Ekskyysmin *”And she was RIGHT THERE.”* on nyt kirjaimellisesti mennyttä aikaa. Kiireinen, ei julma.
+- ***Rewind.* (#5): yksi kelaus pelaajalle** (Codexin ehdotus). Ensimmäisen puhtaan *”oh, hi.”* -toiston jälkeen tulee pito *Hold: rewind* (*”Rewind. Just the last bit.”*). Pitäessä nauha kelautuu (*◀◀ REWIND*, juovat kulkevat ylös), ja kun kelaus on valmis, sama tervehdys toistuu pisteen kanssa: *”oh. hi.”* Sen jälkeen tulee tuttu *”Did you hear the full stop that time?”* – *”There wasn’t one.”* – *”There is NOW.”*, ja viimeinen repliikki osuu pelaajaan, joka kelasi itse. Yksi napautus riittää myös. Kelauksia on vain yksi, ja muut vääristymät tulevat itsestään, jottei pelaaja opi vain odottamaan seuraavaa porrasta.
+
 Versio 0.93.0 (Claude, 22.11.2026): **Codexin Quiet-huomiot ja ihmisen kuplan kärki.**
 - **Kuplan kärki osoittaa puhujaan.** Ihmisen kupla piirrettiin 60 yksikköä hänestä oikealle, ja kärki oli samassa kohdassa. Kun Sanna seisoo lähellä (+92), ihmisen kärki oli lähempänä Sannaa kuin ihmistä, ja *”I nearly cancelled.”* saattoi näyttää ihmisen repliikiltä (Codex, tarkistettu koodista). Nyt laatikko saa yhä väistää sivuun, mutta kärki osoittaa ihmisen päähän. Korjaus koskee kaikkia lähikohtauksia (maanantain kuppi, *Quietin* lounas, perjantai).
 - ***Quiet.* (#17):**

@@ -349,20 +349,21 @@ function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The l
 function typingDots(secs){return function(){return [function(){G.dots={t:0};sfx('pop');},{wait:secs},function(){G.dots=null;G.dotsAt=G.time;sfx('dotsOff');},{wait:0.7}];};}
 function drawDots(){
   var d=G.dots;if(!d)return;var x=(G.w||!G.human.gone?G.human.x+178:138),y=G.w?324:346,i;
+  if(d.at==='R'){x=G.rx-32;y=FEETY-232;}   // typed over the sender's phone: Riitta, three metres away (0.94)
   ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=2;rr(x,y,64,32,16);ctx.fill();ctx.stroke();
   for(i=0;i<3;i++){var b=RM?0:Math.max(0,Math.sin(d.t*7-i*0.9))*4;ctx.fillStyle='#8b8070';circ(x+18+i*14,y+16-b,4.2);ctx.fill();}
 }
 
 /* ================= Rewind. Memory edits. Every replay of the same "oh, hi." is a little worse than the last. ================= */
 var TAPE_SAYS=['oh, hi.','oh. hi.','Oh. Hi.','OH. HI.','OH. HI.'];
-function rewindTape(n){return function(){return [function(){G.tape={n:n,t:0};G.lines=[];G.cur=null;sfx('rewind');},{wait:2.3}];};}
+function rewindTape(n,quiet){return function(){return [function(){G.tape={n:n,t:0};G.lines=[];G.cur=null;if(!quiet)sfx('rewind');},{wait:2.3}];};}
 function drawTape(){
   var tp=G.tape;if(!tp)return;
   var x=610,y=96,w=250,h=176,cx=x+w/2,cy=y+76,a=Math.min(tp.n,4),wob=RM?0:Math.max(0,0.5-tp.t)*6,i;
   ctx.save();
   ctx.fillStyle='#14111d';rr(x-12,y-12,w+24,h+24,14);ctx.fill();ctx.fillStyle='#232733';rr(x+w/2-30,y+h+12,60,14,4);ctx.fill();   // the set and its stand
   ctx.fillStyle=a>=3?'#3a2a34':'#2f3a40';ctx.fillRect(x,y,w,h);
-  ctx.translate(Math.sin(tp.t*60)*wob,0);
+  ctx.translate(Math.sin(tp.t*60)*wob,tp.rw&&!RM?Math.sin(G.time*31)*3:0);
   // Sanna, as remembered
   var skin='#c9957a';ctx.fillStyle='#463b38';ctx.beginPath();ctx.arc(cx,cy-4,48,Math.PI,0);ctx.fill();ctx.fillRect(cx-48,cy-4,96,40);
   if(a>=4){ctx.fillStyle='#e0563e';ctx.beginPath();ctx.moveTo(cx-38,cy-34);ctx.lineTo(cx-30,cy-70);ctx.lineTo(cx-18,cy-40);ctx.closePath();ctx.fill();
@@ -375,8 +376,10 @@ function drawTape(){
   // scan lines, a counter, and the line itself
   ctx.fillStyle='rgba(0,0,0,.16)';for(i=0;i<h;i+=4)ctx.fillRect(x,y+i,w,1.5);
   ctx.fillStyle='#f6f1e4';ctx.font='700 11px ui-monospace,Menlo,Consolas,monospace';ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.fillText('◀◀ REPLAY #'+(tp.n+1),x+10,y+14);if(Math.floor(tp.t*2)%2===0){ctx.fillStyle='#e0563e';circ(x+w-16,y+14,4.5);ctx.fill();}
-  ctx.textAlign='center';ctx.fillStyle='#f6f1e4';ctx.font=(a>=3?'800 ':'600 ')+(16+a*2)+'px system-ui,sans-serif';ctx.fillText(TAPE_SAYS[a],cx,y+h-20);
+  ctx.fillText(tp.rw?'◀◀ REWIND':'◀◀ REPLAY #'+(tp.n+1),x+10,y+14);if(Math.floor(tp.t*2)%2===0){ctx.fillStyle='#e0563e';circ(x+w-16,y+14,4.5);ctx.fill();}
+  if(tp.rw){var rt=G.time*9;ctx.fillStyle='rgba(246,241,228,.5)';for(i=0;i<3;i++){var ry=y+((rt*40+i*61)%h);ctx.fillRect(x,ry,w,5);}   // rewinding: tracking bars run up the picture
+    ctx.textAlign='center';ctx.fillStyle='#f6f1e4';ctx.font='700 20px system-ui,sans-serif';ctx.fillText('◀◀',cx,y+h-20);}
+  else{ctx.textAlign='center';ctx.fillStyle='#f6f1e4';ctx.font=(a>=3?'800 ':'600 ')+(16+a*2)+'px system-ui,sans-serif';ctx.fillText(TAPE_SAYS[a],cx,y+h-20);}
   ctx.restore();
 }
 function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',clock:23*3600+40*60}).concat([
@@ -384,7 +387,10 @@ function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',c
   ['S','Just once more. For accuracy.'],
   rewindTape(0),
   ['S','Friendly. Suspiciously friendly.',{look:'squint'}],
-  rewindTape(1),
+  // 0.94 (Codex): the tape is the player's, once. Rewinding it is how the greeting picks up its full stop. One pull is enough;
+  // the rest stays automatic, or the player only learns to wait for the next step.
+  {hold:{kind:'rewind',secs:0.9}},
+  rewindTape(1,true),
   ['S','Did you hear the full stop that time?'],
   ['H','There wasn’t one.'],
   ['S','There is NOW.'],

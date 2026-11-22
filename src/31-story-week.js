@@ -27,21 +27,23 @@ function fib(){var M=G.morko;M.s=Math.max(0.3,M.s-0.07);}
 function shadowHit(){var g=G;trigger();addLived('the one that landed',LIVED.shadowHit);sfx('hit');g.pulse=0.9;g.shake=RM?0:0.8;g.lines=[];g.cur=null;g.flash=0.8;g.morko.sT=0.62;g.morko.mood='scared';g.morko.pose=null;g.anx=0.9;g.cz=1.08;g.cx=W/2-30;g.cy=300;}
 function yes(){G.yes++;G.human.grin=G.yes;addLived('saying yes, regretting it',30);if(G.mug)drain(1,'saying yes')();}   // every yes costs a sip, down to the last one: only Thursday gets to empty the mug (VISIO V22)
 
+function riittaArrives(){var g=G;return Math.abs(g.rx-g.rxT)>2?[{wait:0.1},riittaArrives]:[];}   // the phone comes out when she has stopped walking
 function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60}).concat([
   mugOn(4),
   tuesdayOpening,
   // 0.80 (TARINAKARTTA §6, open hole 2): Riitta is seen before she is a message. Busy, not cruel: eleven things, none of them you.
-  // 0.88 (Joonas: "she appears for a moment and then calls from further away?"): she stays in the picture with her phone, so the
-  // message visibly comes from three metres away, and walks off after Ekskyysmi has noticed it.
-  function(){var g=G;g.cowR=true;g.rx=860;g.rxT=null;g.rPhone=true;},
+  // 0.94 (Joonas, twice: "why does she appear with a phone, and then vanish?"): she walks in, types where she stands (the dots
+  // are over HER phone, three metres from yours) and is gone before the message lands. Busy, not cruel. "She WAS right there."
+  function(){var g=G;g.cowR=true;g.rx=1010;g.rxT=830;g.rPhone=false;},
   ['N','Riitta, at the coffee machine. Eleven things on her mind. All of them today.'],
-  {wait:0.6},
+  riittaArrives,function(){G.rPhone=true;},{wait:0.6},
+  function(){G.dots={t:0,at:'R'};sfx('pop');},{wait:1.6},
+  function(){var g=G;g.dots=null;g.dotsAt=g.time;g.rxT=1090;sfx('dotsOff');},
   ['P','Riitta: “Quick chat tomorrow at 9?”'],
   hit(0.9,'P'),drain(2,'“quick chat?”'),set({sweat:0.7}),{wait:1.2},
   ['S','“Quick.”',{look:'squint'}],
   ['S','Nobody says “quick” about good news. Good news takes its time. Good news has cake.'],
   ['S','And she was RIGHT THERE. Three metres away. She chose to WRITE it.'],
-  function(){var g=G;g.rPhone=false;g.rxT=1080;},
   ['H','It’s probably nothing.'],
   ['S','It’s five words and a question mark. It’s EVERYTHING.'],
   {choice:[
