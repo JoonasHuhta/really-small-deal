@@ -23,11 +23,13 @@ function tone(f,t0,dur,type,vol,f2){
 var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
 // Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
 // A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
-var MUSIC={title:'assets/audio/title.mp3',epilogue:'assets/audio/epilogue.mp3',tuesday:'assets/audio/ordinary-evening.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
+var MUSIC={title:'assets/audio/title.mp3',epilogue:'assets/audio/epilogue.mp3',tuesday:'assets/audio/ordinary-evening.mp3',quiet:'assets/audio/quiet-arpeggios.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
 var firstTouch=false,BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 // Scene music is background: well under the voices. It fades in, and steps aside for a moment when something lands.
-var MUSICVOLS={epilogue:0.36,tuesday:0.2},MUSICFADEIN={tuesday:2},MUSICONCE={epilogue:true},
-    MUSICDELAY={tuesday:1.5},MUSICNODUCK={tuesday:true},   // Joonas 20.11.: Ordinary Evening under the whole Tuesday, 1–2 s in, quiet, and it never steps aside
+var MUSICVOLS={epilogue:0.36,tuesday:0.2,quiet:0.15},MUSICFADEIN={tuesday:2,quiet:3},MUSICONCE={epilogue:true},
+    MUSICDELAY={tuesday:1.5,quiet:2},MUSICNODUCK={tuesday:true,quiet:true},   // Joonas 20.11.: Ordinary Evening under the whole Tuesday, 1–2 s in, quiet, and it never steps aside
+    // Joonas 22.11.: Quiet Arpeggios (−15.6 LUFS, like Tuesday's) under the quiet Monday and that evening (#17 Quiet. → #18 Evenings.), the same day.
+    // A little under Tuesday's: its arpeggios sit where the voices do (84 % of it is 250–1500 Hz, Tuesday's 61 %).
     musicLvl=1,talkLvl=1,talkT=null,rampId=null;   // monday.mp3 is mastered at -24 LUFS, ~10 dB under the title track
 function musicTarget(){return (MUSICVOLS[musicName]!=null?MUSICVOLS[musicName]:MUSICVOL)*musicLvl*talkLvl;}
 // While anyone talks, the music steps back, and returns a moment after the last syllable.

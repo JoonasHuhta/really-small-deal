@@ -54,11 +54,13 @@ function tone(f,t0,dur,type,vol,f2){
 var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
 // Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
 // A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
-var MUSIC={title:'assets/audio/title.mp3',epilogue:'assets/audio/epilogue.mp3',tuesday:'assets/audio/ordinary-evening.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
+var MUSIC={title:'assets/audio/title.mp3',epilogue:'assets/audio/epilogue.mp3',tuesday:'assets/audio/ordinary-evening.mp3',quiet:'assets/audio/quiet-arpeggios.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
 var firstTouch=false,BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 // Scene music is background: well under the voices. It fades in, and steps aside for a moment when something lands.
-var MUSICVOLS={epilogue:0.36,tuesday:0.2},MUSICFADEIN={tuesday:2},MUSICONCE={epilogue:true},
-    MUSICDELAY={tuesday:1.5},MUSICNODUCK={tuesday:true},   // Joonas 20.11.: Ordinary Evening under the whole Tuesday, 1–2 s in, quiet, and it never steps aside
+var MUSICVOLS={epilogue:0.36,tuesday:0.2,quiet:0.15},MUSICFADEIN={tuesday:2,quiet:3},MUSICONCE={epilogue:true},
+    MUSICDELAY={tuesday:1.5,quiet:2},MUSICNODUCK={tuesday:true,quiet:true},   // Joonas 20.11.: Ordinary Evening under the whole Tuesday, 1–2 s in, quiet, and it never steps aside
+    // Joonas 22.11.: Quiet Arpeggios (−15.6 LUFS, like Tuesday's) under the quiet Monday and that evening (#17 Quiet. → #18 Evenings.), the same day.
+    // A little under Tuesday's: its arpeggios sit where the voices do (84 % of it is 250–1500 Hz, Tuesday's 61 %).
     musicLvl=1,talkLvl=1,talkT=null,rampId=null;   // monday.mp3 is mastered at -24 LUFS, ~10 dB under the title track
 function musicTarget(){return (MUSICVOLS[musicName]!=null?MUSICVOLS[musicName]:MUSICVOL)*musicLvl*talkLvl;}
 // While anyone talks, the music steps back, and returns a moment after the last syllable.
@@ -3405,7 +3407,8 @@ function afterForm(){
 // No Ekskyysmi. Three places where it would have said something show its name and a dash.
 function labQuiet(){
   var gap=['S','—'];
-  return labScene({set:'home',title:'Quiet.',plan:'—',clock:7*3600+40*60}).concat([
+  return labScene({set:'home',title:'Quiet.',plan:'—',clock:7*3600+40*60,music:'quiet'}).concat([
+  function(){G.chapMusic='quiet';},   // 0.91: the song stays through the day's three places and into the evening
   shadowAway,function(){G.human.gone=true;},tableShot(true),{wait:3.2},tableShot(false),
   scene({set:'room',clock:8*3600+52*60,day:'MONDAY'}),shadowAway,
   function(){var g=G;g.hud=true;g.plan=true;g.planText='—';g.noCup=false;g.mugFixed=false;},
@@ -3463,7 +3466,7 @@ function labQuiet(){
 }
 
 /* ================= 4. Evenings. ================= */
-function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The lamp.',clock:21*3600}).concat([
+function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The lamp.',clock:21*3600,music:'quiet'}).concat([   // the same song as the day: it carries on, or starts here
   shadowAway,lampOff,
   function(){G.note={legs:5,on:'shadow',a:1,aT:1,off:12,offT:12};},   // the cat is on the wall now, not in the drawer
   ['N','Nine in the evening. One lamp beside the sofa.'],
@@ -6321,6 +6324,6 @@ function frame(ts){
   window.requestAnimationFrame(frame);
 }
 syncImmersive();reset(null);showTitle();
-window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,inside:{run:function(){return G.run;},day:function(){return G.day0;},mult:function(){return G.mult;},add:addLived,cameBack:cameBack,receipt:function(){return G.receiptText;}},qteKey:function(k){return qteKey({key:k});},qte:function(){return G.qte;},full:toggleFull,immersive:function(){return htmlEl.classList.contains('immersive');},chapters:showChapters,hotScreen:function(x,y){var r=cv.getBoundingClientRect(),z=C.z,hw=W/(2*z),hh=H/(2*z),fx=clamp(C.fx,hw,W-hw),fy=clamp(C.fy,hh,H-hh);return [r.left+((x-fx)*z+W/2)/W*r.width,r.top+((y-fy)*z+H/2)/H*r.height];},labList:showLab,moments:showMoments,about:showAbout,lensTap:lensTap,back:backButton,lang:function(v){LANG=v;try{document.documentElement.lang=v;}catch(e){}},fiMiss:function(){return FIMISS;},fiDict:function(){return FI;},sound:{load:loadSound,has:function(k){return !!BUF[k];},music:function(){return {name:musicName,playing:!!(musicEl&&!musicEl.paused),t:musicEl?musicEl.currentTime:0,vol:musicEl?musicEl.volume:0};},seek:function(t){if(musicEl)musicEl.currentTime=t;},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
+window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,inside:{run:function(){return G.run;},day:function(){return G.day0;},mult:function(){return G.mult;},add:addLived,cameBack:cameBack,receipt:function(){return G.receiptText;}},qteKey:function(k){return qteKey({key:k});},qte:function(){return G.qte;},full:toggleFull,immersive:function(){return htmlEl.classList.contains('immersive');},chapters:showChapters,hotScreen:function(x,y){var r=cv.getBoundingClientRect(),z=C.z,hw=W/(2*z),hh=H/(2*z),fx=clamp(C.fx,hw,W-hw),fy=clamp(C.fy,hh,H-hh);return [r.left+((x-fx)*z+W/2)/W*r.width,r.top+((y-fy)*z+H/2)/H*r.height];},labList:showLab,moments:showMoments,about:showAbout,lensTap:lensTap,back:backButton,lang:function(v){LANG=v;try{document.documentElement.lang=v;}catch(e){}},fiMiss:function(){return FIMISS;},fiDict:function(){return FI;},music:function(){return musicName;},sound:{load:loadSound,has:function(k){return !!BUF[k];},music:function(){return {name:musicName,playing:!!(musicEl&&!musicEl.paused),t:musicEl?musicEl.currentTime:0,vol:musicEl?musicEl.volume:0};},seek:function(t){if(musicEl)musicEl.currentTime=t;},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
 window.requestAnimationFrame(frame);
 })();

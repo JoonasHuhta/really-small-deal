@@ -107,7 +107,7 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 | Lintu (Ekskyysmin oma piirustus) | #9 ”It’s a hobby. Shadows are allowed one. Don’t tell the office.” | #25 näytetään Sannan varjolle: ”Do it again.” / ”…Nobody laughed.” · loppukuva | `pose:'puppet'` |
 | Tiistai (haavan päivä) | #10 ”Since a Tuesday. You were seven.” | #3 quick chat · #16 tuoli joka toinen tiistai · #8/#22 ”Tuesday works.” · #25 ”It was a Tuesday, you know. The drawing.” | – |
 | Vuoronvaihto | #10 ”Nobody came to relieve me.” · väsymys | #20 Sannan varjo ottaa oven, Ekskyysmi nukkuu · aamulla ”Somebody had the door.” | `night.sleepS` |
-| Musiikki | #1 alkuvalikko | #3 Ordinary Evening, #24 epilogi | – |
+| Musiikki | #1 alkuvalikko | #3 Ordinary Evening · #17–#18 Quiet Arpeggios (hiljainen maanantai ja saman päivän ilta, yksi yhtäjaksoinen soitto) · #24 epilogi | `MUSIC`, `tests/music.test.cjs` |
 
 **Mukin periaate:** muki liikkuu maailmasta, ei valinnoista. Valinta koskee mukiin vain kun se kuluttaa (jokainen kyllä −1, tiuskaisu −1) tai diilissä, jossa vaihtokauppa näkyy. Piiloutuminen ei koske mukiin missään. Testi vartioi tätä.
 

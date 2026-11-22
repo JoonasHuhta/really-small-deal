@@ -239,7 +239,8 @@ function afterForm(){
 // No Ekskyysmi. Three places where it would have said something show its name and a dash.
 function labQuiet(){
   var gap=['S','—'];
-  return labScene({set:'home',title:'Quiet.',plan:'—',clock:7*3600+40*60}).concat([
+  return labScene({set:'home',title:'Quiet.',plan:'—',clock:7*3600+40*60,music:'quiet'}).concat([
+  function(){G.chapMusic='quiet';},   // 0.91: the song stays through the day's three places and into the evening
   shadowAway,function(){G.human.gone=true;},tableShot(true),{wait:3.2},tableShot(false),
   scene({set:'room',clock:8*3600+52*60,day:'MONDAY'}),shadowAway,
   function(){var g=G;g.hud=true;g.plan=true;g.planText='—';g.noCup=false;g.mugFixed=false;},
@@ -297,7 +298,7 @@ function labQuiet(){
 }
 
 /* ================= 4. Evenings. ================= */
-function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The lamp.',clock:21*3600}).concat([
+function labEvenings(){return labScene({set:'home',title:'Evenings.',plan:'The lamp.',clock:21*3600,music:'quiet'}).concat([   // the same song as the day: it carries on, or starts here
   shadowAway,lampOff,
   function(){G.note={legs:5,on:'shadow',a:1,aT:1,off:12,offT:12};},   // the cat is on the wall now, not in the drawer
   ['N','Nine in the evening. One lamp beside the sofa.'],
