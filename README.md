@@ -14,6 +14,15 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.93.0 (Claude, 22.11.2026): **Codexin Quiet-huomiot ja ihmisen kuplan kärki.**
+- **Kuplan kärki osoittaa puhujaan.** Ihmisen kupla piirrettiin 60 yksikköä hänestä oikealle, ja kärki oli samassa kohdassa. Kun Sanna seisoo lähellä (+92), ihmisen kärki oli lähempänä Sannaa kuin ihmistä, ja *”I nearly cancelled.”* saattoi näyttää ihmisen repliikiltä (Codex, tarkistettu koodista). Nyt laatikko saa yhä väistää sivuun, mutta kärki osoittaa ihmisen päähän. Korjaus koskee kaikkia lähikohtauksia (maanantain kuppi, *Quietin* lounas, perjantai).
+- ***Quiet.* (#17):**
+  - Aamun kolme samaa vaihtoehtoa ovat nyt *”See you at lunch.”*. Ennen ne olivat *”Go to lunch.”*, joka luettiin lähtemiseksi heti.
+  - Riitalle kysytään ensin jotain: *”Riitta, quick question—”* – *”Not now.”* – *”Okay.”* Tiistain *”Quick chat?”* toisin päin.
+  - Lounaan alkuun konkreettinen tieto: *”12:04. Sanna came. It goes well.”* Vasta sen jälkeen Sanna sanoo *”I nearly cancelled.”*
+  - Illalla ihminen kääntyy katsomaan seinää, varjon tavallista paikkaa, ennen kuin sanoo *”For the record.”* Hiljaisuus kuuluu nyt jollekulle.
+- **Ei tehty, Joonaksen päätettäväksi:** Codexin ehdotus turvakamerakuvasta (*Footage.*) epilogiin toisen ninjavälähdyksen tilalle. Epilogin viimeinen kertosäe on sävelletty neljän ninjakuvan sarjaksi, ja ehdotettu paikka on vain yhden tahdin mittainen. Kahden kuvakulman vitsi tarvitsee noin kaksi tahtia.
+
 Versio 0.92.0 (Claude, 22.11.2026): **Codexin huumorikierros, punnittuna.** Codexin raportti oli tehty versiosta 0.87. Tarkistin jokaisen kohdan nykyistä koodia vasten.
 - **Otettu (sellaisenaan):** *A fine.* (#15): *”Then we have a defence.”* → *”Keep a finger on that page. It’s our alibi.”* Sivu 212 on ensin todiste ja lopulta yhteinen suosikki. *The posting.* (#19): *”Old AND relevant. Very rare.”* → *”If they weren’t relevant, why would I still have them?”* Kehäpäätelmä, joka on varjolle aukoton. Se riimaa kirjaston *”why did we KEEP it?”* kanssa: varjo säilyttää kirjaa seitsemän viikkoa ja loukkauksia vuosia.
 - **Uusi ilme `edge` patterilla (#25):** kun Sannan varjo sanoo *”I like your edges.”*, Ekskyysmi vilkaisee repliikillään *”…I like your radiator.”* omaa olkapäätään, sitä joka on Sannan varjon puolella. Pupillit painuvat alas sivulle, kulmat pysyvät suorina ja olkapää nousee hieman. Ele kestää yhden repliikin, eikä koko muutu. Testattu ruudulla pöytäkoneen ja puhelimen koossa.

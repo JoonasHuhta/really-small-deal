@@ -251,10 +251,11 @@ function labQuiet(){
   gap,
   ['H','Hi. Lunch today?'],
   ['A','Sure!'],
-  {auto:{opts:['Go to lunch.','Go to lunch.','Go to lunch.'],pick:0,secs:1.9}},
+  {auto:{opts:['See you at lunch.','See you at lunch.','See you at lunch.'],pick:0,secs:1.9}},   // 0.93 (Codex): “Go to lunch.” read as going now
   ['N','It took four seconds.'],
   set({ax:1100}),{wait:1.2},
   function(){G.cowR=true;G.cowA=false;},
+  ['H','Riitta, quick question—'],   // 0.93: what was asked (Codex); Tuesday’s “Quick chat?”, the other way round
   ['R','Not now.'],
   ['H','Okay.'],
   gap,
@@ -267,7 +268,7 @@ function labQuiet(){
   ['N','Nobody rehearsed anything.'],
   set({bx:1100}),{wait:1.2},
   function(){var g=G;g.cowB=false;g.cowA=true;g.ax=1010;g.clock=12*3600+4*60;},set({near:1,aFace:-1}),{wait:1.6},
-  ['N','Lunch. It goes well.'],
+  ['N','12:04. Sanna came. It goes well.'],   // 0.93 (Codex): a time and a visible fact before her “I nearly cancelled.”
   ['A','I nearly cancelled. Didn’t think you’d want another lunch.'],
   ['H','I asked you this morning.'],
   ['A','Yes. I brought my own argument.'],
@@ -288,10 +289,11 @@ function labQuiet(){
   function(){G.note.legs=5;sfx('scribble');},   // 0.86: the fifth leg is heard being drawn
   ['H','Five. Excellent. Very stable cat. It stays on the wall.'],   // 0.88: Monday said "drawer, for now"
   function(){G.quietDrawing=true;},
+  set({back:true}),{wait:0.9},   // 0.93 (Codex): the human looks at the wall, at the shadow's usual place, before saying its words
   ['H','For the record.'],
   {wait:1.6},
   gap,
-  ['N','Nobody objected.'],
+  ['N','Nobody objected.'],set({back:false}),
   function(){G.quiet=true;},
   quietReceipt
  ]);

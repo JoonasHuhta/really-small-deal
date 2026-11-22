@@ -17,7 +17,7 @@ function bubble(x,y,text,o){
   w+=26;var h=lines.length*lh+16,pad=18/(VIEW.z||1),bx=clamp(x-w/2,Math.max(8,VIEW.l+pad),Math.min(W-8,VIEW.r-pad)-w),topPad=((COMPACT?46:10)+(G.boss?50:0))/(VIEW.z||1),by=o.top!=null?o.top:Math.max(VIEW.t+topPad,y-h-12);
   var fill=o.dark?'#14111d':'#fffdf6',ink=o.dark?'#f6f1e4':'#2b2733',hot=o.dark?'#ebbd79':'#2b2733';
   ctx.fillStyle=fill;ctx.strokeStyle=ink;ctx.lineWidth=k>1?3:2;rr(bx,by,w,h,10);ctx.fill();ctx.stroke();
-  if(!o.noTail){var tx=clamp(x,bx+16,bx+w-16);ctx.beginPath();ctx.moveTo(tx-8,by+h-1);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h-1);ctx.closePath();ctx.fill();
+  if(!o.noTail){var tx=clamp(o.tailX!=null?o.tailX:x,bx+16,bx+w-16);   // the box may move aside; the tail points at whoever speaksctx.beginPath();ctx.moveTo(tx-8,by+h-1);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h-1);ctx.closePath();ctx.fill();
     ctx.beginPath();ctx.moveTo(tx-8,by+h);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h);ctx.stroke();}
   var left=o.reveal==null?1e9:o.reveal;
   for(i=0;i<lines.length&&left>0;i++){var cx=bx+13,cy=by+8+lh/2+i*lh;
@@ -420,7 +420,7 @@ function drawLines(){
     if(l.who==='S'){var q=geom(),above=q.hdY-q.hdR-14-(g.morko.hat&&!g.ninja?44*Math.max(0.6,q.hdR/20):0),sw=mw||260,bh=bubbleH(l.text,sw,l);
       if(above-12>=bh+8)bubble(q.bx-70,above+12,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet});
       else bubble(q.bx-70,0,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet,top:Math.min(q.hdY+q.hdR+14,WALLY-bh-70)});}
-    else if(l.who==='H')bubble(g.human.x+60,FEETY-172,l.text,{maxW:mw||230,reveal:rv});
+    else if(l.who==='H')bubble(g.human.x+60,FEETY-172,l.text,{maxW:mw||230,reveal:rv,tailX:g.human.x+6*(g.human.facing||1)});   // 0.93 (Codex): the box sits right of the human; the tail was 60 to the right too, nearer Sanna standing close (+92) than the human
     else if(l.who==='A')bubble(g.ax,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='B')bubble(g.bx2,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='P')bubble(g.w||!g.human.gone?g.human.x+210:170,g.w?330:340,l.text,{noTail:true,maxW:mw,reveal:rv});
