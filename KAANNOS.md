@@ -45,3 +45,11 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
 - **Ääni ja ajastus** käyttävät englanninkielistä riviä (esim. lähetetyn viestin ”You:”-suhahdus), joten ne toimivat samoin kummallakin kielellä.
 - **Ratkaisuja, joihin voi palata:** ”Become furniture” → ”Muutu huonekaluksi”; ”Lamp gap.” → ”Lamppujen väli.”; ”Please don’t have slides.” → ”Älä vain sano, että teit kalvoja.” (jotta ”Kaksi.” toimii vastauksena); ”YEAR 2” → ”2. LUOKKA”; ”BE A MUG. NOT A HERO.” → ”OLE MUKI. ÄLÄ SANKARI.”; ”comfort zone” → ”mukavuusalue”; ”the snap” → ”tiuskaisu”.
 - **RSD:lle ei ole vakiintunutta suomenkielistä termiä.** Yhteisöt käyttävät lyhennettä sellaisenaan; kuvailevia ehdotuksia ovat ”torjuntaherkkyys” ja ”hylkäämisherkkyys”. Peli ei nimeä RSD:tä tekstissä, joten käännöksen ei tarvitse ratkaista tätä.
+
+## Päätös 22.11.2026: englanti ensin, käännökset sen jälkeen (Joonas)
+- **Englanti on punainen lanka.** Se tehdään valmiiksi vitseineen ja kohtauksineen ennen kuin käännöksiin käytetään aikaa. Suomenkielinen maanantai (0.89) jää kokeiluksi: se todisti, että tekniikka toimii. Tekstiä ei hiota ennen kuin englanti on lukittu.
+- **Ei sanasta sanaan.** Kokeilun suomi on paikoin tönkköä, koska se seuraa englantia liian tarkasti. Lopullinen suomi (ja ruotsi) saa revitellä omalla tavallaan: oma vitsi saa korvata käännetyn, kunhan kohtauksen rakenne ja tunne säilyvät (vrt. *Lokalisointi, ei käännös* yllä). Kun englanti on valmis, suomi kirjoitetaan rivi riviltä uudelleen, eikä kokeilun tekstiä vain korjailla.
+- **Suomenkielisen version nimiehdokkaat** (Joonas, molemmissa säilyy RSD):
+  - *Raskaansarjan sisäinen draama.* Englanninkielinen nimi on ulkoa katsottuna (pieni juttu), tämä sisältä katsottuna (raskaansarja). Nimet ovat toistensa peilikuvat, kuten pelin kaksi kelloa. Raskaansarja sopii varjoon, joka kasvaa hartioita myöten. Varo: ”draama” voi kuulostaa samalta kuin ”älä draamaile”, jota RSD-ihminen on kuullut tarpeeksi. ”Sisäinen” pitää sen omana kokemuksena eikä esityksenä.
+  - *Rauhattoman sielun dialogi.* Osuva (koko peli on dialogi ihmisen ja varjon välillä), mutta kuulostaa runokokoelmalta. Komedia ei näy nimestä.
+  - Suomen kielessä otsikoissa on iso alkukirjain vain ensimmäisessä sanassa. Lyhenne RSD näkyy silti, jos logo korostaa sanojen alkukirjaimia.

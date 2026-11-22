@@ -16,7 +16,7 @@ Older plans are history and partly out of date: `TYOSUUNNITELMA.md`, `CODEX_JATK
 - `node tools/build.cjs --check` fails if `assets/game.js` is stale.
 - `python tools/audit_layout.py [state ...]` checks the layout at five phone sizes and saves screenshots to `tools/audit-shots/` (needs Playwright).
 - Any new `G.` field that draws something must be reset in `scene()` (`src/31-story-week.js`), or it leaks into the next scene.
-- Languages (0.89): script lines, choices, names, outside views, hint and receipt rows already go through `tr()` (`src/15-fi.js`). Text you draw yourself with `fillText` or build into HTML must be wrapped in `tr('…')`, as a whole sentence (use `{a}` placeholders for numbers). Finnish is in `src/16-fi-monday.js`; `tests/fi.test.cjs` fails if Monday shows English in Finnish mode. Do not name a local variable `tr`.
+- Languages (0.89): script lines, choices, names, outside views, hint and receipt rows already go through `tr()` (`src/15-fi.js`). Text you draw yourself with `fillText` or build into HTML must be wrapped in `tr('…')`, as a whole sentence (use `{a}` placeholders for numbers). Finnish is in `src/16-fi-monday.js`; `tests/fi.test.cjs` fails if Monday shows English in Finnish mode. Do not name a local variable `tr`. **Translations are on hold (Joonas 22.11.):** English is finished first. Do not extend or polish the Finnish until Joonas says the English is locked, but keep wrapping new drawn text in `tr()`, which costs nothing.
 - Android: `npm run android:sync`, then `android\gradlew.bat assembleDebug`. The `android/` folder is not in git; native changes go through `tools/android-patch.cjs`.
 
 ## Script engine in one minute
