@@ -14,6 +14,18 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.95.0 (Claude, 22.11.2026): **Rewindin nauha jumittuu, ja sarvet ovat Ekskyysmin sormet.**
+- **Valinnainen *”Rewind once more. For thoroughness.”*** (Codexin ehdotus) jumittaa nauhan aina, myös napauttamalla pelaavalla:
+  1. Kuva pysähtyy kesken hymyn (*❚❚ JAMMED*, *”oh, h—”*).
+  2. Ekskyysmi työntää molemmat kädet television taakse oikaistakseen nauhaa.
+  3. Kuva napsahtaa takaisin. Tervehdys on taas puhdas *”oh, hi.”*, mutta Sannan pään yläpuolella on kaksi tummaa kärkeä.
+  4. *”She has horns.”* – *”Hold on.”* Ekskyysmi nostaa kättään, ja toinen sarvi nousee. Sitten se laskee sen hyvin hitaasti: asiantuntijalausunto peruutetaan.
+  5. Jakso päättyy *”Memory is a living document.”* -repliikkiin.
+
+  Vanhat punaiset piirretyt sarvet ja repliikit *”She does now.”* sekä *”She didn’t this morning.”* poistuivat. Varjo löysi kuvasta täsmälleen sen uhan, jonka se lisäsi omin käsin.
+- **Korjaus:** toisessa haarassa (*”Let the human play the original.”*) sarvia ei koskaan näytetty, mutta loppu puhui niistä. Nyt siinä haarassa sanotaan *”Somewhere under the capital letters.”* – *”The one in capitals.”*
+- **Korjaus 0.94:ään:** kelauksen jälkeen varjo jäi lohdutusasentoon, koska pito putosi oletushaaraan. Nyt kelaus päättyy omaan haaraansa.
+
 Versio 0.94.0 (Claude, 22.11.2026): **Riitta kirjoittaa siinä missä seisoo, ja pelaaja kelaa nauhan itse.**
 - **Tiistain Riitta (#3), kolmas yritys** (Joonas: ”miksi hän ilmestyy puhelimen kanssa ja häviää?”). Aiemmin Riitta ilmestyi kuvaan valmiiksi puhelin kädessä, ja kirjoituspisteet näkyivät ihmisen kohdalla, joten mikään ei kertonut, että viesti tuli häneltä. Nyt:
   1. Riitta kävelee sisään kahvinkeittimelle (*”Riitta, at the coffee machine. Eleven things on her mind.”*).

@@ -886,8 +886,8 @@ function holdStep(h,on,dt){
 function finishHold(){
   var g=G,h=g.hold,M=g.morko,Hm=g.human;g.hold=null;WAIT=null;
   if(h.on)swallowClick=true; // the release of this press must not also count as "continue"
-  if(h.kind==='rewind'&&g.tape)g.tape.rw=false;
-  if(h.kind==='cover'){g.aWave=false;g.aFace=1;
+  if(h.kind==='rewind'){if(g.tape)g.tape.rw=false;}   // 0.95: its own branch (0.94 fell through to the comforting arm below)
+  else if(h.kind==='cover'){g.aWave=false;g.aFace=1;
     if(g.peeked){M.pose=null;g.leak='none';Q=[['H','…She’s waving.'],['S','I looked away for ONE second.'],['H','Hi.']].concat(Q);}else M.pose='cover';}
   else if(h.kind==='pull'){M.pose='pull';Hm.xT=-90;Hm.back=true;g.cupLeft=true;g.lines=[];}
   else if(h.kind==='still'){M.pose='hold';Hm.face='stiff';g.aFace=1;}
@@ -3539,11 +3539,13 @@ function drawTape(){
   ctx.save();
   ctx.fillStyle='#14111d';rr(x-12,y-12,w+24,h+24,14);ctx.fill();ctx.fillStyle='#232733';rr(x+w/2-30,y+h+12,60,14,4);ctx.fill();   // the set and its stand
   ctx.fillStyle=a>=3?'#3a2a34':'#2f3a40';ctx.fillRect(x,y,w,h);
+  if(tp.stuck)wob=0;
   ctx.translate(Math.sin(tp.t*60)*wob,tp.rw&&!RM?Math.sin(G.time*31)*3:0);
   // Sanna, as remembered
   var skin='#c9957a';ctx.fillStyle='#463b38';ctx.beginPath();ctx.arc(cx,cy-4,48,Math.PI,0);ctx.fill();ctx.fillRect(cx-48,cy-4,96,40);
-  if(a>=4){ctx.fillStyle='#e0563e';ctx.beginPath();ctx.moveTo(cx-38,cy-34);ctx.lineTo(cx-30,cy-70);ctx.lineTo(cx-18,cy-40);ctx.closePath();ctx.fill();
-    ctx.beginPath();ctx.moveTo(cx+38,cy-34);ctx.lineTo(cx+30,cy-70);ctx.lineTo(cx+18,cy-40);ctx.closePath();ctx.fill();}               // memory is a living document
+  if(tp.horns){   // 0.95: not horns. Two shadow fingertips, caught in the tape while straightening it. One of them can move.
+    var lv=tapeLift();ctx.fillStyle='#14111d';ctx.strokeStyle='#14111d';ctx.lineCap='round';
+    for(var hs=-1;hs<=1;hs+=2){var up=hs>0?lv*16:0;ctx.lineWidth=11;line(cx+hs*26,cy-34,cx+hs*31,cy-62-up);circ(cx+hs*31,cy-62-up,5.5);ctx.fill();}}
   ctx.fillStyle=skin;circ(cx,cy+4,38);ctx.fill();
   ctx.strokeStyle='#2b2027';ctx.lineWidth=3+a*0.6;ctx.lineCap='round';
   for(var sdx=-1;sdx<=1;sdx+=2){var bx=cx+sdx*15,tilt=a*0.16;line(bx-sdx*9,cy-12-a*0.5+(-tilt*9),bx+sdx*9,cy-12+tilt*9);}            // brows: inner ends sink with every replay
@@ -3552,13 +3554,23 @@ function drawTape(){
   // scan lines, a counter, and the line itself
   ctx.fillStyle='rgba(0,0,0,.16)';for(i=0;i<h;i+=4)ctx.fillRect(x,y+i,w,1.5);
   ctx.fillStyle='#f6f1e4';ctx.font='700 11px ui-monospace,Menlo,Consolas,monospace';ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.fillText(tp.rw?'◀◀ REWIND':'◀◀ REPLAY #'+(tp.n+1),x+10,y+14);if(Math.floor(tp.t*2)%2===0){ctx.fillStyle='#e0563e';circ(x+w-16,y+14,4.5);ctx.fill();}
+  ctx.fillText(tp.stuck?'❚❚ JAMMED':tp.rw?'◀◀ REWIND':tp.jam?'◀◀ REPLAY #5':'◀◀ REPLAY #'+(tp.n+1),x+10,y+14);if(Math.floor(tp.t*2)%2===0){ctx.fillStyle='#e0563e';circ(x+w-16,y+14,4.5);ctx.fill();}
   if(tp.rw){var rt=G.time*9;ctx.fillStyle='rgba(246,241,228,.5)';for(i=0;i<3;i++){var ry=y+((rt*40+i*61)%h);ctx.fillRect(x,ry,w,5);}   // rewinding: tracking bars run up the picture
     ctx.textAlign='center';ctx.fillStyle='#f6f1e4';ctx.font='700 20px system-ui,sans-serif';ctx.fillText('◀◀',cx,y+h-20);}
-  else{ctx.textAlign='center';ctx.fillStyle='#f6f1e4';ctx.font=(a>=3?'800 ':'600 ')+(16+a*2)+'px system-ui,sans-serif';ctx.fillText(TAPE_SAYS[a],cx,y+h-20);}
+  else{ctx.textAlign='center';ctx.fillStyle='#f6f1e4';ctx.font=(a>=3?'800 ':'600 ')+(16+a*2)+'px system-ui,sans-serif';ctx.fillText(tp.stuck?'oh, h—':TAPE_SAYS[a],cx,y+h-20);}
+  if(tp.stuck){ctx.fillStyle='rgba(246,241,228,.55)';ctx.fillRect(x,y+h*0.52,w,7);ctx.fillStyle='rgba(20,17,29,.35)';ctx.fillRect(x,y+h*0.52+7,w,12);}   // a torn line across the frozen picture
   ctx.restore();
 }
+// 0.95 (Codex): “once more, for thoroughness” always jams. Ekskyysmi reaches behind the set to straighten the tape; the picture
+// snaps back, clean again, with two dark points over her head. They are its fingers. One goes up. It comes down again, very slowly.
+function tapeJam(){return [function(){var g=G;g.tape={n:0,t:0,jam:1};g.lines=[];g.cur=null;g.tapeHorns=true;sfx('rewind');},{wait:1.1},
+  function(){G.tape.stuck=1;sfx('nope');},{wait:1.2},
+  set({pose:'tv',mood:'alert'}),{wait:1.4},
+  function(){var tp=G.tape;tp.stuck=0;tp.horns=1;sfx('turn');},{wait:1.0}];}
+// How far the moving fingertip is up: quickly up, then down over 1.6 s (a withdrawn expert opinion). Also lifts the hand behind the set.
+function tapeLift(){var tp=G.tape;if(!tp||!tp.liftUp)return 0;var up=RM?1:clamp((G.time-tp.liftUp)/0.25,0,1),dn=tp.liftDown?(RM?1:clamp((G.time-tp.liftDown)/1.6,0,1)):0;return up*(1-dn*dn*(3-2*dn));}
 function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',clock:23*3600+40*60}).concat([
+  function(){G.tapeHorns=false;},
   ['N','23:40. Lights off. Ekskyysmi has the tape.'],
   ['S','Just once more. For accuracy.'],
   rewindTape(0),
@@ -3577,10 +3589,11 @@ function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',c
   rewindTape(3),
   ['S','There. THAT’S what she meant.',{look:'pleased'}],
   {choice:[
-    {t:'Rewind once more. For thoroughness.',then:[rewindTape(4),
+    {t:'Rewind once more. For thoroughness.',then:[tapeJam,
       ['H','She has horns.'],
-      ['S','She does now.'],
-      ['H','She didn’t this morning.'],
+      ['S','Hold on.',{look:'up'}],
+      function(){G.tape.liftUp=G.time;},{wait:1.0},
+      function(){G.tape.liftDown=G.time;},{wait:2.0},
       aside(['S','Memory is a living document.']),
       ['H','Play the original.'],
       ['S','The original is very boring.']]},
@@ -3588,13 +3601,13 @@ function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',c
       ['H','Play the one from this morning. The actual one.'],
       ['S','That one’s in the archive. Nobody watches it. It’s very boring.']]}
   ]},
-  function(){G.tape=null;G.tiredForce=1;addLived('one “oh, hi.”, replayed',40);}   // 0.81: the bags arrive after the replays, as their price
+  function(){G.tape=null;if(G.morko.pose==='tv')G.morko.pose=null;G.tiredForce=1;addLived('one “oh, hi.”, replayed',40);}   // 0.81: the bags arrive after the replays, as their price
  ],outside({title:'WHAT THE CAMERA SAW',dur:'duration: 0 seconds',cap:'No camera. No recording. One greeting, remembered differently at 23:40.',anim:'text'}),[
-  ['S','…I remember a smile. Somewhere under the horns.',{look:'soft'}],
+  function(){return [['S','…I remember a smile. Somewhere under the '+(G.tapeHorns?'horns':'capital letters')+'.',{look:'soft'}]];},   // 0.95: the other branch never saw horns
   ['H','I don’t remember the exact face anymore.'],
   ['S','I’ll file it next to the other one.'],
   ['H','Which other one?'],
-  ['S','The one with horns.',{look:'pleased'}],
+  function(){return [['S',G.tapeHorns?'The one with horns.':'The one in capitals.',{look:'pleased'}]];},
   ['H','Go to sleep.'],
   ['S','I’m a shadow. It’s dark. I’m EVERYWHERE.']
 ]);}
@@ -5709,6 +5722,7 @@ function handTargets(q){
     case 'puppet':a={x:R.x+74*q.s,y:q.shY-64*q.s};b={x:R.x+92*q.s,y:q.shY-56*q.s};break;   // up in the light, over the human’s head
     case 'balance':a={x:L.x-q.shW*0.45,y:q.shY+22*q.s+q.lean};b={x:R.x+q.shW*0.45,y:q.shY+22*q.s-q.lean};break;
     case 'selfmouth':a={x:q.bx-q.hdR*0.3,y:q.hdY+q.hdR*0.45};b={x:q.bx+q.hdR*0.3,y:q.hdY+q.hdR*0.5};break;
+    case 'tv':if(G.tape){a={x:604,y:196};b={x:866,y:196-14*tapeLift()};break;}a={x:L.x,y:q.shY+60};b={x:R.x,y:q.shY+60};break;   // both hands behind the set (Rewind, 0.95)
     case 'selfeyes':a={x:q.bx-q.hdR*0.42,y:q.hdY-q.hdR*0.05};b={x:q.bx+q.hdR*0.42,y:q.hdY-q.hdR*0.05};break;
     default:a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};
   }

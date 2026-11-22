@@ -253,8 +253,8 @@ function holdStep(h,on,dt){
 function finishHold(){
   var g=G,h=g.hold,M=g.morko,Hm=g.human;g.hold=null;WAIT=null;
   if(h.on)swallowClick=true; // the release of this press must not also count as "continue"
-  if(h.kind==='rewind'&&g.tape)g.tape.rw=false;
-  if(h.kind==='cover'){g.aWave=false;g.aFace=1;
+  if(h.kind==='rewind'){if(g.tape)g.tape.rw=false;}   // 0.95: its own branch (0.94 fell through to the comforting arm below)
+  else if(h.kind==='cover'){g.aWave=false;g.aFace=1;
     if(g.peeked){M.pose=null;g.leak='none';Q=[['H','…She’s waving.'],['S','I looked away for ONE second.'],['H','Hi.']].concat(Q);}else M.pose='cover';}
   else if(h.kind==='pull'){M.pose='pull';Hm.xT=-90;Hm.back=true;g.cupLeft=true;g.lines=[];}
   else if(h.kind==='still'){M.pose='hold';Hm.face='stiff';g.aFace=1;}
