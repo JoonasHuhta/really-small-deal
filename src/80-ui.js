@@ -19,14 +19,14 @@ function showAbout(){
 function showWeekEnd(){
   var g=G;g.ended=true;g.dayEnd=false;WAIT=null;Q=[];render();
   var note=g.no?'One “no” was said out loud. Everyone survived, including Eero.':'The “no” is still in its box. It keeps.';
-  closeDay();var rows=runRows(g.run),rt='RECEIPT · THE WHOLE THING';
+  closeDay();if(!g.lab)saveDone();var rows=runRows(g.run),rt='RECEIPT · THE WHOLE THING';
   g.receiptText=receiptText(rt,rows,RC_FOOT_RUN);g.receipt={title:rt,rows:rows,foot:RC_FOOT_RUN};
   showOv('<div class="end-grid"><div><div class="eyebrow">For now</div><h2>Still here. Both of you.</h2>'+
    '<p class="small job-line">Ekskyysmi’s job: <s>Keep you from being rejected.</s> Stay with you when it happens.</p>'+
    '<p>A string of small moments. One “oh, hi”, twice.<br>It went off both times. The second time, somebody stayed.</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
    '<p class="title-quote">“For the record, I intend to go off again on Monday.”</p>'+
-   '<div class="end-go"><button class="go" type="button" data-go="start">New game →</button><button class="go alt" type="button" data-go="menu">Title screen</button></div></div>'+
+   '<div class="end-go"><button class="go" type="button" data-go="menu">Main menu →</button><button class="go alt" type="button" data-go="start">New game</button></div></div>'+   // 0.97: the story is over; out with one clear press (Codex)
    receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function showTitle(){
@@ -38,17 +38,17 @@ function showTitle(){
 function titleHTML(sv){   // 0.89: its own function, so a language change can redraw it
   return '<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
    '<p class="tagline">'+tr('A small moment.<br>A very long shadow.')+'</p>'+
-   (sv?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
+   (sv&&!sv.fin?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
       :'<button class="go" type="button" data-go="start">'+tr('New game')+' <span aria-hidden="true">→</span></button>')+
    '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
-   '<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>'+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button><button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
+   (sv&&sv.unlocked>=2||DEVLAB?'<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>':'')+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button><button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
 }
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
 function showEnd(){
   var g=G,n=g.startles;g.ended=true;g.dayEnd=true;WAIT=null;Q=[];render();saveProgress(2);
   var note=g.lunch===1?'You answered inside the window. Nobody has done that before. Lunch happened. The shadow is lying down.':g.lunch===2?'Lunch didn’t happen today. A message did. Tomorrow, then.':g.day==='C'?(g.reflected?'Today hurt. You reached for someone who makes room for you.':'Today hurt. Their choice to leave you out was theirs.'):'Nobody said no. Nobody had the chance. The shadow is calling that a win.';
   if(g.day==='C'&&g.leak==='exit'&&!g.reflected)note='Today felt lonely. Not every missing piece needs filling in tonight.';
-  var quote=g.lunch===1?'I would like to lodge a complaint about the speed of that hi.':{grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. We went anyway. Slightly after everyone else.'}[g.leak];
+  var quote=g.lunch===1?'I would like to lodge a complaint about the speed of that hi.':{grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. You said hi. Slightly after everyone else.'}[g.leak];   // 0.97 (Codex): “we went” was untrue where lunch was later, or without us
   note=tr(note);quote=tr(quote);   // 0.89: Finnish pilot covers the end of Monday too
   var d=closeDay()||{label:'A MONDAY',outside:AWAKE,extra:0,ledger:[],ratio:1},rows=receiptRows(d).map(trRow),rt=tr('DAILY RECEIPT')+' · '+tr(d.label);
   var foot=tr(RC_FOOT_DAY);g.receiptText=receiptText(rt,rows,foot);g.receipt={title:rt,rows:rows,foot:foot};
@@ -56,10 +56,9 @@ function showEnd(){
    '<p>'+tr('The greeting lasted two seconds.<br>The shadow took the scenic route.')+'</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
    '<p class="title-quote">'+(LANG==='fi'?'”':'“')+quote+'”</p>'+
-   '<div class="end-go"><button class="go" type="button" data-go="next">'+tr('Carry on →')+'</button>'+
-   '<button class="go alt" type="button" data-go="same">'+tr('Try another approach')+'</button>'+
-   '<button class="go alt" type="button" data-go="again">'+tr('Another Monday')+'</button></div>'+
-   '<p class="small">'+tr('Another approach replays this Monday. Another Monday changes what was happening around you.')+'</p></div>'+
+   // 0.97 (Codex): one way on. “Try another approach” read as the game saying the human should have done better, and three
+   // Mondays before Tuesday gave the player three histories and the story one. Monday comes back from Chapters, after.
+   '<div class="end-go"><button class="go" type="button" data-go="next">'+tr('On to Tuesday →')+'</button></div></div>'+
    receiptHTML(rt,rows,foot+'<br><button class="rc-copy" type="button" data-go="sharercpt">'+tr('Save as picture')+'</button> <button class="rc-copy" type="button" data-go="copyrcpt">'+tr('Copy text')+'</button>')+'</div>','end');
 }
 function startGame(day,skip){

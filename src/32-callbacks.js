@@ -51,6 +51,7 @@ function fridayReflex(){
 }
 function mondayRepair(){
   if(!G.real)return [];
-  if(G.leak==='exit')return [['H','I left before lunch on Monday. Then I spent the day guessing.'],['A','We went without asking you. I’m sorry. That was lazy of us.'],['S','I had seventeen theories. None of them were that short.']];
-  return [['H','Monday stung, though. “No need to ask the others.”'],['A','…You heard that. I’m sorry. That was lazy of us.'],['S','I’d like that in writing.']];
+  // 0.97 (Codex): the apology is taken, and Monday still feels like Monday. No new quarrel, no commentary.
+  if(G.leak==='exit')return [['H','I left before lunch on Monday. Then I spent the day guessing.'],['A','We went without asking you. I’m sorry. That was lazy of us.'],['S','I had seventeen theories. None of them were that short.'],['H','Thanks. Monday still stung.'],['A','Yeah.']];
+  return [['H','Monday stung, though. “No need to ask the others.”'],['A','…You heard that. I’m sorry. That was lazy of us.'],['S','I’d like that in writing.'],['H','Thanks. It still stings a bit.'],['A','Yeah.']];
 }

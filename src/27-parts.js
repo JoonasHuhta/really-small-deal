@@ -19,5 +19,5 @@ function storyPart(){
 function nightlightEnding(){return [scene({set:'home',clock:23*3600+10*60}),function(){
   var g=G;g.hud=false;g.plan=false;g.bed=true;g.human.gone=true;g.human.x=g.human.xT=690;
   g.lampOff=false;g.morko.s=g.morko.sT=0.9;g.morko.pose='puppet';g.morko.mood='care';
-  g.finalFrame=true;g.endSeen=true;if(!g.lab)saveDone();g.fade=1;g.fadeRate=0.65;g.cz=1;g.cx=W/2;g.cy=H/2;
+  g.finalFrame=true;g.endSeen=true;g.fade=1;g.fadeRate=0.65;g.cz=1;g.cx=W/2;g.cy=H/2;
 }, {still:true}];}

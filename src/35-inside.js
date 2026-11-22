@@ -99,7 +99,7 @@ function receiptText(title,rows,foot){
 var RC_FOOT_DAY='Thank you for your vigilance.<br>No refunds. No returns.';
 var RC_FOOT_RUN='Outside, a day is a day.<br>Inside, some days come twice.';
 // The receipt as a picture, for sending to someone who will understand. Drawn from the same rows as the paper one.
-function receiptCanvas(title,rows,foot){
+function receiptCanvas(title,rows,foot,inWorld){
   var S=2,PW=560,PAD=34,CW=PW-PAD*2,LH=30,F='500 21px ui-monospace,"SF Mono",Menlo,Consolas,monospace',FB='800 26px ui-monospace,"SF Mono",Menlo,Consolas,monospace';
   var c=document.createElement('canvas'),x=c.getContext('2d'),items=[],y=0,feet=foot.replace(/<br>/g,'\n').replace(/<[^>]+>/g,'').split('\n').filter(function(s){return s;});
   function wrap(t,max){var out=[],cur='';t.split(' ').forEach(function(w){var n=cur?cur+' '+w:w;if(cur&&x.measureText(n).width>max){out.push(cur);cur=w;}else cur=n;});out.push(cur);return out;}
@@ -109,7 +109,7 @@ function receiptCanvas(title,rows,foot){
     var big=r[2]==='big';x.font=big?FB:F;var vw=x.measureText(r[1]).width,ls=wrap(r[0],CW-vw-18);
     ls.forEach(function(l,i){items.push({k:'row',a:l,b:i===ls.length-1?r[1]:'',big:big,h:big?LH+8:LH});});
   });
-  var headH=84,footH=feet.length*26+58,bodyH=0;items.forEach(function(it){bodyH+=it.h;});
+  var headH=84,footH=feet.length*26+(inWorld?30:58),bodyH=0;items.forEach(function(it){bodyH+=it.h;});
   var PH=PAD+headH+bodyH+footH+PAD,M=44,Wc=PW+M*2,Hc=PH+M*2;
   c.width=Wc*S;c.height=Hc*S;x.scale(S,S);
   x.fillStyle='#12171b';x.fillRect(0,0,Wc,Hc);
@@ -125,7 +125,7 @@ function receiptCanvas(title,rows,foot){
   });
   x.textAlign='center';x.font='500 18px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillStyle='#5a5560';y+=26;
   feet.forEach(function(l){x.fillText(l,PW/2,y);y+=26;});
-  x.fillStyle='#8b8070';x.font='500 15px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillText('joonashuhta.github.io/really-small-deal',PW/2,y+12);
+  if(!inWorld){x.fillStyle='#8b8070';x.font='500 15px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillText('joonashuhta.github.io/really-small-deal',PW/2,y+12);}   // 0.97: not on paper inside the story (Codex)
   x.restore();
   return c;
 }

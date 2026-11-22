@@ -44,7 +44,7 @@ function loadProgress(){
     var at=null,a=raw.at;
     if(a&&a.ch===raw.ch&&typeof a.moment==='string'&&(AFTER[a.ch]||[]).indexOf(a.moment)>=0&&a.state&&typeof a.state==='object')
       at={ch:a.ch,moment:a.moment,state:checkpoint(a.state),jobDone:!!a.jobDone};
-    return {version:2,ch:raw.ch,unlocked:top,chapters:chapters,at:at,done:raw.done===true};
+    return {version:2,ch:raw.ch,unlocked:top,chapters:chapters,at:at,done:raw.done===true,fin:raw.fin===true};
   }catch(e){return null;}
 }
 function saveProgress(n){
@@ -55,8 +55,10 @@ function saveProgress(n){
   }catch(e){/* Storage is optional: private/offline play must still work. */}
 }
 // The whole story has been seen once: the Moments menu may then show the last day's moments too.
+// The run is over (0.97: called at the final receipt, after the radiator, not at the group chat's last image). done = finished once
+// (the ending's moments stay open); fin = THIS run is finished, so the title offers no Continue into the scene just played.
 function saveDone(){
-  try{var raw=JSON.parse(window.localStorage.getItem(SAVE_KEY)||'null');if(!raw||typeof raw!=='object')return;raw.done=true;window.localStorage.setItem(SAVE_KEY,JSON.stringify(raw));}catch(e){}
+  try{var raw=JSON.parse(window.localStorage.getItem(SAVE_KEY)||'null');if(!raw||typeof raw!=='object')return;raw.done=true;raw.fin=true;delete raw.at;window.localStorage.setItem(SAVE_KEY,JSON.stringify(raw));}catch(e){}
 }
 function saveMoment(id){
   try{

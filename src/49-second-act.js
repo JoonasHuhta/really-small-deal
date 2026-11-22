@@ -17,7 +17,7 @@ function plainShadow(){
 // The receipt for the quiet day, on the same paper as every other receipt. The only one that says 1.0.
 function quietReceipt(){
   var rows=[['days on the calendar','1'],['days lived','1.0','big'],'-',['lunches arranged','1'],['shifts declined','1'],['drawings finished','1'],['“for the record”','1 (unanswered)']];
-  try{G.paper=receiptCanvas('RECEIPT · A QUIET MONDAY',rows,'Room for something else.');}catch(e){G.paper=null;}
+  try{G.paper=receiptCanvas('RECEIPT · A QUIET MONDAY',rows,'Room for something else.',true);}catch(e){G.paper=null;}
   if(G.paper&&G.paper.width)return [function(){G.lines=[];G.band=null;sfx('card');},{wait:0.8},['N','One lunch arranged. One shift declined. One drawing finished.'],function(){G.paper=null;}];
   G.paper=null;
   return outside({title:'RECEIPT · A QUIET MONDAY',dur:'days lived: 1.0',cap:'One lunch arranged. One shift declined. One drawing finished. “For the record” once, unanswered.',anim:'text'});

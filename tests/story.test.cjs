@@ -67,7 +67,7 @@ for(const day of ['A','B','C'])for(let fear=0;fear<3;fear++)for(let route=0;rout
   assert.equal(T.G.dayEnd,true);assert.equal(T.G.jobDone,false);
   if(route===3){assert.equal(T.G.bit,true);assert.match(transcript,/Did we just bite Eero/);if(walk===4)assert.match(transcript,/I take the lift for a reason/);}
   else{assert.equal(T.G.bit,false);assert.doesNotMatch(transcript,/bite Eero/);}
-  assert.match(element('ov').innerHTML,/Carry on/);
+  assert.match(element('ov').innerHTML,/On to Tuesday/);assert.doesNotMatch(element('ov').innerHTML,/Try another approach/);
   assert.equal(T.G.human.sweatT,0,'no sweating on the walk home');assert.ok(!T.G.cards.some(c=>c.life==null),'the archive closes');assert.match(transcript,/opens the archive/);
   if(day==='C'&&route===2&&(walk===0||walk===4)){
     assert.match(transcript,/I don’t know what happened after that/);
@@ -75,7 +75,7 @@ for(const day of ['A','B','C'])for(let fear=0;fear<3;fear++)for(let route=0;rout
   }
   assert.match(transcript,route<2?/That’s my SMALL warning/:route===2?/I’m ENORMOUS/:/load-bearing concern/);
   if(day==='C'){assert.equal(T.G.lunch,0);assert.equal(T.G.real,1);}
-  assert.match(element('ov').innerHTML,/Try another approach/);
+  assert.doesNotMatch(element('ov').innerHTML,/Try another approach|Another Monday/,'0.97: one way on from Monday');
   assert.doesNotMatch(element('ov').innerHTML,/For the designer|Rejections prevented:/);
   assert.match(element('ov').innerHTML,/DAYS LIVED TODAY/);assert.match(element('ov').innerHTML,/A DAY, AWAKE/);
   {const d=T.inside.run().at(-1);assert.equal(d.label,'A MONDAY');assert.ok(d.ratio>1.6&&d.ratio<2.8,'a missed Monday is lived about twice: '+d.ratio);
@@ -239,8 +239,11 @@ T.chapter(3);stepUntil(()=>T.G.moment==='colleagues'&&T.state()==='click');
  playOn(()=>0);const rt=T.history().map(x=>x.text).join('\n');
  assert.doesNotMatch(rt,/rejection exchange programme|falls off a printer/,'nothing before the moment is replayed');
  assert.match(rt,/Her shadow greeted me/);assert.match(rt,/busy near each other/);assert.match(rt,/Seen 17:31/);assert.match(rt,/I’ll update the file/);
+ // 0.97: that run went to the very end. Finished means finished: no Continue into the radiator, the story's moments open.
+ const fin=JSON.parse(savedItems.get(saveKey));assert.equal(fin.done,true);assert.equal(fin.fin,true);assert.equal(fin.at,undefined,'the end clears the resume point');
+ T.reset();T.title();assert.doesNotMatch(element('ov').innerHTML,/data-go="cont"/,'a finished run offers no Continue');assert.match(element('ov').innerHTML,/data-go="moments"/);
  // A resume point from a different chapter, or for a moment that no longer exists, is ignored rather than trusted.
- const raw=JSON.parse(savedItems.get(saveKey));raw.at.moment='deleted-scene';savedItems.set(saveKey,JSON.stringify(raw));
+ const raw=JSON.parse(savedItems.get(saveKey));delete raw.fin;raw.at={ch:raw.ch,moment:'deleted-scene',state:{}};savedItems.set(saveKey,JSON.stringify(raw));
  T.reset();T.title();assert.match(element('ov').innerHTML,/Continue · For now|Continue · /);assert.doesNotMatch(element('ov').innerHTML,/undefined/);
  raw.at={ch:2,moment:'enhance',state:{}};savedItems.set(saveKey,JSON.stringify(raw));T.reset();T.title();assert.doesNotMatch(element('ov').innerHTML,/Continue · Enhance/);}
 savedItems.set(saveKey,JSON.stringify(checkpointFixture));

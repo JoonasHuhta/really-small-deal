@@ -68,6 +68,14 @@ function postingPayoff(){
     set({mood:'calm'}),
     ['S','…Deal. A small one.']
   ];
+  if(p==='rejected')return [   // 0.97 (Codex): this branch never saw a drawer; the game remembers its own trick
+    ['H','That rejection letter you wrote? I’m applying anyway.'],
+    set({mood:'surprised'}),
+    ['S','They’ve already turned you down. I have the letter.'],
+    ['H','You have the letter because you wrote it.'],
+    set({mood:'calm'}),
+    ['S','…I’ll refile it under fiction. Applications close today.']
+  ];
   if(p)return [
     ['H','And I’m taking that posting out of the drawer.'],
     set({mood:'surprised'}),

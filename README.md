@@ -14,6 +14,23 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.97.0 (Claude, 22.11.2026): **Codexin silaukset: loppu on loppu, maanantailta yksi tie eteenpäin, repliikit vastaavat reittiä.**
+- **Läpipeluu valmistuu vasta todellisessa lopussa.** Aiemmin se merkittiin valmiiksi jo ryhmäkeskustelun yökuvassa, ennen epilogia ja patteria. Siksi päävalikon ensimmäinen nappi oli lopun jälkeen *Continue · By the radiator.*, joka aloitti juuri pelatun loppukohtauksen alusta. Nyt:
+  - Valmistuminen merkitään loppukuitissa patterin jälkeen. Päävalikossa ei silloin ole Continuea, ja jatkokohta tyhjennetään.
+  - Jos pelin sulkee kesken epilogin tai patterin, Continue toimii yhä.
+  - Loppukuitin pääpainike on *Main menu →*, ja *New game* on sivuvalinta.
+  - Yökuvan nappi kertoo, minne se vie: *The week, itemised →* (ennen *For now →*).
+- **Maanantailta yksi tie eteenpäin:** *On to Tuesday →*. *Try another approach* ja *Another Monday* poistuivat maanantain lopusta. Edellinen kuulosti pelin arviolta, että ihmisen olisi pitänyt toimia paremmin, ja tämä osui pahiten reitillä, jolla hänet jätettiin oikeasti ulkopuolelle. Kolme maanantaita ennen tiistaita antoi myös pelaajalle kolme historiaa ja tarinalle yhden. Maanantain voi pelata uudelleen Chapters-valikosta.
+- ***Moments* näkyy päävalikossa vasta, kun siellä on jotain.** Uusi pelaaja ei enää törmää *Not yet.* -ruutuun.
+- **Repliikit vastaavat reittiä:**
+  - Maanantain kuitti myöhäisen moin reitillä: *”I wobbled. You said hi. Slightly after everyone else.”* Ennen se oli *”We went anyway.”*, mikä ei pitänyt paikkaansa, kun lounas siirtyi tai lähdettiin ilman ihmistä.
+  - Perjantaina Sanna sanoo reitillä, jolla ihminen vastasi ajoissa ja hän todella kysyi: *”I’m glad I asked you on Monday.”*, ja varjo lisää *”I was against it. For three seconds.”* Aidon ulkopuolelle jättämisen jälkeen yleisrepliikki *”You looked busy.”* jää pois, koska anteeksipyyntö sanoo asian paremmin.
+  - Anteeksipyynnön jälkeen ihminen sanoo *”Thanks. Monday still stung.”* (lähtemisen reitillä) tai *”Thanks. It still stings a bit.”*, ja Sanna vastaa *”Yeah.”* Anteeksipyyntö menee perille, ja maanantai tuntuu silti maanantailta.
+  - Työpaikkailmoituksen hylkäyshaara saa perjantaina oman paluunsa: *”That rejection letter you wrote? I’m applying anyway.”* – *”…I’ll refile it under fiction.”* Laatikkorepliikki jää arkistointihaaralle, joka laatikon näki.
+  - Perjantain vaihtoehdot ovat ehdotuksia: *”Suggest “nothing”. We have a folder for it.”* Ihminen päättää vastauksensa itse.
+- **Verkko-osoite ei enää näy tarinan sisäisellä paperilla** (*Quiet.*-kohtauksen kuitti). Jaettavassa kuittikuvassa ja kopioidussa tekstissä se pysyy, jotta jaetun kuitin saaja löytää pelin.
+- Testit: läpipelattu peli ei tarjoa Continuea, Moments on auki, valmistumismerkintä on päällä ja jatkokohta tyhjä. Maanantain lopussa ei ole uusintanappeja. Ajoin kolme kokonaista reittiä, ja uudet repliikit näkyvät jokaisella. Ruutu tarkistettu.
+
 Versio 0.96.0 (Claude, 22.11.2026): **punainen journaali ja sulkakynä, kerran.**
 - Joonas: Ekskyysmi puhuu arkistoinnista koko pelin, joten kerran teon voisi nähdä konkreettisesti. *Enhancen* (#4) lopussa salapoliisilakkinen varjo avaa punaisen journaalin ja kirjoittaa siihen aivan liian suurella sulkakynällä. Samalla se sanoo: *”I’m filing it under “eyebrows, inconclusive”.”* Vasemmalla sivulla on vanhoja merkintöjä, oikealle syntyy tämän päivän rivi. Ennen repliikkiä *”I have a WING for eyebrows.”* kansi napsahtaa kiinni, ja vasta sitten lakki lähtee: juttu on suljettu.
 - **Miksi juuri tässä:** arkistointi on tässä kohdassa itse vitsi, ja salapoliisi tekee muistiinpanot. Tarinan tärkein arkistoteko, vanhimman kortin päivitys kohdassa #23 (*”This time I left it up.”* – *”…I’ll update the file.”*), näkyy jo korttina ja kuuluu ihmisen rohkeudelle. Siellä sulkakynän koreilu veisi huomion väärään paikkaan.

@@ -434,4 +434,7 @@
 "Menu":"Valikko","Language":"Kieli"
 ,
 "Coming. COMING.":"Tullaan. TULLAAN."
+,
+// 0.97: the end of Monday, changed
+"On to Tuesday →":"Tiistaihin →","I wobbled. You said hi. Slightly after everyone else.":"Huojuin. Sinä sanoit moi. Vähän kaikkien muiden jälkeen."
 };for(var k in d)FI[k]=d[k];fiIndex();})();

@@ -401,8 +401,8 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   calm,set({aFace:-1,near:1}),
   ['A','You okay?'],
   {choice:[   // Friday ran 37 lines without the player: Ekskyysmi gets a say in the answer (the human still decides)
-    {t:'Say “nothing”. We have a folder for it.',m:'hide',f:function(){G.friSmall=0;}},
-    {t:'Say it’s something. A small something.',m:'stay',f:function(){G.friSmall=1;}}
+    {t:'Suggest “nothing”. We have a folder for it.',m:'hide',f:function(){G.friSmall=0;}},   // 0.97 (Codex): a suggestion, since the human answers for themself
+    {t:'Suggest it’s something. A small something.',m:'stay',f:function(){G.friSmall=1;}}
   ]},
   ['H','It’s something. Small. Give me a minute.'],
   set({mood:'surprised'}),
@@ -442,8 +442,10 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   shot('two',{who:'A',hide:1}),
   ['A','Is that why you used to vanish at lunch? We stopped asking. I thought asking was pressure.'],
   ['H','I thought not being asked was the verdict.'],
-  ['A','I was going to ask you on Monday. You looked busy.'],keep('asked'),
-  shot('crash'),aside(['S','Looking busy was my idea.']),
+  function(){var g=G;   // 0.97 (Codex): she did ask, on the route where the human answered in time; and after a real exclusion her apology says it better
+    if(g.lunch===1)return [['A','I’m glad I asked you on Monday.'],keep('askedYes'),shot('crash'),aside(['S','I was against it. For three seconds.'])];
+    if(g.real)return [];
+    return [['A','I was going to ask you on Monday. You looked busy.'],keep('asked'),shot('crash'),aside(['S','Looking busy was my idea.'])];},
   ['A','So we’ve been being polite AT each other. For a year.'],
   ['S','She says “fine” carefully. Like it might break. Tell her.',{quiet:1}],
   ['H','For the record: when I say “fine”, it’s the good kind.'],

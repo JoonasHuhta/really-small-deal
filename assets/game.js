@@ -629,6 +629,9 @@ function trRow(r){if(!Array.isArray(r))return r;var m=/^(.*?)( ×\d+)?$/.exec(r[
 "Menu":"Valikko","Language":"Kieli"
 ,
 "Coming. COMING.":"Tullaan. TULLAAN."
+,
+// 0.97: the end of Monday, changed
+"On to Tuesday →":"Tiistaihin →","I wobbled. You said hi. Slightly after everyone else.":"Huojuin. Sinä sanoit moi. Vähän kaikkien muiden jälkeen."
 };for(var k in d)FI[k]=d[k];fiIndex();})();
 // ---- src/20-engine.js ----
 /* ================= state ================= */
@@ -766,7 +769,7 @@ function render(){
     html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">'+tr('Skip intro →')+'</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+tr(WAIT==='time'?'A moment…':'Continue →')+'</button>';
   }
   if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">'+tr('Begin '+g.chap.day.toLowerCase()+' →')+'</button>';
-  if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">'+tr('For now →')+'</button>';}
+  if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">'+tr('The week, itemised →')+'</button>';}   // 0.97: says where it goes (the epilogue)
   text=tr(text);   // 0.89: prompts, hold texts, captions
   var icon=speaker==='H'?'human':speaker==='S'?'':speaker==='N'?'narrator':'other';
   // Narration is unlabelled and in italics, as in most narrative games: a voice, not a character. Screen readers still hear “Narrator”.
@@ -933,7 +936,7 @@ function archive(kind,items){return function(){
 function keep(id){return function(){var k=G.kept||(G.kept=[]);if(k.indexOf(id)<0)k.push(id);};}
 var KEPT={hi:['MONDAY','She said hi first.'],compliments:['TUESDAY','Three compliments. Not misplaced. Filed here.'],
   eero:['WEDNESDAY','Eero hates presenting. Kept. Not posted.'],library:['PAGE 212','Someone else loves lighthouses too.'],
-  asked:['FRIDAY','She was going to ask on Monday.'],drawing:['YEAR 2','The drawing. Before anyone laughed.']};
+  asked:['FRIDAY','She was going to ask on Monday.'],askedYes:['FRIDAY','She was glad she asked.'],drawing:['YEAR 2','The drawing. Before anyone laughed.']};
 function openDrawer(){var g=G,ids=(g.kept||[]).filter(function(k){return KEPT[k];}).concat(['drawing']).slice(0,6);g.cards=[];
   for(var i=0;i<ids.length;i++){var c=KEPT[ids[i]];g.cards.push({kind:'good',year:c[0],text:c[1],t:-0.4-i*0.75,life:null,x:i%2?795:165,y:115+Math.floor(i/2)*125,rot:(i%2?1:-1)*0.025});}   // two side columns: the middle stays free for the two of them
   g.drawer=true;sfx('card');}
@@ -1009,7 +1012,7 @@ function storyPart(){
 function nightlightEnding(){return [scene({set:'home',clock:23*3600+10*60}),function(){
   var g=G;g.hud=false;g.plan=false;g.bed=true;g.human.gone=true;g.human.x=g.human.xT=690;
   g.lampOff=false;g.morko.s=g.morko.sT=0.9;g.morko.pose='puppet';g.morko.mood='care';
-  g.finalFrame=true;g.endSeen=true;if(!g.lab)saveDone();g.fade=1;g.fadeRate=0.65;g.cz=1;g.cx=W/2;g.cy=H/2;
+  g.finalFrame=true;g.endSeen=true;g.fade=1;g.fadeRate=0.65;g.cz=1;g.cx=W/2;g.cy=H/2;
 }, {still:true}];}
 // ---- src/28-progress.js ----
 /* Chapter checkpoints keep their own history. Unlocks and the last played chapter are separate. */
@@ -1058,7 +1061,7 @@ function loadProgress(){
     var at=null,a=raw.at;
     if(a&&a.ch===raw.ch&&typeof a.moment==='string'&&(AFTER[a.ch]||[]).indexOf(a.moment)>=0&&a.state&&typeof a.state==='object')
       at={ch:a.ch,moment:a.moment,state:checkpoint(a.state),jobDone:!!a.jobDone};
-    return {version:2,ch:raw.ch,unlocked:top,chapters:chapters,at:at,done:raw.done===true};
+    return {version:2,ch:raw.ch,unlocked:top,chapters:chapters,at:at,done:raw.done===true,fin:raw.fin===true};
   }catch(e){return null;}
 }
 function saveProgress(n){
@@ -1069,8 +1072,10 @@ function saveProgress(n){
   }catch(e){/* Storage is optional: private/offline play must still work. */}
 }
 // The whole story has been seen once: the Moments menu may then show the last day's moments too.
+// The run is over (0.97: called at the final receipt, after the radiator, not at the group chat's last image). done = finished once
+// (the ending's moments stay open); fin = THIS run is finished, so the title offers no Continue into the scene just played.
 function saveDone(){
-  try{var raw=JSON.parse(window.localStorage.getItem(SAVE_KEY)||'null');if(!raw||typeof raw!=='object')return;raw.done=true;window.localStorage.setItem(SAVE_KEY,JSON.stringify(raw));}catch(e){}
+  try{var raw=JSON.parse(window.localStorage.getItem(SAVE_KEY)||'null');if(!raw||typeof raw!=='object')return;raw.done=true;raw.fin=true;delete raw.at;window.localStorage.setItem(SAVE_KEY,JSON.stringify(raw));}catch(e){}
 }
 function saveMoment(id){
   try{
@@ -1909,8 +1914,8 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   calm,set({aFace:-1,near:1}),
   ['A','You okay?'],
   {choice:[   // Friday ran 37 lines without the player: Ekskyysmi gets a say in the answer (the human still decides)
-    {t:'Say “nothing”. We have a folder for it.',m:'hide',f:function(){G.friSmall=0;}},
-    {t:'Say it’s something. A small something.',m:'stay',f:function(){G.friSmall=1;}}
+    {t:'Suggest “nothing”. We have a folder for it.',m:'hide',f:function(){G.friSmall=0;}},   // 0.97 (Codex): a suggestion, since the human answers for themself
+    {t:'Suggest it’s something. A small something.',m:'stay',f:function(){G.friSmall=1;}}
   ]},
   ['H','It’s something. Small. Give me a minute.'],
   set({mood:'surprised'}),
@@ -1950,8 +1955,10 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   shot('two',{who:'A',hide:1}),
   ['A','Is that why you used to vanish at lunch? We stopped asking. I thought asking was pressure.'],
   ['H','I thought not being asked was the verdict.'],
-  ['A','I was going to ask you on Monday. You looked busy.'],keep('asked'),
-  shot('crash'),aside(['S','Looking busy was my idea.']),
+  function(){var g=G;   // 0.97 (Codex): she did ask, on the route where the human answered in time; and after a real exclusion her apology says it better
+    if(g.lunch===1)return [['A','I’m glad I asked you on Monday.'],keep('askedYes'),shot('crash'),aside(['S','I was against it. For three seconds.'])];
+    if(g.real)return [];
+    return [['A','I was going to ask you on Monday. You looked busy.'],keep('asked'),shot('crash'),aside(['S','Looking busy was my idea.'])];},
   ['A','So we’ve been being polite AT each other. For a year.'],
   ['S','She says “fine” carefully. Like it might break. Tell her.',{quiet:1}],
   ['H','For the record: when I say “fine”, it’s the good kind.'],
@@ -2076,8 +2083,9 @@ function fridayReflex(){
 }
 function mondayRepair(){
   if(!G.real)return [];
-  if(G.leak==='exit')return [['H','I left before lunch on Monday. Then I spent the day guessing.'],['A','We went without asking you. I’m sorry. That was lazy of us.'],['S','I had seventeen theories. None of them were that short.']];
-  return [['H','Monday stung, though. “No need to ask the others.”'],['A','…You heard that. I’m sorry. That was lazy of us.'],['S','I’d like that in writing.']];
+  // 0.97 (Codex): the apology is taken, and Monday still feels like Monday. No new quarrel, no commentary.
+  if(G.leak==='exit')return [['H','I left before lunch on Monday. Then I spent the day guessing.'],['A','We went without asking you. I’m sorry. That was lazy of us.'],['S','I had seventeen theories. None of them were that short.'],['H','Thanks. Monday still stung.'],['A','Yeah.']];
+  return [['H','Monday stung, though. “No need to ask the others.”'],['A','…You heard that. I’m sorry. That was lazy of us.'],['S','I’d like that in writing.'],['H','Thanks. It still stings a bit.'],['A','Yeah.']];
 }
 // ---- src/33-moments.js ----
 /* ================= the order of things: a life in small moments, not a calendar ================= */
@@ -2302,7 +2310,7 @@ function receiptText(title,rows,foot){
 var RC_FOOT_DAY='Thank you for your vigilance.<br>No refunds. No returns.';
 var RC_FOOT_RUN='Outside, a day is a day.<br>Inside, some days come twice.';
 // The receipt as a picture, for sending to someone who will understand. Drawn from the same rows as the paper one.
-function receiptCanvas(title,rows,foot){
+function receiptCanvas(title,rows,foot,inWorld){
   var S=2,PW=560,PAD=34,CW=PW-PAD*2,LH=30,F='500 21px ui-monospace,"SF Mono",Menlo,Consolas,monospace',FB='800 26px ui-monospace,"SF Mono",Menlo,Consolas,monospace';
   var c=document.createElement('canvas'),x=c.getContext('2d'),items=[],y=0,feet=foot.replace(/<br>/g,'\n').replace(/<[^>]+>/g,'').split('\n').filter(function(s){return s;});
   function wrap(t,max){var out=[],cur='';t.split(' ').forEach(function(w){var n=cur?cur+' '+w:w;if(cur&&x.measureText(n).width>max){out.push(cur);cur=w;}else cur=n;});out.push(cur);return out;}
@@ -2312,7 +2320,7 @@ function receiptCanvas(title,rows,foot){
     var big=r[2]==='big';x.font=big?FB:F;var vw=x.measureText(r[1]).width,ls=wrap(r[0],CW-vw-18);
     ls.forEach(function(l,i){items.push({k:'row',a:l,b:i===ls.length-1?r[1]:'',big:big,h:big?LH+8:LH});});
   });
-  var headH=84,footH=feet.length*26+58,bodyH=0;items.forEach(function(it){bodyH+=it.h;});
+  var headH=84,footH=feet.length*26+(inWorld?30:58),bodyH=0;items.forEach(function(it){bodyH+=it.h;});
   var PH=PAD+headH+bodyH+footH+PAD,M=44,Wc=PW+M*2,Hc=PH+M*2;
   c.width=Wc*S;c.height=Hc*S;x.scale(S,S);
   x.fillStyle='#12171b';x.fillRect(0,0,Wc,Hc);
@@ -2328,7 +2336,7 @@ function receiptCanvas(title,rows,foot){
   });
   x.textAlign='center';x.font='500 18px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillStyle='#5a5560';y+=26;
   feet.forEach(function(l){x.fillText(l,PW/2,y);y+=26;});
-  x.fillStyle='#8b8070';x.font='500 15px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillText('joonashuhta.github.io/really-small-deal',PW/2,y+12);
+  if(!inWorld){x.fillStyle='#8b8070';x.font='500 15px ui-monospace,"SF Mono",Menlo,Consolas,monospace';x.fillText('joonashuhta.github.io/really-small-deal',PW/2,y+12);}   // 0.97: not on paper inside the story (Codex)
   x.restore();
   return c;
 }
@@ -3193,7 +3201,7 @@ function plainShadow(){
 // The receipt for the quiet day, on the same paper as every other receipt. The only one that says 1.0.
 function quietReceipt(){
   var rows=[['days on the calendar','1'],['days lived','1.0','big'],'-',['lunches arranged','1'],['shifts declined','1'],['drawings finished','1'],['“for the record”','1 (unanswered)']];
-  try{G.paper=receiptCanvas('RECEIPT · A QUIET MONDAY',rows,'Room for something else.');}catch(e){G.paper=null;}
+  try{G.paper=receiptCanvas('RECEIPT · A QUIET MONDAY',rows,'Room for something else.',true);}catch(e){G.paper=null;}
   if(G.paper&&G.paper.width)return [function(){G.lines=[];G.band=null;sfx('card');},{wait:0.8},['N','One lunch arranged. One shift declined. One drawing finished.'],function(){G.paper=null;}];
   G.paper=null;
   return outside({title:'RECEIPT · A QUIET MONDAY',dur:'days lived: 1.0',cap:'One lunch arranged. One shift declined. One drawing finished. “For the record” once, unanswered.',anim:'text'});
@@ -5184,6 +5192,14 @@ function postingPayoff(){
     set({mood:'calm'}),
     ['S','…Deal. A small one.']
   ];
+  if(p==='rejected')return [   // 0.97 (Codex): this branch never saw a drawer; the game remembers its own trick
+    ['H','That rejection letter you wrote? I’m applying anyway.'],
+    set({mood:'surprised'}),
+    ['S','They’ve already turned you down. I have the letter.'],
+    ['H','You have the letter because you wrote it.'],
+    set({mood:'calm'}),
+    ['S','…I’ll refile it under fiction. Applications close today.']
+  ];
   if(p)return [
     ['H','And I’m taking that posting out of the drawer.'],
     set({mood:'surprised'}),
@@ -6137,14 +6153,14 @@ function showAbout(){
 function showWeekEnd(){
   var g=G;g.ended=true;g.dayEnd=false;WAIT=null;Q=[];render();
   var note=g.no?'One “no” was said out loud. Everyone survived, including Eero.':'The “no” is still in its box. It keeps.';
-  closeDay();var rows=runRows(g.run),rt='RECEIPT · THE WHOLE THING';
+  closeDay();if(!g.lab)saveDone();var rows=runRows(g.run),rt='RECEIPT · THE WHOLE THING';
   g.receiptText=receiptText(rt,rows,RC_FOOT_RUN);g.receipt={title:rt,rows:rows,foot:RC_FOOT_RUN};
   showOv('<div class="end-grid"><div><div class="eyebrow">For now</div><h2>Still here. Both of you.</h2>'+
    '<p class="small job-line">Ekskyysmi’s job: <s>Keep you from being rejected.</s> Stay with you when it happens.</p>'+
    '<p>A string of small moments. One “oh, hi”, twice.<br>It went off both times. The second time, somebody stayed.</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
    '<p class="title-quote">“For the record, I intend to go off again on Monday.”</p>'+
-   '<div class="end-go"><button class="go" type="button" data-go="start">New game →</button><button class="go alt" type="button" data-go="menu">Title screen</button></div></div>'+
+   '<div class="end-go"><button class="go" type="button" data-go="menu">Main menu →</button><button class="go alt" type="button" data-go="start">New game</button></div></div>'+   // 0.97: the story is over; out with one clear press (Codex)
    receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function showTitle(){
@@ -6156,17 +6172,17 @@ function showTitle(){
 function titleHTML(sv){   // 0.89: its own function, so a language change can redraw it
   return '<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
    '<p class="tagline">'+tr('A small moment.<br>A very long shadow.')+'</p>'+
-   (sv?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
+   (sv&&!sv.fin?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
       :'<button class="go" type="button" data-go="start">'+tr('New game')+' <span aria-hidden="true">→</span></button>')+
    '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
-   '<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>'+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button><button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
+   (sv&&sv.unlocked>=2||DEVLAB?'<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>':'')+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button><button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
 }
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
 function showEnd(){
   var g=G,n=g.startles;g.ended=true;g.dayEnd=true;WAIT=null;Q=[];render();saveProgress(2);
   var note=g.lunch===1?'You answered inside the window. Nobody has done that before. Lunch happened. The shadow is lying down.':g.lunch===2?'Lunch didn’t happen today. A message did. Tomorrow, then.':g.day==='C'?(g.reflected?'Today hurt. You reached for someone who makes room for you.':'Today hurt. Their choice to leave you out was theirs.'):'Nobody said no. Nobody had the chance. The shadow is calling that a win.';
   if(g.day==='C'&&g.leak==='exit'&&!g.reflected)note='Today felt lonely. Not every missing piece needs filling in tonight.';
-  var quote=g.lunch===1?'I would like to lodge a complaint about the speed of that hi.':{grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. We went anyway. Slightly after everyone else.'}[g.leak];
+  var quote=g.lunch===1?'I would like to lodge a complaint about the speed of that hi.':{grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. You said hi. Slightly after everyone else.'}[g.leak];   // 0.97 (Codex): “we went” was untrue where lunch was later, or without us
   note=tr(note);quote=tr(quote);   // 0.89: Finnish pilot covers the end of Monday too
   var d=closeDay()||{label:'A MONDAY',outside:AWAKE,extra:0,ledger:[],ratio:1},rows=receiptRows(d).map(trRow),rt=tr('DAILY RECEIPT')+' · '+tr(d.label);
   var foot=tr(RC_FOOT_DAY);g.receiptText=receiptText(rt,rows,foot);g.receipt={title:rt,rows:rows,foot:foot};
@@ -6174,10 +6190,9 @@ function showEnd(){
    '<p>'+tr('The greeting lasted two seconds.<br>The shadow took the scenic route.')+'</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
    '<p class="title-quote">'+(LANG==='fi'?'”':'“')+quote+'”</p>'+
-   '<div class="end-go"><button class="go" type="button" data-go="next">'+tr('Carry on →')+'</button>'+
-   '<button class="go alt" type="button" data-go="same">'+tr('Try another approach')+'</button>'+
-   '<button class="go alt" type="button" data-go="again">'+tr('Another Monday')+'</button></div>'+
-   '<p class="small">'+tr('Another approach replays this Monday. Another Monday changes what was happening around you.')+'</p></div>'+
+   // 0.97 (Codex): one way on. “Try another approach” read as the game saying the human should have done better, and three
+   // Mondays before Tuesday gave the player three histories and the story one. Monday comes back from Chapters, after.
+   '<div class="end-go"><button class="go" type="button" data-go="next">'+tr('On to Tuesday →')+'</button></div></div>'+
    receiptHTML(rt,rows,foot+'<br><button class="rc-copy" type="button" data-go="sharercpt">'+tr('Save as picture')+'</button> <button class="rc-copy" type="button" data-go="copyrcpt">'+tr('Copy text')+'</button>')+'</div>','end');
 }
 function startGame(day,skip){
