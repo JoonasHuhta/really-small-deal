@@ -293,7 +293,7 @@ function epiForm(e){var t=e.ct,x=560,y=58,w=360,h=300,mono='"DM Mono",ui-monospa
       ctx.fillStyle='#6b6470';ctx.font='500 11px '+mono;ctx.fillText('signature (the shadow)',x+18,y+h-34);}
     ctx.globalAlpha=1;});
   ctx.restore();}
-function epiChrome(on){try{document.body.classList.toggle('epi-on',on);}catch(e){}}
+function epiChrome(on){try{document.body.classList.toggle('epi-on',on);resize();}catch(e){}}   // 0.82: the layout changes size on the desktop, so the canvas does too
 // Skip: the first tap asks, a second tap within 2.5 s jumps to the black at the end.
 function epiTap(){var e=G.epi;if(!e)return false;if(e.ask!=null&&G.time-e.ask<2.5){e.skip=true;music(null);return true;}e.ask=G.time;return true;}
 function epiSkipHint(e){if(e.ask==null||G.time-e.ask>2.5||e.skip)return;ctx.save();ctx.globalAlpha=clamp(2.5-(G.time-e.ask),0,1)*0.85;ctx.fillStyle='rgba(13,17,20,.6)';rr(W-356,14,342,30,15);ctx.fill();

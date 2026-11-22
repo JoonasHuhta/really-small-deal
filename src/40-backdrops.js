@@ -15,7 +15,10 @@ function home(){
   if(!G.bed&&!G.kitchen){   // at night the bed takes the floor; in the kitchen there is no sofa
   ctx.fillStyle='#57486a';rr(600,292,300,70,16);ctx.fill();ctx.fillStyle='#655479';rr(588,338,324,84,14);ctx.fill();
   ctx.fillStyle='#4b3e5b';rr(588,330,30,92,10);ctx.fill();rr(882,330,30,92,10);ctx.fill();
-  ctx.fillStyle='#c98f2e';rr(700,322,60,34,8);ctx.fill();}
+  ctx.fillStyle='#c98f2e';rr(700,322,60,34,8);ctx.fill();
+  // 0.82: someone has mended this sofa (one trace of use per object, Codex visual review 22.11.)
+  ctx.save();ctx.translate(828,372);ctx.rotate(-0.06);ctx.fillStyle='#76668c';ctx.fillRect(-17,-12,34,24);
+  ctx.strokeStyle='#3f3350';ctx.lineWidth=1.6;ctx.setLineDash([4,3]);ctx.strokeRect(-14,-9,28,18);ctx.setLineDash([]);ctx.restore();}
   if(G.snacks){var cols=['#c9553f','#e2b04a','#62887f'];for(var k=G.torn?1:0;k<11;k++){var b=bagPos(k);ctx.fillStyle=cols[k%3];rr(b.x,b.y,26,34,5);ctx.fill();}}
 }
 function homeLamp(){

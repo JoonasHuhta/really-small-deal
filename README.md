@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.82.0 (Claude, 22.11.2026): **pieniä kuvakorjauksia Codexin kuva-arviosta, alkuperäinen tyyli säilyy** (Joonas: ”default alkuperäinen oli selkeästi paras”).
+- **Käytön jäljet, yksi esinettä kohden** (Codexin suunta B, mutta vain jäljet): kotisohvassa on paikka ja harsittu ommel, taukotilan korkkitaululla yksi lappu on kiinnitetty uudelleen vinoon ja sen kulma käpristyy, ja kahvipisteen seinällä on kaksi vanhaa teipinpalaa paikassa, jossa oli joskus lappu. Huoneilla on nyt eilinen.
+- **Päiväleima on luettava:** ennen se himmeni leikkauksen jälkeen 55 %:iin, ja vaaleaa seinää vasten se näytti pois käytöstä olevalta säätimeltä. Nyt sillä on peittävä tumma pohja (#36343b, teksti #f2ece0, noin 10:1), ja se himmenee enintään 86 %:iin.
+- **Epilogi työpöydällä:** dialogipaneeli piilotettiin epilogin ajaksi, mutta sen 310 px:n sarake jäi tyhjäksi. Nyt kuva käyttää koko leveyden, mutta ei koskaan kasva ikkunan alareunan yli, koska kuvatekstit ovat siellä. Testattu koot 1024×700, 1280×720, 1366×650 ja 1920×1080. Puhelimilla ei muutoksia.
+- **Ei tehty:** uudet tyylisuunnat A (lomake), B (kokonaisena) ja C (hiilipaperi), HUD-pillereiden muutos, paneelin sumennus ja hahmojen asennot. Alkuperäinen tyyli säilyy.
+- **Odottaa Joonaksen kynää** (Codexin ohjeet raportissa 22.11.): kissa kahdessa vaiheessa (4 ja 5 jalkaa samalle paperille), Ekskyysmin sininen käsiala ja nimikirjoitus lomakkeeseen (#24, nyt järjestelmäfontti, joka näyttää eri laitteilla erilaiselta) sekä lappu ”BE A MUG. NOT A HERO.”.
+
 Versio 0.81.0 (Claude, 21.11.2026): **silmäpussit harvemmin** (Joonas: ”ehkä vähän liian usein”).
 - Ennen väsymys tuli aina, kun mukissa oli 1 tai vähemmän, eli myös maanantai- ja tiistaipäivänä. Silmäpussit näkyivät 12 %:ssa repliikeistä. Nyt ne tulevat vain kolmena yönä: tiistaina 03:07, *Rewind*-kohtauksessa vasta uusintojen jälkeen (niiden hintana) ja keskiviikkona 23:15–00:19. Osuus on nyt 5 %. Mumina seuraa samaa sääntöä.
 

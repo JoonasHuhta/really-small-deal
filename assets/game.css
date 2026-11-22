@@ -31,6 +31,8 @@ dialog{color:var(--ink);background:#263237;border:1px solid #738176;border-radiu
   .playing .game-frame{display:grid;grid-template-columns:minmax(0,1fr) 310px}
   .playing .scene-bar{grid-column:1/-1}
   .playing .stage{align-self:center;background:#b8bda7}
+  .playing.epi-on .game-frame{grid-template-columns:minmax(0,1fr)}   /* 0.82: the epilogue hides the dialogue panel; its column goes too */
+  .playing.epi-on .stage{justify-self:center;width:100%;max-width:calc((100vh - 140px) * 16 / 9)}   /* …but the picture never grows past the bottom of the window: the captions live there */
   .playing .play-panel{min-height:470px;display:flex;flex-direction:column;border-left:1px solid #556159;padding:24px 20px}
   .playing .line{grid-template-columns:1fr;gap:14px}.playing .line p{font-size:calc(19px * var(--ts,1));line-height:1.55}
   .playing .opts{grid-template-columns:1fr;margin-top:auto}.playing .opt{font-size:calc(13px * var(--ts,1));padding:12px}
@@ -189,5 +191,3 @@ html.immersive body.playing .opts.n4{grid-column:1/-1;grid-template-columns:repe
 html.immersive body.playing .opts.n4 .opt{font-size:calc(12.5px * var(--ts,1));padding:6px 8px}
 html.immersive body.playing .opts.n5{grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr))}
 
-/* 0.79: words for a screen reader that are already on the screen as pictures (the epilogue) */
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

@@ -2455,7 +2455,7 @@ function epiForm(e){var t=e.ct,x=560,y=58,w=360,h=300,mono='"DM Mono",ui-monospa
       ctx.fillStyle='#6b6470';ctx.font='500 11px '+mono;ctx.fillText('signature (the shadow)',x+18,y+h-34);}
     ctx.globalAlpha=1;});
   ctx.restore();}
-function epiChrome(on){try{document.body.classList.toggle('epi-on',on);}catch(e){}}
+function epiChrome(on){try{document.body.classList.toggle('epi-on',on);resize();}catch(e){}}   // 0.82: the layout changes size on the desktop, so the canvas does too
 // Skip: the first tap asks, a second tap within 2.5 s jumps to the black at the end.
 function epiTap(){var e=G.epi;if(!e)return false;if(e.ask!=null&&G.time-e.ask<2.5){e.skip=true;music(null);return true;}e.ask=G.time;return true;}
 function epiSkipHint(e){if(e.ask==null||G.time-e.ask>2.5||e.skip)return;ctx.save();ctx.globalAlpha=clamp(2.5-(G.time-e.ask),0,1)*0.85;ctx.fillStyle='rgba(13,17,20,.6)';rr(W-356,14,342,30,15);ctx.fill();
@@ -2502,7 +2502,10 @@ function home(){
   if(!G.bed&&!G.kitchen){   // at night the bed takes the floor; in the kitchen there is no sofa
   ctx.fillStyle='#57486a';rr(600,292,300,70,16);ctx.fill();ctx.fillStyle='#655479';rr(588,338,324,84,14);ctx.fill();
   ctx.fillStyle='#4b3e5b';rr(588,330,30,92,10);ctx.fill();rr(882,330,30,92,10);ctx.fill();
-  ctx.fillStyle='#c98f2e';rr(700,322,60,34,8);ctx.fill();}
+  ctx.fillStyle='#c98f2e';rr(700,322,60,34,8);ctx.fill();
+  // 0.82: someone has mended this sofa (one trace of use per object, Codex visual review 22.11.)
+  ctx.save();ctx.translate(828,372);ctx.rotate(-0.06);ctx.fillStyle='#76668c';ctx.fillRect(-17,-12,34,24);
+  ctx.strokeStyle='#3f3350';ctx.lineWidth=1.6;ctx.setLineDash([4,3]);ctx.strokeRect(-14,-9,28,18);ctx.setLineDash([]);ctx.restore();}
   if(G.snacks){var cols=['#c9553f','#e2b04a','#62887f'];for(var k=G.torn?1:0;k<11;k++){var b=bagPos(k);ctx.fillStyle=cols[k%3];rr(b.x,b.y,26,34,5);ctx.fill();}}
 }
 function homeLamp(){
@@ -4997,7 +5000,10 @@ function room(flat,noFront){
   ctx.strokeStyle='#557260';ctx.lineWidth=3;line(88,365,91,293);line(88,350,67,316);line(88,352,110,325);
   ctx.fillStyle='#c78d71';ctx.beginPath();ctx.moveTo(64,348);ctx.lineTo(111,348);ctx.lineTo(103,389);ctx.lineTo(72,389);ctx.closePath();ctx.fill();
   ctx.fillStyle='#b08a5a';rr(140,150,150,104,4);ctx.fill();
-  ctx.fillStyle='#f6f1e4';ctx.fillRect(152,162,46,58);ctx.fillRect(206,166,34,40);ctx.fillRect(246,160,34,50);ctx.fillRect(208,214,60,30);
+  ctx.fillStyle='#f6f1e4';ctx.fillRect(152,162,46,58);ctx.fillRect(206,166,34,40);ctx.fillRect(208,214,60,30);
+  // 0.82: re-pinned once, a little crooked, the corner curling (one trace of use per object)
+  ctx.save();ctx.translate(263,162);ctx.rotate(0.07);ctx.beginPath();ctx.moveTo(-17,-2);ctx.lineTo(17,-2);ctx.lineTo(17,38);ctx.lineTo(8,48);ctx.lineTo(-17,48);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#dcd4c0';ctx.beginPath();ctx.moveTo(17,38);ctx.lineTo(8,48);ctx.lineTo(7,36);ctx.closePath();ctx.fill();ctx.restore();ctx.fillStyle='#f6f1e4';
   ctx.strokeStyle='#9c958a';ctx.lineWidth=1.5;for(var i=0;i<5;i++)line(157,172+i*9,192,172+i*9);
   ctx.fillStyle='#5a6559';ctx.font='600 9px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText('BE A MUG.',237,226);ctx.fillText('NOT A HERO.',237,237);
   ctx.fillStyle='#c9553f';circ(175,164,3);ctx.fill();circ(223,168,3);ctx.fill();circ(263,162,3);ctx.fill();
@@ -5009,6 +5015,9 @@ function room(flat,noFront){
   ctx.fillStyle=flat?'#8c9092':'#7d8a8c';ctx.fillRect(728,322,252,WALLY-322);
   ctx.fillStyle=flat?'#74787a':'#667274';ctx.fillRect(728,316,252,8);
   ctx.fillStyle='#34323c';rr(872,262,52,56,5);ctx.fill();ctx.fillStyle='#c9553f';circ(912,274,3);ctx.fill();
+  // 0.82: two old bits of tape above the mugs; whatever the note said, it is gone
+  ctx.save();ctx.fillStyle='rgba(242,233,200,.6)';ctx.translate(778,268);ctx.rotate(-0.12);ctx.fillRect(-9,-3,18,6);ctx.rotate(0.12);ctx.translate(46,2);ctx.rotate(0.1);ctx.fillRect(-9,-3,18,6);
+  ctx.fillStyle='rgba(246,241,228,.85)';ctx.beginPath();ctx.moveTo(-7,3);ctx.lineTo(3,3);ctx.lineTo(-4,9);ctx.closePath();ctx.fill();ctx.restore();
   ctx.fillStyle='#fbf8ef';ctx.fillRect(748,302,12,14);ctx.fillRect(766,302,12,14);
   ctx.strokeStyle='#fbf8ef';ctx.lineWidth=2;ctx.beginPath();ctx.arc(760,309,4,-Math.PI/2,Math.PI/2);ctx.stroke();
   ctx.beginPath();if(G.mugFixed===false)ctx.arc(766,309,4,Math.PI/2,Math.PI*1.5);else ctx.arc(778,309,4,-Math.PI/2,Math.PI/2);ctx.stroke();
@@ -5444,10 +5453,10 @@ function hud(){
 // Top left, small and faint: which day it is and the time. Brighter for a few seconds after a cut.
 function dayStamp(){
   var g=G;if(!g.started||g.ended||g.epi||g.finalFrame||g.out||g.qte||g.form||g.paper||g.clock==null)return;
-  var t=(g.dayTag?g.dayTag+'  ·  ':'')+hhmm(g.clock),a=0.55+0.4*clamp(1-((g.stampT||0)-3.5)/1.5,0,1);
+  var t=(g.dayTag?g.dayTag+'  ·  ':'')+hhmm(g.clock),a=0.86+0.14*clamp(1-((g.stampT||0)-3.5)/1.5,0,1);   // 0.82: never fades below readable (Codex visual review: on a light wall it looked disabled)
   ctx.save();ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='600 '+(COMPACT?14:11)+'px system-ui,sans-serif';
-  var w=ctx.measureText(t).width;ctx.globalAlpha=a;ctx.fillStyle='rgba(22,19,30,.72)';rr(10,10,w+20,COMPACT?26:22,11);ctx.fill();
-  ctx.fillStyle='#f1ebdd';ctx.fillText(t,20,COMPACT?23:21);ctx.restore();
+  var w=ctx.measureText(t).width;ctx.globalAlpha=a;ctx.fillStyle='#36343b';rr(10,10,w+20,COMPACT?26:22,11);ctx.fill();
+  ctx.fillStyle='#f2ece0';ctx.fillText(t,20,COMPACT?23:21);ctx.restore();
 }
 function pausedNote(){
   var g=G,a=g.awayNote;
