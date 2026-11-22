@@ -14,6 +14,11 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.96.0 (Claude, 22.11.2026): **punainen journaali ja sulkakynä, kerran.**
+- Joonas: Ekskyysmi puhuu arkistoinnista koko pelin, joten kerran teon voisi nähdä konkreettisesti. *Enhancen* (#4) lopussa salapoliisilakkinen varjo avaa punaisen journaalin ja kirjoittaa siihen aivan liian suurella sulkakynällä. Samalla se sanoo: *”I’m filing it under “eyebrows, inconclusive”.”* Vasemmalla sivulla on vanhoja merkintöjä, oikealle syntyy tämän päivän rivi. Ennen repliikkiä *”I have a WING for eyebrows.”* kansi napsahtaa kiinni, ja vasta sitten lakki lähtee: juttu on suljettu.
+- **Miksi juuri tässä:** arkistointi on tässä kohdassa itse vitsi, ja salapoliisi tekee muistiinpanot. Tarinan tärkein arkistoteko, vanhimman kortin päivitys kohdassa #23 (*”This time I left it up.”* – *”…I’ll update the file.”*), näkyy jo korttina ja kuuluu ihmisen rohkeudelle. Siellä sulkakynän koreilu veisi huomion väärään paikkaan.
+- Journaali näkyy vain tässä kohdassa (EKSKYYSMI.md): kerran nähty teko on vitsi, toistuva olisi maneeri. Se on piirretty varjon rinnalle ihmisen kasvojen ulkopuolelle ja tarkistettu pöytäkoneen ja puhelimen koossa.
+
 Versio 0.95.0 (Claude, 22.11.2026): **Rewindin nauha jumittuu, ja sarvet ovat Ekskyysmin sormet.**
 - **Valinnainen *”Rewind once more. For thoroughness.”*** (Codexin ehdotus) jumittaa nauhan aina, myös napauttamalla pelaavalla:
   1. Kuva pysähtyy kesken hymyn (*❚❚ JAMMED*, *”oh, h—”*).

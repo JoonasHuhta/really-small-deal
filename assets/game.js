@@ -1522,7 +1522,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.rxT=null;g.rPhone=false;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.journal=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -3833,10 +3833,14 @@ function labEnhance(){return labScene({set:'office',title:'Enhance.',plan:'Share
  ],outside({title:'WHAT RIITTA WAS LOOKING AT',dur:'duration: half a second',cap:'The clock behind you. It was nearly lunch.',anim:'text'}),[
   calm,
   ['H','You enhanced a hungry eyebrow.'],
-  hat(null),   // the case is closed, so the hat comes off
+  // 0.96 (Joonas: it talks about filing all game long; once, let the filing be seen). A red journal and an absurdly large quill.
+  // Only here, where the filing is the punchline. The archive cards elsewhere stay as they are: this is the field notebook.
+  function(){var g=G;g.journal={at:g.time};g.morko.pose='journal';sfx('scribble');},
   ['S','I’m filing it under “eyebrows, inconclusive”.'],
   ['H','You have a file for eyebrows?'],
-  ['S','I have a WING for eyebrows.']
+  function(){var g=G;if(g.journal)g.journal.shutAt=g.time;sfx('card');},{wait:0.5},
+  ['S','I have a WING for eyebrows.'],
+  function(){var g=G;g.journal=null;if(g.morko.pose==='journal')g.morko.pose=null;},hat(null)   // the case is closed, so the hat comes off
  ]);}
 var ZOOMLABEL=[null,'ENHANCE ×800','ENHANCE ×6 400','ENHANCE ×51 200 · RESOLUTION: GONE','REFLECTION DETECTED'];
 function drawZoom(){
@@ -5723,11 +5727,30 @@ function handTargets(q){
     case 'balance':a={x:L.x-q.shW*0.45,y:q.shY+22*q.s+q.lean};b={x:R.x+q.shW*0.45,y:q.shY+22*q.s-q.lean};break;
     case 'selfmouth':a={x:q.bx-q.hdR*0.3,y:q.hdY+q.hdR*0.45};b={x:q.bx+q.hdR*0.3,y:q.hdY+q.hdR*0.5};break;
     case 'tv':if(G.tape){a={x:604,y:196};b={x:866,y:196-14*tapeLift()};break;}a={x:L.x,y:q.shY+60};b={x:R.x,y:q.shY+60};break;   // both hands behind the set (Rewind, 0.95)
+    case 'journal':var jr=journalAt(q);a={x:jr.x-24*jr.k,y:jr.y+8*jr.k};b=jr.pen;front=true;break;   // left hand under the journal, right hand on the quill
     case 'selfeyes':a={x:q.bx-q.hdR*0.42,y:q.hdY-q.hdR*0.05};b={x:q.bx+q.hdR*0.42,y:q.hdY-q.hdR*0.05};break;
     default:a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};
   }
   return{a:a,b:b,front:front,L:L,R:R};
 }
+// The red journal (0.96): held at the chest, open; the quill moves along a line, then rests; closed with a snap.
+function journalAt(q){var k=Math.max(0.8,Math.sqrt(q.s)),x=q.bx-4*k,y=q.shY+60*k,j=G.journal||{},t=G.time-(j.at||G.time),shut=j.shutAt!=null;
+  var wr=shut?1:clamp(t/2.4,0,1),line=Math.min(3,Math.floor(wr*4)),fx=(wr*4)%1,
+    pen={x:x+(shut?18:2+fx*22)*k+(RM||shut||wr>=1?0:Math.sin(G.time*26)*1.5*k),y:y+(shut?-6:-6+line*5)*k};
+  return {x:x,y:y,k:k,wr:wr,shut:shut,pen:pen};}
+function drawJournal(q){
+  var jr=journalAt(q),k=jr.k,x=jr.x,y=jr.y,i;ctx.save();ctx.lineCap='round';
+  if(jr.shut){ctx.fillStyle='#a53739';rr(x-16*k,y-20*k,32*k,40*k,3*k);ctx.fill();ctx.fillStyle='#7d2427';ctx.fillRect(x-16*k,y-20*k,4*k,40*k);}
+  else{ctx.fillStyle='#a53739';rr(x-34*k,y-22*k,68*k,42*k,3*k);ctx.fill();                       // the open cover
+    ctx.fillStyle='#f4eddf';rr(x-31*k,y-19*k,30*k,36*k,2*k);ctx.fill();rr(x+1*k,y-19*k,30*k,36*k,2*k);ctx.fill();   // two pages
+    ctx.strokeStyle='#7d2427';ctx.lineWidth=1.2*k;line(x,y-19*k,x,y+17*k);
+    ctx.strokeStyle='#8c3a3a';ctx.lineWidth=1.4*k;for(i=0;i<4;i++)line(x-27*k,y+(-12+i*6)*k,x-6*k,y+(-12+i*6)*k);   // what was already in it
+    var done=jr.wr*4;for(i=0;i<4&&i<done;i++){var len=Math.min(1,done-i)*22*k,yy=y+(-12+i*5)*k;ctx.beginPath();ctx.moveTo(x+4*k,yy);
+      for(var s=0;s<=len;s+=2*k)ctx.lineTo(x+4*k+s,yy+Math.sin(s*0.9+i)*1.1*k);ctx.stroke();}}   // today's entry, in a hand it is proud of
+  // the quill: far too large for the journal. Nib at the pen hand, feather up and out.
+  var p=jr.pen,tx=p.x+30*k,ty=p.y-64*k;ctx.strokeStyle='#d9d2c3';ctx.lineWidth=1.6*k;line(p.x,p.y,tx,ty);
+  ctx.fillStyle='#efe8da';ctx.beginPath();ctx.moveTo(p.x+8*k,p.y-16*k);ctx.quadraticCurveTo(tx+14*k,ty+14*k,tx+2*k,ty-4*k);ctx.quadraticCurveTo(tx-12*k,ty+20*k,p.x+3*k,p.y-14*k);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#14111d';ctx.lineWidth=2*k;line(p.x,p.y,p.x+3*k,p.y-6*k);ctx.restore();}
 function mcol(){return G.w||G.set==='home'||G.set==='bar'?'#0d0f18':G.dark>0.5?'#14111d':'#28243a';}
 function selfStamps(q,n){
   ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 '+Math.round(11*q.s)+'px system-ui,sans-serif';
@@ -5871,6 +5894,7 @@ function drawPair(humanOpts){
   if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to. 0.85: after the human: its feet are nearer than theirs, so anyone walking past goes behind it, not over it
   if(up&&ht.front){ctx.save();ctx.globalAlpha*=fa;morkoArms(q,ht);ctx.restore();}
   if(up)drawStamp();
+  if(up&&G.journal&&G.morko.pose==='journal')drawJournal(q);
 }
 
 /* ================= drawing: speech ================= */

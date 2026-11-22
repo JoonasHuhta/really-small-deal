@@ -112,10 +112,14 @@ function labEnhance(){return labScene({set:'office',title:'Enhance.',plan:'Share
  ],outside({title:'WHAT RIITTA WAS LOOKING AT',dur:'duration: half a second',cap:'The clock behind you. It was nearly lunch.',anim:'text'}),[
   calm,
   ['H','You enhanced a hungry eyebrow.'],
-  hat(null),   // the case is closed, so the hat comes off
+  // 0.96 (Joonas: it talks about filing all game long; once, let the filing be seen). A red journal and an absurdly large quill.
+  // Only here, where the filing is the punchline. The archive cards elsewhere stay as they are: this is the field notebook.
+  function(){var g=G;g.journal={at:g.time};g.morko.pose='journal';sfx('scribble');},
   ['S','I’m filing it under “eyebrows, inconclusive”.'],
   ['H','You have a file for eyebrows?'],
-  ['S','I have a WING for eyebrows.']
+  function(){var g=G;if(g.journal)g.journal.shutAt=g.time;sfx('card');},{wait:0.5},
+  ['S','I have a WING for eyebrows.'],
+  function(){var g=G;g.journal=null;if(g.morko.pose==='journal')g.morko.pose=null;},hat(null)   // the case is closed, so the hat comes off
  ]);}
 var ZOOMLABEL=[null,'ENHANCE ×800','ENHANCE ×6 400','ENHANCE ×51 200 · RESOLUTION: GONE','REFLECTION DETECTED'];
 function drawZoom(){
