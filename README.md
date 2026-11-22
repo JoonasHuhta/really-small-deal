@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.90.0 (Claude, 22.11.2026): **suurennuslasi Enhanceen, lakkien eheys.**
+- **Enhance (#4) saa lasin ja lakin.** Joonas muisti, että lasi ”katosi”. Tarkistin koko historian: *Enhance* ei ollut koskaan käyttänyt lasia, vaan siinä oli vain zoom. Lasi kuuluu kuitenkin juuri tähän. Nyt *”“Interesting.” With an eyebrow.”* → salapoliisilakki päähän ja lasi Riitan kulmakarvalle (*EYEBROW: UP. OPINION: PENDING.*) → *”ENHANCE.”* → zoom kuten ennen. Lakki lähtee, kun juttu arkistoidaan (*”I’m filing it under “eyebrows, inconclusive”.”*).
+- **Lakkien eheys tarkistettu.** Neljä lakkia, jokainen omassa kohdassaan: salapoliisi (*Enhance*, *Evidence*), kokki (tiskit #9), juhlahattu (torstai, lentää romahduksessa), merirosvo (vain labran muki-prototyyppi). Yksikään hetki ei pääty lakki päässä, ja `scene()` riisuu lakin joka kohtauksen alussa. Periaate on kirjattu EKSKYYSMI.md:hen: pikakatse on pelkkä lasi, tutkinta on lasi ja lakki.
+- `tests/moments.test.cjs` vaatii nyt, että jokainen puku tulee omaan kohtaansa, ettei mikään hetki käytä toisen hetken lakkia ja ettei mikään pääty lakki päässä tai lasi kädessä. Testi kaatuu, jos *Enhancen* lakki poistetaan.
+- Pieni: lasin lappu kulkee `tr()`:n kautta tulevaa käännöstä varten.
+
 Versio 0.89.0 (Claude, 22.11.2026): **suomenkielinen maanantai (kokeilu).**
 - **Valikko → Kieli → Suomi (kokeilu).** Koko maanantai on suomeksi ensimmäisestä repliikistä kotimatkaan, kissaan ja päivän kuittiin asti: kaikki valinnat, ulkonäkymät (*MITÄ MUUT NÄKIVÄT*), puhelinviestit, oikean vastauksen ikkuna, leima, arkistokortit, korkkitaulun lappu (*OLE MUKI. ÄLÄ SANKARI.*), vihjerivi, alkuruutu ja valikon napit. Tiistaista eteenpäin peli jatkuu englanniksi, kunnes loput käännetään.
 - **Miten:** pelin englanninkielinen rivi on avain. `tr()` (`src/15-fi.js`) hakee suomennoksen ja palauttaa englannin, jos sitä ei ole. Suomennokset ovat tiedostossa `src/16-fi-monday.js` (462 riviä). Ne kerättiin ajamalla kaikki maanantaireitit suomeksi: `tr()` kirjaa jokaisen englanniksi jääneen rivin.

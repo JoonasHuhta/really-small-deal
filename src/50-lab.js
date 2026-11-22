@@ -79,8 +79,10 @@ function labEnhance(){return labScene({set:'office',title:'Enhance.',plan:'Share
   ['R','Interesting.'],
   hit(0.6,'R'),{wait:1.3},
   ['S','“Interesting.” With an eyebrow.'],
+  // 0.90: an investigation gets the hat and the glass (Joonas 22.11.: "the glass is the best"); a quick look gets the glass only
+  hat('detective'),lensHold(function(){return {x:G.rx,y:FEETY-170};},'EYEBROW: UP. OPINION: PENDING.'),{wait:1.5},
   ['S','ENHANCE.'],
-  zoom(1),{wait:0.5},
+  lensOff,zoom(1),{wait:0.5},
   ['S','Note the angle. Twelve degrees. Textbook disdain.'],
   {choice:[
     {t:'Measure the arch.',then:[['S','The arch is load-bearing. It is holding up an entire opinion.']]},
@@ -110,6 +112,7 @@ function labEnhance(){return labScene({set:'office',title:'Enhance.',plan:'Share
  ],outside({title:'WHAT RIITTA WAS LOOKING AT',dur:'duration: half a second',cap:'The clock behind you. It was nearly lunch.',anim:'text'}),[
   calm,
   ['H','You enhanced a hungry eyebrow.'],
+  hat(null),   // the case is closed, so the hat comes off
   ['S','I’m filing it under “eyebrows, inconclusive”.'],
   ['H','You have a file for eyebrows?'],
   ['S','I have a WING for eyebrows.']

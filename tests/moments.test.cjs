@@ -10,13 +10,15 @@ const ids=[...src.matchAll(/^\s+(\w+):\{title/gm)].map(m=>m[1]);
 assert.ok(ids.length>=10,'LABS was not found in src/50-lab.js');
 const SPEAKERS='SHABPRNZYWTXL';
 const problems=[];let runs=0,lines=0;
+// Hats (0.90, Joonas: "are the hats where they belong?"): each moment that has a costume still puts it on, and nothing ends wearing one.
+const HATS={glass:'detective',enhance:'detective',evening:'chef',mug:'pirate'},worn={};
 for(const id of ids){
   for(const pick of ['first','middle','last']){
     const H=harness(),T=H.T,seen=new Set();runs++;let ended=false;
     try{
       T.lab(id);
       for(let guard=0;guard<6000;guard++){
-        T.unlock();const st=T.state(),c=T.G.cur;
+        T.unlock();const st=T.state(),c=T.G.cur;if(T.G.morko.hat)(worn[id]=worn[id]||new Set()).add(T.G.morko.hat);
         if(c&&st==='click'){const k=c.who+'|'+c.text;if(!seen.has(k)){seen.add(k);lines++;
           if(typeof c.text!=='string'||!c.text.trim()||/undefined|NaN|\[object/.test(c.text))problems.push(`${id} (${pick}): broken line from ${c.who}: ${JSON.stringify(c.text)}`);
           if(!SPEAKERS.includes(c.who))problems.push(`${id} (${pick}): unknown speaker ${c.who}`);}}
@@ -31,9 +33,13 @@ for(const id of ids){
         else T.tick(0.2);
         T.tick(0.05);
       }
+      if(T.G.morko.hat)problems.push(`${id} (${pick}): ends wearing the ${T.G.morko.hat} hat`);
+      if(T.G.lens)problems.push(`${id} (${pick}): ends holding the glass`);
       if(!ended)problems.push(`${id} (${pick}): never reached its end; stuck in state ${T.state()} at ${JSON.stringify(T.G.cur&&T.G.cur.text)}`);
     }catch(e){problems.push(`${id} (${pick}): crashed: ${e&&e.stack?e.stack.split('\n').slice(0,3).join(' | '):e}`);}
   }
 }
+for(const [id,h] of Object.entries(HATS))if(!(worn[id]&&worn[id].has(h)))problems.push(`${id}: the ${h} hat never went on`);
+for(const [id,s] of Object.entries(worn))for(const h of s)if(HATS[id]!==h)problems.push(`${id}: wears the ${h} hat, which belongs elsewhere`);
 assert.deepEqual(problems,[],'\n'+problems.join('\n'));
-console.log(`PASS: ${ids.length} moments × 3 choice paths (${runs} runs, ${lines} distinct lines), no crashes, stalls or broken lines.`);
+console.log(`PASS: ${ids.length} moments × 3 choice paths (${runs} runs, ${lines} distinct lines), no crashes, stalls or broken lines; hats where they belong.`);
