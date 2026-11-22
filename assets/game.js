@@ -6145,8 +6145,10 @@ function gameVersion(){var e=document.querySelector&&document.querySelector('scr
 function showAbout(){
   showOv('<div class="eyebrow">About</div><h2>What is this?</h2>'+
    '<p>You play Ekskyysmi, the overprotective shadow of a perfectly ordinary human. The human has one small plan: ask Sanna from work to lunch. You have concerns.</p>'+
-   '<p>About 50 minutes. Read at your own pace: almost nothing is timed. The one thing that is, is unfair on purpose. Conversations don’t wait either.</p>'+
-   '<p>It’s a comedy about rejection sensitivity, meant kindly. It isn’t advice. Some moments may land close: being left out, a message left on “Seen.”, a bad night at home.</p>'+
+   // 0.98: what it is about, in plain words first (the term is not common knowledge); loneliness as “wanting company”, shame as
+   // a situation in the content note rather than abstract nouns. “Conversations don’t wait either” went: only one thing is timed.
+   '<p>It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.</p>'+
+   '<p>About 50 minutes. It saves as you go. Only one thing is timed, and it’s unfair on purpose (Slow reality, in the menu, helps).</p>'+
    '<p class="small">Alpha'+gameVersion()+', still changing. Made by Joonas Huhta (MoshBitSurfers).</p>'+
    '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
 }

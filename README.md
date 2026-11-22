@@ -14,6 +14,12 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.98.0 (Claude, 22.11.2026): **About-teksti uudelleen.** Joonas kysyi, kertooko peli myös yksinäisyydestä ja häpeästä ja pitäisikö niiden näkyä Aboutissa.
+- **Uusi teksti:** *”It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.”* sekä *”About 50 minutes. It saves as you go. Only one thing is timed, and it’s unfair on purpose (Slow reality, in the menu, helps).”*
+- **Miksi näin:** yksinäisyys ja häpeä ovat pelin ydintä, mutta ne kerrotaan arkisin sanoin eikä abstrakteina käsitteinä. *Wanting company* on yksinäisyys, ja *an old embarrassment at 3 a.m.* on häpeä tilanteena, pelin omalla äänellä (*”I remember it every night at 3 a.m.”*). Lista ”rejection sensitivity, loneliness and shame” kuulostaisi esitteeltä ja lupaisi raskaampaa peliä kuin tämä komedia on. Sisältövaroitus kertoo tilanteita, ei tunteita. Termi *rejection sensitivity* jäi, mutta selitetään heti tavallisin sanoin, koska kaikki eivät tunne sitä.
+- **Korjattu ristiriita:** vanha teksti sanoi, että vain yksi asia on ajastettu, ja heti perään *”Conversations don’t wait either.”* Ajastettu on oikeasti vain oikean vastauksen ikkuna. Nyt tekstissä kerrotaan myös, että peli tallentuu ja että *Slow reality* antaa lisäaikaa.
+- Pituus pysyi samana. Asettelutarkistus on puhdas kaikilla viidellä vaakasuuntaisella puhelinkoolla.
+
 Versio 0.97.0 (Claude, 22.11.2026): **Codexin silaukset: loppu on loppu, maanantailta yksi tie eteenpäin, repliikit vastaavat reittiä.**
 - **Läpipeluu valmistuu vasta todellisessa lopussa.** Aiemmin se merkittiin valmiiksi jo ryhmäkeskustelun yökuvassa, ennen epilogia ja patteria. Siksi päävalikon ensimmäinen nappi oli lopun jälkeen *Continue · By the radiator.*, joka aloitti juuri pelatun loppukohtauksen alusta. Nyt:
   - Valmistuminen merkitään loppukuitissa patterin jälkeen. Päävalikossa ei silloin ole Continuea, ja jatkokohta tyhjennetään.
