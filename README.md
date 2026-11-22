@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.85.0 (Claude, 22.11.2026): **pieniä korjauksia Joonaksen kuvista.**
+- **Kukaan ei kävele enää takaperin.** Kenkien kärjet piirrettiin aina oikealle, joten vasemmalle kävelevä hahmo näytti kävelevän takaperin. Nyt kärjet seuraavat kasvoja kaikilla hahmoilla. Myös maanantain ulkoversiossa poistuva ihminen katsoo kulkusuuntaansa.
+- **Kukaan ei kävele pöydän päältä.** Taukotilan lamppupöytä piirrettiin ihmisen alle, vaikka sen jalat ovat lähempänä katsojaa. Nyt ohi kulkeva menee pöydän taakse.
+- **Introssa ei ole päällekkäistä päivää.** Päiväleima (MONDAY · 08:51) ja kertojan ”Monday, 8:52. Nobody here yet.” sanoivat saman asian päällekkäin ja minuutin erossa. Nyt kertoja sanoo vain ”Nobody here yet.” ja hieman alempana. Mukimerkinnät (”mug handle on the wrong side”) nousivat pään päältä sen yläpuolelle.
+- **Kertoja yhdessä paikassa.** Kertojan kaistale piirrettiin kuvaan silloinkin, kun paneeli näytti saman tekstin (kapea kuva, iso teksti tai Text below). Nyt kertoja näkyy joko kaistaleena kuvassa tai paneelissa, ei koskaan molemmissa.
+- **Ikkunoissa tapahtuu harvemmin.** Lintu näkyi 38 % ajasta (joka 7,3 sekunti), ja kuvio toistui, koska satunnaisluku eteni joka kerta saman verran. Nyt lintu näkyy noin 8 % ajasta, joskus kaksi, eri nopeuksilla ja suuntiin. Yöllä lentokone kulkee vain joskus ja tähdenlento on harvinainen.
+
 Versio 0.84.0 (Claude, 22.11.2026): **perjantaikierros Codexin tarinahuomioista** (jokainen tarkistettu koodista; Codexin grafiikkaversio 0.83.1 tuotiin ensin gittiin sellaisenaan).
 - **Ei Eerolle maksaa nyt jotain.** Ennen Eero vastasi heti ”Oh. Right. I’ll ask Riitta.”, joten perjantain ”ei” oli pelin ainoa raja, joka ei maksanut mitään. Nyt Eero on jo luvannut vuoron Riitalle: *”Oh. I told Riitta you probably could.”* – *”Oh.”* Ekskyysmi kasvaa (1,9), ja pelaaja valitsee, mitä se tekee: painostaa perumaan (*”It’s ONE Monday.”* – *”…No. It’s still no.”*) tai seisoo vieressä (*”I’m standing here. Not fixing it.”*). Ihminen pitää kieltäytymisensä kummassakin. *”…Okay. I’ll tell her.”* Ekskyysmi on kerrankin oikeassa: *”That was awkward. I was right about that one.”* – *”You were.”* – *”…I’m staying anyway.”* Pidettävä ihminen tekee pienen epäreilun teon, eikä peli kerro jälkikäteen, että se olikin pientä.
 - **Miksi juuri Sanna.** Yleinen *”Lunch?”* vaihtui kutsuun, josta näkee heidän yhteisen makunsa: *”Soup? The one with too much dill.”* – *”Oh, good. That one.”* Ihmisen oma ”oh” tarkoittaa kerrankin juuri sitä, miltä se kuulostaa (vrt. maanantain ”oh, hi.”). Hammaslääkärihaaran *”It’s Friday. No dentist.”* säilyy.

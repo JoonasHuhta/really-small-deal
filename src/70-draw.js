@@ -53,7 +53,7 @@ var VIEW={l:0,r:W,t:0,z:1};
 
 /* ================= drawing: break room ================= */
 // The lamp table stands on the floor in front of the wall, so the shadow on the wall goes behind it.
-// In a scene it is drawn between the shadow and the human (drawPair); room() draws it itself only when asked to draw the whole room.
+// In a scene it is drawn after the shadow and the human (drawPair); room() draws it itself only when asked to draw the whole room.
 function roomFront(flat){
   ctx.fillStyle='#6b563e';ctx.fillRect(604,420,72,8);ctx.fillRect(610,428,6,40);ctx.fillRect(664,428,6,40);
   ctx.strokeStyle='#3d3a44';ctx.lineWidth=4;line(640,420,640,366);
@@ -113,7 +113,8 @@ function person(x,o){
   if(o.puddle>0.02){ctx.fillStyle='rgba(150,205,230,.55)';ctx.beginPath();ctx.ellipse(x+6,FEETY+5,20+o.puddle*70,4+o.puddle*7,0,0,Math.PI*2);ctx.fill();}
   ctx.fillStyle='#3a3944';rr(x-15+lg,FEETY-54,12,54,4);ctx.fill();rr(x+3-lg,FEETY-54,12,54,4);ctx.fill();
   var skin=o.body===SANNA.body?'#c9957a':o.body===MIKA.body?'#e5c4a1':'#e4bba2';
-  ctx.fillStyle='#263639';rr(x-19+lg,FEETY-8,20,10,4);ctx.fill();rr(x+1-lg,FEETY-8,23,10,4);ctx.fill();
+  ctx.fillStyle='#263639';if(f>0){rr(x-19+lg,FEETY-8,20,10,4);ctx.fill();rr(x+1-lg,FEETY-8,23,10,4);ctx.fill();}
+  else{rr(x-1+lg,FEETY-8,20,10,4);ctx.fill();rr(x-24-lg,FEETY-8,23,10,4);ctx.fill();}   // 0.85: the toes follow the face (Joonas: "they walk backwards")
   var hy=FEETY-150+(o.nod||0)*5+fl*3+(o.down?4:0)-(o.walk?Math.abs(Math.sin(G.time*8))*1.5:0)+(o.face==='laugh'&&!RM?Math.abs(Math.sin(G.time*13))*-3:0),hx=x+(o.back?0:f*2);
   if(o.body===SANNA.body){ctx.fillStyle=o.hair;rr(hx-23,hy-17,45,45,18);ctx.fill();}
   ctx.fillStyle=skin;rr(x-7,top-14,14,23,4);ctx.fill();
@@ -390,9 +391,9 @@ function drawPair(humanOpts){
   morkoBody(q);morkoSpikes(q);ctx.globalAlpha=fa;if(up&&!ht.front)morkoArms(q,ht);ctx.restore();   // morkoBody ends at alpha 1 for the eyes
   if(up)shadowDrink(q);
   drawGaze();
-  if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to: not on the street
   homeLamp();   // shadow on the wall, then the lamp, then the human
   drawHuman(humanOpts);
+  if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to. 0.85: after the human: its feet are nearer than theirs, so anyone walking past goes behind it, not over it
   if(up&&ht.front){ctx.save();ctx.globalAlpha*=fa;morkoArms(q,ht);ctx.restore();}
   if(up)drawStamp();
 }
@@ -447,7 +448,7 @@ function drawOutside(){
   else if(an==='nod'){h.nod=(t>0.5&&t<1.3)?Math.sin((t-0.5)/0.8*Math.PI):(t>1.6&&t<2.4)?Math.sin((t-1.6)/0.8*Math.PI):0;}
   else if(an==='grow'){h.face='stiff';h.flinch=t<1.9?0.8:0.25;h.shake=t<2.8;}
   else if(an==='cover'){h.face='down';h.down=true;if(g.day!=='C'&&t>1&&t<2.8){aFace=-1;aWave=true;}}
-  else if(an==='exit'){hx=300-t*110;h.back=true;h.cup=false;h.walk=true;show=hx>-40;if(t>2.6)aFace=-1;}
+  else if(an==='exit'){hx=300-t*110;h.back=true;h.facing=-1;h.cup=false;h.walk=true;show=hx>-40;if(t>2.6)aFace=-1;}
   if(an==='tape'&&t>0.4&&t<1.4)bubble(700,FEETY-172,'oh, hi.');
   if(an==='exit'){ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(650,406,12,14,2);ctx.fill();ctx.stroke();}
   if(show)person(hx,h);
@@ -610,7 +611,7 @@ function draw(){
         if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText('THE WALK HOME',W/2,74);
       ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('Nine minutes, usually.',W/2,106);}
   }
-  if(g.band&&!COMPACT)band(g.band,H-18);
+  if(g.band&&!COMPACT&&!textBelow&&lineInBubble({who:'N'}))band(g.band,H-18);   // 0.85: never in the picture and in the panel at once
   if(g.chap&&g.chap.moment)momentCard();
   if(paused)pausedNote();
 }

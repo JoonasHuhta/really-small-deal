@@ -624,7 +624,7 @@ function scPrelude(){return [
     g.chap={day:CHAPTERS[1].day,title:CHAPTERS[1].title,t:0};g.chapter=1;g.dayTag='MONDAY';g.stampT=0;newDay();sfx('card');},
   function(){return partCard(1);},
   function(){G.chap=null;G.fade=1;G.fadeRate=0.36;},
-  addTic('Monday, 8:52. Nobody here yet.',190,62,{at:0.9,life:3.4,size:19}),
+  addTic('Nobody here yet.',300,96,{at:0.9,life:3.4,size:19}),   // 0.85: the day stamp says MONDAY · 08:51; this line used to say it again, a minute off, on top of it
   {wait:2.6},
   function(){var Hm=G.human;Hm.gone=false;Hm.xT=815;},
   {wait:1.8},
@@ -634,10 +634,10 @@ function scPrelude(){return [
   function(){var g=G,Hm=g.human;g.noCup=false;Hm.back=false;Hm.facing=-1;Hm.xT=704;},
   {wait:1.3},
   function(){G.human.facing=1;},
-  addTic('(mug handle on the wrong side.)',764,276,{life:1.5}),
+  addTic('(mug handle on the wrong side.)',764,246,{life:1.5}),   // 0.85: above the head, not on it
   {wait:1.5},
   function(){G.mugFixed=true;G.mugFx={t:0};sfx('clink');},
-  addTic('(better.)',764,276,{life:1.1}),
+  addTic('(better.)',764,246,{life:1.1}),
   {wait:1.1},
   function(){var Hm=G.human;Hm.facing=-1;Hm.xT=HOME;},
   {wait:2.2},
@@ -2626,17 +2626,23 @@ function bigNote(){
 /* ================= a little life (Joonas 20.11.: the world felt static) =================
    Through windows: now and then a bird by day, a plane's light or a shooting star by night. In lamp light: dust.
    All of it is clocked by G.time, so it is the same on every replay, and Less motion turns it off. */
+// 0.85 (Joonas: "far too often, and always the same"): a bird now and then, not every seven seconds; some passes are empty,
+// some have two birds, speeds differ. At night a plane only sometimes, a shooting star rarely. The hash no longer creeps by a fixed step.
+function skyHash(k,x){var v=Math.sin(k*12.9898+x*78.233)*43758.5453;return v-Math.floor(v);}
 function sky(x,y,w,h,night){
-  if(RM||!G.time)return;var t=G.time+x*0.37,P=night?9.5:7.3,k=Math.floor(t/P),ph=t-k*P,r=((k*9301+x*49297)%233280)/233280;
+  if(RM||!G.time)return;var t=G.time+x*0.37;
   ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
   if(!night){
-    if(ph<2.8){var bx=x-20+(w+40)*(ph/2.8),by=y+18+r*(h*0.55)+Math.sin(ph*3)*4,fl=Math.sin(G.time*14)*4,dir=r>0.5?1:-1;if(dir<0)bx=x+w+20-(w+40)*(ph/2.8);
+    var P=11,k=Math.floor(t/P),ph=t-k*P,r=skyHash(k,x),dur=2.6+skyHash(k+7,x)*1.9;
+    if(r<0.3&&ph<dur){var u=ph/dur,dir=skyHash(k+3,x)>0.5?1:-1,bx=dir>0?x-20+(w+40)*u:x+w+20-(w+40)*u,by=y+18+skyHash(k+5,x)*(h*0.55)+Math.sin(ph*3)*4,fl=Math.sin(G.time*14)*4;
       ctx.strokeStyle='rgba(40,46,52,.75)';ctx.lineWidth=1.8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(bx-7,by-fl);ctx.lineTo(bx,by);ctx.lineTo(bx+7,by-fl);ctx.stroke();
-      if(r>0.6){var b2=bx-dir*16;ctx.beginPath();ctx.moveTo(b2-6,by+7+fl);ctx.lineTo(b2,by+9);ctx.lineTo(b2+6,by+7+fl);ctx.stroke();}}
+      if(r<0.1){var b2=bx-dir*16;ctx.beginPath();ctx.moveTo(b2-6,by+7+fl);ctx.lineTo(b2,by+9);ctx.lineTo(b2+6,by+7+fl);ctx.stroke();}}
   }else{
-    var px=x+((t*9)%(w+60))-30,py=y+22+((x*7)%30);if(Math.sin(G.time*5)>0.6){ctx.fillStyle='rgba(255,90,80,.9)';circ(px,py,1.6);ctx.fill();}
-    ctx.fillStyle='rgba(255,255,255,.55)';circ(px+4,py,1.1);ctx.fill();
-    if(r>0.55&&ph<0.7){var sx=x+w*0.85-ph*w*1.1,sy=y+10+ph*h*0.5;var g2=ctx.createLinearGradient(sx,sy,sx+26,sy-12);g2.addColorStop(0,'rgba(255,255,255,'+(0.9-ph)+')');g2.addColorStop(1,'rgba(255,255,255,0)');
+    var P2=26,k2=Math.floor(t/P2),ph2=t-k2*P2;
+    if(skyHash(k2,x+3)<0.3){var px=x-30+ph2*9,py=y+22+((x*7)%30);if(Math.sin(G.time*5)>0.6){ctx.fillStyle='rgba(255,90,80,.9)';circ(px,py,1.6);ctx.fill();}
+      ctx.fillStyle='rgba(255,255,255,.55)';circ(px+4,py,1.1);ctx.fill();}
+    var P3=9.5,k3=Math.floor(t/P3),ph3=t-k3*P3;
+    if(skyHash(k3,x+11)>0.92&&ph3<0.7){var sx=x+w*0.85-ph3*w*1.1,sy=y+10+ph3*h*0.5;var g2=ctx.createLinearGradient(sx,sy,sx+26,sy-12);g2.addColorStop(0,'rgba(255,255,255,'+(0.9-ph3)+')');g2.addColorStop(1,'rgba(255,255,255,0)');
       ctx.strokeStyle=g2;ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+26,sy-12);ctx.stroke();}
   }
   ctx.restore();
@@ -4995,7 +5001,7 @@ var VIEW={l:0,r:W,t:0,z:1};
 
 /* ================= drawing: break room ================= */
 // The lamp table stands on the floor in front of the wall, so the shadow on the wall goes behind it.
-// In a scene it is drawn between the shadow and the human (drawPair); room() draws it itself only when asked to draw the whole room.
+// In a scene it is drawn after the shadow and the human (drawPair); room() draws it itself only when asked to draw the whole room.
 function roomFront(flat){
   ctx.fillStyle='#6b563e';ctx.fillRect(604,420,72,8);ctx.fillRect(610,428,6,40);ctx.fillRect(664,428,6,40);
   ctx.strokeStyle='#3d3a44';ctx.lineWidth=4;line(640,420,640,366);
@@ -5055,7 +5061,8 @@ function person(x,o){
   if(o.puddle>0.02){ctx.fillStyle='rgba(150,205,230,.55)';ctx.beginPath();ctx.ellipse(x+6,FEETY+5,20+o.puddle*70,4+o.puddle*7,0,0,Math.PI*2);ctx.fill();}
   ctx.fillStyle='#3a3944';rr(x-15+lg,FEETY-54,12,54,4);ctx.fill();rr(x+3-lg,FEETY-54,12,54,4);ctx.fill();
   var skin=o.body===SANNA.body?'#c9957a':o.body===MIKA.body?'#e5c4a1':'#e4bba2';
-  ctx.fillStyle='#263639';rr(x-19+lg,FEETY-8,20,10,4);ctx.fill();rr(x+1-lg,FEETY-8,23,10,4);ctx.fill();
+  ctx.fillStyle='#263639';if(f>0){rr(x-19+lg,FEETY-8,20,10,4);ctx.fill();rr(x+1-lg,FEETY-8,23,10,4);ctx.fill();}
+  else{rr(x-1+lg,FEETY-8,20,10,4);ctx.fill();rr(x-24-lg,FEETY-8,23,10,4);ctx.fill();}   // 0.85: the toes follow the face (Joonas: "they walk backwards")
   var hy=FEETY-150+(o.nod||0)*5+fl*3+(o.down?4:0)-(o.walk?Math.abs(Math.sin(G.time*8))*1.5:0)+(o.face==='laugh'&&!RM?Math.abs(Math.sin(G.time*13))*-3:0),hx=x+(o.back?0:f*2);
   if(o.body===SANNA.body){ctx.fillStyle=o.hair;rr(hx-23,hy-17,45,45,18);ctx.fill();}
   ctx.fillStyle=skin;rr(x-7,top-14,14,23,4);ctx.fill();
@@ -5332,9 +5339,9 @@ function drawPair(humanOpts){
   morkoBody(q);morkoSpikes(q);ctx.globalAlpha=fa;if(up&&!ht.front)morkoArms(q,ht);ctx.restore();   // morkoBody ends at alpha 1 for the eyes
   if(up)shadowDrink(q);
   drawGaze();
-  if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to: not on the street
   homeLamp();   // shadow on the wall, then the lamp, then the human
   drawHuman(humanOpts);
+  if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to. 0.85: after the human: its feet are nearer than theirs, so anyone walking past goes behind it, not over it
   if(up&&ht.front){ctx.save();ctx.globalAlpha*=fa;morkoArms(q,ht);ctx.restore();}
   if(up)drawStamp();
 }
@@ -5389,7 +5396,7 @@ function drawOutside(){
   else if(an==='nod'){h.nod=(t>0.5&&t<1.3)?Math.sin((t-0.5)/0.8*Math.PI):(t>1.6&&t<2.4)?Math.sin((t-1.6)/0.8*Math.PI):0;}
   else if(an==='grow'){h.face='stiff';h.flinch=t<1.9?0.8:0.25;h.shake=t<2.8;}
   else if(an==='cover'){h.face='down';h.down=true;if(g.day!=='C'&&t>1&&t<2.8){aFace=-1;aWave=true;}}
-  else if(an==='exit'){hx=300-t*110;h.back=true;h.cup=false;h.walk=true;show=hx>-40;if(t>2.6)aFace=-1;}
+  else if(an==='exit'){hx=300-t*110;h.back=true;h.facing=-1;h.cup=false;h.walk=true;show=hx>-40;if(t>2.6)aFace=-1;}
   if(an==='tape'&&t>0.4&&t<1.4)bubble(700,FEETY-172,'oh, hi.');
   if(an==='exit'){ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(650,406,12,14,2);ctx.fill();ctx.stroke();}
   if(show)person(hx,h);
@@ -5552,7 +5559,7 @@ function draw(){
         if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText('THE WALK HOME',W/2,74);
       ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('Nine minutes, usually.',W/2,106);}
   }
-  if(g.band&&!COMPACT)band(g.band,H-18);
+  if(g.band&&!COMPACT&&!textBelow&&lineInBubble({who:'N'}))band(g.band,H-18);   // 0.85: never in the picture and in the panel at once
   if(g.chap&&g.chap.moment)momentCard();
   if(paused)pausedNote();
 }

@@ -123,17 +123,23 @@ function bigNote(){
 /* ================= a little life (Joonas 20.11.: the world felt static) =================
    Through windows: now and then a bird by day, a plane's light or a shooting star by night. In lamp light: dust.
    All of it is clocked by G.time, so it is the same on every replay, and Less motion turns it off. */
+// 0.85 (Joonas: "far too often, and always the same"): a bird now and then, not every seven seconds; some passes are empty,
+// some have two birds, speeds differ. At night a plane only sometimes, a shooting star rarely. The hash no longer creeps by a fixed step.
+function skyHash(k,x){var v=Math.sin(k*12.9898+x*78.233)*43758.5453;return v-Math.floor(v);}
 function sky(x,y,w,h,night){
-  if(RM||!G.time)return;var t=G.time+x*0.37,P=night?9.5:7.3,k=Math.floor(t/P),ph=t-k*P,r=((k*9301+x*49297)%233280)/233280;
+  if(RM||!G.time)return;var t=G.time+x*0.37;
   ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
   if(!night){
-    if(ph<2.8){var bx=x-20+(w+40)*(ph/2.8),by=y+18+r*(h*0.55)+Math.sin(ph*3)*4,fl=Math.sin(G.time*14)*4,dir=r>0.5?1:-1;if(dir<0)bx=x+w+20-(w+40)*(ph/2.8);
+    var P=11,k=Math.floor(t/P),ph=t-k*P,r=skyHash(k,x),dur=2.6+skyHash(k+7,x)*1.9;
+    if(r<0.3&&ph<dur){var u=ph/dur,dir=skyHash(k+3,x)>0.5?1:-1,bx=dir>0?x-20+(w+40)*u:x+w+20-(w+40)*u,by=y+18+skyHash(k+5,x)*(h*0.55)+Math.sin(ph*3)*4,fl=Math.sin(G.time*14)*4;
       ctx.strokeStyle='rgba(40,46,52,.75)';ctx.lineWidth=1.8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(bx-7,by-fl);ctx.lineTo(bx,by);ctx.lineTo(bx+7,by-fl);ctx.stroke();
-      if(r>0.6){var b2=bx-dir*16;ctx.beginPath();ctx.moveTo(b2-6,by+7+fl);ctx.lineTo(b2,by+9);ctx.lineTo(b2+6,by+7+fl);ctx.stroke();}}
+      if(r<0.1){var b2=bx-dir*16;ctx.beginPath();ctx.moveTo(b2-6,by+7+fl);ctx.lineTo(b2,by+9);ctx.lineTo(b2+6,by+7+fl);ctx.stroke();}}
   }else{
-    var px=x+((t*9)%(w+60))-30,py=y+22+((x*7)%30);if(Math.sin(G.time*5)>0.6){ctx.fillStyle='rgba(255,90,80,.9)';circ(px,py,1.6);ctx.fill();}
-    ctx.fillStyle='rgba(255,255,255,.55)';circ(px+4,py,1.1);ctx.fill();
-    if(r>0.55&&ph<0.7){var sx=x+w*0.85-ph*w*1.1,sy=y+10+ph*h*0.5;var g2=ctx.createLinearGradient(sx,sy,sx+26,sy-12);g2.addColorStop(0,'rgba(255,255,255,'+(0.9-ph)+')');g2.addColorStop(1,'rgba(255,255,255,0)');
+    var P2=26,k2=Math.floor(t/P2),ph2=t-k2*P2;
+    if(skyHash(k2,x+3)<0.3){var px=x-30+ph2*9,py=y+22+((x*7)%30);if(Math.sin(G.time*5)>0.6){ctx.fillStyle='rgba(255,90,80,.9)';circ(px,py,1.6);ctx.fill();}
+      ctx.fillStyle='rgba(255,255,255,.55)';circ(px+4,py,1.1);ctx.fill();}
+    var P3=9.5,k3=Math.floor(t/P3),ph3=t-k3*P3;
+    if(skyHash(k3,x+11)>0.92&&ph3<0.7){var sx=x+w*0.85-ph3*w*1.1,sy=y+10+ph3*h*0.5;var g2=ctx.createLinearGradient(sx,sy,sx+26,sy-12);g2.addColorStop(0,'rgba(255,255,255,'+(0.9-ph3)+')');g2.addColorStop(1,'rgba(255,255,255,0)');
       ctx.strokeStyle=g2;ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+26,sy-12);ctx.stroke();}
   }
   ctx.restore();

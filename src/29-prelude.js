@@ -13,7 +13,7 @@ function scPrelude(){return [
     g.chap={day:CHAPTERS[1].day,title:CHAPTERS[1].title,t:0};g.chapter=1;g.dayTag='MONDAY';g.stampT=0;newDay();sfx('card');},
   function(){return partCard(1);},
   function(){G.chap=null;G.fade=1;G.fadeRate=0.36;},
-  addTic('Monday, 8:52. Nobody here yet.',190,62,{at:0.9,life:3.4,size:19}),
+  addTic('Nobody here yet.',300,96,{at:0.9,life:3.4,size:19}),   // 0.85: the day stamp says MONDAY · 08:51; this line used to say it again, a minute off, on top of it
   {wait:2.6},
   function(){var Hm=G.human;Hm.gone=false;Hm.xT=815;},
   {wait:1.8},
@@ -23,10 +23,10 @@ function scPrelude(){return [
   function(){var g=G,Hm=g.human;g.noCup=false;Hm.back=false;Hm.facing=-1;Hm.xT=704;},
   {wait:1.3},
   function(){G.human.facing=1;},
-  addTic('(mug handle on the wrong side.)',764,276,{life:1.5}),
+  addTic('(mug handle on the wrong side.)',764,246,{life:1.5}),   // 0.85: above the head, not on it
   {wait:1.5},
   function(){G.mugFixed=true;G.mugFx={t:0};sfx('clink');},
-  addTic('(better.)',764,276,{life:1.1}),
+  addTic('(better.)',764,246,{life:1.1}),
   {wait:1.1},
   function(){var Hm=G.human;Hm.facing=-1;Hm.xT=HOME;},
   {wait:2.2},
