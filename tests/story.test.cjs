@@ -686,4 +686,10 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
  {const css=fs4.readFileSync(p4.join(root,'assets','game.css'),'utf8');assert.ok(css.includes('grid-template-columns:minmax(0,1fr) minmax(0,1fr)')&&css.includes('nav .lang-row{grid-column:1/-1}'),'the immersive menu grid lost its fix');}
  // 12. The epilogue is not the end: no “The End.” card, and the last card before the radiator promises it.
  {const ep=src('37-epilogue.js');assert.ok(!ep.includes("fillText('The End.'")&&ep.includes("credit:'One appointment outstanding.'"),'players stopped at the epilogue: keep the radiator promised');}
+ // 13. Friday (Codex 22.11., 0.84): the "no" to Eero costs something real; lunch with Sanna has a reason; the sorry gets one gloss, not two.
+ {const fr=src('31-story-week.js');
+  assert.ok(fr.includes("['B','Oh. I told Riitta you probably could.']")&&fr.includes("['S','That was awkward. I was right about that one.']"),'Friday: the no must cost something (Eero promised the shift)');
+  assert.ok(!fr.includes("I’ll ask Riitta.']"),'Friday: the free “I’ll ask Riitta” is back');
+  assert.ok(fr.includes('Soup? The one with too much dill.')&&fr.includes("['H','Oh, good. That one.']"),'Friday: why lunch with Sanna');
+  assert.ok(!fr.includes('I never noticed one we gave'),'Friday: the sorry is explained twice again');}
  console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle, the Fine. thread, epilogue bars, part labels, radiator speakers, phone menu, the appointment.');}

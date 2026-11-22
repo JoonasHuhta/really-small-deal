@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.84.0 (Claude, 22.11.2026): **perjantaikierros Codexin tarinahuomioista** (jokainen tarkistettu koodista; Codexin grafiikkaversio 0.83.1 tuotiin ensin gittiin sellaisenaan).
+- **Ei Eerolle maksaa nyt jotain.** Ennen Eero vastasi heti ”Oh. Right. I’ll ask Riitta.”, joten perjantain ”ei” oli pelin ainoa raja, joka ei maksanut mitään. Nyt Eero on jo luvannut vuoron Riitalle: *”Oh. I told Riitta you probably could.”* – *”Oh.”* Ekskyysmi kasvaa (1,9), ja pelaaja valitsee, mitä se tekee: painostaa perumaan (*”It’s ONE Monday.”* – *”…No. It’s still no.”*) tai seisoo vieressä (*”I’m standing here. Not fixing it.”*). Ihminen pitää kieltäytymisensä kummassakin. *”…Okay. I’ll tell her.”* Ekskyysmi on kerrankin oikeassa: *”That was awkward. I was right about that one.”* – *”You were.”* – *”…I’m staying anyway.”* Pidettävä ihminen tekee pienen epäreilun teon, eikä peli kerro jälkikäteen, että se olikin pientä.
+- **Miksi juuri Sanna.** Yleinen *”Lunch?”* vaihtui kutsuun, josta näkee heidän yhteisen makunsa: *”Soup? The one with too much dill.”* – *”Oh, good. That one.”* Ihmisen oma ”oh” tarkoittaa kerrankin juuri sitä, miltä se kuulostaa (vrt. maanantain ”oh, hi.”). Hammaslääkärihaaran *”It’s Friday. No dentist.”* säilyy.
+- **Anteeksipyyntö:** Sannan *”Thanks for saying it.”* saa hetken, ja Ekskyysmi kommentoi vain kerran (*”That was a real sorry. Not one of mine.”*). Toinen selitys (*”I file every ’oh’ we get. I never noticed one we gave.”*) poistettiin, koska se ehti pelaajan oman oivalluksen edelle.
+- **Mihin Codexissa en yhtynyt:** se esitti bar-takauman olevan vain yhdellä polulla. Kaikilla kolmella polulla Sannalla on jo oma ”thought of you” -rivinsä. Sen keittoluonnos (”the one you can eat with a fork”) vaihtui tilliin.
+- Perjantai 3:39 → 3:54, koko peli noin 51:45.
+
 **Versio 0.83.1 (22.11.2026).** Mukia pitelevä käsi on nyt kupin ulkoreunalla myös siemaisun aikana. Kyynärvarsi liittyy samaan kohtaan. Ote peilautuu hahmon kääntyessä.
 
 **Versio 0.83.0 (22.11.2026).** Maanantaiaamuna mukin reuna käy ihmisen huulella. Pieni peukalo näkyy sekä mukin että puhelimen reunalla. Sannan vilkuttava käsi erottuu kasvoista ja kaulus peittää kaulan alareunan. Epilogin ylävitosessa Ekskyysmi tähtää ensin ohi ja osuu sitten ihmisen nostettuun käteen posken korkeudella.

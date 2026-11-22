@@ -1455,8 +1455,8 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['H','I know. Sorry.'],
   ['A','Okay.',{quiet:1}],
   ['A','Thanks for saying it.'],
+  {wait:1.0},   // 0.84: her answer gets a moment before anyone explains it; the second gloss (“I file every ’oh’ we get…”) is gone (Codex 22.11.)
   aside(['S','That was a real sorry. Not one of mine.',{quiet:1}]),
-  aside(['S','I file every “oh” we get. I never noticed one we gave.',{quiet:1}]),
   function(){G.zT=1;},{wait:1.6},
   fridayShadow,
   archive('good',[['2026','She told me herself.']]),
@@ -1479,11 +1479,27 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['B','Hey! While you’re both here — could you also take my Monday shift?'],
   ['S','Here we go. I’ll get the “sure”.'],
   {choice:[
-    {t:'No. (I will wobble.)',m:'stay',f:function(){G.no=true;},then:[function(){return G.coatNo?[['H','It’s a no in a coat, Eero. Not this time.'],['B','…What coat?'],aside(['S','My words. Out in the world.'])]:[['H','Not this time, Eero.']];},set({s:1.5,mood:'scared'}),['S','He’s going to—'],['B','Oh. Right. I’ll ask Riitta.'],set({s:1.1,mood:'surprised'}),['S','He sounds disappointed.'],['H','I think he is.'],['S','…He survived. WE survived. It was three words.',{look:'stunned'}]]},
+    {t:'No. (I will wobble.)',m:'stay',f:function(){G.no=true;},then:[function(){return G.coatNo?[['H','It’s a no in a coat, Eero. Not this time.'],['B','…What coat?'],aside(['S','My words. Out in the world.'])]:[['H','Not this time, Eero.']];},set({s:1.5,mood:'scared'}),['S','He’s going to—'],
+      // 0.84 (Codex 22.11.): until now this "no" was free ("Oh. Right. I’ll ask Riitta."). A liked person does a slightly unfair thing:
+      // he has promised the shift already. Ekskyysmi is right that it gets awkward; the player decides what it does with that; the human keeps the no either way.
+      ['B','Oh. I told Riitta you probably could.'],
+      ['H','Oh.'],
+      set({s:1.9,mood:'scared'}),
+      {choice:[
+        {t:'Take it back. Quick. Say you can.',m:'please',then:[['S','Say you can. It’s one Monday. It’s ONE Monday.'],['H','…No. It’s still no.',{quiet:1}]]},
+        {t:'Say nothing. Stand next to them.',m:'stay',then:[{wait:1.2},['S','I’m standing here. Not fixing it.',{quiet:1}]]}
+      ]},
+      ['B','…Okay. I’ll tell her.'],
+      set({s:1.1,mood:'surprised'}),
+      ['S','That was awkward. I was right about that one.'],
+      ['H','You were.'],
+      ['S','…I’m staying anyway.',{look:'soft'}]]},
     {t:'Say yes. Old habits.',m:'please',f:yes,then:[['H','Sure.'],['S','Next time, then.'],['H','Next time.'],['S','I’ll put the “no” in the archive. Under “pending”.']]}
   ]},
   set({aFace:-1,mood:'calm'}),
-  function(){return [['A',G.lunch===2?'Lunch? It’s Friday. No dentist.':'Lunch?']];},
+  // 0.84 (Codex 22.11.): why lunch with Sanna. She knows the soup they both like; the human's "oh" for once means what it sounds like.
+  function(){return G.lunch===2?[['A','It’s Friday. No dentist.'],['A','Soup? The one with too much dill.']]:[['A','Soup? The one with too much dill.']];},
+  ['H','Oh, good. That one.'],
   ['S','It’s a tr—'],
   ['S','…No. It’s lunch.',{look:'soft'}],
   set({face:'smile'}),
