@@ -160,7 +160,7 @@ function cameBack(){
   if(secs<6||!g.started||g.ended)return;
   var inside=Math.min(240,Math.round(secs/60*30))||1;
   addLived('waiting for you to come back',inside);
-  g.awayNote=['You left for '+dur(secs)+'.','In here that was '+dur(inside*60)+'. I’ve prepared a statement.'];
+  g.awayNote=[tr('You left for {a}.').replace('{a}',dur(secs)),tr('In here that was {a}. I’ve prepared a statement.').replace('{a}',dur(inside*60))];
 }
 
 /* ---------- the jolt: one small detail, and for a moment everything is an X-ray ---------- */
@@ -208,16 +208,16 @@ function drawXray(){
   ctx.shadowColor='#7fd0ff';ctx.shadowBlur=10;ctx.strokeStyle='#d6f0ff';ctx.lineWidth=2.5;ctx.strokeRect(cx,cy,cw,ch);
   var labels=['2011','2016','2019','TODAY'];
   for(var i=0;i<4;i++){var dy=cy+6+i*(ch-12)/4,dh=(ch-12)/4-5;ctx.strokeRect(cx+5,dy,cw-10,dh);ctx.beginPath();ctx.moveTo(cx+cw/2-8,dy+dh/2);ctx.lineTo(cx+cw/2+8,dy+dh/2);ctx.stroke();
-    ctx.shadowBlur=0;ctx.fillStyle='#d6f0ff';ctx.font='700 '+Math.max(8,Math.min(11,dh*0.36))+'px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(labels[i],cx+cw/2,dy+dh*0.28);ctx.shadowBlur=10;}
+    ctx.shadowBlur=0;ctx.fillStyle='#d6f0ff';ctx.font='700 '+Math.max(8,Math.min(11,dh*0.36))+'px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(tr(labels[i]),cx+cw/2,dy+dh*0.28);ctx.shadowBlur=10;}
   ctx.restore();
   ctx.fillStyle='#d6f0ff';ctx.fillRect(q.bx-q.hdR*0.45,q.hdY-3,5,6);ctx.fillRect(q.bx+q.hdR*0.2,q.hdY-3,5,6);
   skeleton(g.human.x,false,true);
   if(g.cowB)skeleton(g.bx2,true,false);if(g.cowA)skeleton(g.ax,true,false);
   ctx.textAlign='left';ctx.textBaseline='middle';
   ctx.fillStyle='rgba(3,10,18,.8)';rr(26,24,420,62,6);ctx.fill();
-  ctx.fillStyle='#ff6a55';ctx.font='800 15px system-ui,sans-serif';ctx.fillText('● X-RAY · CHEST · '+g.jolt.tag,40,44);
-  ctx.fillStyle='#bfe3ff';ctx.font='600 12px system-ui,sans-serif';ctx.fillText('SHADOW: NO BONES DETECTED. FILING CABINET DETECTED.',40,68);
-  if(g.cowB||g.cowA){ctx.textAlign='center';ctx.fillStyle='rgba(191,227,255,.7)';ctx.font='700 11px system-ui,sans-serif';ctx.fillText('HEART RATE: NORMAL',g.cowB?g.bx2:g.ax,FEETY-186);}
+  ctx.fillStyle='#ff6a55';ctx.font='800 15px system-ui,sans-serif';ctx.fillText(tr('● X-RAY · CHEST · ')+tr(g.jolt.tag),40,44);
+  ctx.fillStyle='#bfe3ff';ctx.font='600 12px system-ui,sans-serif';ctx.fillText(tr('SHADOW: NO BONES DETECTED. FILING CABINET DETECTED.'),40,68);
+  if(g.cowB||g.cowA){ctx.textAlign='center';ctx.fillStyle='rgba(191,227,255,.7)';ctx.font='700 11px system-ui,sans-serif';ctx.fillText(tr('HEART RATE: NORMAL'),g.cowB?g.bx2:g.ax,FEETY-186);}
 }
 
 /* ---------- Lab / moment: One small thing. ---------- */

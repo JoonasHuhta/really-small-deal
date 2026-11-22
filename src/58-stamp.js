@@ -39,8 +39,8 @@ function drawStamp(){
     // Oversized, slightly crooked office ink. It never appears in the outside view.
     ctx.fillStyle='rgba(246,241,228,.84)';rr(-91,-29,182,58,3);ctx.fill();
     ctx.strokeStyle='#a53739';ctx.fillStyle='#a53739';ctx.lineWidth=3;rr(-86,-24,172,48,2);ctx.stroke();
-    ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 11px system-ui,sans-serif';ctx.fillText('REJECTION',0,-12);
-    ctx.font='900 23px system-ui,sans-serif';ctx.fillText('PREVENTED',0,9);
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 11px system-ui,sans-serif';ctx.fillText(tr('REJECTION'),0,-12);
+    ctx.font='900 23px system-ui,sans-serif';ctx.fillText(tr('PREVENTED'),0,9);
     ctx.restore();
   }
   if(!stampToolVisible())return;

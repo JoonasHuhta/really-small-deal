@@ -32,12 +32,16 @@ CHECK='''()=>{const vw=innerWidth,vh=innerHeight,out=[];const de=document.docume
  const nav=[...document.querySelectorAll('nav button')].filter(vis).map(b=>b.getBoundingClientRect());
  for(let i=1;i<nav.length;i++){const a=nav[i-1],b=nav[i];const sameRow=b.top<a.bottom-1&&b.bottom>a.top+1;if(sameRow&&b.left<a.right-1)out.push('nav buttons overlap');}
  return out;}'''
+FI="(()=>{const l=document.getElementById('lang');l.value='fi';l.dispatchEvent(new Event('change'));})()"   # the real menu path
 STATES=[
  ('title',None,None,0),('title-save',None,None,0),('about',"__T.about()",None,0),('chapters',"__T.chapters()",None,0),('lab-list',"__T.labList()",None,0),('moments',"localStorage.setItem('ekskyysmi.save',JSON.stringify({version:2,ch:5,unlocked:5,chapters:{1:{},2:{},3:{},4:{},5:{}}}));__T.moments()",None,0),
  ('intro-skip',"__T.start()",'time',0),('longline',"__T.start('B',true)",'longline',0),('choice',"__T.start('B',true)",'choice',0),('stretch',"__T.start('B',true)",'stretch',0),('hold',"__T.start('B',true)",'hold',1),
  ('choice4',"__T.chapter(3)",'choice4',0),('fight-flow',"__T.lab('comments')",'flow',0),('fight-paced',"__T.lab('comments')",'paced',1),('chatlog',"__T.lab('comments')",'chatlog',1),
  ('glass',"__T.lab('glass')",'choice',0),('bar',"__T.lab('bar')",'choice',0),('lab-end',"__T.lab('enhance')",'ended',0),('monday-end',"__T.start('B',true)",'ended',0),
- ('paused',"__T.start('B',true)",'choice',0),('restart-confirm',"__T.start('B',true)",'choice',0),('journal',"__T.start('B',true)",'choice',0),('menu-open',"__T.start('B',true)",'choice',0),('voice',"__T.lab('voice')",'click',0),('quiet',"__T.lab('quiet')",'auto',0),('form',"__T.lab('form')",'choice',0),('night',"__T.lab('night')",'click',0),('rewind',"__T.lab('rewind')",'choice',0),('week-end',"__T.chapter(5)",'ended',0)]
+ ('paused',"__T.start('B',true)",'choice',0),('restart-confirm',"__T.start('B',true)",'choice',0),('journal',"__T.start('B',true)",'choice',0),('menu-open',"__T.start('B',true)",'choice',0),('voice',"__T.lab('voice')",'click',0),('quiet',"__T.lab('quiet')",'auto',0),('form',"__T.lab('form')",'choice',0),('night',"__T.lab('night')",'click',0),('rewind',"__T.lab('rewind')",'choice',0),('week-end',"__T.chapter(5)",'ended',0),
+ # 0.89: the Finnish pilot (Monday). Finnish lines run longer, so the same Monday states again in Finnish.
+ ('fi-longline',FI+";__T.start('B',true)",'longline',0),('fi-choice',FI+";__T.start('B',true)",'choice',0),('fi-qte',FI+";__T.start('B',true)",'qte',0),
+ ('fi-hold',FI+";__T.start('B',true)",'hold',1),('fi-monday-end',FI+";__T.start('B',true)",'ended',0),('fi-intro',FI+";__T.start()",'time',0),('fi-title',FI,None,0),('fi-menu',FI+";__T.start('B',true)",'choice',0)]
 async def main():
     only=sys.argv[1:] 
     async with async_playwright() as p:
@@ -56,7 +60,7 @@ async def main():
                 if setup: await pg.evaluate(setup)
                 ok=True
                 if target: ok=await pg.evaluate(DRIVE,[target,pick])
-                if name=='menu-open': await pg.tap('#menu')
+                if name in('menu-open','fi-menu'): await pg.tap('#menu')
                 if name=='paused':
                     await pg.tap('#menu'); await pg.tap('#pause')
                 if name=='restart-confirm':

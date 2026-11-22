@@ -14,6 +14,13 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+Versio 0.89.0 (Claude, 22.11.2026): **suomenkielinen maanantai (kokeilu).**
+- **Valikko → Kieli → Suomi (kokeilu).** Koko maanantai on suomeksi ensimmäisestä repliikistä kotimatkaan, kissaan ja päivän kuittiin asti: kaikki valinnat, ulkonäkymät (*MITÄ MUUT NÄKIVÄT*), puhelinviestit, oikean vastauksen ikkuna, leima, arkistokortit, korkkitaulun lappu (*OLE MUKI. ÄLÄ SANKARI.*), vihjerivi, alkuruutu ja valikon napit. Tiistaista eteenpäin peli jatkuu englanniksi, kunnes loput käännetään.
+- **Miten:** pelin englanninkielinen rivi on avain. `tr()` (`src/15-fi.js`) hakee suomennoksen ja palauttaa englannin, jos sitä ei ole. Suomennokset ovat tiedostossa `src/16-fi-monday.js` (462 riviä). Ne kerättiin ajamalla kaikki maanantaireitit suomeksi: `tr()` kirjaa jokaisen englanniksi jääneen rivin.
+- **Linjaukset** (KAANNOS.md): ”oh, hi.” → ”ai, moi.” piste säilyy, ”You too.” → ”Samoin.”, ”For the record” → ”Pöytäkirjaan:”, Ekskyysmi pysyy Ekskyysminä, lainausmerkit ovat suomalaiset (” ”). Desimaalit kuitissa pilkulla (2,3).
+- **Uusi testi `tests/fi.test.cjs`:** 48 maanantaireittiä suomeksi (myös voitettu vastaus) ilman yhtään englanniksi jäänyttä riviä. Testi tarkistaa myös, että jokainen suomennos säilyttää sen, mihin koodi nojaa (`<br>`, `{paikkamerkit}`, alun ”…”, ”Nimi:”-viestietuliite, välilyönnit päissä), ja että englanti pysyy englantina. Asettelutarkistukseen (`tools/audit_layout.py`) tuli kahdeksan suomenkielistä tilaa: viisi puhelinkokoa, ei ylivuotoja.
+- Englanninkielinen peli ei muuttunut: kaikki aiemmat testit samoin tuloksin.
+
 Versio 0.88.0 (Claude, 22.11.2026): **Joonaksen pelikerran huomiot.**
 - **Kotimatkan ”oh”-uusinta tulee aina** (Joonas: ”niin hauska, että pitää käydä läpi joka tapauksessa”). Jos pelaaja ei valitse sitä matkalla, Ekskyysmi tekee sen ovella: *”Wait. Before the door.”* – *”No.”* – *”One look. For the archive.”*, ja sitten koko uusinta. Uusintaa ei voi kävellä karkuun. Tarkistettu: kaikki 192 maanantaireittiä sisältävät uusinnan, eikä yksikään kahdesti.
 - **Kissalla on syy** (Joonas: ”miksi kissa, miksi nyt, onko heillä kissaa?”). *”After a loud day, the human draws. Small things, on sticky notes.”* Sitten *”Tonight: a cat. Four legs so far.”* – *”We don’t have a cat.”* – *”That’s why I draw them.”* Ihminen haluaa lapun seinälle, Ekskyysmi laatikkoon (*”Five gets laughed at.”*, YEAR 2 -kortti) → *”…Drawer. For now.”* Hiljaisena päivänä (#17): *”It stays on the wall.”* Seinä tarkoittaa näytettyä, laatikko piilotettua.
@@ -716,6 +723,8 @@ Kotimatkalla voi käsitellä kaikki kolme aihetta tai valita suoraan jatkamisen 
 |---|---|
 | `src/00-core.js` | Vakiot, canvas, koko |
 | `src/10-audio.js` | Puhepiipitys, tehosteet, paikka tallennetuille äänille ja musiikille |
+| `src/15-fi.js` | Kielet: `tr()` hakee suomennoksen englanninkielisellä rivillä avaimena ja kirjaa puuttuvat |
+| `src/16-fi-monday.js` | Suomennokset: maanantai, kuitti, alkuruutu ja valikko (kokeilu 0.89) |
 | `src/20-engine.js` | Tila, käsikirjoitusmoottori, pitohetket, näyttämöohjeet |
 | `src/29-prelude.js` | Hiljainen alku, Colleagues, Not now |
 | `src/30-story-monday.js` | Maanantai ja kotimatka |

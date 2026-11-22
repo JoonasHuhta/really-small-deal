@@ -15,7 +15,7 @@ function reset(day){
   G.handout=false;G.afterparty=false;G.sips=0;G.files=0;G.bigSip=null;G.fineSent=false;G.applied=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.coatNo=false;G.kept=[];G.methods={};G.endSeen=false;G.stamp=null;
   G.choiceWho='S';G.finalFrame=false;G.barStory=null;G.quietDrawing=false;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
-  document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
+  document.getElementById('pause').textContent=tr('Pause');document.body.classList.remove('is-paused');
   C.z=1.025;C.fx=W/2;C.fy=H/2;
   hideOv();render();
 }
@@ -58,14 +58,14 @@ function choose(i){
   Q=(o.hush?[]:[[G.choiceWho||'S',o.t]]).concat(then,Q);run();
 }
 function setLine(who,text,o){
-  var g=G;
+  var g=G,en=text;text=tr(text);   // 0.89: Finnish pilot
   if(who==='N'){g.band=text;}
   else{g.band=null;g.lines=g.lines.filter(function(l){return l.who!==who;});g.lines.push({who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet)});if(g.lines.length>2)g.lines.shift();}
   var prev=g.cur&&g.cur.who,pair=(who==='S'&&prev==='H')||(who==='H'&&prev==='S');
   g.bick=pair&&text.length<=46&&!(o&&o.big)?(g.bick||0)+1:(who==='S'||who==='H')&&pair?Math.max(0,(g.bick||0)-1):0;
   var mute=who==='S'&&g.morko.asleep;
-  g.phoneN=who==='P'?3:Math.max(0,(g.phoneN||0)-1);if(who==='P'&&!/^You:/.test(text))g.buzz=0.7;
-  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute){speak(who,text,o);if(who!=='N'&&!(o&&o.big))sfx(who==='S'?'popS':'pop');}if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
+  g.phoneN=who==='P'?3:Math.max(0,(g.phoneN||0)-1);if(who==='P'&&!/^You:/.test(en))g.buzz=0.7;
+  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute){speak(who,text,o,en);if(who!=='N'&&!(o&&o.big))sfx(who==='S'?'popS':'pop');}if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
   history.push({who:who,text:text});
 }
 // How many characters of a line are showing after t seconds. A full stop is a breath, an ellipsis is a longer one.
@@ -89,14 +89,14 @@ function render(){
   document.getElementById('play-panel').classList.toggle('hidden',!g.started||g.ended);
   document.getElementById('pause').disabled=!g.started||g.ended;
   document.getElementById('journal').disabled=!history.length;
-  document.getElementById('chapter').textContent=g.ended?(g.labEnd?(DEVLAB?'Scenario lab':'Moments'):g.dayEnd?'End of Monday':'For now'):g.started?(g.lab?'':['','I · ','II · ','III · '][storyPart()])+(g.chap&&g.chap.part?g.chap.title:g.label|| (g.w?'The walk home':'Oh, hi.')):'A small social adventure';
-  document.getElementById('perspective').textContent=g.chap&&g.chap.part?g.chap.day:g.finalFrame?'FOR NOW':g.out?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION';
+  document.getElementById('chapter').textContent=g.ended?(g.labEnd?(DEVLAB?'Scenario lab':'Moments'):g.dayEnd?'End of Monday':'For now'):g.started?(g.lab?'':['','I · ','II · ','III · '][storyPart()])+tr(g.chap&&g.chap.part?g.chap.title:g.label|| (g.w?'The walk home':'Oh, hi.')):tr('A small social adventure');
+  document.getElementById('perspective').textContent=tr(g.chap&&g.chap.part?g.chap.day:g.finalFrame?'FOR NOW':g.out?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION');
   cv.classList.toggle('stretching',WAIT==='stretch');
   cv.setAttribute('aria-label',g.chap&&g.chap.part?g.chap.day+'. '+g.chap.title:g.finalFrame?'The human is asleep. A lamp stays on. Ekskyysmi makes a bird with its hands.':'A human and a very large shadow');
   if(WAIT==='choice'&&CH){
     speaker=g.choiceWho||'S';text=g.nopeMsg||g.choiceAsk||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':g.chapter===1&&!g.lab&&!g.firstPick?'You’re Ekskyysmi. Pick what I say.':'What do we do with this?');   // the very first choice says who the player is
     if(g.form&&g.form.i>=0){speaker='N';text=FORM_Q[g.form.i].q;}
-    for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(CH[i].t)+' <em>Not a setting. Yet.</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>':CH[i].off&&CH[i].note?'<button class="opt off'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>'+esc(CH[i].note)+'</em></button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>';
+    for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(tr(CH[i].t))+' <em>'+tr('Not a setting. Yet.')+'</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>':CH[i].off&&CH[i].note?'<button class="opt off'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>'+esc(CH[i].note)+'</em></button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>';
   }else if(WAIT==='stretch'){
     speaker='S';text='A small warning. Just enough to make my point.';
     html='<div class="stretch-controls"><label for="stretch">Unfurl your warning</label><input id="stretch" type="range" min="1.8" max="3.8" step="0.05" value="'+g.morko.sT+'" aria-label="Size of your warning"><button class="opt cont" type="button" data-i="go">That should do it →</button></div>';
@@ -111,10 +111,10 @@ function render(){
     html='<button class="opt cont" type="button" data-i="go">Let go</button>';
   }else if(WAIT==='hold'){
     speaker='S';text=holdText();g.hold.shown=text;
-    html='<div class="hold-controls"><button class="opt cont" type="button" data-i="hold">'+HOLD_LABEL[g.hold.kind]+'</button><div class="holdbar"><i id="holdfill"></i></div></div>';
+    html='<div class="hold-controls"><button class="opt cont" type="button" data-i="hold">'+tr(HOLD_LABEL[g.hold.kind])+'</button><div class="holdbar"><i id="holdfill"></i></div></div>';
   }else if(WAIT==='qte'&&g.qte){
     var qq=g.qte;speaker='S';text='RESPOND. CORRECTLY. NOW.';
-    html=qq.order.map(function(i){var r=RESPONSE[i],done=i<qq.i;return '<button class="opt qte'+(done?' done':'')+'" type="button" data-i="q'+i+'"'+(qq.end||done?' disabled':'')+'><b>'+r.sym+'</b><span>'+r.label+'</span></button>';}).join('');
+    html=qq.order.map(function(i){var r=RESPONSE[i],done=i<qq.i;return '<button class="opt qte'+(done?' done':'')+'" type="button" data-i="q'+i+'"'+(qq.end||done?' disabled':'')+'><b>'+r.sym+'</b><span>'+tr(r.label)+'</span></button>';}).join('');
   }else if(WAIT==='fight'){
     speaker='S';text='Incoming! I’ve got this. Probably.';
     html='<button class="opt cont swat" type="button" data-i="go">Swat! <span>(or tap the scene)</span></button>';
@@ -126,17 +126,18 @@ function render(){
     }
   }else if(WAIT==='view'){
     speaker='N';text=g.out.cap;
-    html='<button class="opt cont" type="button" data-i="go"'+(TIMER>0?' disabled':'')+'>Back inside →</button>';
+    html='<button class="opt cont" type="button" data-i="go"'+(TIMER>0?' disabled':'')+'>'+tr('Back inside →')+'</button>';
     if(g.out.anim==='chatlog')html=chatTranscript()+html;
   }else{
     if(WAIT==='time'&&!cur)text=g.skippable?'':'…';   // the intro speaks through its own caption (top left); the panel only offers Skip
-    html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">Skip intro →</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+(WAIT==='time'?'A moment…':'Continue →')+'</button>';
+    html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">'+tr('Skip intro →')+'</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+tr(WAIT==='time'?'A moment…':'Continue →')+'</button>';
   }
-  if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">Begin '+g.chap.day.toLowerCase()+' →</button>';
-  if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">For now →</button>';}
+  if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">'+tr('Begin '+g.chap.day.toLowerCase()+' →')+'</button>';
+  if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">'+tr('For now →')+'</button>';}
+  text=tr(text);   // 0.89: prompts, hold texts, captions
   var icon=speaker==='H'?'human':speaker==='S'?'':speaker==='N'?'narrator':'other';
   // Narration is unlabelled and in italics, as in most narrative games: a voice, not a character. Screen readers still hear “Narrator”.
-  var label=speaker==='N'?'<b class="sr">'+NAMES.N+'</b>':'<b>'+NAMES[speaker]+'</b>';
+  var label=speaker==='N'?'<b class="sr">'+tr(NAMES.N)+'</b>':'<b>'+tr(NAMES[speaker])+'</b>';
   elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'">'+label+'<p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
@@ -154,6 +155,7 @@ function render(){
   if(g.finalFrame)document.getElementById('hint').textContent='Stay a little, if you like.';
   else if(WAIT==='click'&&hotOn())document.getElementById('hint').textContent='Space / Enter to continue · P to pause · Dialogue to look back · Things in the room can be tapped.';   // a whole line, not a joined one: it has to translate
   if(WAIT==='auto')document.getElementById('hint').textContent='The human can answer without checking with Ekskyysmi.';
+  var hintEl=document.getElementById('hint');hintEl.textContent=tr(hintEl.textContent);
   resize();
 }
 function clearPreview(){if(previewSaved){G.morko.pose=previewSaved.pose;G.morko.sT=previewSaved.s;previewSaved=null;}}
@@ -285,7 +287,7 @@ function hit(k,from){return function(){
   trigger();addLived('jolts to the chest',Math.round(LIVED.hit*k));
 };}
 function archive(kind,items){return function(){
-  var g=G;for(var i=0;i<items.length;i++)g.cards.push({kind:kind,year:items[i][0],text:items[i][1],t:-i*0.45,life:null,
+  var g=G;for(var i=0;i<items.length;i++)g.cards.push({kind:kind,year:tr(items[i][0]),text:tr(items[i][1]),t:-i*0.45,life:null,
     x:kind==='good'?790:170+i*310,y:kind==='good'?178:150+(i%2)*46,rot:kind==='good'?-0.03:((i%2?1:-1)*(0.06+i*0.02))});
   if(kind==='bad'){addLived('archive visits',LIVED.archive);g.files=(g.files||0)+items.length;}   // old files reopened, for the receipt
   if(kind!=='bad')sfx('card');   // red cards make their own bang as each one lands (update loop)
@@ -308,7 +310,7 @@ function drawCards(){
     var good=c.kind==='good';ctx.fillStyle=good?'#fff4d6':'#f6f1e4';ctx.strokeStyle=good?'#e2b04a':'#8b8070';ctx.lineWidth=good?3:1.5;
     rr(-140,-56,280,112,5);ctx.fill();ctx.stroke();
     ctx.fillStyle=good?'#e2b04a':'#c9553f';ctx.fillRect(-140,-56,280,24);
-    ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillStyle='#fffdf6';ctx.fillText((good?'ARCHIVE · THE OTHER PILE · ':'ARCHIVE · ')+c.year,-128,-44);
+    ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillStyle='#fffdf6';ctx.fillText(tr(good?'ARCHIVE · THE OTHER PILE · ':'ARCHIVE · ')+tr(c.year),-128,-44);
     ctx.font='600 17px system-ui,sans-serif';ctx.fillStyle='#2b2733';var ls=wrap(c.text,250);for(var k=0;k<ls.length&&k<3;k++)ctx.fillText(ls[k],-128,-12+k*22);
     ctx.restore();}
 }
@@ -342,7 +344,7 @@ function drawReplay(){
 function look(){G.gazeFrom='A';G.gazeT=0.5;}
 function calm(){var g=G;g.human.sweatT=0;g.gazeT=0;g.darkT=0;g.anx=0.25;g.morko.sT=1.15;g.morko.mood='calm';g.morko.pose=null;g.human.face='neutral';g.cz=1.025;g.cx=W/2;g.cy=H/2;g.camRate=null;g.hidS=null;}
 function prevent(label,quiet){return function(){G.prevented++;if(quiet)return [];startStamp('press');return [{wait:0.85}];};}   // quiet: counted, not stamped (one stamp on Monday is the joke, two is a lecture)
-function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
+function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=LANG==='fi'?{title:tr(o.title),dur:tr(o.dur),cap:tr(o.cap),anim:o.anim,t:0}:o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
 function leave(){G.axT=1120;G.bxT=1200;G.aFace=1;G.bFace=1;}
 function frozen(){var g=G;sfx('startle');g.morko.st='frozen';g.startles++;g.human.flinch=1;}
 function hide(){G.morko.st='hide';}

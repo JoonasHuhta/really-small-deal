@@ -103,12 +103,13 @@ function syncMusic(){
 // One voice per character: waveform, pitch, loudness. The shadow's pitch drops as it grows.
 var VOICE={S:['triangle',185,0.075],H:['sine',330,0.06],A:['sine',494,0.05],B:['triangle',262,0.06],R:['sine',392,0.05],T:['triangle',147,0.06],L:['sine',523,0.05],X:['sine',440,0.05],Z:['triangle',233,0.045]};
 function stopVoice(){for(var i=0;i<voiceNodes.length;i++){try{voiceNodes[i].stop();}catch(e){}}voiceNodes=[];}
-function speak(who,text,o){
+function speak(who,text,o,en){
   stopVoice();var a=audio();if(!a)return;var t0=a.currentTime+0.02;
   if(who==='P'){
-    if(/^You:/.test(text)){tone(420,t0,0.2,'sine',0.05,1700);tone(1700,t0+0.2,0.07,'sine',0.03);}                 // sent: a whoosh, and no way back
-    else if(/^Seen/.test(text)){tone(150,t0,0.3,'sine',0.11,96);}                                                      // seen: one flat thud
-    else if(/calling/.test(text)){for(var r=0;r<2;r++)for(var q=0;q<5;q++)tone(q%2?1180:940,t0+r*0.62+q*0.07,0.07,'square',0.03);}
+    var pt=en||text;
+    if(/^You:/.test(pt)){tone(420,t0,0.2,'sine',0.05,1700);tone(1700,t0+0.2,0.07,'sine',0.03);}                 // sent: a whoosh, and no way back
+    else if(/^Seen/.test(pt)){tone(150,t0,0.3,'sine',0.11,96);}                                                      // seen: one flat thud
+    else if(/calling/.test(pt)){for(var r=0;r<2;r++)for(var q=0;q<5;q++)tone(q%2?1180:940,t0+r*0.62+q*0.07,0.07,'square',0.03);}
     else{for(var b=0;b<2;b++){tone(92,t0+b*0.2,0.15,'sawtooth',0.085,84);tone(184,t0+b*0.2,0.15,'square',0.02,170);}  // incoming: the table hears it first
       tone(880,t0+0.42,0.09,'sine',0.05);tone(1320,t0+0.52,0.18,'sine',0.05);}
     return;}
@@ -174,7 +175,459 @@ function sfx(k){if(G&&G.epi)return;   // the epilogue is the song alone: no effe
   else if(k==='card'){tone(262,t,0.5,'sine',0.05);tone(392,t+0.14,0.55,'sine',0.04);}
   else if(k==='turn'){tone(392,t,0.3,'sine',0.05);tone(494,t+0.9,0.3,'sine',0.05);tone(587,t+1.5,0.7,'sine',0.06);}
 }
-function soundUI(){var b=document.getElementById('sound');if(b){b.textContent=soundOn?'Sound on':'Sound off';b.setAttribute('aria-pressed',String(soundOn));}}
+function soundUI(){var b=document.getElementById('sound');if(b){b.textContent=tr(soundOn?'Sound on':'Sound off');b.setAttribute('aria-pressed',String(soundOn));}}
+// ---- src/15-fi.js ----
+// Finnish, a pilot (0.89, Joonas 22.11.: "I'd like to try the first scene in Finnish").
+// The English line is the key; a line without a Finnish one stays English, so the pilot can cover Monday only.
+// Lines are whole sentences (KAANNOS.md): nothing is assembled from pieces. The dictionary itself is FI (16-fi-monday.js).
+var FI={},FIV={},FIMISS={};
+function tr(s){
+  if(typeof LANG==='undefined'||LANG!=='fi'||typeof s!=='string'||!s)return s;
+  var t=FI[s];if(t)return t;
+  if(!FIV[s]&&/[A-Za-z]/.test(s))FIMISS[s]=(FIMISS[s]||0)+1;   // the tests read this: what the pilot still shows in English
+  return s;
+}
+function fiIndex(){FIV={};for(var k in FI)if(Object.prototype.hasOwnProperty.call(FI,k))FIV[FI[k]]=1;}
+// A receipt row: its label in Finnish (a “ ×3” count stays as it is), the value as it is unless it is words.
+function trRow(r){if(!Array.isArray(r))return r;var m=/^(.*?)( ×\d+)?$/.exec(r[0]),v=r[1];if(LANG==='fi'&&typeof v==='string')v=/[a-z]{3}/.test(v)&&!/\d/.test(v)?tr(v):v.replace(/(\d)\.(\d)/g,'$1,$2');return [tr(m[1])+(m[2]||''),v].concat(r.slice(2));}
+// ---- src/16-fi-monday.js ----
+// Finnish pilot: Monday (#1–#2). Generated from the English lines the game actually shows (harvest in Finnish mode), then translated by hand.
+// KAANNOS.md: “oh, hi.” → “ai, moi.”, “You too.” → “Samoin.”, “For the record” → “Pöytäkirjaan:”. Quotation marks are Finnish (” ”).
+(function(){var d={
+"A small social adventure":"Pieni sosiaalinen seikkailu",
+"THE INSIDE VERSION":"SISÄLTÄ KATSOTTUNA",
+"Continue →":"Jatka →",
+"NARRATOR":"KERTOJA",
+"A Monday. One small plan.":"Maanantai. Yksi pieni suunnitelma.",
+"Better safe.":"Varmuuden vuoksi.",
+"PART ONE":"OSA YKSI",
+"Begin part one →":"Aloita osa yksi →",
+"Nobody here yet.":"Ei vielä ketään.",
+"Oh, hi.":"Ai, moi.",
+"Skip intro →":"Ohita alku →",
+"MONDAY":"MAANANTAI",
+"drip.":"tip.",
+"(mug handle on the wrong side.)":"(mukin korva väärällä puolella.)",
+"(better.)":"(parempi.)",
+"Today I’m going to ask Sanna to lunch.":"Tänään pyydän Sannaa lounaalle.",
+"HUMAN":"IHMINEN",
+"A moment…":"Hetkinen…",
+"…Sorry. WHAT are we doing today?":"…Anteeksi. MITÄ me tänään teemme?",
+"EKSKYYSMI":"EKSKYYSMI",
+"Asking Sanna to lunch.":"Pyydämme Sannaa lounaalle.",
+"It was going so well. Coffee. Warm light. No people. We are exceptionally good at mornings.":"Kaikki meni niin hyvin. Kahvia. Lämmintä valoa. Ei ihmisiä. Me olemme poikkeuksellisen hyviä aamuissa.",
+"It’s coffee.":"Se on kahvia.",
+"Ekskyysmi. Informal head of keeping things from getting awkward. Reporting for duty.":"Ekskyysmi. Epävirallinen kiusallisuudenestopäällikkö. Ilmoittautuu palvelukseen.",
+"You don’t have to introduce yourself every morning. You live on my wall.":"Sinun ei tarvitse esittäytyä joka aamu. Asut seinälläni.",
+"It’s a formality. Formalities are how nothing goes wrong.":"Se on muodollisuus. Muodollisuuksien ansiosta mikään ei mene pieleen.",
+"My job is simple. Keep you from being rejected. By anyone. Ever.":"Työni on yksinkertainen. Suojella sinua torjunnalta. Keneltä tahansa. Ikinä.",
+"And my job?":"Entä minun työni?",
+"EKSKYYSMI’S JOB":"EKSKYYSMIN TYÖ",
+"Keep you from being rejected.":"Suojella sinua torjunnalta.",
+"A SMALL PLAN":"PIENI SUUNNITELMA",
+"Ask Sanna to lunch.":"Pyytää Sannaa lounaalle.",
+"Coffee. I’ll handle the catastrophes.":"Kahvi. Minä hoidan katastrofit.",
+"The mug is how much of you there is today. It starts full.":"Muki kertoo, paljonko sinua tänään riittää. Aamulla se on täynnä.",
+"Then handle lunch. I’m asking her out loud.":"Hoida sitten lounas. Minä kysyn häneltä ääneen.",
+"…Out LOUD?":"…ÄÄNEEN?",
+"Suggest something. I’ll decide.":"Ehdota jotain. Minä päätän.",
+"You usually do. It’s a flaw in the system.":"Niin yleensä teet. Se on järjestelmän vika.",
+"Rehearse the sentence. Forty times.":"Harjoittele lause. Neljäkymmentä kertaa.",
+"Locate the exits.":"Paikanna uloskäynnit.",
+"Schedule a meeting about whether to ask.":"Sovi palaveri siitä, kannattaako kysyä.",
+"You’re Ekskyysmi. Pick what I say.":"Sinä olet Ekskyysmi. Valitse, mitä sanon.",
+"“Would you like to get lunch.”":"”Haluaisitko lähteä lounaalle.”",
+"You sounded hungry. Desperate, even. Again.":"Kuulostit nälkäiseltä. Jopa epätoivoiselta. Taas.",
+"It’s lunch. Hunger is on topic.":"Se on lounas. Nälkä kuuluu asiaan.",
+"Morning! You’re quiet today.":"Huomenta! Olet tänään hiljainen.",
+"EERO":"EERO",
+"Morning.":"Huomenta.",
+"You know what you need? To push yourself out of your comfort zone more!":"Tiedätkö mitä tarvitset? Enemmän ulos mukavuusalueelta!",
+"comfort-zone advice":"mukavuusaluevinkki",
+"…Out of the WHAT?":"…Ulos MISTÄ?",
+"We haven’t SEEN the comfort zone since 2016.":"Emme ole NÄHNEET mukavuusaluetta sitten vuoden 2016.",
+"I think he’s being nice.":"Hän taitaa yrittää olla mukava.",
+"You are in a room. With a person. Holding a hot drink AND a conversation. This IS the expedition.":"Olet huoneessa. Ihmisen kanssa. Kädessä kuuma juoma JA keskustelu. Tämä ON se retkikunta.",
+"Tell him about the supermarket.":"Kerro hänelle marketista.",
+"Deploy the nod.":"Ota nyökkäys käyttöön.",
+"Ask where HIS comfort zone is. For later.":"Kysy, missä HÄNEN mukavuusalueensa on. Myöhempää varten.",
+"Show him some teeth. Small ones.":"Näytä vähän hampaita. Pieniä.",
+"What do we do with this?":"Mitä me tälle teemme?",
+"Four hundred and twelve visits. It is still a supermarket. Tell him.":"Neljäsataakaksitoista käyntiä. Se on yhä marketti. Kerro hänelle.",
+"I’m not telling him about the supermarket.":"En kerro hänelle marketista.",
+"…Thanks. I’ll look into it.":"…Kiitos. Mietin sitä.",
+"Enjoy the coffee!":"Nauti kahvista!",
+"You too.":"Samoin.",
+"He doesn’t HAVE a coffee. He’s drinking TEA.":"Eihän hänellä OLE kahvia. Hän juo TEETÄ.",
+"I know.":"Tiedän.",
+"I didn’t do that one. That was all you.":"Tuota en tehnyt minä. Se oli ihan sinua.",
+"WHAT THE OTHERS SAW":"MITÄ MUUT NÄKIVÄT",
+"duration: 4 seconds":"kesto: 4 sekuntia",
+"Two nods. One sip. One “you too”. A perfectly ordinary pause.":"Kaksi nyökkäystä. Yksi siemaus. Yksi ”samoin”. Täysin tavallinen tauko.",
+"THE OUTSIDE VERSION":"ULKOA KATSOTTUNA",
+"Back inside →":"Takaisin sisälle →",
+"Rejection prevented.":"Torjunta estetty.",
+"That wasn’t a rejection.":"Se ei ollut torjunta.",
+"And it stays that way.":"Ja sellaisena se pysyy.",
+"Here she comes. Remember: casual. Like someone who has lunch all the time.":"Sieltä hän tulee. Muista: rennosti. Kuin joku, joka käy lounaalla koko ajan.",
+"oh, hi.":"ai, moi.",
+"SANNA":"SANNA",
+"SMILE":"HYMYILE",
+"NOD":"NYÖKKÄÄ",
+"EYE CONTACT (NOT TOO MUCH)":"KATSEKONTAKTI (EI LIIKAA)",
+"SAY “HI”":"SANO ”MOI”",
+"BREATHE":"HENGITÄ",
+"RESPOND. CORRECTLY. NOW.":"VASTAA. OIKEIN. NYT.",
+"“oh, hi.”":"”ai, moi.”",
+"Waved back at someone who was waving at someone else.":"Vilkutti takaisin jollekulle, joka vilkutti jollekulle toiselle.",
+"Said “you too” when the waiter said “enjoy your meal”.":"Sanoi ”samoin”, kun tarjoilija sanoi ”hyvää ruokahalua”.",
+"Signed an email “Love,”. To Facilities.":"Allekirjoitti sähköpostin ”Rakkaudella,”. Kiinteistöhuollolle.",
+"Ekskyysmi opens the archive. All of it. At once.":"Ekskyysmi avaa arkiston. Kokonaan. Kerralla.",
+"Okay. We missed the window. Nobody panic. I’ve reviewed the “oh”.":"Okei. Ikkuna meni. Ei paniikkia. Olen analysoinut ”ai”-kohdan.",
+"It was a greeting.":"Se oli tervehdys.",
+"It was a verdict. I just need to work out which one.":"Se oli tuomio. Pitää vain selvittää, mikä.",
+"“Oh” as in “oh no. It’s you.”":"”Ai” niin kuin ”ai ei. Sinä.”",
+"“Oh” as in “I forgot you existed.”":"”Ai” niin kuin ”unohdin, että olet olemassa.”",
+"She knows about the email from 2019.":"Hän tietää sen sähköpostin vuodelta 2019.",
+"She saw you and her whole morning went “oh”. You are the “oh” in her day.":"Hän näki sinut, ja hänen koko aamunsa sanoi ”ai”. Sinä olet hänen päivänsä ”ai”.",
+"I’m also the “hi”.":"Olen myös se ”moi”.",
+"The “hi” was legally required.":"”Moi” oli lakisääteinen.",
+"By lunchtime the whole floor says “oh”. By Friday, the building. They’ll name the sound after you.":"Lounaaseen mennessä koko kerros sanoo ”ai”. Perjantaihin mennessä koko talo. Äänelle annetaan sinun nimesi.",
+"A small warning. Just enough to make my point.":"Pieni varoitus. Juuri sen verran, että asia menee perille.",
+"—and after that we—":"—ja sen jälkeen me—",
+"…Is that me?":"…Olenko tuo minä?",
+"That’s you.":"Tuo olet sinä.",
+"That’s my SMALL warning?":"Tuoko on PIENI varoitukseni?",
+"It has shoulders.":"Sillä on hartiat.",
+"For carrying the concern.":"Huolen kantamista varten.",
+"Anyway. I was demonstrating scale.":"Joka tapauksessa. Havainnollistin mittakaavaa.",
+"It’s been two seconds.":"On kulunut kaksi sekuntia.",
+"A lot can happen in two seconds. I just did all of it.":"Kahdessa sekunnissa ehtii tapahtua paljon. Minä tein juuri kaiken.",
+"Recommendation.":"Suositus.",
+"Become furniture. Very convincing furniture.":"Muutu huonekaluksi. Hyvin vakuuttavaksi huonekaluksi.",
+"Study the cup. It has excellent manners.":"Tutki kuppia. Sillä on erinomaiset tavat.",
+"A strategic exit. We can come back.":"Strateginen poistuminen. Voimme tulla takaisin.",
+"…Say “hi” back. I’ll stay right here.":"…Sano ”moi” takaisin. Minä pysyn tässä.",
+"For how long?":"Kuinka kauan?",
+"Until retirement.":"Eläkkeeseen asti.",
+"Hold: keep perfectly still":"Pidä: pysy täysin liikkumatta",
+"Hold to keep perfectly still.":"Pidä painettuna, niin pysyt täysin liikkumatta.",
+"duration: 2 seconds":"kesto: 2 sekuntia",
+"Stood very still. Then a slightly too loud hi, to nobody in particular.":"Seisoi hyvin liikkumatta. Sitten vähän liian kova ”moi” ei kenellekään erityisesti.",
+"You okay? You look like you’ve seen something big.":"Onko kaikki hyvin? Näytät siltä kuin olisit nähnyt jotain isoa.",
+"Nothing big.":"Ei mitään isoa.",
+"I’m medium. At most.":"Olen keskikokoinen. Korkeintaan.",
+"Okay! We’re off to lunch. See you!":"Okei! Me lähdetään lounaalle. Nähdään!",
+"She said “see you”.":"Hän sanoi ”nähdään”.",
+"Not “come with us”. I noticed.":"Ei ”tule mukaan”. Huomasin.",
+"I was standing like a wardrobe.":"Seisoin kuin vaatekaappi.",
+"A very convincing wardrobe. Nobody invites a wardrobe.":"Hyvin vakuuttava vaatekaappi. Kukaan ei kutsu vaatekaappia.",
+"they went without us":"lähtivät ilman meitä",
+"The walk home":"Kotimatka",
+"THE MOMENT HAS PASSED. MOSTLY.":"HETKI ON OHI. ENIMMÄKSEEN.",
+"Right. Debrief. I’ve prepared slides.":"No niin. Jälkipuinti. Olen tehnyt kalvot.",
+"Please don’t have slides.":"Älä vain sano, että teit kalvoja.",
+"Two. Slide one: the full stop.":"Kaksi. Kalvo yksi: piste.",
+"Slide two: she said hi first. Irrelevant. Filed.":"Kalvo kaksi: hän sanoi moi ensin. Epäolennaista. Arkistoitu.",
+"Mention what I actually saw.":"Kerro, mitä oikeasti näin.",
+"Review the “oh”. Again.":"Käy ”ai” läpi. Uudestaan.",
+"We can walk while I’m still worried.":"Voimme kävellä, vaikka olen vielä huolissani.",
+"For the record, she wasn’t being cold. I’ve rewatched it.":"Pöytäkirjaan: hän ei ollut kylmä. Katsoin sen uudelleen.",
+"You said the “oh” was a verdict.":"Sanoit, että ”ai” oli tuomio.",
+"I said a lot of things. Quickly.":"Sanoin paljon asioita. Nopeasti.",
+"Wait. WAIT. Lamp gap.":"Odota. ODOTA. Lamppujen väli.",
+"Sanna: “Missed you at lunch! The noodle place has a new spicy one. Tomorrow?”":"Sanna: ”Kaipasin sua lounaalla! Nuudelipaikassa on uusi tulinen. Huomenna?”",
+"PHONE":"PUHELIN",
+"She MISSED us?":"Hän KAIPASI meitä?",
+"She missed me.":"Hän kaipasi minua.",
+"Same thing. I’m attached.":"Sama asia. Olen kiinni sinussa.",
+"You: “Tomorrow!”":"Sinä: ”Huomenna!”",
+"Bring up the comfort zone thing.":"Ota puheeksi se mukavuusaluejuttu.",
+"Exhibit A. I’ve had it restored.":"Todiste A. Annoin restauroida sen.",
+"Note the comma.":"Huomaa pilkku.",
+"People don’t say commas.":"Ihmiset eivät sano pilkkuja.",
+"ohhh. …hi.":"aiii. …moi.",
+"Enhanced. Look at the eyebrows.":"Tehostettu. Katso kulmakarvoja.",
+"You drew those.":"Sinä piirsit ne.",
+"I RESTORED those.":"Minä RESTAUROIN ne.",
+"the replay":"uusinta",
+" (on the tab)":" (piikkiin)",
+"OH.  …  hi.":"AI.  …  moi.",
+"Director’s cut. With the audience.":"Ohjaajan versio. Yleisön kanssa.",
+"There was no audience.":"Yleisöä ei ollut.",
+"There’s always an audience. It just sits in here.":"Yleisö on aina. Se vain istuu täällä sisällä.",
+"By now the whole building says “oh”. There’s a memo.":"Nyt jo koko talo sanoo ”ai”. Siitä on muistio.",
+"…I’ve scared myself with my own cut.":"…Pelästytin itseni omalla leikkauksellani.",
+"Can we watch the original?":"Voidaanko katsoa alkuperäinen?",
+"The original is very boring.":"Alkuperäinen on tosi tylsä.",
+"THE ORIGINAL TAPE":"ALKUPERÄINEN NAUHA",
+"Sanna said hi. Nobody else was in the room. Literally nobody.":"Sanna sanoi moi. Huoneessa ei ollut ketään muuta. Kirjaimellisesti ei ketään.",
+"…It’s shorter than I remember.":"…Se on lyhyempi kuin muistan.",
+"It’s two seconds.":"Se on kaksi sekuntia.",
+"Mine has an intermission.":"Minun versiossani on väliaika.",
+"That took eight minutes.":"Siihen meni kahdeksan minuuttia.",
+"Of a nine-minute walk. Efficient.":"Yhdeksän minuutin kävelystä. Tehokasta.",
+"ROS-151 …  1+5+1 = 7.  a pair ✓":"ROS-151 …  1+5+1 = 7.  pari ✓",
+"APU-999 …  27.  no.":"APU-999 …  27.  ei.",
+"I’m not entirely finished worrying.":"Huolestuminen on vielä vähän kesken.",
+"You can come in anyway.":"Saat silti tulla sisään.",
+"…Is there toast?":"…Onko paahtoleipää?",
+"There’s toast.":"On paahtoleipää.",
+"home. toast.":"koti. paahtoleipä.",
+"Inside. Toast.":"Sisällä. Paahtoleipää.",
+"After a loud day, the human draws. Small things, on sticky notes.":"Äänekkään päivän jälkeen ihminen piirtää. Pieniä asioita, muistilapuille.",
+"Tonight: a cat. Four legs so far.":"Tänä iltana: kissa. Toistaiseksi neljä jalkaa.",
+"We don’t have a cat.":"Meillä ei ole kissaa.",
+"That’s why I draw them.":"Siksi piirrän niitä.",
+"It needs one more leg. And it goes on the wall.":"Se tarvitsee vielä yhden jalan. Ja se menee seinälle.",
+"Cats have four. Five gets laughed at.":"Kissoilla on neljä. Viidelle nauretaan.",
+"It goes in the drawer. We have a file on drawings.":"Se menee laatikkoon. Meillä on mappi piirustuksista.",
+"YEAR 2":"2. LUOKKA",
+"Showed someone a drawing. Somebody laughed.":"Näytti jollekulle piirustuksen. Joku nauroi.",
+"…Drawer. For now.":"…Laatikkoon. Toistaiseksi.",
+"You are so forgettable she had to reload you.":"Olet niin unohdettava, että hänen piti ladata sinut uudelleen.",
+"She said hi within a second.":"Hän sanoi moi sekunnissa.",
+"A full second. To remember a colleague of three years.":"Kokonainen sekunti. Kolmen vuoden työkaverin muistamiseen.",
+"Soon they forget your desk. Someone puts a plant on it. The plant gets invited to lunch.":"Pian he unohtavat työpisteesi. Joku laittaa siihen kasvin. Kasvi kutsutaan lounaalle.",
+"Mm.":"Mm.",
+"I’ve done the maths. Today: one break room, two conversations, one lunch decision. Three expeditions. Eero took the lift.":"Olen laskenut. Tänään: yksi taukotila, kaksi keskustelua, yksi lounaspäätös. Kolme retkikuntaa. Eero meni hissillä.",
+"He means well.":"Hän tarkoittaa hyvää.",
+"He means well from INSIDE his comfort zone. It has a sofa.":"Hän tarkoittaa hyvää mukavuusalueensa SISÄLTÄ. Siellä on sohva.",
+"Wait. Before the door.":"Odota. Ennen ovea.",
+"No.":"Ei.",
+"One look. For the archive.":"Yksi katsaus. Arkistoa varten.",
+"The plant has your desk now. The plant went to lunch.":"Kasvilla on nyt työpisteesi. Kasvi meni lounaalle.",
+"What email?":"Mikä sähköposti?",
+"You signed it “Love,”. To Facilities.":"Allekirjoitit sen ”Rakkaudella,”. Kiinteistöhuollolle.",
+"Nobody remembers that.":"Kukaan ei muista sitä.",
+"I remember it every night at 3 a.m. That is what I’m FOR.":"Minä muistan sen joka yö kolmelta. Sitä varten minä OLEN.",
+"It’s been forwarded. There’s a group chat. It’s called “Love, Facilities”.":"Se on välitetty eteenpäin. On ryhmächatti. Sen nimi on ”Rakkaudella, Kiinteistöhuolto”.",
+"I may bring up the comma again.":"Saatan ottaa pilkun vielä puheeksi.",
+"I know. Keep walking with me.":"Tiedän. Kävele silti vierelläni.",
+"The group chat has a logo now.":"Ryhmächatilla on nyt logo.",
+"Deploying.":"Otetaan käyttöön.",
+"Get an address.":"Hanki osoite.",
+"A postcode, then.":"No postinumero sitten.",
+"Wait—":"Odota—",
+"Maybe YOUR comfort zone could use a walk, Eero.":"Ehkä SINUN mukavuusalueesi kaipaisi kävelylenkkiä, Eero.",
+"…Ha. Fair.":"…Hah. Reilua.",
+"duration: 3 seconds":"kesto: 3 sekuntia",
+"One slightly sharp joke. Eero laughed a beat too late.":"Yksi vähän terävä vitsi. Eero nauroi hetken liian myöhään.",
+"…Did we just bite Eero?":"…Puraisimmeko me juuri Eeroa?",
+"We bit Eero.":"Me puraisimme Eeroa.",
+"the snap":"tiuskaisu",
+"Eero is SOFT. Eero owns a cardigan.":"Eero on PEHMEÄ. Eerolla on neuletakki.",
+"I was defending us. From advice.":"Puolustin meitä. Neuvoilta.",
+"He was being nice.":"Hän yritti olla mukava.",
+"I know that NOW. Two seconds ago he was a predator.":"Tiedän sen NYT. Kaksi sekuntia sitten hän oli saalistaja.",
+"Apologise to Eero. I’ve drafted something.":"Pyydä Eerolta anteeksi. Tein luonnoksen.",
+"Door. Window. Cupboard under the sink.":"Ovi. Ikkuna. Tiskipöydän alakaappi.",
+"I’m not hiding under the sink.":"En piiloudu tiskipöydän alle.",
+"Not with that attitude.":"Et tuolla asenteella.",
+"It’s a cup.":"Se on kuppi.",
+"Not one personal remark.":"Ei yhtään henkilökohtaista huomautusta.",
+"Hold: cover the eyes":"Pidä: peitä silmät",
+"Hold to keep the eyes covered.":"Pidä painettuna, niin silmät pysyvät peitossa.",
+"Looked into the cup until the moment had passed.":"Katsoi kuppiin, kunnes hetki oli ohi.",
+"I waved just now.":"Vilkutin äsken.",
+"I was looking at the cup.":"Katsoin kuppia.",
+"Ha. Good cup. Anyway, we’re heading to lunch!":"Hah. Hyvä kuppi. No, me lähdetään lounaalle!",
+"She likes the cup.":"Hän pitää kupista.",
+"She went to lunch.":"Hän meni lounaalle.",
+"With the cup’s blessing.":"Kupin siunauksella.",
+"Without me.":"Ilman minua.",
+"…The cup didn’t mention that part.":"…Kuppi ei maininnut sitä kohtaa.",
+"With whom?":"Kenen kanssa?",
+"Us. Closed session. No catering.":"Meidän kahden. Suljettu istunto. Ei tarjoilua.",
+"I’m asking before you invent a subcommittee.":"Kysyn ennen kuin keksit alavaliokunnan.",
+"My coffee’s still here.":"Kahvini on vielä täällä.",
+"A convincing alibi.":"Vakuuttava alibi.",
+"Hold: walk out":"Pidä: kävele ulos",
+"Hold to walk out of the room.":"Pidä painettuna, niin kävelet ulos huoneesta.",
+"Oh— hey, are you…":"Ai— hei, oletko sinä…",
+"Left. The coffee stayed.":"Lähti. Kahvi jäi.",
+"Oh. Gone?":"Ai. Lähti jo?",
+"Left the coffee, though.":"Kahvi jäi kuitenkin.",
+"Shame. I was going to ask about lunch.":"Harmi. Aioin kysyä lounaasta.",
+"In the corridor, a shadow records one more rejection prevented. Nobody had been planning one.":"Käytävällä varjo kirjaa vielä yhden estetyn torjunnan. Kukaan ei ollut suunnitellut sellaista.",
+"I reserve the right to wobble.":"Pidätän oikeuden huojua.",
+"You can wobble.":"Saat huojua.",
+"A pause. Then a “hi”, just after the moment had moved on.":"Tauko. Sitten ”moi”, juuri kun hetki oli jo mennyt.",
+"Eero, lunch? The noodle place?":"Eero, lounas? Nuudelipaikka?",
+"Starving.":"Kuolen nälkään.",
+"…Hi.":"…Moi.",
+"The “hi” arrives. Nobody is left to receive it.":"”Moi” saapuu perille. Ketään ei ole enää vastaanottamassa sitä.",
+"It took us four minutes to agree on “hi”.":"Meiltä meni neljä minuuttia sopia ”moista”.",
+"It took them four seconds to go to lunch.":"Heiltä meni neljä sekuntia lähteä lounaalle.",
+"Different departments.":"Eri osastot.",
+"Hey, I was going to— …never mind.":"Hei, minä aioin— …ei mitään.",
+"Eero, let’s just go.":"Eero, mennään vaan.",
+"She was about to say something.":"Hän oli sanomassa jotain.",
+"And now she can’t. You’re welcome.":"Eikä nyt enää voi. Ole hyvä.",
+"…You’re welcome?":"…Ole hyvä?",
+"She started a sentence. We never got the rest.":"Hän aloitti lauseen. Loppua emme koskaan kuulleet.",
+"We could ask.":"Voisimme kysyä.",
+"Without a reconstruction of the incident?":"Ilman tapahtuman rekonstruktiota?",
+"You: “Lunch tomorrow?”":"Sinä: ”Lounaalle huomenna?”",
+"Sanna: “YES. I never know if you want company.”":"Sanna: ”JOO. En ikinä tiedä, haluatko seuraa.”",
+"“YES.”":"”JOO.”",
+"…She thought WE didn’t want HER?":"…Hän luuli, ettemme ME halua HÄNTÄ?",
+"Looks busy. Maybe another day.":"Näyttää kiireiseltä. Ehkä joku toinen päivä.",
+"Shame.":"Harmi.",
+"For the record, I saw a hand go up.":"Pöytäkirjaan: näin käden nousevan.",
+"When?":"Milloin?",
+"While I was covering your eyes.":"Kun peitin silmiäsi.",
+"In my defence, the cup was extremely safe.":"Puolustuksekseni: kuppi oli äärimmäisen turvallinen.",
+"Her hand went up. I saw that much.":"Hänen kätensä nousi. Sen verran näin.",
+"While I was studying the cup.":"Kun minä tutkin kuppia.",
+"The cup has declined to comment.":"Kuppi on kieltäytynyt kommentoimasta.",
+"Oh. Already gone.":"Ai. Jo mennyt.",
+"Maybe not a lunch person.":"Ehkä ei ole lounasihminen.",
+"In the corridor, a shadow records one more rejection prevented.":"Käytävällä varjo kirjaa vielä yhden estetyn torjunnan.",
+"We left before she could say anything.":"Lähdimme ennen kuin hän ehti sanoa mitään.",
+"So we don’t actually know.":"Emme siis oikeasti tiedä.",
+"I had a very detailed guess.":"Minulla oli hyvin yksityiskohtainen arvaus.",
+"Good. We said hi. Eventually. Let’s never speak again.":"Hyvä. Sanoimme moi. Lopulta. Ei puhuta enää ikinä.",
+"I’m going to ask.":"Minä kysyn.",
+"Don’t.":"Älä.",
+"Sanna, do you want to—":"Sanna, haluatko—",
+"Eero! Wait up, I’m coming!":"Eero! Odota, tulen!",
+"—get lunch.":"—lähteä lounaalle.",
+"The question arrives at an empty doorway. It was a good question.":"Kysymys saapuu tyhjään oviaukkoon. Se oli hyvä kysymys.",
+"She didn’t hear it.":"Hän ei kuullut sitä.",
+"So technically she didn’t say no.":"Teknisesti hän ei siis sanonut ei.",
+"Technically nobody said anything.":"Teknisesti kukaan ei sanonut mitään.",
+"You asked. Out loud. To a doorway.":"Kysyit. Ääneen. Oviaukolle.",
+"I could ask again. Somewhere with a person in it.":"Voisin kysyä uudestaan. Jossain, missä on ihminen.",
+"Risky. People are in it.":"Riskialtista. Siellä on ihmisiä.",
+"Lunch? No need to ask the others, right?":"Lounaalle? Ei tarvitse kysyä muita, eihän?",
+"No need.":"Ei tarvitse.",
+"…I didn’t make that one up.":"…Tuota en keksinyt.",
+"I’d like it noted that I don’t enjoy being right.":"Pyydän kirjaamaan, etten nauti siitä, että olin oikeassa.",
+"Noted.":"Kirjattu.",
+"They said: no need to ask the others. That happened. I’m not doing a bit.":"He sanoivat: ei tarvitse kysyä muita. Niin tapahtui. En vitsaile.",
+"You: “Rough day. Call?”":"Sinä: ”Rankka päivä. Soitatko?”",
+"Reply: “Calling.”":"Vastaus: ”Soitan.”",
+"…Who is that?":"…Kuka tuo on?",
+"Someone who asks.":"Joku, joka kysyy.",
+"I’d like to vet them.":"Haluaisin tarkastaa hänet.",
+"You’ve met. You hid.":"Olette tavanneet. Sinä piilouduit.",
+"What did they say?":"Mitä he sanoivat?",
+"…Weather. They said weather.":"…Säästä. He puhuivat säästä.",
+"You’re a terrible liar.":"Olet surkea valehtelija.",
+"They said: no need to ask the others.":"He sanoivat: ei tarvitse kysyä muita.",
+"…Okay.":"…Okei.",
+"I’d have covered it forever. I only have the two hands.":"Olisin peittänyt sen ikuisesti. Minulla on vain kaksi kättä.",
+"Only the empty room heard that. The shadow would call it a win. It doesn’t feel like one.":"Vain tyhjä huone kuuli sen. Varjo kutsuisi sitä voitoksi. Siltä se ei tunnu.",
+"We left. I don’t know what happened after that.":"Lähdimme. En tiedä, mitä sen jälkeen tapahtui.",
+"I still felt left out.":"Tunsin silti jääväni ulkopuolelle.",
+"I’d like to fill in the missing bits.":"Haluaisin täydentää puuttuvat kohdat.",
+"Let’s call someone first.":"Soitetaan ensin jollekulle.",
+"Can I come?":"Saanko tulla mukaan?",
+"You’re attached to my feet.":"Olet kiinni jaloissani.",
+"KIV-304 …  3+0+4 = 7":"KIV-304 …  3+0+4 = 7"
+,
+// the end of Monday, the receipt, the winning response, the hint line
+"Lunch didn’t happen today. A message did. Tomorrow, then.":"Lounasta ei tänään tullut. Viesti tuli. Huomenna sitten.",
+"I was very convincing furniture.":"Olin hyvin vakuuttava huonekalu.",
+"A DAY, AWAKE":"PÄIVÄ, HEREILLÄ",
+"rest of the day, twice":"loppupäivä, kahdesti",
+"jolts to the chest":"säpsähdyksiä rinnassa",
+"archive visits":"arkistokäyntejä",
+"lying awake (projected)":"valvomista (ennuste)",
+"replays":"uusintoja",
+"the response, revisited":"vastaus, kerrattuna",
+"edits, for safety":"muokkauksia, varmuuden vuoksi",
+"exhibits examined":"todisteita tutkittu",
+"one “oh, hi.”, replayed":"yksi ”ai, moi.”, uusintana",
+"Mondays replayed, by you":"maanantaita toistettu, sinun toimestasi",
+"noted":"kirjattu",
+"nothing to report":"ei raportoitavaa",
+"OUTSIDE":"ULKOA",
+"INSIDE":"SISÄLTÄ",
+"DAYS LIVED TODAY":"PÄIVIÄ ELETTY TÄNÄÄN",
+"DAILY RECEIPT":"PÄIVÄN KUITTI",
+"A MONDAY":"MAANANTAI",
+"Thank you for your vigilance.<br>No refunds. No returns.":"Kiitos valppaudestasi.<br>Ei hyvityksiä. Ei palautuksia.",
+"End of Monday":"Maanantai on ohi",
+"Home. Both of you.":"Kotona. Molemmat.",
+"The greeting lasted two seconds.<br>The shadow took the scenic route.":"Tervehdys kesti kaksi sekuntia.<br>Varjo valitsi maisemareitin.",
+"Carry on →":"Eteenpäin →",
+"Try another approach":"Kokeile toista tapaa",
+"Another Monday":"Toinen maanantai",
+"Another approach replays this Monday. Another Monday changes what was happening around you.":"Toinen tapa toistaa tämän maanantain. Toinen maanantai muuttaa sitä, mitä ympärilläsi tapahtui.",
+"Save as picture":"Tallenna kuvana",
+"Copy text":"Kopioi teksti",
+"Hi!":"Moi!",
+"Oh good, you’re in. We’re doing lunch at twelve. Coming?":"Kiva, olet täällä. Mennään lounaalle kahdeltatoista. Tuletko?",
+"Yeah.":"Joo.",
+"You did it.":"Sinä teit sen.",
+"Nobody has ever done it. I designed it so that nobody could do it.":"Kukaan ei ole ikinä tehnyt sitä. Suunnittelin sen niin, ettei kukaan voisi.",
+"I said hi.":"Sanoin moi.",
+"In under three seconds. With BREATHING.":"Alle kolmessa sekunnissa. HENGITTÄEN.",
+"I’m going to need to lie down.":"Minun pitää mennä makuulle.",
+"duration: 1 second":"kesto: 1 sekunti",
+"Someone said hi back. That was all it ever was.":"Joku sanoi moi takaisin. Muuta se ei koskaan ollutkaan.",
+"For the record. We had lunch.":"Pöytäkirjaan: kävimme lounaalla.",
+"We did.":"Kävimme.",
+"Because you answered inside the window.":"Koska vastasit, kun ikkuna oli auki.",
+"Because I said hi.":"Koska sanoin moi.",
+"Those are the same thing and I resent it.":"Ne ovat sama asia, ja se ottaa minua päähän.",
+"You answered inside the window. Nobody has done that before. Lunch happened. The shadow is lying down.":"Vastasit, kun ikkuna oli auki. Kukaan ei ole tehnyt sitä ennen. Lounas toteutui. Varjo on makuulla.",
+"I would like to lodge a complaint about the speed of that hi.":"Haluan jättää valituksen tuon moin nopeudesta.",
+"Nobody said no. Nobody had the chance. The shadow is calling that a win.":"Kukaan ei sanonut ei. Kukaan ei ehtinyt. Varjo kutsuu sitä voitoksi.",
+"Twelve paragraphs. One diagram. A small poem about cardigans.":"Kaksitoista kappaletta. Yksi kaavio. Pieni runo neuletakeista.",
+"I’ll send one line.":"Lähetän yhden rivin.",
+"You: “Sorry I was snappy this morning. Comfort zone advice hits a nerve.”":"Sinä: ”Sori, että tiuskin aamulla. Mukavuusaluevinkit osuvat hermoon.”",
+"Eero: “Ha, no, fair. I take the lift for a reason.”":"Eero: ”Hah, ei, reilua. Minä menen hissillä syystä.”",
+"…Eero takes the lift for a REASON?":"…Eero menee hissillä SYYSTÄ?",
+"Everyone’s got something.":"Kaikilla on jotain.",
+"Does Eero have one of me?":"Onko Eerolla tällainen kuin minä?",
+"Probably. A smaller one. In a cardigan.":"Luultavasti. Pienempi. Neuletakissa.",
+"I maintain that the cup was very safe.":"Pysyn kannassani: kuppi oli hyvin turvallinen.",
+"Next time, we bring the coffee.":"Ensi kerralla kahvi tulee mukaan.",
+"I wobbled. We went anyway. Slightly after everyone else.":"Huojuin. Menimme silti. Vähän kaikkien muiden jälkeen.",
+"Today hurt. You reached for someone who makes room for you.":"Tänään sattui. Kurotit kohti jotakuta, joka tekee sinulle tilaa.",
+"Today hurt. Their choice to leave you out was theirs.":"Tänään sattui. Päätös jättää sinut ulkopuolelle oli heidän.",
+"Today felt lonely. Not every missing piece needs filling in tonight.":"Tänään tuntui yksinäiseltä. Jokaista puuttuvaa palaa ei tarvitse täyttää tänä iltana.",
+"Nothing to do. It’s handled.":"Ei mitään tehtävää. Hoidossa.",
+"The lamp.":"Lamppu.",
+"Arrow keys and Space, in this order. Or tap the buttons. Two seconds have been added for reading. Reality did not add them.":"Nuolinäppäimet ja välilyönti, tässä järjestyksessä. Tai napauta nappeja. Lukemista varten on lisätty kaksi sekuntia. Todellisuus ei lisännyt niitä.",
+"Press and hold the button or the scene. A few taps work too. Letting go is allowed.":"Paina ja pidä nappia tai kohtausta. Muutama napautus käy myös. Irti saa päästää.",
+"Drag up on the scene, or use the slider. No rush.":"Vedä kohtausta ylöspäin tai käytä liukusäädintä. Ei kiirettä.",
+"Choose a line · keys 1–4 · every choice keeps the story moving.":"Valitse repliikki · näppäimet 1–4 · jokainen valinta vie tarinaa eteenpäin.",
+"Space / Enter to continue · P to pause · Dialogue to look back.":"Välilyönti / Enter jatkaa · P tauko · Dialogi näyttää aiemmat.",
+"Take your time. The coffee can wait.":"Ota aikaa. Kahvi odottaa.",
+"A place to pause. Continue when you’re ready.":"Paikka pysähtyä. Jatka, kun olet valmis.",
+"Space / Enter to continue · P to pause · Dialogue to look back · Things in the room can be tapped.":"Välilyönti / Enter jatkaa · P tauko · Dialogi näyttää aiemmat · Huoneen esineitä voi napauttaa.",
+"The human can answer without checking with Ekskyysmi.":"Ihminen voi vastata kysymättä Ekskyysmiltä."
+,
+// drawn on the canvas: the response header, the stamp, the x-ray (the x-ray is Tuesday's, but it is one shared picture)
+"RESPOND CORRECTLY":"VASTAA OIKEIN","REJECTION":"TORJUNTA","PREVENTED":"ESTETTY","● X-RAY · CHEST · ":"● RÖNTGEN · RINTAKEHÄ · ",
+"SHADOW: NO BONES DETECTED. FILING CABINET DETECTED.":"VARJO: LUITA EI HAVAITTU. ARKISTOKAAPPI HAVAITTU.","HEART RATE: NORMAL":"SYKE: NORMAALI","TODAY":"TÄNÄÄN",
+"IMPACT DETECTED":"ISKU HAVAITTU","SOURCE: —":"LÄHDE: —","SOURCE: “JUST ONE SMALL THING”":"LÄHDE: ”VAIN YKSI PIENI JUTTU”"
+,
+"WINDOW: NOT REQUIRED":"IKKUNA: EI TARPEEN","WINDOW: {s} s · INCLUDES TWO SECONDS FOR READING · REALITY: ALREADY MOVING":"IKKUNA: {s} s · SISÄLTÄÄ KAKSI SEKUNTIA LUKUAIKAA · TODELLISUUS: JO MENOSSA",
+"CORRECT.":"OIKEIN.","INCORRECT.":"VÄÄRIN.","TOO LATE.":"LIIAN MYÖHÄÄN.","BE A MUG.":"OLE MUKI.","NOT A HERO.":"ÄLÄ SANKARI."
+,
+"Ekskyysmi filed that.":"Ekskyysmi arkistoi tuon.","ARCHIVE · ":"ARKISTO · ","ARCHIVE · THE OTHER PILE · ":"ARKISTO · TOINEN PINO · "
+,
+// pause, coming back, the walk-home card
+"Paused":"Tauko","Take your time. I’ll just be here, thinking about it.":"Ota aikaa. Minä olen tässä ja mietin asiaa.","Tap the scene to carry on.":"Napauta kohtausta, niin jatketaan.",
+"You left for {a}.":"Olit poissa {a}.","In here that was {a}. I’ve prepared a statement.":"Täällä sisällä se oli {a}. Olen valmistellut lausunnon.",
+"THE WALK HOME":"KOTIMATKA","Nine minutes, usually.":"Yleensä yhdeksän minuuttia."
+,
+// the title screen and the menu
+"A small moment.<br>A very long shadow.":"Pieni hetki.<br>Hyvin pitkä varjo.","Continue":"Jatka","New game":"Uusi peli","Chapters":"Luvut","Moments":"Hetket","Settings":"Asetukset","About":"Tietoa",
+"Quick chat?":"Pikainen juttu?","Resume":"Jatka","Pause":"Tauko","Text: small":"Teksti: pieni","Text: normal":"Teksti: normaali","Text: large":"Teksti: suuri",
+"Slow reality":"Hidas todellisuus","Slow reality: on":"Hidas todellisuus: päällä",
+"The window to respond correctly lasts about nine seconds.":"Oikean vastauksen ikkuna kestää noin yhdeksän sekuntia.","Give yourself about nine seconds to respond correctly.":"Anna itsellesi noin yhdeksän sekuntia vastata oikein.",
+"Full screen":"Koko näyttö","Leave full screen":"Poistu koko näytöstä","Sound on":"Ääni päällä","Sound off":"Ääni pois",
+"Less motion":"Vähemmän liikettä","Text below":"Teksti alle","Dialogue":"Dialogi","Restart":"Aloita alusta","The conversation so far":"Keskustelu tähän asti","Back to the moment":"Takaisin hetkeen",
+"Menu":"Valikko","Language":"Kieli"
+,
+"Coming. COMING.":"Tullaan. TULLAAN."
+};for(var k in d)FI[k]=d[k];fiIndex();})();
 // ---- src/20-engine.js ----
 /* ================= state ================= */
 function reset(day){
@@ -193,7 +646,7 @@ function reset(day){
   G.handout=false;G.afterparty=false;G.sips=0;G.files=0;G.bigSip=null;G.fineSent=false;G.applied=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.coatNo=false;G.kept=[];G.methods={};G.endSeen=false;G.stamp=null;
   G.choiceWho='S';G.finalFrame=false;G.barStory=null;G.quietDrawing=false;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
-  document.getElementById('pause').textContent='Pause';document.body.classList.remove('is-paused');
+  document.getElementById('pause').textContent=tr('Pause');document.body.classList.remove('is-paused');
   C.z=1.025;C.fx=W/2;C.fy=H/2;
   hideOv();render();
 }
@@ -236,14 +689,14 @@ function choose(i){
   Q=(o.hush?[]:[[G.choiceWho||'S',o.t]]).concat(then,Q);run();
 }
 function setLine(who,text,o){
-  var g=G;
+  var g=G,en=text;text=tr(text);   // 0.89: Finnish pilot
   if(who==='N'){g.band=text;}
   else{g.band=null;g.lines=g.lines.filter(function(l){return l.who!==who;});g.lines.push({who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet)});if(g.lines.length>2)g.lines.shift();}
   var prev=g.cur&&g.cur.who,pair=(who==='S'&&prev==='H')||(who==='H'&&prev==='S');
   g.bick=pair&&text.length<=46&&!(o&&o.big)?(g.bick||0)+1:(who==='S'||who==='H')&&pair?Math.max(0,(g.bick||0)-1):0;
   var mute=who==='S'&&g.morko.asleep;
-  g.phoneN=who==='P'?3:Math.max(0,(g.phoneN||0)-1);if(who==='P'&&!/^You:/.test(text))g.buzz=0.7;
-  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute){speak(who,text,o);if(who!=='N'&&!(o&&o.big))sfx(who==='S'?'popS':'pop');}if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
+  g.phoneN=who==='P'?3:Math.max(0,(g.phoneN||0)-1);if(who==='P'&&!/^You:/.test(en))g.buzz=0.7;
+  g.cur={who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet),look:(o&&o.look)||null};g.curT=0;if(!mute){speak(who,text,o,en);if(who!=='N'&&!(o&&o.big))sfx(who==='S'?'popS':'pop');}if(o&&o.loud&&!RM)g.shake=Math.max(g.shake||0,0.25);
   history.push({who:who,text:text});
 }
 // How many characters of a line are showing after t seconds. A full stop is a breath, an ellipsis is a longer one.
@@ -267,14 +720,14 @@ function render(){
   document.getElementById('play-panel').classList.toggle('hidden',!g.started||g.ended);
   document.getElementById('pause').disabled=!g.started||g.ended;
   document.getElementById('journal').disabled=!history.length;
-  document.getElementById('chapter').textContent=g.ended?(g.labEnd?(DEVLAB?'Scenario lab':'Moments'):g.dayEnd?'End of Monday':'For now'):g.started?(g.lab?'':['','I · ','II · ','III · '][storyPart()])+(g.chap&&g.chap.part?g.chap.title:g.label|| (g.w?'The walk home':'Oh, hi.')):'A small social adventure';
-  document.getElementById('perspective').textContent=g.chap&&g.chap.part?g.chap.day:g.finalFrame?'FOR NOW':g.out?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION';
+  document.getElementById('chapter').textContent=g.ended?(g.labEnd?(DEVLAB?'Scenario lab':'Moments'):g.dayEnd?'End of Monday':'For now'):g.started?(g.lab?'':['','I · ','II · ','III · '][storyPart()])+tr(g.chap&&g.chap.part?g.chap.title:g.label|| (g.w?'The walk home':'Oh, hi.')):tr('A small social adventure');
+  document.getElementById('perspective').textContent=tr(g.chap&&g.chap.part?g.chap.day:g.finalFrame?'FOR NOW':g.out?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION');
   cv.classList.toggle('stretching',WAIT==='stretch');
   cv.setAttribute('aria-label',g.chap&&g.chap.part?g.chap.day+'. '+g.chap.title:g.finalFrame?'The human is asleep. A lamp stays on. Ekskyysmi makes a bird with its hands.':'A human and a very large shadow');
   if(WAIT==='choice'&&CH){
     speaker=g.choiceWho||'S';text=g.nopeMsg||g.choiceAsk||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':g.chapter===1&&!g.lab&&!g.firstPick?'You’re Ekskyysmi. Pick what I say.':'What do we do with this?');   // the very first choice says who the player is
     if(g.form&&g.form.i>=0){speaker='N';text=FORM_Q[g.form.i].q;}
-    for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(CH[i].t)+' <em>Not a setting. Yet.</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>':CH[i].off&&CH[i].note?'<button class="opt off'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>'+esc(CH[i].note)+'</em></button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(CH[i].t)+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(CH[i].t)+'</button>';
+    for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(tr(CH[i].t))+' <em>'+tr('Not a setting. Yet.')+'</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>':CH[i].off&&CH[i].note?'<button class="opt off'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>'+esc(CH[i].note)+'</em></button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>';
   }else if(WAIT==='stretch'){
     speaker='S';text='A small warning. Just enough to make my point.';
     html='<div class="stretch-controls"><label for="stretch">Unfurl your warning</label><input id="stretch" type="range" min="1.8" max="3.8" step="0.05" value="'+g.morko.sT+'" aria-label="Size of your warning"><button class="opt cont" type="button" data-i="go">That should do it →</button></div>';
@@ -289,10 +742,10 @@ function render(){
     html='<button class="opt cont" type="button" data-i="go">Let go</button>';
   }else if(WAIT==='hold'){
     speaker='S';text=holdText();g.hold.shown=text;
-    html='<div class="hold-controls"><button class="opt cont" type="button" data-i="hold">'+HOLD_LABEL[g.hold.kind]+'</button><div class="holdbar"><i id="holdfill"></i></div></div>';
+    html='<div class="hold-controls"><button class="opt cont" type="button" data-i="hold">'+tr(HOLD_LABEL[g.hold.kind])+'</button><div class="holdbar"><i id="holdfill"></i></div></div>';
   }else if(WAIT==='qte'&&g.qte){
     var qq=g.qte;speaker='S';text='RESPOND. CORRECTLY. NOW.';
-    html=qq.order.map(function(i){var r=RESPONSE[i],done=i<qq.i;return '<button class="opt qte'+(done?' done':'')+'" type="button" data-i="q'+i+'"'+(qq.end||done?' disabled':'')+'><b>'+r.sym+'</b><span>'+r.label+'</span></button>';}).join('');
+    html=qq.order.map(function(i){var r=RESPONSE[i],done=i<qq.i;return '<button class="opt qte'+(done?' done':'')+'" type="button" data-i="q'+i+'"'+(qq.end||done?' disabled':'')+'><b>'+r.sym+'</b><span>'+tr(r.label)+'</span></button>';}).join('');
   }else if(WAIT==='fight'){
     speaker='S';text='Incoming! I’ve got this. Probably.';
     html='<button class="opt cont swat" type="button" data-i="go">Swat! <span>(or tap the scene)</span></button>';
@@ -304,17 +757,18 @@ function render(){
     }
   }else if(WAIT==='view'){
     speaker='N';text=g.out.cap;
-    html='<button class="opt cont" type="button" data-i="go"'+(TIMER>0?' disabled':'')+'>Back inside →</button>';
+    html='<button class="opt cont" type="button" data-i="go"'+(TIMER>0?' disabled':'')+'>'+tr('Back inside →')+'</button>';
     if(g.out.anim==='chatlog')html=chatTranscript()+html;
   }else{
     if(WAIT==='time'&&!cur)text=g.skippable?'':'…';   // the intro speaks through its own caption (top left); the panel only offers Skip
-    html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">Skip intro →</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+(WAIT==='time'?'A moment…':'Continue →')+'</button>';
+    html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">'+tr('Skip intro →')+'</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+tr(WAIT==='time'?'A moment…':'Continue →')+'</button>';
   }
-  if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">Begin '+g.chap.day.toLowerCase()+' →</button>';
-  if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">For now →</button>';}
+  if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">'+tr('Begin '+g.chap.day.toLowerCase()+' →')+'</button>';
+  if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">'+tr('For now →')+'</button>';}
+  text=tr(text);   // 0.89: prompts, hold texts, captions
   var icon=speaker==='H'?'human':speaker==='S'?'':speaker==='N'?'narrator':'other';
   // Narration is unlabelled and in italics, as in most narrative games: a voice, not a character. Screen readers still hear “Narrator”.
-  var label=speaker==='N'?'<b class="sr">'+NAMES.N+'</b>':'<b>'+NAMES[speaker]+'</b>';
+  var label=speaker==='N'?'<b class="sr">'+tr(NAMES.N)+'</b>':'<b>'+tr(NAMES[speaker])+'</b>';
   elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'">'+label+'<p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
@@ -332,6 +786,7 @@ function render(){
   if(g.finalFrame)document.getElementById('hint').textContent='Stay a little, if you like.';
   else if(WAIT==='click'&&hotOn())document.getElementById('hint').textContent='Space / Enter to continue · P to pause · Dialogue to look back · Things in the room can be tapped.';   // a whole line, not a joined one: it has to translate
   if(WAIT==='auto')document.getElementById('hint').textContent='The human can answer without checking with Ekskyysmi.';
+  var hintEl=document.getElementById('hint');hintEl.textContent=tr(hintEl.textContent);
   resize();
 }
 function clearPreview(){if(previewSaved){G.morko.pose=previewSaved.pose;G.morko.sT=previewSaved.s;previewSaved=null;}}
@@ -463,7 +918,7 @@ function hit(k,from){return function(){
   trigger();addLived('jolts to the chest',Math.round(LIVED.hit*k));
 };}
 function archive(kind,items){return function(){
-  var g=G;for(var i=0;i<items.length;i++)g.cards.push({kind:kind,year:items[i][0],text:items[i][1],t:-i*0.45,life:null,
+  var g=G;for(var i=0;i<items.length;i++)g.cards.push({kind:kind,year:tr(items[i][0]),text:tr(items[i][1]),t:-i*0.45,life:null,
     x:kind==='good'?790:170+i*310,y:kind==='good'?178:150+(i%2)*46,rot:kind==='good'?-0.03:((i%2?1:-1)*(0.06+i*0.02))});
   if(kind==='bad'){addLived('archive visits',LIVED.archive);g.files=(g.files||0)+items.length;}   // old files reopened, for the receipt
   if(kind!=='bad')sfx('card');   // red cards make their own bang as each one lands (update loop)
@@ -486,7 +941,7 @@ function drawCards(){
     var good=c.kind==='good';ctx.fillStyle=good?'#fff4d6':'#f6f1e4';ctx.strokeStyle=good?'#e2b04a':'#8b8070';ctx.lineWidth=good?3:1.5;
     rr(-140,-56,280,112,5);ctx.fill();ctx.stroke();
     ctx.fillStyle=good?'#e2b04a':'#c9553f';ctx.fillRect(-140,-56,280,24);
-    ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillStyle='#fffdf6';ctx.fillText((good?'ARCHIVE · THE OTHER PILE · ':'ARCHIVE · ')+c.year,-128,-44);
+    ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillStyle='#fffdf6';ctx.fillText(tr(good?'ARCHIVE · THE OTHER PILE · ':'ARCHIVE · ')+tr(c.year),-128,-44);
     ctx.font='600 17px system-ui,sans-serif';ctx.fillStyle='#2b2733';var ls=wrap(c.text,250);for(var k=0;k<ls.length&&k<3;k++)ctx.fillText(ls[k],-128,-12+k*22);
     ctx.restore();}
 }
@@ -520,7 +975,7 @@ function drawReplay(){
 function look(){G.gazeFrom='A';G.gazeT=0.5;}
 function calm(){var g=G;g.human.sweatT=0;g.gazeT=0;g.darkT=0;g.anx=0.25;g.morko.sT=1.15;g.morko.mood='calm';g.morko.pose=null;g.human.face='neutral';g.cz=1.025;g.cx=W/2;g.cy=H/2;g.camRate=null;g.hidS=null;}
 function prevent(label,quiet){return function(){G.prevented++;if(quiet)return [];startStamp('press');return [{wait:0.85}];};}   // quiet: counted, not stamped (one stamp on Monday is the joke, two is a lecture)
-function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
+function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=LANG==='fi'?{title:tr(o.title),dur:tr(o.dur),cap:tr(o.cap),anim:o.anim,t:0}:o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
 function leave(){G.axT=1120;G.bxT=1200;G.aFace=1;G.bFace=1;}
 function frozen(){var g=G;sfx('startle');g.morko.st='frozen';g.startles++;g.human.flinch=1;}
 function hide(){G.morko.st='hide';}
@@ -1693,7 +2148,7 @@ function drawQte(){
   ctx.save();
   ctx.fillStyle='rgba(14,12,20,.88)';rr(x-w/2,y-46,w,152,14);ctx.fill();
   ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.font='800 15px system-ui,sans-serif';ctx.fillStyle=(RM||Math.floor(G.time*6)%2===0)&&!q.end?'#e0563e':'#f1ebdd';ctx.fillText('RESPOND CORRECTLY',x,y-26);
+  ctx.font='800 15px system-ui,sans-serif';ctx.fillStyle=(RM||Math.floor(G.time*6)%2===0)&&!q.end?'#e0563e':'#f1ebdd';ctx.fillText(tr('RESPOND CORRECTLY'),x,y-26);
   var cw=108,gap=9,x0=x-(n*cw+(n-1)*gap)/2;
   for(i=0;i<n;i++){
     var r=RESPONSE[i],bx=x0+i*(cw+gap),done=i<q.i,cur=i===q.i&&!q.end;
@@ -1701,15 +2156,16 @@ function drawQte(){
     ctx.strokeStyle=done?'#9fd3a8':cur?'#ebbd79':'#4a4456';ctx.lineWidth=2;rr(bx,y-10,cw,40,8);ctx.stroke();
     ctx.fillStyle=done?'#e9ffe9':'#f1ebdd';ctx.font=(r.sym.length>1?'800 13px':'800 21px')+' system-ui,sans-serif';ctx.fillText(r.sym,bx+cw/2,y+10);
     ctx.fillStyle='#b9b2a6';ctx.font='700 9px system-ui,sans-serif';
-    var ls=wrap(r.label,cw-4);for(k=0;k<ls.length;k++)ctx.fillText(ls[k],bx+cw/2,y+42+k*11);
+    var ls=wrap(tr(r.label),cw-4);for(k=0;k<ls.length;k++)ctx.fillText(ls[k],bx+cw/2,y+42+k*11);
   }
   var left=q.end?0:q.auto?1:clamp(1-q.t/q.secs,0,1),bw=w-60;
   ctx.fillStyle='#ffffff1a';rr(x-bw/2,y+72,bw,6,3);ctx.fill();
   ctx.fillStyle=left>0.35?'#ebbd79':'#e0563e';rr(x-bw/2,y+72,bw*left,6,3);ctx.fill();
   ctx.font='600 10px system-ui,sans-serif';ctx.fillStyle='#8b8070';
-  ctx.fillText(q.auto?'WINDOW: NOT REQUIRED':'WINDOW: '+q.secs.toFixed(1)+' s · INCLUDES TWO SECONDS FOR READING · REALITY: ALREADY MOVING',x,y+90);
+  var secs=q.secs.toFixed(1);if(LANG==='fi')secs=secs.replace('.',',');
+  ctx.fillText(q.auto?tr('WINDOW: NOT REQUIRED'):tr('WINDOW: {s} s · INCLUDES TWO SECONDS FOR READING · REALITY: ALREADY MOVING').replace('{s}',secs),x,y+90);
   if(q.end){
-    var a=clamp(q.endT/0.15,0,1),sc=RM?1:1.4-0.4*a,txt=q.end==='won'?'CORRECT.':q.end==='wrong'?'INCORRECT.':'TOO LATE.',col=q.end==='won'?'#7fc08a':'#e0563e';
+    var a=clamp(q.endT/0.15,0,1),sc=RM?1:1.4-0.4*a,txt=tr(q.end==='won'?'CORRECT.':q.end==='wrong'?'INCORRECT.':'TOO LATE.'),col=q.end==='won'?'#7fc08a':'#e0563e';
     ctx.globalAlpha=a;ctx.translate(x,y+12);ctx.rotate(-0.06);ctx.scale(sc,sc);
     ctx.font='900 48px system-ui,sans-serif';var tw=ctx.measureText(txt).width+40;
     ctx.fillStyle='rgba(14,12,20,.92)';rr(-tw/2,-34,tw,68,8);ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=4;rr(-tw/2,-34,tw,68,8);ctx.stroke();
@@ -1899,7 +2355,7 @@ function cameBack(){
   if(secs<6||!g.started||g.ended)return;
   var inside=Math.min(240,Math.round(secs/60*30))||1;
   addLived('waiting for you to come back',inside);
-  g.awayNote=['You left for '+dur(secs)+'.','In here that was '+dur(inside*60)+'. I’ve prepared a statement.'];
+  g.awayNote=[tr('You left for {a}.').replace('{a}',dur(secs)),tr('In here that was {a}. I’ve prepared a statement.').replace('{a}',dur(inside*60))];
 }
 
 /* ---------- the jolt: one small detail, and for a moment everything is an X-ray ---------- */
@@ -1947,16 +2403,16 @@ function drawXray(){
   ctx.shadowColor='#7fd0ff';ctx.shadowBlur=10;ctx.strokeStyle='#d6f0ff';ctx.lineWidth=2.5;ctx.strokeRect(cx,cy,cw,ch);
   var labels=['2011','2016','2019','TODAY'];
   for(var i=0;i<4;i++){var dy=cy+6+i*(ch-12)/4,dh=(ch-12)/4-5;ctx.strokeRect(cx+5,dy,cw-10,dh);ctx.beginPath();ctx.moveTo(cx+cw/2-8,dy+dh/2);ctx.lineTo(cx+cw/2+8,dy+dh/2);ctx.stroke();
-    ctx.shadowBlur=0;ctx.fillStyle='#d6f0ff';ctx.font='700 '+Math.max(8,Math.min(11,dh*0.36))+'px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(labels[i],cx+cw/2,dy+dh*0.28);ctx.shadowBlur=10;}
+    ctx.shadowBlur=0;ctx.fillStyle='#d6f0ff';ctx.font='700 '+Math.max(8,Math.min(11,dh*0.36))+'px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(tr(labels[i]),cx+cw/2,dy+dh*0.28);ctx.shadowBlur=10;}
   ctx.restore();
   ctx.fillStyle='#d6f0ff';ctx.fillRect(q.bx-q.hdR*0.45,q.hdY-3,5,6);ctx.fillRect(q.bx+q.hdR*0.2,q.hdY-3,5,6);
   skeleton(g.human.x,false,true);
   if(g.cowB)skeleton(g.bx2,true,false);if(g.cowA)skeleton(g.ax,true,false);
   ctx.textAlign='left';ctx.textBaseline='middle';
   ctx.fillStyle='rgba(3,10,18,.8)';rr(26,24,420,62,6);ctx.fill();
-  ctx.fillStyle='#ff6a55';ctx.font='800 15px system-ui,sans-serif';ctx.fillText('● X-RAY · CHEST · '+g.jolt.tag,40,44);
-  ctx.fillStyle='#bfe3ff';ctx.font='600 12px system-ui,sans-serif';ctx.fillText('SHADOW: NO BONES DETECTED. FILING CABINET DETECTED.',40,68);
-  if(g.cowB||g.cowA){ctx.textAlign='center';ctx.fillStyle='rgba(191,227,255,.7)';ctx.font='700 11px system-ui,sans-serif';ctx.fillText('HEART RATE: NORMAL',g.cowB?g.bx2:g.ax,FEETY-186);}
+  ctx.fillStyle='#ff6a55';ctx.font='800 15px system-ui,sans-serif';ctx.fillText(tr('● X-RAY · CHEST · ')+tr(g.jolt.tag),40,44);
+  ctx.fillStyle='#bfe3ff';ctx.font='600 12px system-ui,sans-serif';ctx.fillText(tr('SHADOW: NO BONES DETECTED. FILING CABINET DETECTED.'),40,68);
+  if(g.cowB||g.cowA){ctx.textAlign='center';ctx.fillStyle='rgba(191,227,255,.7)';ctx.font='700 11px system-ui,sans-serif';ctx.fillText(tr('HEART RATE: NORMAL'),g.cowB?g.bx2:g.ax,FEETY-186);}
 }
 
 /* ---------- Lab / moment: One small thing. ---------- */
@@ -2016,14 +2472,14 @@ function mugSpiky(on){return function(){if(G.mug)G.mug.spiky=!!on;};}
 function mugEmpty(){return !!(G.mug&&G.mug.v<=1);}
 function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown,before=m.v;m.v=Math.max(Math.min(m.v,m.floor==null?0:m.floor),m.v-n);   // a day can scrape the bottom, only Thursday goes through it
   // the label counts what the mug really lost (not the drawn level, which may still be filling): at a day's floor the cost is written down, not taken. Wednesday's yeses are paid on Thursday.
-  var lost=before-m.v;m.shown=m.v;m.ghost={from:Math.max(from,m.v),to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:lost>0?label:label+' (on the tab)',t:0,minus:true,n:lost};sfx('sipOut');G.sips=(G.sips||0)+lost;if(lost>0&&(!G.bigSip||lost>G.bigSip.n))G.bigSip={t:label,n:lost};};}   // for the receipt's damage report
-function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var before=m.v;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:label,t:0,minus:false,n:m.v-before};sfx('pourIn');};}
+  var lost=before-m.v;m.shown=m.v;m.ghost={from:Math.max(from,m.v),to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:lost>0?tr(label):tr(label)+tr(' (on the tab)'),t:0,minus:true,n:lost};sfx('sipOut');G.sips=(G.sips||0)+lost;if(lost>0&&(!G.bigSip||lost>G.bigSip.n))G.bigSip={t:label,n:lost};};}   // for the receipt's damage report
+function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var before=m.v;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:tr(label),t:0,minus:false,n:m.v-before};sfx('pourIn');};}
 // The meltdown: the last drain on an empty mug breaks it. Shards fly; the mug stays broken until it is glued.
 function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.shown=0;m.broken=true;m.seen=0;m.ghost=null;m.last={text:label||'',t:0,minus:true};
   m.shards=[];for(var i=0;i<11;i++)m.shards.push({x:0,y:0,vx:(i%2?1:-1)*(60+((i*53)%160)),vy:-160-((i*71)%170),r:((i*37)%10)/10*6,va:((i%3)-1)*9,t:0});
   G.shake=RM?0:1;G.pulse=1;sfx('crack');sfx('shatter');};}
 // Glued with gold, because it was the only glue in the drawer. The seams stay for the rest of the game.
-function mugMend(v){return function(){var m=G.mug;if(!m)return;m.broken=false;m.mended=true;G.mugMended=true;m.shards=null;m.v=v||1;m.shown=0;m.seen=0;m.last={text:'glued. gold seams.',t:0,minus:false};m.gleam=0;sfx('glue');};}   // 0.86: the gold catches the light once
+function mugMend(v){return function(){var m=G.mug;if(!m)return;m.broken=false;m.mended=true;G.mugMended=true;m.shards=null;m.v=v||1;m.shown=0;m.seen=0;m.last={text:tr('glued. gold seams.'),t:0,minus:false};m.gleam=0;sfx('glue');};}   // 0.86: the gold catches the light once
 function stepMug(dt){var m=G.mug;if(!m)return;m.t+=dt;m.seen+=dt;if(m.gleam!=null){m.gleam+=dt;if(m.gleam>1.8)m.gleam=null;}
   if(m.shown<m.v)m.shown=Math.min(m.v,m.shown+dt*1.6);
   m.slosh=Math.max(0,m.slosh-dt*0.9);if(m.last){m.last.t+=dt;if(m.last.t>3.4)m.last=null;}
@@ -2617,9 +3073,9 @@ function partCardDraw(c){
   ctx.fillStyle='rgba(24,42,45,'+clamp(t*k/0.7,0,1)+')';ctx.fillRect(0,0,W,H);
   var a1=clamp((t*k-0.5)/0.6,0,1),a2=clamp((t*k-0.9)/0.7,0,1),a3=clamp((t*k-1.8)/0.8,0,1);
   ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.globalAlpha=a1;ctx.font='700 18px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(c.day,W/2,cy-58);
-  ctx.globalAlpha=a2;ctx.font='650 64px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(c.title,W/2,cy+(RM?0:(1-a2)*10));
-  if(c.caption){ctx.globalAlpha=a3;ctx.font='italic 400 23px Fraunces,Georgia,serif';ctx.fillStyle='#c9c2b2';ctx.fillText(c.caption,W/2,cy+64);}
+  ctx.globalAlpha=a1;ctx.font='700 18px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(tr(c.day),W/2,cy-58);
+  ctx.globalAlpha=a2;ctx.font='650 64px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(tr(c.title),W/2,cy+(RM?0:(1-a2)*10));
+  if(c.caption){ctx.globalAlpha=a3;ctx.font='italic 400 23px Fraunces,Georgia,serif';ctx.fillStyle='#c9c2b2';ctx.fillText(tr(c.caption),W/2,cy+64);}
   ctx.globalAlpha=1;
 }
 function chapCard(){
@@ -2627,8 +3083,8 @@ function chapCard(){
   var c=G.chap,a=clamp(c.t/0.5,0,1)*(c.part?1:clamp((2.8-c.t)/0.5,0,1)),cy=COMPACT?H*0.32:H/2;
   ctx.fillStyle='#182a2d';ctx.fillRect(0,0,W,H);
   ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.font='700 18px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(c.day,W/2,cy-52);
-  ctx.font='650 64px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(c.title,W/2,cy+6);
+  ctx.font='700 18px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(tr(c.day),W/2,cy-52);
+  ctx.font='650 64px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(tr(c.title),W/2,cy+6);
   ctx.globalAlpha=1;
 }
 // Direction B (TARINAKARTTA §8, 21.11.): a moment is a window into the same life, not a new day. Its card is lighter:
@@ -2637,9 +3093,9 @@ function momentCard(){
   var c=G.chap,a=clamp(c.t/0.4,0,1)*clamp((2.4-c.t)/0.45,0,1),cy=COMPACT?H*0.34:H/2;
   ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.fillStyle='rgba(14,22,25,'+(0.8*Math.max(a,0.35))+')';ctx.fillRect(0,0,W,H);
   ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.font='600 '+(COMPACT?17:14)+'px system-ui,sans-serif';ctx.fillStyle='#c9b48a';ctx.fillText(c.day,W/2,cy-36);
+  ctx.font='600 '+(COMPACT?17:14)+'px system-ui,sans-serif';ctx.fillStyle='#c9b48a';ctx.fillText(tr(c.day),W/2,cy-36);
   ctx.fillStyle='rgba(226,176,74,.55)';ctx.fillRect(W/2-22,cy-18,44,2);
-  ctx.font='italic 600 '+(COMPACT?50:44)+'px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(c.title,W/2,cy+18);
+  ctx.font='italic 600 '+(COMPACT?50:44)+'px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(tr(c.title),W/2,cy+18);
   ctx.restore();}
 function bigNote(){
   var n=G.bigNote,a=clamp(n.t/0.25,0,1)*(1-0.72*clamp((n.t-2.6)/0.8,0,1)),sh=RM?0:Math.sin(G.time*52)*4;
@@ -3600,7 +4056,7 @@ function drawChatlog(o){
 // ---- src/51-quirks.js ----
 /* ================= quirks: small private habits of the human, mostly without words ================= */
 // A tic is a little thought written in the air: a count, a sum, a hummed line. It never blocks the story.
-function tic(text,x,y,o){o=o||{};return {text:text,x:x,y:y,t:-(o.at||0),life:o.life||2.6,size:o.size||16,world:!!o.world,col:o.col||'#f1ebdd'};}
+function tic(text,x,y,o){o=o||{};return {text:tr(text),x:x,y:y,t:-(o.at||0),life:o.life||2.6,size:o.size||16,world:!!o.world,col:o.col||'#f1ebdd'};}
 function addTic(text,x,y,o){return function(){G.tics.push(tic(text,x,y,o));};}
 function stepTics(dt){var a=G.tics;for(var i=a.length-1;i>=0;i--){a[i].t+=dt;if(a[i].t>a[i].life)a.splice(i,1);}}
 function drawTics(cam){
@@ -4809,8 +5265,8 @@ function drawStamp(){
     // Oversized, slightly crooked office ink. It never appears in the outside view.
     ctx.fillStyle='rgba(246,241,228,.84)';rr(-91,-29,182,58,3);ctx.fill();
     ctx.strokeStyle='#a53739';ctx.fillStyle='#a53739';ctx.lineWidth=3;rr(-86,-24,172,48,2);ctx.stroke();
-    ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 11px system-ui,sans-serif';ctx.fillText('REJECTION',0,-12);
-    ctx.font='900 23px system-ui,sans-serif';ctx.fillText('PREVENTED',0,9);
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 11px system-ui,sans-serif';ctx.fillText(tr('REJECTION'),0,-12);
+    ctx.font='900 23px system-ui,sans-serif';ctx.fillText(tr('PREVENTED'),0,9);
     ctx.restore();
   }
   if(!stampToolVisible())return;
@@ -5053,7 +5509,7 @@ function room(flat,noFront){
   ctx.save();ctx.translate(263,162);ctx.rotate(0.07);ctx.beginPath();ctx.moveTo(-17,-2);ctx.lineTo(17,-2);ctx.lineTo(17,38);ctx.lineTo(8,48);ctx.lineTo(-17,48);ctx.closePath();ctx.fill();
   ctx.fillStyle='#dcd4c0';ctx.beginPath();ctx.moveTo(17,38);ctx.lineTo(8,48);ctx.lineTo(7,36);ctx.closePath();ctx.fill();ctx.restore();ctx.fillStyle='#f6f1e4';
   ctx.strokeStyle='#9c958a';ctx.lineWidth=1.5;for(var i=0;i<5;i++)line(157,172+i*9,192,172+i*9);
-  ctx.fillStyle='#5a6559';ctx.font='600 9px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText('BE A MUG.',237,226);ctx.fillText('NOT A HERO.',237,237);
+  ctx.fillStyle='#5a6559';ctx.font='600 9px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText(tr('BE A MUG.'),237,226);ctx.fillText(tr('NOT A HERO.'),237,237);
   ctx.fillStyle='#c9553f';circ(175,164,3);ctx.fill();circ(223,168,3);ctx.fill();circ(263,162,3);ctx.fill();
   var cx=560,cy=92;ctx.fillStyle='#fbf8ef';ctx.strokeStyle='#2b2733';ctx.lineWidth=3;circ(cx,cy,27);ctx.fill();ctx.stroke();
   var s=G.clock,sa=(s%60)/60*Math.PI*2,ma=((s/60)%60)/60*Math.PI*2,ha=((s/3600)%12)/12*Math.PI*2;
@@ -5123,9 +5579,9 @@ function person(x,o){
     ctx.lineWidth=2;ctx.lineCap='round';
     if(o.grin>0){
       // A smile that is working too hard: wider with every yes, teeth showing, corners trembling.
-      var gw=Math.min(12,6+o.grin*1.6),gd=Math.min(9,5+o.grin),cy0=ey+11,tr=RM?0:Math.sin(G.time*30)*0.6*Math.min(1,o.grin/3);
+      var gw=Math.min(12,6+o.grin*1.6),gd=Math.min(9,5+o.grin),cy0=ey+11,trem=RM?0:Math.sin(G.time*30)*0.6*Math.min(1,o.grin/3);
       ctx.fillStyle='#fffdf6';ctx.strokeStyle='#34413e';ctx.lineWidth=1.6;
-      ctx.beginPath();ctx.moveTo(ex-gw,cy0-1+tr);ctx.quadraticCurveTo(ex,cy0+gd*1.6,ex+gw,cy0-1-tr);ctx.quadraticCurveTo(ex,cy0+2,ex-gw,cy0-1+tr);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.moveTo(ex-gw,cy0-1+trem);ctx.quadraticCurveTo(ex,cy0+gd*1.6,ex+gw,cy0-1-trem);ctx.quadraticCurveTo(ex,cy0+2,ex-gw,cy0-1+trem);ctx.closePath();ctx.fill();ctx.stroke();
       if(o.grin>=2){ctx.lineWidth=1.2;line(ex-gw-1,cy0-4,ex-gw-3,cy0+1);line(ex+gw+1,cy0-4,ex+gw+3,cy0+1);}
     }
     else if(o.face==='smile'){ctx.beginPath();ctx.arc(ex,ey+8,5,0.15*Math.PI,0.85*Math.PI);ctx.stroke();}
@@ -5194,12 +5650,12 @@ function drawCoworkers(alpha){
 /* ================= drawing: the shadow ================= */
 function geom(){
   var M=G.morko,s=M.s,j=M.coat?0:(RM?0.3:1)*clamp(((G.anx||0)-0.3)/0.6,0,1);
-  var tr=1+0.6*(1-clamp((cv.clientWidth||960)/960,0,1));   // a tremble you can see on a phone too
-  var bx=G.human.x+M.off+(Math.sin(G.time*23)+0.5*Math.sin(G.time*37))*2.2*tr*j,by=WALLY;
+  var trem=1+0.6*(1-clamp((cv.clientWidth||960)/960,0,1));   // a tremble you can see on a phone too
+  var bx=G.human.x+M.off+(Math.sin(G.time*23)+0.5*Math.sin(G.time*37))*2.2*trem*j,by=WALLY;
   var baseX=bx,lean=M.wobble?(RM?8:Math.sin(M.wobble.t*4.2)*16*(1-M.wobble.t/3.2)):0,lag=M.sp&&!RM?clamp(M.sp.x-(G.human.x+M.off),-28,28)*Math.min(1,s):0;
   var sway=G.walking&&!RM?Math.sin(G.time*4-1.1)*6*Math.min(1,s):0;bx+=lean+lag+sway;   // walking: a big, slightly late side-to-side, half the human's step
   var hgt=190*s*(RM||M.coat?1:1+0.012*Math.sin(G.time*1.7))*(M.pose==='sit'?0.6:1),shW=58*s,hdR=20*Math.pow(s,0.45);   // seated: a shorter torso, or it reads as standing with a lump
-  var shY=by-hgt*0.7+Math.sin(G.time*29)*1.6*tr*j-(sway?Math.abs(Math.sin(G.time*4-1.1))*3*s:0),hdY=shY-11*s-hdR*0.8;
+  var shY=by-hgt*0.7+Math.sin(G.time*29)*1.6*trem*j-(sway?Math.abs(Math.sin(G.time*4-1.1))*3*s:0),hdY=shY-11*s-hdR*0.8;
   if(hdY<hdR+34)hdY=hdR+34;if(shY<hdY+hdR*0.7)shY=hdY+hdR*0.7;
   return{bx:bx,baseX:baseX,lean:lean,by:by,shY:shY,shW:shW,hdY:hdY,hdR:hdR,s:s};
 }
@@ -5292,8 +5748,8 @@ function morkoFace(q){
   else if(m==='scared'||m==='surprised'){er=r*0.34;pr=0.24;brow='up';}
   else if(m==='stern'){er=r*0.21;brow='in';}
   else if(m==='care'||m==='worry'){er=r*0.21;brow='out';}
-  var tr=M.tired||0,tiredEyes=tr>0.05&&!lk&&m!=='scared'&&m!=='surprised'&&m!=='pokka'&&m!=='pleased'&&m!=='squint';
-  if(tiredEyes)er=Math.max(er,r*0.22*Math.min(1,tr*1.5));   // big enough to show the heavy lids at game scale
+  var tire=M.tired||0,tiredEyes=tire>0.05&&!lk&&m!=='scared'&&m!=='surprised'&&m!=='pokka'&&m!=='pleased'&&m!=='squint';
+  if(tiredEyes)er=Math.max(er,r*0.22*Math.min(1,tire*1.5));   // big enough to show the heavy lids at game scale
   ctx.lineCap='round';
   for(i=-1;i<=1;i+=2){
     var x=cx+i*ex,y=cy-r*0.05;
@@ -5326,15 +5782,15 @@ function morkoFace(q){
   // Tired (Joonas 21.11.): heavy lids and eye bags. Fear opens the eyes again, and so do the one-line looks.
   if(tiredEyes){
     for(i=-1;i<=1;i+=2){var tx=cx+i*ex,ty=cy-r*0.05;
-      ctx.save();ctx.beginPath();ctx.arc(tx,ty,er+0.6,0,Math.PI*2);ctx.clip();ctx.fillStyle='#14111d';ctx.fillRect(tx-er-1,ty-er-1,2*er+2,er*0.95*tr);ctx.restore();
-      ctx.strokeStyle='rgba(246,241,228,'+(0.9*tr)+')';ctx.lineWidth=Math.max(1.5,r*0.06);line(tx-er*0.92,ty-er+er*0.95*tr,tx+er*0.92,ty-er+er*0.95*tr);
+      ctx.save();ctx.beginPath();ctx.arc(tx,ty,er+0.6,0,Math.PI*2);ctx.clip();ctx.fillStyle='#14111d';ctx.fillRect(tx-er-1,ty-er-1,2*er+2,er*0.95*tire);ctx.restore();
+      ctx.strokeStyle='rgba(246,241,228,'+(0.9*tire)+')';ctx.lineWidth=Math.max(1.5,r*0.06);line(tx-er*0.92,ty-er+er*0.95*tire,tx+er*0.92,ty-er+er*0.95*tire);
       ctx.lineWidth=Math.max(2,r*0.08);   // two bags under each eye, clearly below it
-      ctx.strokeStyle='rgba(246,241,228,'+(0.75*tr)+')';ctx.beginPath();ctx.arc(tx,ty+er*0.55,er*1.05,Math.PI*0.2,Math.PI*0.8);ctx.stroke();
-      ctx.strokeStyle='rgba(246,241,228,'+(0.4*tr)+')';ctx.beginPath();ctx.arc(tx,ty+er*1.0,er*1.05,Math.PI*0.25,Math.PI*0.75);ctx.stroke();}}
+      ctx.strokeStyle='rgba(246,241,228,'+(0.75*tire)+')';ctx.beginPath();ctx.arc(tx,ty+er*0.55,er*1.05,Math.PI*0.2,Math.PI*0.8);ctx.stroke();
+      ctx.strokeStyle='rgba(246,241,228,'+(0.4*tire)+')';ctx.beginPath();ctx.arc(tx,ty+er*1.0,er*1.05,Math.PI*0.25,Math.PI*0.75);ctx.stroke();}}
   var mu=M.mumble;
-  if(mu&&tr>0.3){var ma=clamp(mu.t/0.35,0,1)*clamp((3-mu.t)/0.6,0,1)*0.8,right=cx<W-230;
+  if(mu&&tire>0.3){var ma=clamp(mu.t/0.35,0,1)*clamp((3-mu.t)/0.6,0,1)*0.8,right=cx<W-230;
     ctx.save();ctx.globalAlpha=ma;ctx.font='italic 600 '+(COMPACT?15:12)+'px system-ui,sans-serif';ctx.textBaseline='middle';ctx.textAlign=right?'left':'right';
-    ctx.fillStyle='#f1ebdd';ctx.fillText(mu.text,cx+(right?1:-1)*r*1.2,cy-r*0.95-mu.t*5);ctx.restore();}
+    ctx.fillStyle='#f1ebdd';ctx.fillText(tr(mu.text),cx+(right?1:-1)*r*1.2,cy-r*0.95-mu.t*5);ctx.restore();}
 }
 function drawCoatFace(q){
   var c=G.morko.coat,p=c.p*c.p*(3-2*c.p),r=q.hdR,blink=c.blink;
@@ -5499,6 +5955,7 @@ function hud(){
   ctx.save();ctx.globalAlpha=show;if(COMPACT){ctx.translate(W-14,14);ctx.scale(1.3,1.3);ctx.translate(-(W-14),-14);}
   ctx.textAlign='left';ctx.textBaseline='middle';
   for(var i=0;i<rows.length;i++){
+    rows[i][0]=tr(rows[i][0]);rows[i][1]=tr(rows[i][1]);   // 0.89
     ctx.font='700 11px system-ui,sans-serif';var w1=ctx.measureText(rows[i][0]).width;
     ctx.font='500 13px system-ui,sans-serif';var w2=ctx.measureText(rows[i][1]).width;
     var x=W-14-(w1+w2+30);
@@ -5509,13 +5966,13 @@ function hud(){
     if(rows[i][2]==='job'&&g.job)jobRewrite(x+18+w1,y,w2);
     y+=rows[i][2]==='job'&&g.job?50:26;
   }
-  if(g.pop){ctx.globalAlpha=clamp(2.6-g.pop.t,0,1);ctx.textAlign='right';ctx.font='700 14px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(g.pop.text,W-20,y+4-Math.min(8,g.pop.t*10));ctx.globalAlpha=1;}
+  if(g.pop){ctx.globalAlpha=clamp(2.6-g.pop.t,0,1);ctx.textAlign='right';ctx.font='700 14px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(tr(g.pop.text),W-20,y+4-Math.min(8,g.pop.t*10));ctx.globalAlpha=1;}
   ctx.restore();
 }
 // Top left, small and faint: which day it is and the time. Brighter for a few seconds after a cut.
 function dayStamp(){
   var g=G;if(!g.started||g.ended||g.epi||g.finalFrame||g.out||g.qte||g.form||g.paper||g.clock==null)return;
-  var t=(g.dayTag?g.dayTag+'  ·  ':'')+hhmm(g.clock),a=0.86+0.14*clamp(1-((g.stampT||0)-3.5)/1.5,0,1);   // 0.82: never fades below readable (Codex visual review: on a light wall it looked disabled)
+  var t=(g.dayTag?tr(g.dayTag)+'  ·  ':'')+hhmm(g.clock),a=0.86+0.14*clamp(1-((g.stampT||0)-3.5)/1.5,0,1);   // 0.82: never fades below readable (Codex visual review: on a light wall it looked disabled)
   ctx.save();ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='600 '+(COMPACT?14:11)+'px system-ui,sans-serif';
   var w=ctx.measureText(t).width;ctx.globalAlpha=a;ctx.fillStyle='#36343b';rr(10,10,w+20,COMPACT?26:22,11);ctx.fill();
   ctx.fillStyle='#f2ece0';ctx.fillText(t,20,COMPACT?23:21);ctx.restore();
@@ -5523,9 +5980,9 @@ function dayStamp(){
 function pausedNote(){
   var g=G,a=g.awayNote;
   ctx.fillStyle='rgba(13,17,20,.76)';ctx.fillRect(0,0,W,H);
-  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#f1ebdd';ctx.font='650 34px Fraunces,Georgia,serif';ctx.fillText(a?a[0]:'Paused',W/2,H/2-48);
-  ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#ebbd79';ctx.fillText(a?a[1]:'Take your time. I’ll just be here, thinking about it.',W/2,H/2-8);
-  ctx.fillStyle='#bfcfbd';ctx.fillText('Tap the scene to carry on.',W/2,H/2+30);
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#f1ebdd';ctx.font='650 34px Fraunces,Georgia,serif';ctx.fillText(a?a[0]:tr('Paused'),W/2,H/2-48);
+  ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#ebbd79';ctx.fillText(a?a[1]:tr('Take your time. I’ll just be here, thinking about it.'),W/2,H/2-8);
+  ctx.fillStyle='#bfcfbd';ctx.fillText(tr('Tap the scene to carry on.'),W/2,H/2+30);
 }
 function draw(){
   var g=G;
@@ -5583,8 +6040,8 @@ function draw(){
   drawMug();drawDeal();   // VISIO V1: capacity, and the small deals about it   // the form and the paper receipt need the top corner // the window has the screen for its second
   if(g.job&&!g.ended)jobCard();
   if(g.w){
-        if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText('THE WALK HOME',W/2,74);
-      ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('Nine minutes, usually.',W/2,106);}
+        if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText(tr('THE WALK HOME'),W/2,74);
+      ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText(tr('Nine minutes, usually.'),W/2,106);}
   }
   if(g.band&&!COMPACT&&!textBelow&&lineInBubble({who:'N'}))band(g.band,H-18);   // 0.85: never in the picture and in the panel at once
   if(g.chap&&g.chap.moment)momentCard();
@@ -5625,13 +6082,16 @@ function showWeekEnd(){
 function showTitle(){
   var sv=loadProgress();music('title');
   G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
-  showOv('<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
-   '<p class="tagline">A small moment.<br>A very long shadow.</p>'+
-   (sv?'<button class="go" type="button" data-go="cont">Continue · '+(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">New game</button>'
-      :'<button class="go" type="button" data-go="start">New game <span aria-hidden="true">→</span></button>')+
-   '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">Chapters</button>':'')+
-   '<button class="link" type="button" data-go="moments">Moments</button>'+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">Settings</button><button class="link" type="button" data-go="about">About</button></div>');
+  showOv(titleHTML(sv));
   render();
+}
+function titleHTML(sv){   // 0.89: its own function, so a language change can redraw it
+  return '<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
+   '<p class="tagline">'+tr('A small moment.<br>A very long shadow.')+'</p>'+
+   (sv?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
+      :'<button class="go" type="button" data-go="start">'+tr('New game')+' <span aria-hidden="true">→</span></button>')+
+   '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
+   '<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>'+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button><button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
 }
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
 function showEnd(){
@@ -5639,17 +6099,18 @@ function showEnd(){
   var note=g.lunch===1?'You answered inside the window. Nobody has done that before. Lunch happened. The shadow is lying down.':g.lunch===2?'Lunch didn’t happen today. A message did. Tomorrow, then.':g.day==='C'?(g.reflected?'Today hurt. You reached for someone who makes room for you.':'Today hurt. Their choice to leave you out was theirs.'):'Nobody said no. Nobody had the chance. The shadow is calling that a win.';
   if(g.day==='C'&&g.leak==='exit'&&!g.reflected)note='Today felt lonely. Not every missing piece needs filling in tonight.';
   var quote=g.lunch===1?'I would like to lodge a complaint about the speed of that hi.':{grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. We went anyway. Slightly after everyone else.'}[g.leak];
-  var d=closeDay()||{label:'A MONDAY',outside:AWAKE,extra:0,ledger:[],ratio:1},rows=receiptRows(d),rt='DAILY RECEIPT · '+d.label;
-  g.receiptText=receiptText(rt,rows,RC_FOOT_DAY);g.receipt={title:rt,rows:rows,foot:RC_FOOT_DAY};
-  showOv('<div class="end-grid"><div><div class="eyebrow">End of Monday</div><h2>Home. Both of you.</h2>'+
-   '<p>The greeting lasted two seconds.<br>The shadow took the scenic route.</p>'+
+  note=tr(note);quote=tr(quote);   // 0.89: Finnish pilot covers the end of Monday too
+  var d=closeDay()||{label:'A MONDAY',outside:AWAKE,extra:0,ledger:[],ratio:1},rows=receiptRows(d).map(trRow),rt=tr('DAILY RECEIPT')+' · '+tr(d.label);
+  var foot=tr(RC_FOOT_DAY);g.receiptText=receiptText(rt,rows,foot);g.receipt={title:rt,rows:rows,foot:foot};
+  showOv('<div class="end-grid"><div><div class="eyebrow">'+tr('End of Monday')+'</div><h2>'+tr('Home. Both of you.')+'</h2>'+
+   '<p>'+tr('The greeting lasted two seconds.<br>The shadow took the scenic route.')+'</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
-   '<p class="title-quote">“'+quote+'”</p>'+
-   '<div class="end-go"><button class="go" type="button" data-go="next">Carry on →</button>'+
-   '<button class="go alt" type="button" data-go="same">Try another approach</button>'+
-   '<button class="go alt" type="button" data-go="again">Another Monday</button></div>'+
-   '<p class="small">Another approach replays this Monday. Another Monday changes what was happening around you.</p></div>'+
-   receiptHTML(rt,rows,RC_FOOT_DAY+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
+   '<p class="title-quote">'+(LANG==='fi'?'”':'“')+quote+'”</p>'+
+   '<div class="end-go"><button class="go" type="button" data-go="next">'+tr('Carry on →')+'</button>'+
+   '<button class="go alt" type="button" data-go="same">'+tr('Try another approach')+'</button>'+
+   '<button class="go alt" type="button" data-go="again">'+tr('Another Monday')+'</button></div>'+
+   '<p class="small">'+tr('Another approach replays this Monday. Another Monday changes what was happening around you.')+'</p></div>'+
+   receiptHTML(rt,rows,foot+'<br><button class="rc-copy" type="button" data-go="sharercpt">'+tr('Save as picture')+'</button> <button class="rc-copy" type="button" data-go="copyrcpt">'+tr('Copy text')+'</button>')+'</div>','end');
 }
 function startGame(day,skip){
   var snap=null;try{if(cv.width&&document.createElement){snap=document.createElement('canvas');snap.width=cv.width;snap.height=cv.height;var sc=snap.getContext&&snap.getContext('2d');if(sc)sc.drawImage(cv,0,0);else snap=null;}}catch(e){snap=null;}   // the title picture, to fade from
@@ -5694,7 +6155,7 @@ window.addEventListener('keydown',function(e){
   }else if((e.key==='f'||e.key==='F')&&tag!=='INPUT'){toggleFull();}else if(e.key>='1'&&e.key<='4'&&tag!=='INPUT'){choose(+e.key-1);}
   else if(e.key==='p'||e.key==='P'){togglePause();}
 });
-function syncPause(){if(paused||appHidden){stopVoice();holdUp();dragging=false;}syncAudioState();syncWake();document.getElementById('pause').textContent=paused?'Resume':'Pause';document.body.classList.toggle('is-paused',paused);}
+function syncPause(){if(paused||appHidden){stopVoice();holdUp();dragging=false;}syncAudioState();syncWake();document.getElementById('pause').textContent=tr(paused?'Resume':'Pause');document.body.classList.toggle('is-paused',paused);}
 function togglePause(){if(!G.started||G.ended||logDialog.open||ov.classList.contains('on'))return;paused=!paused;if(!paused)G.awayNote=null;syncPause();}
 document.getElementById('pause').addEventListener('click',togglePause);
 document.getElementById('restart').addEventListener('click',function(){
@@ -5714,7 +6175,7 @@ document.getElementById('close-log').addEventListener('click',function(){logDial
 logDialog.addEventListener('close',function(){paused=modalWasPaused;syncPause();document.getElementById('journal').focus();});
 function textUI(){
   var b=document.getElementById('textsize');
-  b.textContent='Text: '+['small','normal','large'][textStep];
+  b.textContent=tr('Text: '+['small','normal','large'][textStep]);
   document.documentElement.style.setProperty('--ts',TEXT_STEPS[textStep]);
 }
 document.getElementById('textsize').addEventListener('click',function(){
@@ -5724,8 +6185,8 @@ document.getElementById('textsize').addEventListener('click',function(){
 textUI();
 function slowUI(){
   var b=document.getElementById('slow');b.setAttribute('aria-pressed',String(slowReality));
-  b.textContent=slowReality?'Slow reality: on':'Slow reality';
-  b.title=slowReality?'The window to respond correctly lasts about nine seconds.':'Give yourself about nine seconds to respond correctly.';
+  b.textContent=tr(slowReality?'Slow reality: on':'Slow reality');
+  b.title=tr(slowReality?'The window to respond correctly lasts about nine seconds.':'Give yourself about nine seconds to respond correctly.');
 }
 document.getElementById('slow').addEventListener('click',function(){
   slowReality=!slowReality;try{window.localStorage.setItem('ekskyysmi.slow',slowReality?'on':'off');}catch(e){}
@@ -5767,7 +6228,7 @@ function syncImmersive(){
   htmlEl.classList.toggle('immersive',on);
   if(!on)setMenu(false);
   var b=document.getElementById('full');
-  if(b){b.textContent=fullOn()?'Leave full screen':'Full screen';b.setAttribute('aria-pressed',String(fullOn()));}
+  if(b){b.textContent=tr(fullOn()?'Leave full screen':'Full screen');b.setAttribute('aria-pressed',String(fullOn()));}
   resize();
 }
 function toggleFull(){
@@ -5831,10 +6292,21 @@ if(document.addEventListener)document.addEventListener('click',function(e){
   if(!b||b.id==='menu'||b.id==='sound'||b.classList.contains('opt')||b.disabled)return;sfx('ui');
 },true);
 
-// Language setting: stored now, used when the string table exists (K12). Until then everything is English.
+// Language setting. 0.89: Finnish is a pilot for Monday (src/15-fi.js, src/16-fi-monday.js); the rest stays English until it is translated.
 var LANG='en';
 (function(){var el=document.getElementById('lang');if(!el)return;try{var v=window.localStorage.getItem('ekskyysmi.lang');if(v&&el.querySelector('option[value="'+v+'"]:not([disabled])'))el.value=LANG=v;}catch(e){}
-  el.addEventListener('change',function(){LANG=el.value;try{window.localStorage.setItem('ekskyysmi.lang',LANG);}catch(e){}sfx('pick');});})();
+  el.addEventListener('change',function(){LANG=el.value;try{window.localStorage.setItem('ekskyysmi.lang',LANG);document.documentElement.lang=LANG;}catch(e){}sfx('pick');chromeText();
+    if(!G.started&&ov.querySelector('h1.logo'))showOv(titleHTML(loadProgress()));render();});
+  try{document.documentElement.lang=LANG;}catch(e){}if(LANG!=='en')setTimeout(chromeText,0);})();
+// The menu's own words follow the language too (the toggles set theirs through tr).
+function chromeText(){
+  var ids={motion:'Less motion',below:'Text below',journal:'Dialogue',restart:'Restart','log-title':'The conversation so far','close-log':'Back to the moment'},id,e;
+  for(id in ids){e=document.getElementById(id);if(e)e.textContent=tr(ids[id]);}
+  e=document.querySelector('#menu .menu-label');if(e)e.textContent=tr('Menu');
+  e=document.querySelector('.lang-row span');if(e)e.textContent=tr('Language');
+  soundUI();textUI();slowUI();e=document.getElementById('pause');if(e)e.textContent=tr(paused?'Resume':'Pause');
+  e=document.getElementById('full');if(e)e.textContent=tr(fullOn()?'Leave full screen':'Full screen');
+}   // 0.89: Finnish pilot (Monday); new lines follow the choice at once
 // ---- src/90-loop.js ----
 /* ================= loop ================= */
 var last=0;
@@ -5845,6 +6317,6 @@ function frame(ts){
   window.requestAnimationFrame(frame);
 }
 syncImmersive();reset(null);showTitle();
-window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,inside:{run:function(){return G.run;},day:function(){return G.day0;},mult:function(){return G.mult;},add:addLived,cameBack:cameBack,receipt:function(){return G.receiptText;}},qteKey:function(k){return qteKey({key:k});},qte:function(){return G.qte;},full:toggleFull,immersive:function(){return htmlEl.classList.contains('immersive');},chapters:showChapters,hotScreen:function(x,y){var r=cv.getBoundingClientRect(),z=C.z,hw=W/(2*z),hh=H/(2*z),fx=clamp(C.fx,hw,W-hw),fy=clamp(C.fy,hh,H-hh);return [r.left+((x-fx)*z+W/2)/W*r.width,r.top+((y-fy)*z+H/2)/H*r.height];},labList:showLab,moments:showMoments,about:showAbout,lensTap:lensTap,back:backButton,sound:{load:loadSound,has:function(k){return !!BUF[k];},music:function(){return {name:musicName,playing:!!(musicEl&&!musicEl.paused),t:musicEl?musicEl.currentTime:0,vol:musicEl?musicEl.volume:0};},seek:function(t){if(musicEl)musicEl.currentTime=t;},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
+window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,inside:{run:function(){return G.run;},day:function(){return G.day0;},mult:function(){return G.mult;},add:addLived,cameBack:cameBack,receipt:function(){return G.receiptText;}},qteKey:function(k){return qteKey({key:k});},qte:function(){return G.qte;},full:toggleFull,immersive:function(){return htmlEl.classList.contains('immersive');},chapters:showChapters,hotScreen:function(x,y){var r=cv.getBoundingClientRect(),z=C.z,hw=W/(2*z),hh=H/(2*z),fx=clamp(C.fx,hw,W-hw),fy=clamp(C.fy,hh,H-hh);return [r.left+((x-fx)*z+W/2)/W*r.width,r.top+((y-fy)*z+H/2)/H*r.height];},labList:showLab,moments:showMoments,about:showAbout,lensTap:lensTap,back:backButton,lang:function(v){LANG=v;try{document.documentElement.lang=v;}catch(e){}},fiMiss:function(){return FIMISS;},fiDict:function(){return FI;},sound:{load:loadSound,has:function(k){return !!BUF[k];},music:function(){return {name:musicName,playing:!!(musicEl&&!musicEl.paused),t:musicEl?musicEl.currentTime:0,vol:musicEl?musicEl.volume:0};},seek:function(t){if(musicEl)musicEl.currentTime=t;},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
 window.requestAnimationFrame(frame);
 })();

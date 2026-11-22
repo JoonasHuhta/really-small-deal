@@ -79,7 +79,7 @@ function room(flat,noFront){
   ctx.save();ctx.translate(263,162);ctx.rotate(0.07);ctx.beginPath();ctx.moveTo(-17,-2);ctx.lineTo(17,-2);ctx.lineTo(17,38);ctx.lineTo(8,48);ctx.lineTo(-17,48);ctx.closePath();ctx.fill();
   ctx.fillStyle='#dcd4c0';ctx.beginPath();ctx.moveTo(17,38);ctx.lineTo(8,48);ctx.lineTo(7,36);ctx.closePath();ctx.fill();ctx.restore();ctx.fillStyle='#f6f1e4';
   ctx.strokeStyle='#9c958a';ctx.lineWidth=1.5;for(var i=0;i<5;i++)line(157,172+i*9,192,172+i*9);
-  ctx.fillStyle='#5a6559';ctx.font='600 9px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText('BE A MUG.',237,226);ctx.fillText('NOT A HERO.',237,237);
+  ctx.fillStyle='#5a6559';ctx.font='600 9px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText(tr('BE A MUG.'),237,226);ctx.fillText(tr('NOT A HERO.'),237,237);
   ctx.fillStyle='#c9553f';circ(175,164,3);ctx.fill();circ(223,168,3);ctx.fill();circ(263,162,3);ctx.fill();
   var cx=560,cy=92;ctx.fillStyle='#fbf8ef';ctx.strokeStyle='#2b2733';ctx.lineWidth=3;circ(cx,cy,27);ctx.fill();ctx.stroke();
   var s=G.clock,sa=(s%60)/60*Math.PI*2,ma=((s/60)%60)/60*Math.PI*2,ha=((s/3600)%12)/12*Math.PI*2;
@@ -149,9 +149,9 @@ function person(x,o){
     ctx.lineWidth=2;ctx.lineCap='round';
     if(o.grin>0){
       // A smile that is working too hard: wider with every yes, teeth showing, corners trembling.
-      var gw=Math.min(12,6+o.grin*1.6),gd=Math.min(9,5+o.grin),cy0=ey+11,tr=RM?0:Math.sin(G.time*30)*0.6*Math.min(1,o.grin/3);
+      var gw=Math.min(12,6+o.grin*1.6),gd=Math.min(9,5+o.grin),cy0=ey+11,trem=RM?0:Math.sin(G.time*30)*0.6*Math.min(1,o.grin/3);
       ctx.fillStyle='#fffdf6';ctx.strokeStyle='#34413e';ctx.lineWidth=1.6;
-      ctx.beginPath();ctx.moveTo(ex-gw,cy0-1+tr);ctx.quadraticCurveTo(ex,cy0+gd*1.6,ex+gw,cy0-1-tr);ctx.quadraticCurveTo(ex,cy0+2,ex-gw,cy0-1+tr);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.moveTo(ex-gw,cy0-1+trem);ctx.quadraticCurveTo(ex,cy0+gd*1.6,ex+gw,cy0-1-trem);ctx.quadraticCurveTo(ex,cy0+2,ex-gw,cy0-1+trem);ctx.closePath();ctx.fill();ctx.stroke();
       if(o.grin>=2){ctx.lineWidth=1.2;line(ex-gw-1,cy0-4,ex-gw-3,cy0+1);line(ex+gw+1,cy0-4,ex+gw+3,cy0+1);}
     }
     else if(o.face==='smile'){ctx.beginPath();ctx.arc(ex,ey+8,5,0.15*Math.PI,0.85*Math.PI);ctx.stroke();}
@@ -220,12 +220,12 @@ function drawCoworkers(alpha){
 /* ================= drawing: the shadow ================= */
 function geom(){
   var M=G.morko,s=M.s,j=M.coat?0:(RM?0.3:1)*clamp(((G.anx||0)-0.3)/0.6,0,1);
-  var tr=1+0.6*(1-clamp((cv.clientWidth||960)/960,0,1));   // a tremble you can see on a phone too
-  var bx=G.human.x+M.off+(Math.sin(G.time*23)+0.5*Math.sin(G.time*37))*2.2*tr*j,by=WALLY;
+  var trem=1+0.6*(1-clamp((cv.clientWidth||960)/960,0,1));   // a tremble you can see on a phone too
+  var bx=G.human.x+M.off+(Math.sin(G.time*23)+0.5*Math.sin(G.time*37))*2.2*trem*j,by=WALLY;
   var baseX=bx,lean=M.wobble?(RM?8:Math.sin(M.wobble.t*4.2)*16*(1-M.wobble.t/3.2)):0,lag=M.sp&&!RM?clamp(M.sp.x-(G.human.x+M.off),-28,28)*Math.min(1,s):0;
   var sway=G.walking&&!RM?Math.sin(G.time*4-1.1)*6*Math.min(1,s):0;bx+=lean+lag+sway;   // walking: a big, slightly late side-to-side, half the human's step
   var hgt=190*s*(RM||M.coat?1:1+0.012*Math.sin(G.time*1.7))*(M.pose==='sit'?0.6:1),shW=58*s,hdR=20*Math.pow(s,0.45);   // seated: a shorter torso, or it reads as standing with a lump
-  var shY=by-hgt*0.7+Math.sin(G.time*29)*1.6*tr*j-(sway?Math.abs(Math.sin(G.time*4-1.1))*3*s:0),hdY=shY-11*s-hdR*0.8;
+  var shY=by-hgt*0.7+Math.sin(G.time*29)*1.6*trem*j-(sway?Math.abs(Math.sin(G.time*4-1.1))*3*s:0),hdY=shY-11*s-hdR*0.8;
   if(hdY<hdR+34)hdY=hdR+34;if(shY<hdY+hdR*0.7)shY=hdY+hdR*0.7;
   return{bx:bx,baseX:baseX,lean:lean,by:by,shY:shY,shW:shW,hdY:hdY,hdR:hdR,s:s};
 }
@@ -318,8 +318,8 @@ function morkoFace(q){
   else if(m==='scared'||m==='surprised'){er=r*0.34;pr=0.24;brow='up';}
   else if(m==='stern'){er=r*0.21;brow='in';}
   else if(m==='care'||m==='worry'){er=r*0.21;brow='out';}
-  var tr=M.tired||0,tiredEyes=tr>0.05&&!lk&&m!=='scared'&&m!=='surprised'&&m!=='pokka'&&m!=='pleased'&&m!=='squint';
-  if(tiredEyes)er=Math.max(er,r*0.22*Math.min(1,tr*1.5));   // big enough to show the heavy lids at game scale
+  var tire=M.tired||0,tiredEyes=tire>0.05&&!lk&&m!=='scared'&&m!=='surprised'&&m!=='pokka'&&m!=='pleased'&&m!=='squint';
+  if(tiredEyes)er=Math.max(er,r*0.22*Math.min(1,tire*1.5));   // big enough to show the heavy lids at game scale
   ctx.lineCap='round';
   for(i=-1;i<=1;i+=2){
     var x=cx+i*ex,y=cy-r*0.05;
@@ -352,15 +352,15 @@ function morkoFace(q){
   // Tired (Joonas 21.11.): heavy lids and eye bags. Fear opens the eyes again, and so do the one-line looks.
   if(tiredEyes){
     for(i=-1;i<=1;i+=2){var tx=cx+i*ex,ty=cy-r*0.05;
-      ctx.save();ctx.beginPath();ctx.arc(tx,ty,er+0.6,0,Math.PI*2);ctx.clip();ctx.fillStyle='#14111d';ctx.fillRect(tx-er-1,ty-er-1,2*er+2,er*0.95*tr);ctx.restore();
-      ctx.strokeStyle='rgba(246,241,228,'+(0.9*tr)+')';ctx.lineWidth=Math.max(1.5,r*0.06);line(tx-er*0.92,ty-er+er*0.95*tr,tx+er*0.92,ty-er+er*0.95*tr);
+      ctx.save();ctx.beginPath();ctx.arc(tx,ty,er+0.6,0,Math.PI*2);ctx.clip();ctx.fillStyle='#14111d';ctx.fillRect(tx-er-1,ty-er-1,2*er+2,er*0.95*tire);ctx.restore();
+      ctx.strokeStyle='rgba(246,241,228,'+(0.9*tire)+')';ctx.lineWidth=Math.max(1.5,r*0.06);line(tx-er*0.92,ty-er+er*0.95*tire,tx+er*0.92,ty-er+er*0.95*tire);
       ctx.lineWidth=Math.max(2,r*0.08);   // two bags under each eye, clearly below it
-      ctx.strokeStyle='rgba(246,241,228,'+(0.75*tr)+')';ctx.beginPath();ctx.arc(tx,ty+er*0.55,er*1.05,Math.PI*0.2,Math.PI*0.8);ctx.stroke();
-      ctx.strokeStyle='rgba(246,241,228,'+(0.4*tr)+')';ctx.beginPath();ctx.arc(tx,ty+er*1.0,er*1.05,Math.PI*0.25,Math.PI*0.75);ctx.stroke();}}
+      ctx.strokeStyle='rgba(246,241,228,'+(0.75*tire)+')';ctx.beginPath();ctx.arc(tx,ty+er*0.55,er*1.05,Math.PI*0.2,Math.PI*0.8);ctx.stroke();
+      ctx.strokeStyle='rgba(246,241,228,'+(0.4*tire)+')';ctx.beginPath();ctx.arc(tx,ty+er*1.0,er*1.05,Math.PI*0.25,Math.PI*0.75);ctx.stroke();}}
   var mu=M.mumble;
-  if(mu&&tr>0.3){var ma=clamp(mu.t/0.35,0,1)*clamp((3-mu.t)/0.6,0,1)*0.8,right=cx<W-230;
+  if(mu&&tire>0.3){var ma=clamp(mu.t/0.35,0,1)*clamp((3-mu.t)/0.6,0,1)*0.8,right=cx<W-230;
     ctx.save();ctx.globalAlpha=ma;ctx.font='italic 600 '+(COMPACT?15:12)+'px system-ui,sans-serif';ctx.textBaseline='middle';ctx.textAlign=right?'left':'right';
-    ctx.fillStyle='#f1ebdd';ctx.fillText(mu.text,cx+(right?1:-1)*r*1.2,cy-r*0.95-mu.t*5);ctx.restore();}
+    ctx.fillStyle='#f1ebdd';ctx.fillText(tr(mu.text),cx+(right?1:-1)*r*1.2,cy-r*0.95-mu.t*5);ctx.restore();}
 }
 function drawCoatFace(q){
   var c=G.morko.coat,p=c.p*c.p*(3-2*c.p),r=q.hdR,blink=c.blink;
@@ -525,6 +525,7 @@ function hud(){
   ctx.save();ctx.globalAlpha=show;if(COMPACT){ctx.translate(W-14,14);ctx.scale(1.3,1.3);ctx.translate(-(W-14),-14);}
   ctx.textAlign='left';ctx.textBaseline='middle';
   for(var i=0;i<rows.length;i++){
+    rows[i][0]=tr(rows[i][0]);rows[i][1]=tr(rows[i][1]);   // 0.89
     ctx.font='700 11px system-ui,sans-serif';var w1=ctx.measureText(rows[i][0]).width;
     ctx.font='500 13px system-ui,sans-serif';var w2=ctx.measureText(rows[i][1]).width;
     var x=W-14-(w1+w2+30);
@@ -535,13 +536,13 @@ function hud(){
     if(rows[i][2]==='job'&&g.job)jobRewrite(x+18+w1,y,w2);
     y+=rows[i][2]==='job'&&g.job?50:26;
   }
-  if(g.pop){ctx.globalAlpha=clamp(2.6-g.pop.t,0,1);ctx.textAlign='right';ctx.font='700 14px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(g.pop.text,W-20,y+4-Math.min(8,g.pop.t*10));ctx.globalAlpha=1;}
+  if(g.pop){ctx.globalAlpha=clamp(2.6-g.pop.t,0,1);ctx.textAlign='right';ctx.font='700 14px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(tr(g.pop.text),W-20,y+4-Math.min(8,g.pop.t*10));ctx.globalAlpha=1;}
   ctx.restore();
 }
 // Top left, small and faint: which day it is and the time. Brighter for a few seconds after a cut.
 function dayStamp(){
   var g=G;if(!g.started||g.ended||g.epi||g.finalFrame||g.out||g.qte||g.form||g.paper||g.clock==null)return;
-  var t=(g.dayTag?g.dayTag+'  ·  ':'')+hhmm(g.clock),a=0.86+0.14*clamp(1-((g.stampT||0)-3.5)/1.5,0,1);   // 0.82: never fades below readable (Codex visual review: on a light wall it looked disabled)
+  var t=(g.dayTag?tr(g.dayTag)+'  ·  ':'')+hhmm(g.clock),a=0.86+0.14*clamp(1-((g.stampT||0)-3.5)/1.5,0,1);   // 0.82: never fades below readable (Codex visual review: on a light wall it looked disabled)
   ctx.save();ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='600 '+(COMPACT?14:11)+'px system-ui,sans-serif';
   var w=ctx.measureText(t).width;ctx.globalAlpha=a;ctx.fillStyle='#36343b';rr(10,10,w+20,COMPACT?26:22,11);ctx.fill();
   ctx.fillStyle='#f2ece0';ctx.fillText(t,20,COMPACT?23:21);ctx.restore();
@@ -549,9 +550,9 @@ function dayStamp(){
 function pausedNote(){
   var g=G,a=g.awayNote;
   ctx.fillStyle='rgba(13,17,20,.76)';ctx.fillRect(0,0,W,H);
-  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#f1ebdd';ctx.font='650 34px Fraunces,Georgia,serif';ctx.fillText(a?a[0]:'Paused',W/2,H/2-48);
-  ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#ebbd79';ctx.fillText(a?a[1]:'Take your time. I’ll just be here, thinking about it.',W/2,H/2-8);
-  ctx.fillStyle='#bfcfbd';ctx.fillText('Tap the scene to carry on.',W/2,H/2+30);
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#f1ebdd';ctx.font='650 34px Fraunces,Georgia,serif';ctx.fillText(a?a[0]:tr('Paused'),W/2,H/2-48);
+  ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#ebbd79';ctx.fillText(a?a[1]:tr('Take your time. I’ll just be here, thinking about it.'),W/2,H/2-8);
+  ctx.fillStyle='#bfcfbd';ctx.fillText(tr('Tap the scene to carry on.'),W/2,H/2+30);
 }
 function draw(){
   var g=G;
@@ -609,8 +610,8 @@ function draw(){
   drawMug();drawDeal();   // VISIO V1: capacity, and the small deals about it   // the form and the paper receipt need the top corner // the window has the screen for its second
   if(g.job&&!g.ended)jobCard();
   if(g.w){
-        if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText('THE WALK HOME',W/2,74);
-      ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('Nine minutes, usually.',W/2,106);}
+        if(g.card>0){ctx.textAlign='center';ctx.fillStyle='#f1ebdd';ctx.font='700 30px system-ui,sans-serif';ctx.fillText(tr('THE WALK HOME'),W/2,74);
+      ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText(tr('Nine minutes, usually.'),W/2,106);}
   }
   if(g.band&&!COMPACT&&!textBelow&&lineInBubble({who:'N'}))band(g.band,H-18);   // 0.85: never in the picture and in the panel at once
   if(g.chap&&g.chap.moment)momentCard();

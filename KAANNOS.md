@@ -36,3 +36,12 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
 - **Ekskyysmi**: nimi on suomalaisittain kirjoitettu ”excuse me”. Suomeksi merkitys aukeaa heti, älä selitä. Ruotsiksi nimi pysyy; tarvittaessa yksi vihjerivi (TYOSUUNNITELMA K18).
 - **”For the record”** on Ekskyysmin tunnuslause ja toistuu (myös ihmisen suussa perjantaina ja hiljaisena päivänä). Valitse yksi vakiokäännös (”Pöytäkirjaan:” / ”Till protokollet:”) ja pidä se kaikkialla.
 - **”since the drawing”**: ei vuosilukua. Älä lisää.
+
+## Suomenkielinen kokeilu: maanantai (0.89)
+- **Tekniikka:** englanninkielinen rivi on avain. `tr(rivi)` (`src/15-fi.js`) palauttaa suomennoksen tai, jos sitä ei ole, englannin. Suomennokset: `src/16-fi-monday.js`. Uuden päivän kääntäminen = uusi tiedosto `src/17-fi-<päivä>.js` samaan muotoon.
+- **Puuttuvien keruu:** suomeksi pelattaessa `tr()` kirjaa jokaisen englanniksi jääneen rivin (`__T.fiMiss()`). Aja reitit suomeksi, kerää lista, käännä, aja uudelleen, kunnes lista on tyhjä. `tests/fi.test.cjs` vaatii maanantailta tyhjän listan.
+- **Kokonaiset lauseet:** jos koodi liimaa rivin palasista, palaset saavat oman avaimen ({paikkamerkki} lukuja varten: `'WINDOW: {s} s · …'`, `'You left for {a}.'`). Älä käännä lauseenpuolikkaita erikseen.
+- **Mitä koodi tarvitsee rivistä:** `<br>` pysyy, `{paikkamerkit}` pysyvät, alun ”…” pysyy, ”Sanna: ”…””-muotoinen viesti alkaa nimellä ja kaksoispisteellä (”You:” → ”Sinä:”), välilyönti rivin alussa pysyy (” (on the tab)” → ” (piikkiin)”). Testi tarkistaa nämä.
+- **Ääni ja ajastus** käyttävät englanninkielistä riviä (esim. lähetetyn viestin ”You:”-suhahdus), joten ne toimivat samoin kummallakin kielellä.
+- **Ratkaisuja, joihin voi palata:** ”Become furniture” → ”Muutu huonekaluksi”; ”Lamp gap.” → ”Lamppujen väli.”; ”Please don’t have slides.” → ”Älä vain sano, että teit kalvoja.” (jotta ”Kaksi.” toimii vastauksena); ”YEAR 2” → ”2. LUOKKA”; ”BE A MUG. NOT A HERO.” → ”OLE MUKI. ÄLÄ SANKARI.”; ”comfort zone” → ”mukavuusalue”; ”the snap” → ”tiuskaisu”.
+- **RSD:lle ei ole vakiintunutta suomenkielistä termiä.** Yhteisöt käyttävät lyhennettä sellaisenaan; kuvailevia ehdotuksia ovat ”torjuntaherkkyys” ja ”hylkäämisherkkyys”. Peli ei nimeä RSD:tä tekstissä, joten käännöksen ei tarvitse ratkaista tätä.

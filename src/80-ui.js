@@ -32,13 +32,16 @@ function showWeekEnd(){
 function showTitle(){
   var sv=loadProgress();music('title');
   G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
-  showOv('<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
-   '<p class="tagline">A small moment.<br>A very long shadow.</p>'+
-   (sv?'<button class="go" type="button" data-go="cont">Continue · '+(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">New game</button>'
-      :'<button class="go" type="button" data-go="start">New game <span aria-hidden="true">→</span></button>')+
-   '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">Chapters</button>':'')+
-   '<button class="link" type="button" data-go="moments">Moments</button>'+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">Settings</button><button class="link" type="button" data-go="about">About</button></div>');
+  showOv(titleHTML(sv));
   render();
+}
+function titleHTML(sv){   // 0.89: its own function, so a language change can redraw it
+  return '<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
+   '<p class="tagline">'+tr('A small moment.<br>A very long shadow.')+'</p>'+
+   (sv?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
+      :'<button class="go" type="button" data-go="start">'+tr('New game')+' <span aria-hidden="true">→</span></button>')+
+   '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
+   '<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>'+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button><button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
 }
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
 function showEnd(){
@@ -46,17 +49,18 @@ function showEnd(){
   var note=g.lunch===1?'You answered inside the window. Nobody has done that before. Lunch happened. The shadow is lying down.':g.lunch===2?'Lunch didn’t happen today. A message did. Tomorrow, then.':g.day==='C'?(g.reflected?'Today hurt. You reached for someone who makes room for you.':'Today hurt. Their choice to leave you out was theirs.'):'Nobody said no. Nobody had the chance. The shadow is calling that a win.';
   if(g.day==='C'&&g.leak==='exit'&&!g.reflected)note='Today felt lonely. Not every missing piece needs filling in tonight.';
   var quote=g.lunch===1?'I would like to lodge a complaint about the speed of that hi.':{grow:'I was very convincing furniture.',cover:'I maintain that the cup was very safe.',exit:'Next time, we bring the coffee.',none:'I wobbled. We went anyway. Slightly after everyone else.'}[g.leak];
-  var d=closeDay()||{label:'A MONDAY',outside:AWAKE,extra:0,ledger:[],ratio:1},rows=receiptRows(d),rt='DAILY RECEIPT · '+d.label;
-  g.receiptText=receiptText(rt,rows,RC_FOOT_DAY);g.receipt={title:rt,rows:rows,foot:RC_FOOT_DAY};
-  showOv('<div class="end-grid"><div><div class="eyebrow">End of Monday</div><h2>Home. Both of you.</h2>'+
-   '<p>The greeting lasted two seconds.<br>The shadow took the scenic route.</p>'+
+  note=tr(note);quote=tr(quote);   // 0.89: Finnish pilot covers the end of Monday too
+  var d=closeDay()||{label:'A MONDAY',outside:AWAKE,extra:0,ledger:[],ratio:1},rows=receiptRows(d).map(trRow),rt=tr('DAILY RECEIPT')+' · '+tr(d.label);
+  var foot=tr(RC_FOOT_DAY);g.receiptText=receiptText(rt,rows,foot);g.receipt={title:rt,rows:rows,foot:foot};
+  showOv('<div class="end-grid"><div><div class="eyebrow">'+tr('End of Monday')+'</div><h2>'+tr('Home. Both of you.')+'</h2>'+
+   '<p>'+tr('The greeting lasted two seconds.<br>The shadow took the scenic route.')+'</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
-   '<p class="title-quote">“'+quote+'”</p>'+
-   '<div class="end-go"><button class="go" type="button" data-go="next">Carry on →</button>'+
-   '<button class="go alt" type="button" data-go="same">Try another approach</button>'+
-   '<button class="go alt" type="button" data-go="again">Another Monday</button></div>'+
-   '<p class="small">Another approach replays this Monday. Another Monday changes what was happening around you.</p></div>'+
-   receiptHTML(rt,rows,RC_FOOT_DAY+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
+   '<p class="title-quote">'+(LANG==='fi'?'”':'“')+quote+'”</p>'+
+   '<div class="end-go"><button class="go" type="button" data-go="next">'+tr('Carry on →')+'</button>'+
+   '<button class="go alt" type="button" data-go="same">'+tr('Try another approach')+'</button>'+
+   '<button class="go alt" type="button" data-go="again">'+tr('Another Monday')+'</button></div>'+
+   '<p class="small">'+tr('Another approach replays this Monday. Another Monday changes what was happening around you.')+'</p></div>'+
+   receiptHTML(rt,rows,foot+'<br><button class="rc-copy" type="button" data-go="sharercpt">'+tr('Save as picture')+'</button> <button class="rc-copy" type="button" data-go="copyrcpt">'+tr('Copy text')+'</button>')+'</div>','end');
 }
 function startGame(day,skip){
   var snap=null;try{if(cv.width&&document.createElement){snap=document.createElement('canvas');snap.width=cv.width;snap.height=cv.height;var sc=snap.getContext&&snap.getContext('2d');if(sc)sc.drawImage(cv,0,0);else snap=null;}}catch(e){snap=null;}   // the title picture, to fade from
@@ -101,7 +105,7 @@ window.addEventListener('keydown',function(e){
   }else if((e.key==='f'||e.key==='F')&&tag!=='INPUT'){toggleFull();}else if(e.key>='1'&&e.key<='4'&&tag!=='INPUT'){choose(+e.key-1);}
   else if(e.key==='p'||e.key==='P'){togglePause();}
 });
-function syncPause(){if(paused||appHidden){stopVoice();holdUp();dragging=false;}syncAudioState();syncWake();document.getElementById('pause').textContent=paused?'Resume':'Pause';document.body.classList.toggle('is-paused',paused);}
+function syncPause(){if(paused||appHidden){stopVoice();holdUp();dragging=false;}syncAudioState();syncWake();document.getElementById('pause').textContent=tr(paused?'Resume':'Pause');document.body.classList.toggle('is-paused',paused);}
 function togglePause(){if(!G.started||G.ended||logDialog.open||ov.classList.contains('on'))return;paused=!paused;if(!paused)G.awayNote=null;syncPause();}
 document.getElementById('pause').addEventListener('click',togglePause);
 document.getElementById('restart').addEventListener('click',function(){
@@ -121,7 +125,7 @@ document.getElementById('close-log').addEventListener('click',function(){logDial
 logDialog.addEventListener('close',function(){paused=modalWasPaused;syncPause();document.getElementById('journal').focus();});
 function textUI(){
   var b=document.getElementById('textsize');
-  b.textContent='Text: '+['small','normal','large'][textStep];
+  b.textContent=tr('Text: '+['small','normal','large'][textStep]);
   document.documentElement.style.setProperty('--ts',TEXT_STEPS[textStep]);
 }
 document.getElementById('textsize').addEventListener('click',function(){
@@ -131,8 +135,8 @@ document.getElementById('textsize').addEventListener('click',function(){
 textUI();
 function slowUI(){
   var b=document.getElementById('slow');b.setAttribute('aria-pressed',String(slowReality));
-  b.textContent=slowReality?'Slow reality: on':'Slow reality';
-  b.title=slowReality?'The window to respond correctly lasts about nine seconds.':'Give yourself about nine seconds to respond correctly.';
+  b.textContent=tr(slowReality?'Slow reality: on':'Slow reality');
+  b.title=tr(slowReality?'The window to respond correctly lasts about nine seconds.':'Give yourself about nine seconds to respond correctly.');
 }
 document.getElementById('slow').addEventListener('click',function(){
   slowReality=!slowReality;try{window.localStorage.setItem('ekskyysmi.slow',slowReality?'on':'off');}catch(e){}
@@ -174,7 +178,7 @@ function syncImmersive(){
   htmlEl.classList.toggle('immersive',on);
   if(!on)setMenu(false);
   var b=document.getElementById('full');
-  if(b){b.textContent=fullOn()?'Leave full screen':'Full screen';b.setAttribute('aria-pressed',String(fullOn()));}
+  if(b){b.textContent=tr(fullOn()?'Leave full screen':'Full screen');b.setAttribute('aria-pressed',String(fullOn()));}
   resize();
 }
 function toggleFull(){
@@ -238,7 +242,18 @@ if(document.addEventListener)document.addEventListener('click',function(e){
   if(!b||b.id==='menu'||b.id==='sound'||b.classList.contains('opt')||b.disabled)return;sfx('ui');
 },true);
 
-// Language setting: stored now, used when the string table exists (K12). Until then everything is English.
+// Language setting. 0.89: Finnish is a pilot for Monday (src/15-fi.js, src/16-fi-monday.js); the rest stays English until it is translated.
 var LANG='en';
 (function(){var el=document.getElementById('lang');if(!el)return;try{var v=window.localStorage.getItem('ekskyysmi.lang');if(v&&el.querySelector('option[value="'+v+'"]:not([disabled])'))el.value=LANG=v;}catch(e){}
-  el.addEventListener('change',function(){LANG=el.value;try{window.localStorage.setItem('ekskyysmi.lang',LANG);}catch(e){}sfx('pick');});})();
+  el.addEventListener('change',function(){LANG=el.value;try{window.localStorage.setItem('ekskyysmi.lang',LANG);document.documentElement.lang=LANG;}catch(e){}sfx('pick');chromeText();
+    if(!G.started&&ov.querySelector('h1.logo'))showOv(titleHTML(loadProgress()));render();});
+  try{document.documentElement.lang=LANG;}catch(e){}if(LANG!=='en')setTimeout(chromeText,0);})();
+// The menu's own words follow the language too (the toggles set theirs through tr).
+function chromeText(){
+  var ids={motion:'Less motion',below:'Text below',journal:'Dialogue',restart:'Restart','log-title':'The conversation so far','close-log':'Back to the moment'},id,e;
+  for(id in ids){e=document.getElementById(id);if(e)e.textContent=tr(ids[id]);}
+  e=document.querySelector('#menu .menu-label');if(e)e.textContent=tr('Menu');
+  e=document.querySelector('.lang-row span');if(e)e.textContent=tr('Language');
+  soundUI();textUI();slowUI();e=document.getElementById('pause');if(e)e.textContent=tr(paused?'Resume':'Pause');
+  e=document.getElementById('full');if(e)e.textContent=tr(fullOn()?'Leave full screen':'Full screen');
+}   // 0.89: Finnish pilot (Monday); new lines follow the choice at once
