@@ -2726,7 +2726,7 @@ var EPI=[
     l:'WORST CASES THAT HAPPENED',v:'0',note:function(){var n=(G.methods||{}).worst;return n?fmtN('prepared: {n}',n):'prepared: plenty';}},
   {cut:'hard',set:'room',clock:16*3600+2*60,s:0.95,mood:'pleased',hx:500,face:'smile',facing:-1,reach:1,pose:'five',five:{dx:30,dy:-38},cam:[1.45,455,262, 1.45,455,262],secs:3.4,
     at:[[1.3,function(){G.five={dx:0,dy:0};}],[1.65,function(){var g=G,palm=g.human.reach;g.tics.push(tic('CLAP.',palm.x,palm.y-36,{life:1.3,size:17}));sfx('clap');g.shake=RM?0:0.18;}]],
-    l:'NOS, SAID OUT LOUD',v:function(){return G.endSeen&&!G.no?'0':'1';},note:function(){return G.endSeen&&!G.no?'next time, then.':'wobbling: allowed';}},
+    l:'NOS, SAID OUT LOUD',v:function(){return String((G.quiet?1:0)+(G.endSeen&&!G.no?0:1));},note:function(){return G.endSeen&&!G.no?'next time, then.':'wobbling: allowed';}},   // 0.92: the quiet Monday’s “No. Sorry.” counts too (Codex)
   // invented: rain, and Ekskyysmi holds an umbrella over the human. It is a shadow umbrella. The rain goes straight through.
   {cut:'hard',walk:1,s:0.45,mood:'pleased',pose:'five',five:{dx:34,dy:8},umbrella:1,rain:1,off:-190,cam:[1.3,430,300, 1.3,430,300],secs:3.6,
     at:[[1.2,function(){var g=G;g.human.sweat=1;g.human.wet=true;g.human.face='stiff';}],[2.7,function(){G.human.face='smile';}]],
@@ -2767,10 +2767,10 @@ var EPI=[
     at:[[0.7,function(){var g=G;g.lampOff=true;g.epi.darkT=1;sfx('turn');}],[2.6,function(){var g=G;g.lampOff=false;g.epi.darkT=0;sfx('turn');}]],
     l:'POWER CUTS',v:'1',note:'eyes in the dark: four. panic: none.'},
   {cut:'fade',set:'home',clock:20*3600,s:1.0,mood:'calm',hx:470,face:'smile',pose:'hug',off:0,cam:[1.9,470,320, 1.55,470,305],secs:5,
-    l:'DRAWINGS SHARED',v:'1',note:'accounts closed: 0'},
+    l:'DRAWINGS SHARED',v:'1',note:'legs: five. accounts closed: 0.'},
   {cut:'hard',set:'home',clock:22*3600,s:0.95,mood:'calm',hx:470,mine:1,pose:'selfmouth',cam:[1.55,450,250, 1.55,450,250],secs:3.4},
   {cut:'fade',set:'home',clock:23*3600,s:0.95,mood:'calm',hx:520,sitting:1,cam:[1.8,450,380, 1.05,475,290],secs:7,
-    l:'DAYS LIVED TODAY',v:'1.0',note:'inside and outside, the same day. a first.'},
+    l:'DAYS LIVED TODAY',v:'1.0',note:'inside and outside, the same day. again.'},   // the quiet Monday was the first (Codex)
   {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,pose:'puppet',cam:[1.05,475,290, 1.05,475,290],secs:6,credit:'One appointment outstanding.'}   // 0.77 (Codex review): the last card before the radiator promises it; “The End.” and a maker credit here made players stop one scene early. The maker is in the roll.
 ];
 // The player's own top methods, as rows. In the lab (or a week with no choices) the shot is skipped.
@@ -2782,7 +2782,7 @@ function epiSnap(){try{var c=document.createElement('canvas');c.width=cv.width;c
 function epiSay(who,text,quiet){history.push({who:who,text:text});if(!quiet)try{var el=document.getElementById('epi-sr');if(el)el.textContent=text;}catch(e){}}
 function epiTell(o){
   if(o.title)epiSay('N',o.title);
-  if(o.l&&!o.noCap){var note=typeof o.note==='function'?o.note():o.note;epiSay('N',o.l+': '+o.v+(note?' — '+note:''));}
+  if(o.l&&!o.noCap){var note=typeof o.note==='function'?o.note():o.note,val=typeof o.v==='function'?o.v():o.v;epiSay('N',o.l+': '+val+(note?' — '+note:''));}   // 0.92: a counted value was read out as its source code
   if(o.mine)mineRows().forEach(function(m,i){epiSay('N',m.l+': '+m.v,i>0);});
   if(o.form){epiSay('N','FORM · PAGE 3 OF 9');EPIFORM.forEach(function(r){epiSay(r[1]==='q'?'N':'S',r[1]==='sig'?'Signed: '+r[2]:r[2],true);});}
   if(o.roll){epiSay('N','The receipt for the whole week. Every line is here in Dialogue.');var rows=epiRollRows();
@@ -2900,9 +2900,10 @@ function epiFind(l){for(var i=0;i<EPI.length;i++)if(l==='laugh'?EPI[i].face==='l
 // The whole receipt, rolling up like credits: every row of the week, the player's methods, the total, the maker.
 function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · THE WHOLE THING'},{gap:1}];
   EPI.forEach(function(o){if(!o.l)return;r.push({l:o.l,v:o.v});var n=typeof o.note==='function'?o.note():o.note;if(n)r.push({n:n});});
-  var g=G,m=g.methods||{},imagined=(m.worst||0)+(g.files||0);
+  var g=G;
   r.push({gap:1},{h:'DAMAGE REPORT'},{l:'CRITICISM, ACTUAL',v:'1'},{n:'“shorter.” it was real. it was one word.'});
-  if(imagined)r.push({l:'CRITICISM, IMAGINED',v:String(imagined)},{n:'all of it rehearsed. some of it twice.'});
+  // 0.92 (Codex humour round): CRITICISM, IMAGINED is gone. It counted the old files, which were real, and without them it only
+  // repeated the worst cases already on the receipt (WORST CASES THAT HAPPENED · 0 · prepared: n). “ACTUAL” still answers all of those.
   if(g.files)r.push({l:'OLD FILES, REOPENED',v:String(g.files)},{n:'the oldest one: year 2. a drawing.'});
   if(g.sips)r.push({l:'SIPS LOST',v:String(g.sips)},{n:g.bigSip?'the biggest: '+g.bigSip.t+' (−'+g.bigSip.n+')':'one at a time.'});
   if(g.mugMended)r.push({l:'MUGS BROKEN',v:'1'},{n:'repaired: gold.'});
@@ -2919,12 +2920,13 @@ function epiInsideRows(){
   run.forEach(function(d){lived+=dayRatio(d);(d.ledger||[]).forEach(function(x){if(!top||x.secs>top.secs)top=x;});});
   // The inside of the week: senses first, then the head, then other people. One row each, no advice.
   var r=[{l:'TIME OUTSIDE THE COMFORT ZONE',v:'ALL OF IT'},{n:'source: eero.'},
-    {l:'COLLAR LABEL, FELT',v:'ALL DAY'},{l:'CHEWING, NEXT TO ME',v:'DEAFENING'},{l:'PERFUME, IN THE LIFT',v:'ALL THE AIR'},
+    {l:'COLLAR LABEL, FELT',v:'ALL DAY'},{l:'CHEWING, NEXT TO ME',v:'DEAFENING'},{l:'SPEAKERPHONE, OPEN OFFICE',v:'SINCE NINE'},   // Wednesday’s, from the story (0.92)
     {l:'TABS OPEN, IN HEAD',v:'37'}];
   if(top)r.push({l:'LONGEST REPLAY',v:dur(top.secs)},{n:top.label});else r.push({l:'“OH, HI.”, REPLAYED',v:'×41'});
   r.push({l:'“DO THEY STILL LIKE ME?”',v:'×23'},{n:'answer so far: yes.'},
     {l:'FACE HELD UP',v:'MOST DAYS'},{l:'RECOVERY AFTER ONE LUNCH',v:'ONE EVENING'},
-    {l:'BRAVE THINGS NOBODY SAW',v:String(Math.max(3,(g.methods||{}).stay||0))},{n:'seen by: one shadow.'});
+    {l:'BRAVE THINGS NOBODY SAW',v:String(Math.max(3,(g.methods||{}).stay||0))},{n:'seen by: one shadow.'},
+    {l:'SHIFTS COVERED',v:'1'},{n:'covered by: another shadow.'});   // 0.92: “Nobody came to relieve me.” (Thursday) → the night shift (#20)
   if(cal)r.push({l:'DAYS ON THE CALENDAR',v:String(cal)},{l:'DAYS LIVED INSIDE',v:lived.toFixed(1)});
   return r;}
 function epiRoll(e){
@@ -4513,7 +4515,7 @@ function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan
   ['S','I’ve been meaning to— the weather is— I like your—'],
   ['S','Hi.',{quiet:1}],
   ['Z','I like your edges.'],
-  ['S','…I like your radiator.'],
+  ['S','…I like your radiator.',{look:'edge'}],   // 0.92 (Codex): it checks its own edge, the one she liked. One line.
   ['Z','It’s the building’s.'],
   ['S','I KNOW. Yes. The building has excellent taste.'],
   // EKSKYYSMI.md, link 1: born from a drawing somebody laughed at, it has kept its own art hidden ("Don't tell the office").
@@ -4973,7 +4975,7 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
   {choice:[
     {t:'Use the returns slot and run.',then:[['H','The slot is for people who aren’t standing in front of her.'],['S','Then stand somewhere else.']]},
     {t:'Prepare a statement.',then:[['S','“I take full responsibility. The lighthouses were compelling.”'],['H','I’m not reading a statement to a librarian.']]},
-    {t:'Blame page 212.',then:[['H','It WAS page 212.'],['S','Then we have a defence.']]}
+    {t:'Blame page 212.',then:[['H','It WAS page 212.'],['S','Keep a finger on that page. It’s our alibi.']]}
   ]},
   function(){G.human.xT=575;},{wait:1.5},
   function(){G.lib.book=true;sfx('clink');},
@@ -5099,7 +5101,7 @@ function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Rea
   archive('bad',[['2019','Applied. Heard nothing. Still checking.'],['2021','“We went with someone with more experience.”'],['2023','Got the interview. Said “you too” to “enjoy your weekend”.']]),
   ['S','I’ve pulled the relevant files.'],
   ['H','They’re not relevant. They’re just old.'],
-  ['S','Old AND relevant. Very rare. Very valuable.'],
+  ['S','If they weren’t relevant, why would I still have them?'],   // 0.92 (Codex humour round): a perfect argument, to the shadow
   closeArchive,
   {choice:[
     {t:'Archive it. For safety.',filed:1,f:function(){G.posting='archived';},then:[
@@ -5715,6 +5717,7 @@ function morkoBody(q){
   ctx.globalAlpha=noLink?0:0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.baseX-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
   ctx.beginPath();ctx.moveTo(q.baseX-26*q.s,q.by);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.bx+q.shW*0.8,q.shY+6);ctx.lineTo(q.bx-q.shW*0.8,q.shY+6);ctx.closePath();ctx.fill();
   ctx.beginPath();ctx.ellipse(q.bx,q.shY+4,q.shW,Math.max(14,26*q.s),0,0,Math.PI*2);ctx.fill();
+  if(lookNow()==='edge'){var es=edgeSide(q.bx);ctx.beginPath();ctx.ellipse(q.bx+es*q.shW*0.6,q.shY-2*q.s,q.shW*0.42,Math.max(10,17*q.s),es*0.3,0,Math.PI*2);ctx.fill();}   // that shoulder, raised a little, to be looked at
   circ(q.bx,q.hdY,q.hdR);ctx.fill();
   if(G.morko.pose==='sit'){   // sitting on the floor of the wall: thighs out, knees up, and much less of it than usual
     var s=q.s;ctx.beginPath();ctx.ellipse(q.baseX-44*s,q.by-15*s,58*s,16*s,-0.12,0,Math.PI*2);ctx.fill();   // thigh, along the floor
@@ -5740,6 +5743,10 @@ function puppetBird(x,y,s){
   ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+w*0.5,y-lift*1.6,x+w,y-lift);ctx.quadraticCurveTo(x+w*0.45,y-2*k,x,y+6*k);ctx.closePath();ctx.fill();
   ctx.beginPath();ctx.moveTo(x-3*k,y-2*k);ctx.lineTo(x,y-11*k);ctx.lineTo(x+3*k,y-2*k);ctx.closePath();ctx.fill();
 }
+// The one-line look on the shadow's current line, if any (also read by the body: the 'edge' look lifts a shoulder).
+function lookNow(){var M=G.morko;return M.st==='free'&&!M.coat&&G.cur&&G.cur.who==='S'&&G.cur.look||null;}
+// Which shoulder: the one nearer Sanna's shadow, if it is in the room (the edge she liked), otherwise the right.
+function edgeSide(x){return G.cowA&&G.zShow>0.02&&G.ax+62<x?-1:1;}
 function morkoFace(q){
   if(G.morko.coat){drawCoatFace(q);return;}
   var M=G.morko,r=q.hdR,cx=q.bx,cy=q.hdY,ex=r*0.42;
@@ -5750,6 +5757,7 @@ function morkoFace(q){
   if(m==='stunned'){er=r*0.36;pr=0.13;}
   else if(m==='soft'){er=r*0.23;pr=0.66;brow='out';py=0.18;}
   else if(m==='up'){er=r*0.25;pr=0.4;brow='out';py=-0.5;look=0;}
+  else if(m==='edge'){er=r*0.24;pr=0.42;brow='flat';py=0.55;look=edgeSide(cx);}   // a glance down at its own shoulder; the brows keep a straight face
   if(m==='calm'){er=r*0.15;pr=0.5;}
   else if(m==='alert'){er=r*0.25;pr=0.4;}
   else if(m==='scared'||m==='surprised'){er=r*0.34;pr=0.24;brow='up';}
@@ -5770,10 +5778,10 @@ function morkoFace(q){
       if(i<0)line(x-r*0.26,y-r*0.3,x+r*0.24,y-r*0.17);else line(x-r*0.24,y-r*0.36,x+r*0.26,y-r*0.4);
     }else if(m==='pleased'){  // eyes shut in two small arches: entirely satisfied with itself
       ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2.5,r*0.12);ctx.beginPath();ctx.arc(x,y+r*0.12,r*0.2,Math.PI*1.12,Math.PI*1.88);ctx.stroke();
-    }else if(lk&&(m==='stunned'||m==='soft'||m==='up')){
+    }else if(lk&&(m==='stunned'||m==='soft'||m==='up'||m==='edge')){
       var jx=m==='stunned'&&!RM?Math.sin(G.time*43+i)*r*0.02:0;
       ctx.fillStyle='#f6f1e4';circ(x+jx,y,er);ctx.fill();
-      ctx.fillStyle='#14111d';circ(x+jx+look*er*0.3,y+er*py,er*pr);ctx.fill();
+      ctx.fillStyle='#14111d';circ(x+jx+look*er*(m==='edge'?0.42:0.3),y+er*py,er*pr);ctx.fill();
       if(m==='soft'){ctx.fillStyle='#f6f1e4';circ(x+look*er*0.3-er*0.2,y+er*py-er*0.22,er*0.16);ctx.fill();}
     }else{
       if(!RM&&brow!=='up'&&G.time%4.7<0.12){ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2,r*0.09);line(x-er,y,x+er,y);}
@@ -5784,6 +5792,7 @@ function morkoFace(q){
     if(brow==='up')line(x-er,y-er-r*0.2,x+er,y-er-r*0.2);
     else if(brow==='in')line(x-i*er*1.1,y-er-r*0.22,x+i*er*0.2,y-er-r*0.02);
     else if(brow==='out')line(x-i*er*1.0,y-er-r*0.22,x+i*er*1.0,y-er-r*0.08);
+    else if(brow==='flat')line(x-er*0.9,y-er-r*0.14,x+er*0.9,y-er-r*0.14);
   }
   if(m==='pokka'){ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(1.5,r*0.07);circ(cx-r*0.1,cy+r*0.5,r*0.09);ctx.stroke();}
   // Tired (Joonas 21.11.): heavy lids and eye bags. Fear opens the eyes again, and so do the one-line looks.

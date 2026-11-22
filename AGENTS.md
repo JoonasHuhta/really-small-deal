@@ -20,7 +20,7 @@ Older plans are history and partly out of date: `TYOSUUNNITELMA.md`, `CODEX_JATK
 - Android: `npm run android:sync`, then `android\gradlew.bat assembleDebug`. The `android/` folder is not in git; native changes go through `tools/android-patch.cjs`.
 
 ## Script engine in one minute
-- A scene is an array of steps: `['S','line']`, `['S','line',{look:'squint'|'pleased'|'stunned'|'soft'|'up',loud:1,quiet:1}]`, `aside([...])`, `{wait:1.2}`, `{choice:[{t:'…',then:[…]}]}`, `{hold:{kind,secs,text}}`, `{toss:{…}}`, `outside({title,dur,cap})`, `set({mood,s,…})`, `addTic(text,x,y,{life})`, `lensPeek(at,tag)`.
+- A scene is an array of steps: `['S','line']`, `['S','line',{look:'squint'|'pleased'|'stunned'|'soft'|'up'|'edge',loud:1,quiet:1}]`, `aside([...])`, `{wait:1.2}`, `{choice:[{t:'…',then:[…]}]}`, `{hold:{kind,secs,text}}`, `{toss:{…}}`, `outside({title,dur,cap})`, `set({mood,s,…})`, `addTic(text,x,y,{life})`, `lensPeek(at,tag)`.
 - A step that expands into several steps must be a **function returning an array**.
 - Speakers: S Ekskyysmi, H human, A Sanna, B Eero, R Riitta, P phone, N narrator, Z/Y/W other people's shadows.
 - Story order: `src/33-moments.js` (`AFTER`). Moments are registered in `LABS` (`src/50-lab.js`).

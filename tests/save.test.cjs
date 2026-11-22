@@ -35,7 +35,11 @@ for(const pick of [0,1]){
  {const h=a.T.history().map(x=>x.text);
   for(const want of ['That was the week. (Ekskyysmi kept the receipts)','Sent: three lines. No apology.','7. How do you usually take criticism?','personally.','Signed: Ekskyysmi','One appointment outstanding.'])assert.ok(h.includes(want),'Dialogue is missing an epilogue line: '+want);
   assert.ok(h.some(t=>/^DAYS ON THE CALENDAR: 5$/.test(t)),'the rolling receipt is in Dialogue, row by row');
-  assert.ok(h.some(t=>/^CRITICISM, ACTUAL: 1 — /.test(t)),'a receipt row keeps its note');}
+  assert.ok(h.some(t=>/^CRITICISM, ACTUAL: 1 — /.test(t)),'a receipt row keeps its note');
+  // 0.92: a counted value is read as its number, never as code; the quiet Monday's “No. Sorry.” counts with Friday's answer
+  assert.ok(!h.some(t=>/function\s*\(|=>|undefined|\[object/.test(t)),'an epilogue line in Dialogue shows code: '+h.find(t=>/function\s*\(|=>|undefined|\[object/.test(t)));
+  const nos=h.filter(t=>/^NOS, SAID OUT LOUD: /.test(t));
+  assert.ok(nos.length&&nos.every(t=>t===(a.T.G.no?'NOS, SAID OUT LOUD: 2 — wobbling: allowed':'NOS, SAID OUT LOUD: 1 — next time, then.')),'the nos said out loud: '+nos.join(' | '));}
  if(a.T.G.posting){assert.ok(roll.some(r=>r.l==='APPLICATIONS, SENT'&&r.v==='1'));assert.match(endA,/applications sent, friday\s+1/,'the last receipt agrees with the epilogue about the application');}
 }
 console.log('PASS: Continue keeps the week (two routes): same receipt, same last note, the epilogue and the end count the same five days, one application sent; the epilogue’s words are in Dialogue.');

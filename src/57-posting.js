@@ -16,7 +16,7 @@ function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Rea
   archive('bad',[['2019','Applied. Heard nothing. Still checking.'],['2021','“We went with someone with more experience.”'],['2023','Got the interview. Said “you too” to “enjoy your weekend”.']]),
   ['S','I’ve pulled the relevant files.'],
   ['H','They’re not relevant. They’re just old.'],
-  ['S','Old AND relevant. Very rare. Very valuable.'],
+  ['S','If they weren’t relevant, why would I still have them?'],   // 0.92 (Codex humour round): a perfect argument, to the shadow
   closeArchive,
   {choice:[
     {t:'Archive it. For safety.',filed:1,f:function(){G.posting='archived';},then:[

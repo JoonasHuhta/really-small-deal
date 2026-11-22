@@ -278,6 +278,7 @@ function morkoBody(q){
   ctx.globalAlpha=noLink?0:0.55*al;ctx.beginPath();ctx.moveTo(Hm.x-22,FEETY);ctx.lineTo(Hm.x+22,FEETY);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.baseX-26*q.s,q.by);ctx.closePath();ctx.fill();ctx.globalAlpha=al;
   ctx.beginPath();ctx.moveTo(q.baseX-26*q.s,q.by);ctx.lineTo(q.baseX+26*q.s,q.by);ctx.lineTo(q.bx+q.shW*0.8,q.shY+6);ctx.lineTo(q.bx-q.shW*0.8,q.shY+6);ctx.closePath();ctx.fill();
   ctx.beginPath();ctx.ellipse(q.bx,q.shY+4,q.shW,Math.max(14,26*q.s),0,0,Math.PI*2);ctx.fill();
+  if(lookNow()==='edge'){var es=edgeSide(q.bx);ctx.beginPath();ctx.ellipse(q.bx+es*q.shW*0.6,q.shY-2*q.s,q.shW*0.42,Math.max(10,17*q.s),es*0.3,0,Math.PI*2);ctx.fill();}   // that shoulder, raised a little, to be looked at
   circ(q.bx,q.hdY,q.hdR);ctx.fill();
   if(G.morko.pose==='sit'){   // sitting on the floor of the wall: thighs out, knees up, and much less of it than usual
     var s=q.s;ctx.beginPath();ctx.ellipse(q.baseX-44*s,q.by-15*s,58*s,16*s,-0.12,0,Math.PI*2);ctx.fill();   // thigh, along the floor
@@ -303,6 +304,10 @@ function puppetBird(x,y,s){
   ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+w*0.5,y-lift*1.6,x+w,y-lift);ctx.quadraticCurveTo(x+w*0.45,y-2*k,x,y+6*k);ctx.closePath();ctx.fill();
   ctx.beginPath();ctx.moveTo(x-3*k,y-2*k);ctx.lineTo(x,y-11*k);ctx.lineTo(x+3*k,y-2*k);ctx.closePath();ctx.fill();
 }
+// The one-line look on the shadow's current line, if any (also read by the body: the 'edge' look lifts a shoulder).
+function lookNow(){var M=G.morko;return M.st==='free'&&!M.coat&&G.cur&&G.cur.who==='S'&&G.cur.look||null;}
+// Which shoulder: the one nearer Sanna's shadow, if it is in the room (the edge she liked), otherwise the right.
+function edgeSide(x){return G.cowA&&G.zShow>0.02&&G.ax+62<x?-1:1;}
 function morkoFace(q){
   if(G.morko.coat){drawCoatFace(q);return;}
   var M=G.morko,r=q.hdR,cx=q.bx,cy=q.hdY,ex=r*0.42;
@@ -313,6 +318,7 @@ function morkoFace(q){
   if(m==='stunned'){er=r*0.36;pr=0.13;}
   else if(m==='soft'){er=r*0.23;pr=0.66;brow='out';py=0.18;}
   else if(m==='up'){er=r*0.25;pr=0.4;brow='out';py=-0.5;look=0;}
+  else if(m==='edge'){er=r*0.24;pr=0.42;brow='flat';py=0.55;look=edgeSide(cx);}   // a glance down at its own shoulder; the brows keep a straight face
   if(m==='calm'){er=r*0.15;pr=0.5;}
   else if(m==='alert'){er=r*0.25;pr=0.4;}
   else if(m==='scared'||m==='surprised'){er=r*0.34;pr=0.24;brow='up';}
@@ -333,10 +339,10 @@ function morkoFace(q){
       if(i<0)line(x-r*0.26,y-r*0.3,x+r*0.24,y-r*0.17);else line(x-r*0.24,y-r*0.36,x+r*0.26,y-r*0.4);
     }else if(m==='pleased'){  // eyes shut in two small arches: entirely satisfied with itself
       ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2.5,r*0.12);ctx.beginPath();ctx.arc(x,y+r*0.12,r*0.2,Math.PI*1.12,Math.PI*1.88);ctx.stroke();
-    }else if(lk&&(m==='stunned'||m==='soft'||m==='up')){
+    }else if(lk&&(m==='stunned'||m==='soft'||m==='up'||m==='edge')){
       var jx=m==='stunned'&&!RM?Math.sin(G.time*43+i)*r*0.02:0;
       ctx.fillStyle='#f6f1e4';circ(x+jx,y,er);ctx.fill();
-      ctx.fillStyle='#14111d';circ(x+jx+look*er*0.3,y+er*py,er*pr);ctx.fill();
+      ctx.fillStyle='#14111d';circ(x+jx+look*er*(m==='edge'?0.42:0.3),y+er*py,er*pr);ctx.fill();
       if(m==='soft'){ctx.fillStyle='#f6f1e4';circ(x+look*er*0.3-er*0.2,y+er*py-er*0.22,er*0.16);ctx.fill();}
     }else{
       if(!RM&&brow!=='up'&&G.time%4.7<0.12){ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2,r*0.09);line(x-er,y,x+er,y);}
@@ -347,6 +353,7 @@ function morkoFace(q){
     if(brow==='up')line(x-er,y-er-r*0.2,x+er,y-er-r*0.2);
     else if(brow==='in')line(x-i*er*1.1,y-er-r*0.22,x+i*er*0.2,y-er-r*0.02);
     else if(brow==='out')line(x-i*er*1.0,y-er-r*0.22,x+i*er*1.0,y-er-r*0.08);
+    else if(brow==='flat')line(x-er*0.9,y-er-r*0.14,x+er*0.9,y-er-r*0.14);
   }
   if(m==='pokka'){ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(1.5,r*0.07);circ(cx-r*0.1,cy+r*0.5,r*0.09);ctx.stroke();}
   // Tired (Joonas 21.11.): heavy lids and eye bags. Fear opens the eyes again, and so do the one-line looks.

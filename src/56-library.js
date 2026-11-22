@@ -30,7 +30,7 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
   {choice:[
     {t:'Use the returns slot and run.',then:[['H','The slot is for people who aren’t standing in front of her.'],['S','Then stand somewhere else.']]},
     {t:'Prepare a statement.',then:[['S','“I take full responsibility. The lighthouses were compelling.”'],['H','I’m not reading a statement to a librarian.']]},
-    {t:'Blame page 212.',then:[['H','It WAS page 212.'],['S','Then we have a defence.']]}
+    {t:'Blame page 212.',then:[['H','It WAS page 212.'],['S','Keep a finger on that page. It’s our alibi.']]}
   ]},
   function(){G.human.xT=575;},{wait:1.5},
   function(){G.lib.book=true;sfx('clink');},

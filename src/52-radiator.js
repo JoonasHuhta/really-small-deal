@@ -24,7 +24,7 @@ function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan
   ['S','I’ve been meaning to— the weather is— I like your—'],
   ['S','Hi.',{quiet:1}],
   ['Z','I like your edges.'],
-  ['S','…I like your radiator.'],
+  ['S','…I like your radiator.',{look:'edge'}],   // 0.92 (Codex): it checks its own edge, the one she liked. One line.
   ['Z','It’s the building’s.'],
   ['S','I KNOW. Yes. The building has excellent taste.'],
   // EKSKYYSMI.md, link 1: born from a drawing somebody laughed at, it has kept its own art hidden ("Don't tell the office").
