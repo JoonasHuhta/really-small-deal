@@ -5,9 +5,11 @@ function addTic(text,x,y,o){return function(){G.tics.push(tic(text,x,y,o));};}
 function stepTics(dt){var a=G.tics;for(var i=a.length-1;i>=0;i--){a[i].t+=dt;if(a[i].t>a[i].life)a.splice(i,1);}}
 function drawTics(cam){
   var a=G.tics;if(!a.length)return;
+  var stampBottom=dayStampBottom();
   ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
   for(var i=0;i<a.length;i++){var q=a[i];if(q.t<0)continue;
     var al=clamp(q.t/0.25,0,1)*clamp((q.life-q.t)/0.5,0,1),x=q.world?q.x-cam:q.x,y=q.y-(RM?0:q.t*6);
+    if(stampBottom)y=Math.max(y,VIEW.t+(stampBottom+6)/VIEW.z+q.size*0.8);
     ctx.globalAlpha=al;ctx.font='italic 600 '+q.size+'px Fraunces,Georgia,serif';
     var w=ctx.measureText(q.text).width+18;ctx.fillStyle='rgba(16,14,24,.55)';rr(x-w/2,y-q.size*0.8,w,q.size*1.6,q.size*0.8);ctx.fill();
     ctx.fillStyle=q.col;ctx.fillText(q.text,x,y+1);

@@ -14,6 +14,8 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+0.99.12 – Päiväleima väistää valikkopainikkeen. Kellonaika näkyy päiväleimassa, ja ilmassa leijuvat ilmoitukset pysyvät sen alapuolella.
+
 0.99.11 – Leveällä puhelimella aloitusruudun seinä, pöytätaso ja lattia jatkuvat näytön reunoille.
 
 0.99.10 – Vaakasuuntaisessa puhelinnäkymässä asetukset avataan päävalikon Settings-linkistä. Androidin paluuele keskeyttää pelin, ja pelikuvaa napauttamalla voi jatkaa.

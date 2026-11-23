@@ -597,12 +597,17 @@ function hud(){
   ctx.restore();
 }
 // Top left, small and faint: which day it is and the time. Brighter for a few seconds after a cut.
+function dayStampBottom(){
+  var g=G;
+  return g.started&&!g.ended&&!g.epi&&!g.finalFrame&&!g.out&&!g.qte&&!g.form&&!g.paper&&g.clock!=null?(COMPACT?36:32):0;
+}
 function dayStamp(){
-  var g=G;if(!g.started||g.ended||g.epi||g.finalFrame||g.out||g.qte||g.form||g.paper||g.clock==null)return;
+  var bottom=dayStampBottom();if(!bottom)return;
+  var g=G,x=10+HUDL;
   var t=(g.dayTag?tr(g.dayTag)+'  ·  ':'')+hhmm(g.clock),a=0.86+0.14*clamp(1-((g.stampT||0)-3.5)/1.5,0,1);   // 0.82: never fades below readable (Codex visual review: on a light wall it looked disabled)
   ctx.save();ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='600 '+(COMPACT?14:11)+'px system-ui,sans-serif';
-  var w=ctx.measureText(t).width;ctx.globalAlpha=a;ctx.fillStyle='#36343b';rr(10,10,w+20,COMPACT?26:22,11);ctx.fill();
-  ctx.fillStyle='#f2ece0';ctx.fillText(t,20,COMPACT?23:21);ctx.restore();
+  var w=ctx.measureText(t).width;ctx.globalAlpha=a;ctx.fillStyle='#36343b';rr(x,10,w+20,bottom-10,11);ctx.fill();
+  ctx.fillStyle='#f2ece0';ctx.fillText(t,x+10,(bottom+10)/2);ctx.restore();
 }
 function pausedNote(){
   var g=G,a=g.awayNote;

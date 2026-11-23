@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.12 – Päiväleima väistää valikkopainikkeen. Kellonaika näkyy päiväleimassa, ja ilmassa leijuvat ilmoitukset pysyvät sen alapuolella.
+
 0.99.11 – Aloitusruudun huone jatkuu leveän näytön reunoille.
 
 0.99.10 – Puhelimen vaakanäkymässä Settings avataan päävalikosta. Androidin paluuele toimii kesken kohtauksen.

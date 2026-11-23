@@ -69,7 +69,7 @@ html.immersive #menu{display:block;position:fixed;z-index:8;top:6px;left:max(6px
 @media (pointer:coarse){
   html.immersive #menu{display:none}
 }
-html.immersive nav{display:none;position:fixed;z-index:8;top:56px;max-height:calc(100dvh - 68px);overflow-y:auto;overscroll-behavior:contain;left:max(6px,env(safe-area-inset-left));margin:0;flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:2px;width:200px;padding:6px;background:#1b2328f7;border:1px solid #ffffff30;border-radius:12px;box-shadow:0 12px 30px #0008}
+html.immersive nav{--controls-top:max(56px,calc(max(0px,(100dvh - var(--stage) * 9 / 16) / 2) + var(--stage) * 36 / 960 + 8px));display:none;position:fixed;z-index:8;top:var(--controls-top);max-height:calc(100dvh - var(--controls-top) - 12px);overflow-y:auto;overscroll-behavior:contain;left:max(6px,env(safe-area-inset-left));margin:0;flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:2px;width:200px;padding:6px;background:#1b2328f7;border:1px solid #ffffff30;border-radius:12px;box-shadow:0 12px 30px #0008}
 html.immersive body.menu-open nav{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-content:start}
 /* 0.77: two equal columns; the language row takes both, so it can no longer push the left column off the screen (Codex review) */
 html.immersive nav .lang-row{grid-column:1/-1}
