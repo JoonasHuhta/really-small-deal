@@ -72,7 +72,7 @@ function showLabEnd(id){
 
 /* ---------- Enhance: the eyebrow ---------- */
 function zoom(n){return function(){var g=G;g.zoom=n?{n:n,t:0}:null;g.lines=[];g.cur=null;stopVoice();if(n)sfx('enhance');else sfx('cut');};}
-function labEnhance(){return labScene({set:'office',title:'Enhance.',plan:'Share one idea in a meeting.',clock:11*3600+56*60,cowR:1,s:1.1}).concat([
+function labEnhance(){return labScene({set:'office',title:'Enhance.',plan:'Share one idea in a meeting.',clock:17*3600+56*60,cowR:1,s:1.1}).concat([
   ['N','A meeting. You have just said an idea out loud.'],
   ['H','…so that’s the idea.'],
   function(){G.rBrow=1;},{wait:0.6},
@@ -104,12 +104,12 @@ function labEnhance(){return labScene({set:'office',title:'Enhance.',plan:'Share
   zoom(4),{wait:0.6},
   ['S','There’s something in her eye. A reflection.'],
   ['S','It’s… a clock.'],
-  ['S','11:58.'],
+  ['S','17:58.'],
   zoom(0),function(){var g=G;g.rBrow=0;g.gazeT=0;g.darkT=0;g.cz=1.025;g.cx=W/2;g.cy=H/2;},
-  ['R','Interesting. Can we pick it up after lunch? I’m starving.'],
+  ['R','Interesting. Can we pick it up tomorrow? I missed lunch.'],
   set({mood:'surprised'}),
   ['S','…The eyebrow was HUNGER.']
- ],outside({title:'WHAT RIITTA WAS LOOKING AT',dur:'duration: half a second',cap:'The clock behind you. It was nearly lunch.',anim:'text'}),[
+ ],outside({title:'WHAT RIITTA WAS LOOKING AT',dur:'duration: half a second',cap:'The clock behind you. Nearly six. She missed lunch.',anim:'text'}),[
   calm,
   ['H','You enhanced a hungry eyebrow.'],
   // 0.96 (Joonas: it talks about filing all game long; once, let the filing be seen). A red journal and an absurdly large quill.
@@ -148,7 +148,7 @@ function drawZoom(){
     ctx.fillStyle='#fbf8ef';ctx.beginPath();ctx.ellipse(W/2,H/2+10,380,190,0,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#6a8a8f';circ(W/2,H/2+10,170);ctx.fill();ctx.fillStyle='#4f6b70';circ(W/2,H/2+10,120);ctx.fill();ctx.fillStyle='#14111d';circ(W/2,H/2+10,80);ctx.fill();
     var cx=W/2+28,cy=H/2-14;ctx.globalAlpha=0.9;ctx.fillStyle='#fbf8ef';circ(cx,cy,34);ctx.fill();ctx.strokeStyle='#14111d';ctx.lineWidth=3;
-    var ha=(11+58/60)/12*Math.PI*2,ma=58/60*Math.PI*2;line(cx,cy,cx+Math.sin(ha)*17,cy-Math.cos(ha)*17);line(cx,cy,cx+Math.sin(ma)*26,cy-Math.cos(ma)*26);
+    var ha=(5+58/60)/12*Math.PI*2,ma=58/60*Math.PI*2;line(cx,cy,cx+Math.sin(ha)*17,cy-Math.cos(ha)*17);line(cx,cy,cx+Math.sin(ma)*26,cy-Math.cos(ma)*26);
     ctx.globalAlpha=0.5;ctx.fillStyle='#fbf8ef';rr(W/2-70,H/2-60,26,40,6);ctx.fill();ctx.globalAlpha=1;
     ctx.strokeStyle='#8c8479';ctx.lineWidth=6;ctx.beginPath();ctx.ellipse(W/2,H/2+10,380,190,0,Math.PI*1.05,Math.PI*1.95);ctx.stroke();
   }
@@ -293,7 +293,7 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   ['S','With the PEOPLE in it?'],
   function(){return G.lab?[]:[['S','Last time you showed someone a drawing, I got this job.'],['H','I know. I’m doing it anyway.'],['S','…Then I’m doing it with you.']];},
   {choice:[
-    {t:'Add a disclaimer. Several.',then:[['P','You: “made a thing!! it’s not very good, ignore the hands, and the left side, and the idea, sorry”'],['S','Perfect. Now nobody can be disappointed. We pre-disappointed them.']]},
+    {t:'Explain the fifth leg. For the record.',then:[['S','Say the fifth leg is intentional.'],['H','It is intentional.'],['S','Good. We have a statement.']]},
     {t:'Delete the drawing. Delete drawing as a concept.',then:[['H','Already sent.'],['S','…Then we go to war.']]},
     {t:'Fine. But I’m getting the headband.',then:[['H','What headband?'],['S','For emergencies. I’ve never needed it. I’ve always needed it.']]},
     hush([{wait:1.4},['H','…No disclaimer?'],['S','I’m saying nothing. At a very high volume.',{quiet:1}],{wait:0.8},['S','…I’m still getting the headband.']])

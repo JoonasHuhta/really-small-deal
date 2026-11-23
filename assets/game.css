@@ -66,6 +66,9 @@ html.immersive header{margin:0;display:block}
 html.immersive .wordmark,html.immersive .sub,html.immersive footer,html.immersive .scene-bar{display:none}
 /* one small button; everything else lives behind it */
 html.immersive #menu{display:block;position:fixed;z-index:8;top:6px;left:max(6px,env(safe-area-inset-left));width:44px;height:44px;border-radius:12px;background:#141a1fb8;border:1px solid #ffffff30;color:var(--ink);font-size:20px;line-height:1;padding:0}
+@media (pointer:coarse){
+  html.immersive #menu{display:none}
+}
 html.immersive nav{display:none;position:fixed;z-index:8;top:56px;max-height:calc(100dvh - 68px);overflow-y:auto;overscroll-behavior:contain;left:max(6px,env(safe-area-inset-left));margin:0;flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:2px;width:200px;padding:6px;background:#1b2328f7;border:1px solid #ffffff30;border-radius:12px;box-shadow:0 12px 30px #0008}
 html.immersive body.menu-open nav{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-content:start}
 /* 0.77: two equal columns; the language row takes both, so it can no longer push the left column off the screen (Codex review) */
@@ -75,6 +78,14 @@ html.immersive nav{width:302px}
 html.immersive .game-frame{display:block;position:relative;height:100dvh;border:0;border-radius:0;box-shadow:none;background:#0d1114}
 html.immersive .stage{height:100dvh;display:flex;align-items:center;justify-content:center;background:#0d1114}
 html.immersive canvas{width:var(--stage);touch-action:none}
+.stage .title-edge{display:none}
+html.immersive .stage:has(.ov.on[data-kind=title]) .title-edge{
+  display:block;position:absolute;top:50%;transform:translateY(-50%);
+  width:calc((100% - var(--stage))/2 + 1px);height:calc(var(--stage) * 9 / 16);
+  aspect-ratio:auto;pointer-events:none;z-index:-1;
+}
+#title-edge-left{left:0}
+#title-edge-right{right:0}
 html.immersive .ov{left:50%;right:auto;width:var(--stage);transform:translateX(-50%);padding:10px 26px 10px 64px;align-items:flex-start}
 html.immersive .ov .card{margin:auto 0}
 html.immersive .ov[data-kind=end] .card,html.immersive .ov[data-kind=restart] .card{margin:auto}

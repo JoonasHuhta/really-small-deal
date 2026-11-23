@@ -14,7 +14,7 @@ function showAbout(){
    // 0.98: what it is about, in plain words first (the term is not common knowledge); loneliness as “wanting company”, shame as
    // a situation in the content note rather than abstract nouns. “Conversations don’t wait either” went: only one thing is timed.
    '<p>It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.</p>'+
-   '<p>About 50 minutes. It saves as you go. Only one thing is timed, and it’s unfair on purpose (Slow reality, in the menu, helps).</p>'+
+   '<p>About 50 minutes. It saves as you go. Only one thing is timed, and it’s unfair on purpose.</p>'+
    '<p class="small">Alpha'+gameVersion()+', still changing. Made by Joonas Huhta (MoshBitSurfers).</p>'+
    '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
 }

@@ -114,7 +114,8 @@ function momentCard(){
   ctx.font='italic 600 '+(COMPACT?50:44)+'px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(tr(c.title),W/2,cy+18);
   ctx.restore();}
 function bigNote(){
-  var n=G.bigNote,a=clamp(n.t/0.25,0,1)*(1-0.72*clamp((n.t-2.6)/0.8,0,1)),sh=RM?0:Math.sin(G.time*52)*4;
+  var n=G.bigNote,settle=clamp((n.t-2.6)/0.8,0,1);
+  var a=clamp(n.t/0.25,0,1)*(1-0.72*settle),sh=RM?0:Math.sin(G.time*52)*4*(1-settle);
   ctx.save();ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 150px Fraunces,Georgia,serif';
   ctx.fillStyle='rgba(18,14,30,.55)';ctx.fillText(n.text,W/2+sh+5,H/2-34);
   ctx.fillStyle='#e0563e';ctx.fillText(n.text,W/2+sh,H/2-40);ctx.restore();

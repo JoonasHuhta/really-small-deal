@@ -127,7 +127,7 @@ for(const day of ['A','B','C'])for(let v=0;v<4;v++){
   // Two clocks: five days on the calendar, more than that lived, and Friday costs less than Monday.
   {const days=T.inside.run().filter(d=>d.label!=='SCENARIO LAB');assert.equal(days.length,5,days.map(d=>d.label).join());
    assert.ok(days[0].ratio>days[4].ratio,'Friday is lighter than Monday');assert.ok(days.every(d=>d.ratio>=1));
-   assert.match(element('ov').innerHTML,/DAYS ON THE CALENDAR/);assert.match(T.inside.receipt(),/DAYS ON THE CALENDAR\s+5/);
+   assert.match(element('ov').innerHTML,/WEEKDAYS FILED/);assert.match(T.inside.receipt(),/WEEKDAYS FILED\s+5/);
    assert.match(days[4].ledger[0].label,/1\.4 times/);}
   // The short moments are part of the story now, in order, each behind its own card and never labelled as lab scenes.
   for(const must of [/You showed someone a drawing/,/Last time you showed someone a drawing/,/This time I left it up/,/The eyebrow was HUNGER/,/falls off a printer/,/I rounded up/,/Bengtskär/,/she said hi first/,/It’s the one people could take away/,/A crack\. Leave it open a crack/,/I always thought that was the bad outcome/,/busy near each other/,/Leave it open a crack/])assert.match(tr,must);
@@ -671,9 +671,9 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
  assert.ok(week.includes("['P','You: “Fine.”']")&&second.includes('Someone said “fine”.')&&week.includes("['H','You were asleep. That one was all me.']"),'the Fine. thread is broken');
  // 8. The epilogue is cut to the song: the montage stays 32 bars and the bird keeps at least five seconds before the last hit.
  {const ep=src('37-epilogue.js'),B=Function('return '+ep.match(/var EPIBARS=(\[[^\]]*\])/)[1])(),A=Function('return '+ep.match(/var EPIA=(\[[^\]]*\])/)[1])();
-  const nb=[...ep.slice(ep.indexOf('var EPIN=')).matchAll(/^\s*\{bars:(\d)/gm)].reduce((a,m)=>a+ +m[1],0),bt=k=>k<B.length?B[k]:B[B.length-1]+(k-B.length+1)*2.25;
-  assert.equal(A.reduce((a,b)=>a+b,0),32,'the montage must stay 32 bars (the receipt rolls on the song’s quiet middle)');
-  assert.ok(169.4-bt(59+nb)>=5,'the bird and the credit need at least five seconds before the last hit');}
+  const nb=[...ep.slice(ep.indexOf('var EPIN=')).matchAll(/^\s*\{bars:([\d.]+)/gm)].reduce((a,m)=>a+ +m[1],0),bt=k=>k<B.length?B[k]:B[B.length-1]+(k-B.length+1)*2.25;
+  assert.equal(A.reduce((a,b)=>a+b,0),24,'the opening montage must stay 24 bars (the receipt rolls on the song’s quiet middle)');
+  assert.ok(169.4-bt(51+nb)>=5,'the bird and the credit need at least five seconds before the last hit');}
  // 9. Codex review of 0.76 (21.11.): the part label follows the map, and a part card names itself.
  {T.chapter(4);const seen={};let k=0;
   while(T.G.chapter===4&&!T.G.ended&&k++<40000){T.unlock();T.draw();const g=T.G;if(g.moment)seen[g.moment]=element('chapter').textContent;if(g.chap&&g.chap.part===2)seen.part2=element('chapter').textContent;

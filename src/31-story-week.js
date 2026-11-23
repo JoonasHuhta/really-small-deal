@@ -1,6 +1,6 @@
 /* ================= the week: chapters 2–5 ================= */
 // `day` is what the card says. The weekdays are flavour; nothing insists they belong to the same week.
-var CHAPTERS=[null,{day:'A MONDAY',title:'Oh, hi.',wd:'MONDAY'},{day:'A TUESDAY',title:'Quick chat?',wd:'TUESDAY',music:'tuesday'},{day:'A WEDNESDAY, PROBABLY',title:'Could you just…',wd:'WEDNESDAY'},{day:'A THURSDAY',title:'Seen.',wd:'THURSDAY'},{day:'A FRIDAY. NOT NECESSARILY THAT ONE.',title:'Oh, hi. Again.',wd:'FRIDAY'}];
+var CHAPTERS=[null,{day:'A MONDAY',title:'Oh, hi.',wd:'MONDAY'},{day:'A TUESDAY',title:'Quick chat?',wd:'TUESDAY',music:'tuesday'},{day:'A WEDNESDAY',title:'Could you just…',wd:'WEDNESDAY'},{day:'A THURSDAY',card:'THURSDAY, 17:30',title:'Seen.',wd:'THURSDAY'},{day:'A FRIDAY. NOT NECESSARILY THAT ONE.',title:'Oh, hi. Again.',wd:'FRIDAY'}];
 // The day stamp (top left): the weekday and the clock, so a cut to the next morning reads as one (Joonas 20.11.).
 var WEEK=['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
 function nextDay(d){var i=WEEK.indexOf(d);return i<0?null:WEEK[(i+1)%7];}
@@ -19,8 +19,8 @@ function scene(o){return function(){
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
 function begin(n,o){return [function(){G.chapMusic=CHAPTERS[n].music||null;},scene(o),function(){
-  var g=G;g.dayTag=CHAPTERS[n].wd;g.stampT=0;g.chapter=n;g.moment=null;newDay();g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
-  g.morko.s=1;g.morko.off=-70;g.chap={day:CHAPTERS[n].day,title:CHAPTERS[n].title,t:0};saveProgress(n);stopVoice();sfx('card');
+  var g=G;g.dayTag=CHAPTERS[n].wd;g.stampT=0;g.chapter=n;g.moment=null;if(!g.day0||g.day0.label!==CHAPTERS[n].day)newDay();g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
+  g.morko.s=1;g.morko.off=-70;g.chap={day:CHAPTERS[n].card||CHAPTERS[n].day,title:CHAPTERS[n].title,t:0};saveProgress(n);stopVoice();sfx('card');
  },function(){return n===5?partCard(3):[{wait:2.8}];},function(){G.chap=null;G.fade=1;}];}
 // Ekskyysmi's tell: whenever it says it is fine and is not, it shrinks a little, then grows back.
 function fib(){var M=G.morko;M.s=Math.max(0.3,M.s-0.07);}
@@ -65,13 +65,15 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['S','A thumb.',{look:'stunned'}],
   aside(['S','ONE thumb. She has two.']),
   calm,{wait:0.9}
- ],[
-  scene({set:'home',clock:3*3600+7*60}),function(){G.tiredForce=1;},   // 03:07: eye bags, muttering
+ ]);}
+
+function wedMorning(){return [
+  mugOn(2),function(){G.chapMusic='tuesday';music(G.chapMusic);G.tiredForce=1;},
   ['N','03:07.'],
   ['S','Are you awake?'],
   ['H','I am now. It’s three in the morning.'],
   ['S','Out there, yes. In here it’s about Thursday. I did the afternoon twice.'],
-  ['S','Good. I’ve prepared tomorrow. Three scenarios.',{look:'pleased'}],
+  ['S','Good. I’ve prepared your nine o’clock. Three scenarios.',{look:'pleased'}],
   {choice:[
     {t:'Scenario one: “We need to talk about your attitude.”',m:'worst',then:[['S','You say: “I don’t have an attitude.” Which is an attitude.'],['H','I’ll just listen.'],['S','Listening is suspicious.']]},
     {t:'Scenario two: she isn’t angry. She’s disappointed.',m:'worst',then:[['H','Oh no.'],['S','I know. I shouldn’t have said it out loud. Now it’s in the room.']]},
@@ -93,7 +95,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['H','There’s only one watch. It’s you. Every night.'],
   ['S','And yet nobody has ever been rejected in their sleep. You’re welcome.',{look:'pleased'}],
   scene({set:'office',clock:9*3600,cowR:1,s:1.3,mood:'alert'}),set({sweat:1}),
-  addTic('The next morning, 9:00. The quick chat.',230,62,{life:3.4,size:19}),{wait:1.6},
+  addTic('9:00. The quick chat.',190,62,{life:3.4,size:19}),{wait:1.6},
   refill(1,'some sleep'),
   ['H','This label has been scratching my neck since eight.',{quiet:1}],drain(1,'the label'),
   ['S','One crisis at a time. …Two crises.'],
@@ -136,7 +138,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['H','That’s the trouble with your filing system.'],
   ['S','It’s not a filing system. It’s a smoke alarm. It doesn’t have a setting for “nice”.'],
   function(){G.pop={text:'Filed: 1 note. Misplaced: 3 compliments.',t:0};},keep('compliments'),
-  refill(1,'three compliments, found'),   // praise lands late, when somebody finds it (21.11.: Tuesday ends at 2, so Wednesday 10:20 follows on)
+  refill(1,'three compliments, found'),
   {wait:1.6},
   ['S','…Look at that stapler.',{look:'up'}],
   ['H','What about it?'],
@@ -145,7 +147,7 @@ function scTue(){return begin(2,{plan:'Get through Tuesday.',clock:16*3600+55*60
   ['H','It’s the office stapler. It’s on everyone’s team.'],
   ['S','…Anyway. Doom.'],
   {wait:0.6}
- ]);}
+ ];}
 
 function yesMenu(s,extra,extraKey){return {choice:[
   {t:'Say yes.',m:'please',f:yes,then:[['H','Sure.'],['S',s[0]]]},
@@ -153,9 +155,13 @@ function yesMenu(s,extra,extraKey){return {choice:[
   {t:'Say yes, and offer something extra.',m:'please',filed:1,f:function(){yes();yes();if(extraKey)G[extraKey]=true;},then:[['H',extra],['S',s[2]]]},
   {t:'No.',off:true}
 ]};}
-function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600+20*60}).concat([
-  // Wednesday 10:20 is an hour after Tuesday's 9:12 meeting: the mug carries on from there (2), gets one good hour,
-  // then the open office takes it back. Every yes costs a sip, down to the floor (2); the bill arrives on Thursday.
+function scWed(){
+  // Older saves already chose a response to Riitta before reaching this chapter.
+  var reviewed=!!G.fb,work={plan:'Do your own work for once.',clock:10*3600+20*60};
+  var steps=begin(3,reviewed?work:{set:'home',plan:'Get some sleep.',clock:3*3600+7*60});
+  if(!reviewed)steps=steps.concat(wedMorning(),[function(){G.chapMusic=null;},scene(work),function(){G.planText=work.plan;}]);
+  return steps.concat([
+  // The coffee break after the review ends at two sips. From here the floor is two until Thursday.
   mugOn(2,2),
   ['N','An hour of your own work. Headphones on. Nobody needed anything.'],refill(1,'an hour, headphones on'),
   // VISIO V4: the senses take from the mug too. An open office, a speakerphone, since nine.
@@ -181,7 +187,25 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   ['H','I’d love to.'],yes,shot('wide'),
   set({aFace:1,mood:'calm',s:1.1}),
   ['B','Brilliant. Could you bring the snacks? And maybe drive?'],
-  yesMenu(['Snacks AND driving. We are the infrastructure now.','Happy to. HAPPY to. We said it twice in case he missed it.','You offered to host the afterparty of a board game night. There is no afterparty.'],'Sure — I could host an afterparty too?','afterparty'),
+  {choice:[
+    {t:'Say yes.',m:'please',f:yes,then:[
+      ['H','Sure. I can pick you up.'],
+      ['S','Snacks AND driving. We are the infrastructure now.']
+    ]},
+    {t:'Offer the snacks. Leave the lift out of it.',m:'please',then:[
+      aside(['S','“I can bring the crisps.” Stop there.',{quiet:1}]),
+      ['H','I can bring the crisps.'],
+      {wait:1.1},
+      ['H','I’m driving past yours anyway.'],
+      ['B','Oh! Could you pick me up?'],
+      ['H','…Yeah.'],yes
+    ]},
+    {t:'Say yes, and offer something extra.',m:'please',filed:1,f:function(){yes();yes();G.afterparty=true;},then:[
+      ['H','Sure. I’ll pick you up. I could host an afterparty too?'],
+      ['S','You offered to host the afterparty of a board game night. There is no afterparty.']
+    ]},
+    {t:'No.',off:true}
+  ]},
   ['S','Look at that. Everyone likes us.',{look:'pleased'}],
   ['H','My face hurts.'],
   ['S','That’s the smile. It’s load-bearing.'],
@@ -207,7 +231,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   shot('push',{who:'H',z:1.28}),['S','I only have the one move, you know. Keep everyone pleased. It works.'],
   ['H','It works on everyone except me.'],
   {wait:1.2},
-  function(){G.clock=12*60;G.dayTag='THURSDAY';G.stampT=0;},   // past midnight: the stamp says so too
+  function(){G.clock=12*60;G.dayTag='THURSDAY';newDay(CHAPTERS[4].day);G.stampT=0;},   // past midnight: the stamp says so too
   ['N','00:12. The slides are done. The email is written: “Slides for Eero’s talk. He hates presenting, lol. Don’t tell him I said.”'],
   set({mood:'alert',s:1.35}),shot('wide',{rate:9}),
   ['S','Stop. That is going to ALL STAFF.',{loud:1}],
@@ -230,7 +254,7 @@ function scWed(){return begin(3,{plan:'Do your own work for once.',clock:10*3600
   function(){var x=G.human.x;G.tics.push(tic('z',x-70,WALLY-150,{life:2.4}));G.tics.push(tic('z',x-58,WALLY-172,{at:0.8,life:2.4}));},
   function(){G.clock=19*60;},['N','00:19. Ekskyysmi has dozed off.'],
   {wait:0.8},
-  ['P','Sanna: “Still up?? Game night tomorrow! You don’t have to bring anything.”'],
+  ['P','Sanna: “Still up?? Game night at mine! You don’t have to bring anything.”'],
   ['P','You: “Fine.”'],drain(1,'“Fine.”'),function(){G.fineSent=true;},
   {wait:1.4},
   ['P','Sanna: “Oh. Okay!”'],
@@ -250,7 +274,7 @@ var SEEN={
 };
 function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock:17*3600+30*60,snacks:1}).concat([
   mugOn(3,0),hat('party'),countBags,{wait:2.8},
-  ['S','Snacks: eleven bags. Car: fuelled. Us: early. Hat: festive. I have no notes.',{look:'pleased'}],
+  ['S','Snacks: eleven bags. Car: fuelled. Eero: pick up on the way. Hat: festive. I have no notes.',{look:'pleased'}],
   ['P','You: “What time tonight? I’ve got the snacks.”'],
   ['P','Seen 17:31.'],
   {wait:1.0},typingDots(2.4),

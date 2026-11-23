@@ -17,7 +17,8 @@ function bubble(x,y,text,o){
   w+=26;var h=lines.length*lh+16,pad=18/(VIEW.z||1),bx=clamp(x-w/2,Math.max(8,VIEW.l+pad),Math.min(W-8,VIEW.r-pad)-w),topPad=((COMPACT?46:10)+(G.boss?50:0))/(VIEW.z||1),by=o.top!=null?o.top:Math.max(VIEW.t+topPad,y-h-12);
   var fill=o.dark?'#14111d':'#fffdf6',ink=o.dark?'#f6f1e4':'#2b2733',hot=o.dark?'#ebbd79':'#2b2733';
   ctx.fillStyle=fill;ctx.strokeStyle=ink;ctx.lineWidth=k>1?3:2;rr(bx,by,w,h,10);ctx.fill();ctx.stroke();
-  if(!o.noTail){var tx=clamp(o.tailX!=null?o.tailX:x,bx+16,bx+w-16);   // the box may move aside; the tail points at whoever speaksctx.beginPath();ctx.moveTo(tx-8,by+h-1);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h-1);ctx.closePath();ctx.fill();
+  if(!o.noTail){var tx=clamp(o.tailX!=null?o.tailX:x,bx+16,bx+w-16);
+    ctx.beginPath();ctx.moveTo(tx-8,by+h-1);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h-1);ctx.closePath();ctx.fill();
     ctx.beginPath();ctx.moveTo(tx-8,by+h);ctx.lineTo(tx,by+h+10);ctx.lineTo(tx+8,by+h);ctx.stroke();}
   var left=o.reveal==null?1e9:o.reveal;
   for(i=0;i<lines.length&&left>0;i++){var cx=bx+13,cy=by+8+lh/2+i*lh;
@@ -177,6 +178,12 @@ function person(x,o){
     ctx.fillStyle=skin;circ(-f*5,7,3.8);ctx.fill();ctx.restore();
     if(o.buzz>0.15&&!RM){ctx.strokeStyle='rgba(20,17,29,.55)';ctx.lineWidth=2;ctx.lineCap='round';for(var bz=0;bz<2;bz++){var br=17+bz*6;ctx.beginPath();ctx.arc(phx,phy,br,-0.5,0.5);ctx.stroke();ctx.beginPath();ctx.arc(phx,phy,br,Math.PI-0.5,Math.PI+0.5);ctx.stroke();}}
     ctx.strokeStyle=o.body;ctx.lineWidth=9;ctx.lineCap='round';}
+  else if(o.keys){
+    var kx=x+f*31,ky=top+43;
+    bentSleeve(x+f*18,top+16,x+f*24,top+48,kx,ky);
+    ctx.strokeStyle='#d8c397';ctx.lineWidth=2.4;circ(kx+f*3,ky+4,4);ctx.stroke();
+    line(kx+f*4,ky+8,kx+f*10,ky+17);line(kx+f*9,ky+15,kx+f*13,ky+12);
+    ctx.fillStyle=skin;circ(kx,ky,4);ctx.fill();}
   else if(o.cup){
     var sip=o.sip||0,cxp=x+f*(32-19*sip),restY=top+36;
     var rimAtLip=hy+14+(o.down?4:0),cyp=restY+(rimAtLip+7-restY)*sip+(o.shake?Math.sin(G.time*38)*1.5:0);
@@ -231,7 +238,7 @@ function geom(){
 }
 function handTargets(q){
   var M=G.morko,Hm=G.human,hy=FEETY-150;
-  var L={x:q.bx-q.shW*0.9,y:q.shY},R={x:q.bx+q.shW*0.9,y:q.shY},a,b,front=false;
+  var L={x:q.bx-q.shW*0.9,y:q.shY},R={x:q.bx+q.shW*0.9,y:q.shY},a,b,front=false,shoulderHands=0;
   var pose=M.st==='frozen'?'grow':M.st==='hide'?'hold':M.st==='pokka'?null:M.pose;
   if(stampToolVisible())pose='stamp';
   switch(pose){
@@ -240,12 +247,12 @@ function handTargets(q){
     case 'cover':a={x:Hm.x-7,y:hy+2};b={x:Hm.x+11,y:hy+2};front=true;break;
     case 'pull':a={x:Hm.x+24,y:FEETY-96};b={x:Hm.x+22,y:FEETY-72};front=true;break;
     case 'hold':a={x:Hm.x-24,y:FEETY-112};b={x:Hm.x+24,y:FEETY-112};front=true;break;
-    case 'shoulder':a={x:L.x-4,y:q.shY+80*q.s};b={x:Hm.x-16,y:FEETY-114};front=true;break;   // one hand on the near shoulder, never across the head
+    case 'shoulder':
+    case 'comfort':a={x:L.x-4,y:q.shY+80*q.s};b={x:Hm.x-18,y:FEETY-113};shoulderHands=2;break;
     case 'sit':a={x:q.baseX-96*q.s,y:q.by-46*q.s};b={x:q.baseX-70*q.s,y:q.by-30*q.s};break;   // arms resting on the knee
-    case 'hug':a={x:Hm.x-27,y:FEETY-100};b={x:Hm.x+27,y:FEETY-100};front=true;break;   // from behind, around the shoulders (keep the shadow centred: off 0)
+    case 'hug':a={x:Hm.x-22,y:FEETY-109};b={x:Hm.x+22,y:FEETY-109};shoulderHands=3;break;
     case 'five':var fv=G.five||{dx:0,dy:0},palm=Hm.reach||{x:Hm.x-34,y:FEETY-196};
       a={x:L.x-4,y:q.shY+70*q.s};b={x:palm.x+fv.dx,y:palm.y+fv.dy};front=true;break;
-    case 'comfort':a={x:L.x-6,y:q.shY+85*q.s};b={x:Hm.x+25,y:FEETY-106};front=true;break;
     case 'lens':if(G.lens){var lh=lensHandle();a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b={x:lh.x2,y:lh.y2};front=true;break;}a={x:L.x,y:q.shY+60};b={x:R.x,y:q.shY+60};break;
     case 'swat':if(G.fight&&G.fight.swat){a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b={x:G.fight.swat.x,y:G.fight.swat.y};front=true;break;}a={x:L.x,y:q.shY+60};b={x:R.x,y:q.shY+60};break;
     case 'drink':a={x:L.x-q.shW*0.45,y:q.shY+62*q.s};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};break;
@@ -261,7 +268,7 @@ function handTargets(q){
     case 'selfeyes':a={x:q.bx-q.hdR*0.42,y:q.hdY-q.hdR*0.05};b={x:q.bx+q.hdR*0.42,y:q.hdY-q.hdR*0.05};break;
     default:a={x:L.x-8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};b={x:R.x+8*q.s,y:Math.min(WALLY-8,q.shY+95*q.s)};
   }
-  return{a:a,b:b,front:front,L:L,R:R};
+  return{a:a,b:b,front:front,shoulderHands:shoulderHands,L:L,R:R};
 }
 // The red journal (0.96): held at the chest, open; the quill moves along a line, then rests; closed with a snap.
 function journalAt(q){var k=Math.max(0.8,Math.sqrt(q.s)),x=q.bx-4*k,y=q.shY+60*k,j=G.journal||{},t=G.time-(j.at||G.time),shut=j.shutAt!=null;
@@ -315,6 +322,15 @@ function morkoArms(q,ht){
     ctx.beginPath();ctx.moveTo(s0.x,s0.y);ctx.quadraticCurveTo((s0.x+h.x)/2+(i?14:-14)*q.s,(s0.y+h.y)/2+10*q.s,h.x,h.y);ctx.stroke();
     circ(h.x,h.y,lw*0.78);ctx.fill();}
   if(M.pose==='puppet')puppetBird((M.h[0].x+M.h[1].x)/2,(M.h[0].y+M.h[1].y)/2,q.s);
+}
+function drawShoulderHands(q,ht){
+  var Hm=G.human,top=FEETY-118-(Hm.flinch||0)*5,rad=11*Math.sqrt(q.s)*0.78;
+  ctx.save();
+  // The arms stay behind HUMAN. Only the part of each palm touching a shoulder comes forward.
+  ctx.beginPath();ctx.rect(Hm.x-29,top-1,18,24);ctx.rect(Hm.x+11,top-1,18,24);ctx.clip();
+  ctx.fillStyle=mcol();
+  for(var i=0;i<2;i++)if(ht.shoulderHands&(1<<i)){var hand=G.morko.h[i];circ(hand.x,hand.y,rad);ctx.fill();}
+  ctx.restore();
 }
 // What a shadow does when there is nothing to prevent: a bird, made of two hands.
 function puppetBird(x,y,s){
@@ -421,6 +437,7 @@ function drawPair(humanOpts){
   drawGaze();
   homeLamp();   // shadow on the wall, then the lamp, then the human
   drawHuman(humanOpts);
+  if(up&&ht.shoulderHands&&!G.human.gone){ctx.save();ctx.globalAlpha*=fa;drawShoulderHands(q,ht);ctx.restore();}
   if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to. 0.85: after the human: its feet are nearer than theirs, so anyone walking past goes behind it, not over it
   if(up&&ht.front){ctx.save();ctx.globalAlpha*=fa;morkoArms(q,ht);ctx.restore();}
   if(up)drawStamp();
@@ -446,7 +463,9 @@ function drawLines(){
     else if(l.who==='B')bubble(g.bx2,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='P')bubble(g.w||!g.human.gone?g.human.x+210:170,g.w?330:340,l.text,{noTail:true,maxW:mw,reveal:rv});
     else if(l.who==='R')bubble(g.rx,FEETY-172,l.text,{maxW:mw,reveal:rv});
-    else if(l.who==='T'&&g.bar)bubble(g.bar.tx-196,0,l.text,{noTail:true,maxW:mw||240,reveal:rv,top:BARY+26});
+    else if(l.who==='T'&&g.bar){
+      var panelEdge=VIEW.t+SCENE_BOTTOM/VIEW.z;
+      bubble(g.bar.tx-45,Math.min(BARY-15,panelEdge-14/VIEW.z),l.text,{maxW:mw||240,reveal:rv,tailX:g.bar.tx});}
     else if(l.who==='X'&&g.bar)bubble(g.bar.sx,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(l.who==='L')bubble(760,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(g.night&&NIGHT_EYES[l.who])bubble(NIGHT_EYES[l.who].x,NIGHT_EYES[l.who].y-16,l.text,{dark:true,maxW:mw||250,reveal:rv});   // in the dark, a tail points at the eyes that spoke
@@ -505,8 +524,18 @@ function drawWalk(){
   drawCars(cam);
   var hx=HOMEX+60-cam;
   if(hx<W+200){ctx.fillStyle='#57405a';ctx.fillRect(hx-130,90,360,WALLY-90);
-    ctx.fillStyle='#f3d27a';rr(hx+110,200,70,70,4);ctx.fill();
-    ctx.fillStyle='#7a4f3c';rr(hx-34,WALLY-158,72,158,6);ctx.fill();ctx.fillStyle='#e2b04a';circ(hx+26,WALLY-78,4);ctx.fill();}
+    ctx.fillStyle='#423747';ctx.fillRect(hx-134,85,368,9);
+    ctx.fillStyle='#433946';ctx.fillRect(hx+105,195,80,81);
+    ctx.fillStyle='#f3d27a';ctx.fillRect(hx+110,200,70,70);
+    ctx.fillStyle='#ac7968';ctx.beginPath();ctx.moveTo(hx+110,200);ctx.lineTo(hx+152,200);ctx.quadraticCurveTo(hx+147,222,hx+132,237);ctx.lineTo(hx+137,270);ctx.lineTo(hx+110,270);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#77606a';ctx.fillRect(hx+101,271,88,5);
+    ctx.fillStyle='rgba(246,206,130,.13)';ctx.beginPath();ctx.moveTo(hx+138,WALLY);ctx.lineTo(hx+180,WALLY);ctx.lineTo(hx+133,WALLY+38);ctx.lineTo(hx+75,WALLY+38);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#433743';ctx.fillRect(hx-39,WALLY-164,82,164);
+    ctx.fillStyle='#7a4f3c';rr(hx-34,WALLY-158,72,158,6);ctx.fill();ctx.fillStyle='#e2b04a';circ(hx+26,WALLY-78,4);ctx.fill();
+    ctx.fillStyle='#635562';ctx.fillRect(hx-48,WALLY-2,101,6);
+    ctx.fillStyle='#3d3643';ctx.fillRect(hx-48,WALLY+4,101,4);
+    ctx.fillStyle='#806354';ctx.fillRect(hx-25,WALLY-3,59,4);
+    ctx.fillStyle='#ae8b70';ctx.beginPath();ctx.moveTo(hx+24,WALLY-3);ctx.lineTo(hx+33,WALLY-6);ctx.lineTo(hx+34,WALLY);ctx.closePath();ctx.fill();}
   for(i=0;i<LAMPS.length;i++){
     sx=LAMPS[i]-cam;if(sx<-320||sx>W+320)continue;
     var home=i===LAMPS.length-1,ly=home?190:150,lx=home?sx:sx+26;
@@ -515,7 +544,7 @@ function drawWalk(){
     if(!home){ctx.strokeStyle='#1b1d2a';ctx.lineWidth=6;ctx.lineCap='round';line(sx,WALLY,sx,150);line(sx,150,sx+26,150);}
     ctx.fillStyle='#ffe9a8';circ(lx,ly+4,home?7:9);ctx.fill();
   }
-  drawPair({walk:g.walking});
+  drawPair({walk:g.walking,keys:!g.epi&&w.xT===HOMEX&&w.x>=HOMEX-45});
   drawTics(cam);
 }
 function hhmm(s){var h=Math.floor(s/3600)%24,m=Math.floor(s/60)%60;return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;}
@@ -582,6 +611,23 @@ function pausedNote(){
   ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#ebbd79';ctx.fillText(a?a[1]:tr('Take your time. I’ll just be here, thinking about it.'),W/2,H/2-8);
   ctx.fillStyle='#bfcfbd';ctx.fillText(tr('Tap the scene to carry on.'),W/2,H/2+30);
 }
+var titleEdgeLeft=document.getElementById('title-edge-left'),titleEdgeRight=document.getElementById('title-edge-right');
+function drawTitleEdges(){
+  if(!COMPACT||ov.dataset.kind!=='title'||!ov.classList.contains('on')||cv.clientWidth>=window.innerWidth)return;
+  // Extend the current room colours and floor lines at the exact edges of the camera.
+  var narrow=window.innerWidth<=720;
+  var edges=[titleEdgeLeft,titleEdgeRight];
+  for(var i=0;i<edges.length;i++){
+    var edge=edges[i];
+    if(edge.height!==cv.height)edge.height=cv.height;
+    var edgeCtx=edge.getContext('2d');
+    edgeCtx.drawImage(cv,i?cv.width-1:0,0,1,cv.height,0,0,1,cv.height);
+    if(!i||narrow){
+      edgeCtx.fillStyle=i?'#182a2d20':narrow?'#182a2df9':'#182a2df5';
+      edgeCtx.fillRect(0,0,1,cv.height);
+    }
+  }
+}
 function draw(){
   var g=G;
   ctx.setTransform(SC,0,0,SC,0,0);VIEW.l=0;VIEW.r=W;VIEW.t=0;VIEW.z=1;   // unzoomed until applyCamera says otherwise
@@ -591,7 +637,7 @@ function draw(){
   if(g.out){drawOutside();return;}
   if(g.rep){drawReplay();return;}
   if(g.zoom){drawZoom();return;}
-  if(g.jolt&&joltPhase()){drawXray();return;}
+  if((g.jolt&&joltPhase())||(g.epi&&g.epi.o&&g.epi.o.xray)){drawXray();return;}
   ctx.save();applyCamera();
   if(g.w){drawWalk();drawLines();}
   else{
@@ -644,4 +690,5 @@ function draw(){
   if(g.band&&!COMPACT&&!textBelow&&lineInBubble({who:'N'}))band(g.band,H-18);   // 0.85: never in the picture and in the panel at once
   if(g.chap&&g.chap.moment)momentCard();
   if(paused)pausedNote();
+  drawTitleEdges();
 }

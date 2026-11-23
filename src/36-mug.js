@@ -13,7 +13,7 @@ function mugEmpty(){return !!(G.mug&&G.mug.v<=1);}
 function drain(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var from=m.shown,before=m.v;m.v=Math.max(Math.min(m.v,m.floor==null?0:m.floor),m.v-n);   // a day can scrape the bottom, only Thursday goes through it
   // the label counts what the mug really lost (not the drawn level, which may still be filling): at a day's floor the cost is written down, not taken. Wednesday's yeses are paid on Thursday.
   var lost=before-m.v;m.shown=m.v;m.ghost={from:Math.max(from,m.v),to:m.v,t:0};m.slosh=1;m.seen=0;m.last={text:lost>0?tr(label):tr(label)+tr(' (on the tab)'),t:0,minus:true,n:lost};sfx('sipOut');G.sips=(G.sips||0)+lost;if(lost>0&&(!G.bigSip||lost>G.bigSip.n))G.bigSip={t:label,n:lost};};}   // for the receipt's damage report
-function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var before=m.v;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:tr(label),t:0,minus:false,n:m.v-before};sfx('pourIn');};}
+function refill(n,label){return function(){var m=G.mug;if(!m||m.broken)return;var before=m.v;m.v=Math.min(MUGMAX,m.v+n);m.slosh=0.6;m.seen=0;m.last={text:tr(label),t:0,minus:false,n:m.v-before};if(m.v>before)sfx('pourIn');};}
 // The meltdown: the last drain on an empty mug breaks it. Shards fly; the mug stays broken until it is glued.
 function mugBreak(label){return function(){var m=G.mug;if(!m)return;m.v=0;m.shown=0;m.broken=true;m.seen=0;m.ghost=null;m.last={text:label||'',t:0,minus:true};
   m.shards=[];for(var i=0;i<11;i++)m.shards.push({x:0,y:0,vx:(i%2?1:-1)*(60+((i*53)%160)),vy:-160-((i*71)%170),r:((i*37)%10)/10*6,va:((i%3)-1)*9,t:0});
@@ -30,7 +30,7 @@ function stepMug(dt){var m=G.mug;if(!m)return;m.t+=dt;m.seen+=dt;if(m.gleam!=nul
 
 // The mug sits under the HUD pills, top right. A real mug: handle, steam while there is something to steam.
 // Joonas 21.11.: Ekskyysmi gets tired. A night that says so gives it eye bags, heavy lids and a mutter
-// (0.81, Joonas: "a bit too often": no longer on every low mug in daylight, only the three nights: Tuesday 03:07, after the replays in Rewind, Wednesday 23:15):
+// The bags only show on three nights: after the replays in Rewind, Wednesday 03:07, and Wednesday 23:15.
 // the week, looping, half a word at a time. Size is still feeling; this is only the face.
 var MUMBLES={1:['…oh, hi…','…with a full stop…','…was it the comma…','…mm.'],2:['…quick chat…','…nine o’clock…','…shorter…','…mm.'],
   3:['…could you just…','…yes…','…yes. yes…','…slides…'],4:['…seen…','…17:31…','…eleven bags…','…mm.'],5:['…oh, hi. again…','…mm.']};
@@ -52,7 +52,8 @@ function drawCatNote(){var g=G,n=g.note;if(!n||g.set!=='home'||n.a<0.02)return;
   circ(9,-4,4.6);ctx.stroke();                                                            // head
   ctx.beginPath();ctx.moveTo(6,-8);ctx.lineTo(6.5,-12);ctx.lineTo(9,-8.6);ctx.moveTo(10,-8.6);ctx.lineTo(12.5,-12);ctx.lineTo(12.6,-7.4);ctx.stroke();   // ears
   ctx.beginPath();ctx.moveTo(-13,2);ctx.quadraticCurveTo(-19,-4,-15,-10);ctx.stroke();      // tail
-  var k=n.legs||4;for(var i=0;i<k;i++){var lx=-10+i*(17/(k-1));line(lx,7.5,lx-0.6,14);}     // legs: four, then five
+  for(var i=0;i<4;i++){var lx=-10+i*17/3;line(lx,7.5,lx-0.6,14);}
+  if(n.legs===5){ctx.beginPath();ctx.moveTo(6,5);ctx.quadraticCurveTo(13,8,16,0);ctx.lineTo(17,-2);ctx.stroke();}
   ctx.restore();}
 function mugGlint(cx,cy,r){if(r<0.5)return;ctx.beginPath();ctx.moveTo(cx,cy-r);ctx.quadraticCurveTo(cx,cy,cx+r,cy);ctx.quadraticCurveTo(cx,cy,cx,cy+r);ctx.quadraticCurveTo(cx,cy,cx-r,cy);ctx.quadraticCurveTo(cx,cy,cx,cy-r);ctx.fill();}
 function drawMug(){

@@ -9,11 +9,11 @@ var STAY=1.4;                 // after the job changes: still more than one, but
 var TRIES=0;                  // Mondays the player has replayed. Ekskyysmi notices.
 var LIVED={hit:55,replay:25,archive:40,shadowHit:90,qteMissed:70,tonight:24};   // minutes
 function dayLabel(){var g=G;if(g.lab)return 'SCENARIO LAB';if(g.chapter&&CHAPTERS[g.chapter])return CHAPTERS[g.chapter].day;return 'A DAY';}
-function newDay(){
+function newDay(label){
   var g=G;
   // a day that has barely started (the intro re-basing the clock) is simply replaced, not printed
   if(g.day0!=null){if(g.day0.hits||g.day0.ledger.length)closeDay();else g.day0=null;}
-  g.day0={label:dayLabel(),start:g.clock,outside:0,extra:0,ledger:[],hits:0,trigAt:null,stayAt:null};
+  g.day0={label:label||dayLabel(),start:g.clock,outside:0,extra:0,ledger:[],hits:0,trigAt:null,stayAt:null};
   g.mult=1;g.prevClock=g.clock;g.livedShown=0;
 }
 function addLived(label,mins){
@@ -82,7 +82,7 @@ function runRows(run){
   var rows=[],cal=0,livedDays=0;
   run.forEach(function(d){if(d.label==='SCENARIO LAB')return;cal++;livedDays+=d.ratio;rows.push([d.label.toLowerCase().replace(/\. not necessarily that one\./,''),'×'+d.ratio.toFixed(1)]);});
   var extra=storyRows();if(extra.length)rows.push('-');rows=rows.concat(extra);
-  rows.push('-',['DAYS ON THE CALENDAR',String(cal)],['DAYS LIVED',livedDays.toFixed(1),'big']);
+  rows.push('-',['WEEKDAYS FILED',String(cal)],['DAYS LIVED',livedDays.toFixed(1),'big']);
   return rows;
 }
 function receiptHTML(title,rows,foot){
@@ -215,7 +215,7 @@ function drawXray(){
   if(g.cowB)skeleton(g.bx2,true,false);if(g.cowA)skeleton(g.ax,true,false);
   ctx.textAlign='left';ctx.textBaseline='middle';
   ctx.fillStyle='rgba(3,10,18,.8)';rr(26,24,420,62,6);ctx.fill();
-  ctx.fillStyle='#ff6a55';ctx.font='800 15px system-ui,sans-serif';ctx.fillText(tr('● X-RAY · CHEST · ')+tr(g.jolt.tag),40,44);
+  ctx.fillStyle='#ff6a55';ctx.font='800 15px system-ui,sans-serif';ctx.fillText(tr('● X-RAY · CHEST · ')+tr(g.jolt?g.jolt.tag:'ONE SMALL THING'),40,44);
   ctx.fillStyle='#bfe3ff';ctx.font='600 12px system-ui,sans-serif';ctx.fillText(tr('SHADOW: NO BONES DETECTED. FILING CABINET DETECTED.'),40,68);
   if(g.cowB||g.cowA){ctx.textAlign='center';ctx.fillStyle='rgba(191,227,255,.7)';ctx.font='700 11px system-ui,sans-serif';ctx.fillText(tr('HEART RATE: NORMAL'),g.cowB?g.bx2:g.ax,FEETY-186);}
 }

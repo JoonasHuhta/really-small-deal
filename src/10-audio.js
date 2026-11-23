@@ -111,7 +111,10 @@ function sfx(k){if(G&&G.epi)return;   // the epilogue is the song alone: no effe
   else if(k==='car'){tone(70,t,1.6,'sawtooth',0.02,140);tone(140,t+0.7,0.9,'sine',0.03,60);}
   else if(k==='slam'){duckMusic();tone(70,t,0.38,'sine',0.24,36);noise(t,0.26,0.4,'lowpass',1500,0.7);tone(190,t,0.08,'square',0.035,90);}   // a red card hits the wall
   else if(k==='sipOut'){tone(640,t,0.07,'triangle',0.07,470);noise(t+0.02,0.2,0.14,'bandpass',850,2.2);tone(96,t,0.14,'sine',0.1,58);}   // the mug drops a level: a clunk and a slosh
-  else if(k==='pourIn'){for(var pi=0;pi<5;pi++)tone(300+pi*68,t+pi*0.065,0.05,'sine',0.045,350+pi*70);noise(t,0.4,0.05,'bandpass',620,1.4);}   // the mug fills: a small gurgle upwards
+  else if(k==='pourIn'){   // Two light taps on porcelain, C5 to E5; the upper note rings a little longer.
+    tone(523.25,t,0.15,'triangle',0.085);
+    tone(659.25,t+0.10,0.36,'sine',0.10);
+    tone(1710,t+0.10,0.09,'sine',0.022);}
   else if(k==='crack'){noise(t,0.09,0.32,'highpass',3200,0.7);tone(2300,t,0.05,'square',0.03,900);}
   else if(k==='shatter'){duckMusic();tone(62,t,0.55,'sine',0.32,30);noise(t,0.8,0.5,'bandpass',2600,0.8);noise(t+0.05,0.4,0.25,'lowpass',700,0.8);
     for(var si=0;si<10;si++)tone(2300+((si*577)%1900),t+0.03+si*0.04,0.09,'triangle',0.035,1700);}

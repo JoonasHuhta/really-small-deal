@@ -124,7 +124,7 @@ function labSometime(){return labScene({set:'office',title:'Sometime.',plan:'Lea
  ]);}
 
 /* ---------- Lab: An ordinary evening ---------- */
-function labEvening(){return labScene({set:'home',title:'An ordinary evening',plan:'Do the dishes.',clock:19*3600+5*60}).concat([
+function labEvening(){return labScene({set:'home',title:'An ordinary evening',plan:'Do the dishes.',clock:17*3600+5*60}).concat([
   function(){var g=G;g.kitchen=true;g.human.x=g.human.xT=440;g.morko.off=-70;},
   addTic('…14, 15, 16.',440,FEETY-250,{life:1.8}),addTic('Still sixteen stairs.',440,FEETY-250,{at:1.9,life:2.2}),
   {wait:4.2},

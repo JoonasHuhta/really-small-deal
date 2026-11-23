@@ -44,7 +44,7 @@ function scIntro(){return [
   set({clr:1,s:1,mood:'calm'}),
   set({cowB:1,bx:880}),{wait:1.7},
   ['B','Morning! You’re quiet today.'],
-  ['H','Morning.'],
+  ['H','Hi, Eero.'],
   ['B','You know what you need? To push yourself out of your comfort zone more!'],
   hit(0.55,'B'),drain(1,'comfort-zone advice'),{wait:1.1},
   ['S','…Out of the WHAT?'],
@@ -91,7 +91,7 @@ function scBite(){return [
  ]);}
 function scSanna(){return [
   set({clr:1,cowA:1,ax:780,cowB:1,bx:880,hud:1,plan:1,mood:'alert',s:1.2}),
-  ['S','Here she comes. Remember: casual. Like someone who has lunch all the time.'],
+  ['S','Here comes Sanna. Remember: casual. Like someone who has lunch all the time.'],
   {wait:0.9},set({aFace:-1,clr:1}),look,
   ['A','oh, hi.'],
   {qte:true},
@@ -244,7 +244,7 @@ function scWalk(){
     ['N','Tonight: a cat. Four legs so far.'],
     ['S','We don’t have a cat.',{look:'squint'}],
     ['H','That’s why I draw them.'],
-    ['H','It needs one more leg. And it goes on the wall.'],
+    ['H','Four for standing. I want one for waving. Then it goes on the wall.'],
     ['S','Cats have four. Five gets laughed at.'],
     ['S','It goes in the drawer. We have a file on drawings.',{quiet:1}],
     archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.']]),

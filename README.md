@@ -14,6 +14,32 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+0.99.11 – Leveällä puhelimella aloitusruudun seinä, pöytätaso ja lattia jatkuvat näytön reunoille.
+
+0.99.10 – Vaakasuuntaisessa puhelinnäkymässä asetukset avataan päävalikon Settings-linkistä. Androidin paluuele keskeyttää pelin, ja pelikuvaa napauttamalla voi jatkaa.
+
+0.99.9 – Koko kuitti näkyy 26 tahdin ajan. Alkumontaasin 24 tahtia, neljän hatun lähikuva ja Ekskyysmin arkistokaappiröntgen korvaavat ylävitoset.
+
+0.99.8 – Epilogin kuittirulla kestää 18 tahtia. Hissin tilalla ovat ninjapanta, nauhan sarvet, suurennuslasi, sateenvarjo ja piirustus. Huti ja yhteinen nauru päättävät kertosäkeen.
+
+0.99.7 – #24 HUMAN kurottaa ohi menneeseen ylävitoseen. Testilinkki `?preview=epilogue` avaa katselupainikkeen.
+
+0.99.6 – Torstain kuitti alkaa puolenyön jälkeen. Kooste laskee viisi arkisin nimettyä lukua. Epilogin lomakkeen jälkeen hissikuva paljastaa Eeron varjon, ja viimeinen ylävitonen menee ohi.
+
+**0.99.5 – Päivät järjestykseen.** Riitan viesti, *Enhance.* ja *Rewind.* vievät tiistain iltaan. Keskiviikon kortin jälkeen seuraavat yö kello 03.07, Riitan aamupalaveri ja työpäivä. Torstain välihetket edeltävät peli-iltaa. Eero ja Sanna nimetään heti maanantaina, ja Ekskyysmin olkapääeleessä käsivarsi kulkee HUMANin takaa.
+
+**0.99.4 – Riitan palaute.** SHORTER asettuu paikoilleen alkusysäyksen jälkeen ja jää näkyviin keskustelun ajaksi. Epilogin kuitissa sama sana palautuu Riitan toimitusehdotuksena.
+
+**0.99.3 – Vilkuttava kissa.** HUMANin viidennellä tassulla on oma tehtävä. Ryhmächatissa Ekskyysmi voi yrittää perustella sen yleisölle.
+
+**0.99.2 – Sipsit ja kyyti.** Keskiviikkona Ekskyysmi voi ehdottaa pelkkiä sipsejä. HUMAN täyttää tauon kertomalla ajavansa Eeron kodin ohi, ja Eero pyytää kyytiä. Torstain muistilista mainitsee sovitun noudon.
+
+**0.99.1 – About.** Peliesittely päättyy nyt lauseeseen *“Only one thing is timed, and it’s unfair on purpose.”*
+
+**0.99.0 – Kotiovi ja baari.** Ikkunan valo, eteisen porras ja kotiavaimet merkitsevät kotimatkan loppua. Baarissa HUMAN kertoo Sannalle, mitä varjo teki juomasateenvarjolla. Baarimikon kupla mahtuu lukupaneelin yläpuolelle.
+
+**0.98.1 – Mukin täyttyminen.** Kun pinta nousee, kuuluu kaksi pehmeää, nousevaa kilahdusta. Täysi muki ei kilahda uudelleen.
+
 Versio 0.98.0 (Claude, 22.11.2026): **About-teksti uudelleen.** Joonas kysyi, kertooko peli myös yksinäisyydestä ja häpeästä ja pitäisikö niiden näkyä Aboutissa.
 - **Uusi teksti:** *”It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.”* sekä *”About 50 minutes. It saves as you go. Only one thing is timed, and it’s unfair on purpose (Slow reality, in the menu, helps).”*
 - **Miksi näin:** yksinäisyys ja häpeä ovat pelin ydintä, mutta ne kerrotaan arkisin sanoin eikä abstrakteina käsitteinä. *Wanting company* on yksinäisyys, ja *an old embarrassment at 3 a.m.* on häpeä tilanteena, pelin omalla äänellä (*”I remember it every night at 3 a.m.”*). Lista ”rejection sensitivity, loneliness and shame” kuulostaisi esitteeltä ja lupaisi raskaampaa peliä kuin tämä komedia on. Sisältövaroitus kertoo tilanteita, ei tunteita. Termi *rejection sensitivity* jäi, mutta selitetään heti tavallisin sanoin, koska kaikki eivät tunne sitä.

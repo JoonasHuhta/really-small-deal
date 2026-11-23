@@ -287,7 +287,7 @@ function labQuiet(){
   function(){G.note={legs:4,a:0,aT:1,off:0};},
   ['N','At home, the cat from the drawer gets its fifth leg.'],
   function(){G.note.legs=5;sfx('scribble');},   // 0.86: the fifth leg is heard being drawn
-  ['H','Five. Excellent. Very stable cat. It stays on the wall.'],   // 0.88: Monday said "drawer, for now"
+  ['H','Hi, cat. It stays on the wall.'],
   function(){G.quietDrawing=true;},
   set({back:true}),{wait:0.9},   // 0.93 (Codex): the human looks at the wall, at the shadow's usual place, before saying its words
   ['H','For the record.'],
@@ -422,7 +422,7 @@ function labRewind(){return labScene({set:'home',title:'Rewind.',plan:'Sleep.',c
       ['H','Play the original.'],
       ['S','The original is very boring.']]},
     {t:'Let the human play the original.',then:[
-      ['H','Play the one from this morning. The actual one.'],
+      ['H','Play the one from Monday morning. The actual one.'],
       ['S','That one’s in the archive. Nobody watches it. It’s very boring.']]}
   ]},
   function(){G.tape=null;if(G.morko.pose==='tv')G.morko.pose=null;G.tiredForce=1;addLived('one “oh, hi.”, replayed',40);}   // 0.81: the bags arrive after the replays, as their price

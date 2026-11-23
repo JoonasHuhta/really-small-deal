@@ -11,7 +11,7 @@ assert.ok(ids.length>=10,'LABS was not found in src/50-lab.js');
 const SPEAKERS='SHABPRNZYWTXL';
 const problems=[];let runs=0,lines=0;
 // Hats (0.90, Joonas: "are the hats where they belong?"): each moment that has a costume still puts it on, and nothing ends wearing one.
-const HATS={glass:'detective',enhance:'detective',evening:'chef',mug:'pirate'},worn={};
+const HATS={glass:['detective'],enhance:['detective'],evening:['chef'],mug:['pirate'],epilogue:['chef','party','pirate','detective']},worn={};
 for(const id of ids){
   for(const pick of ['first','middle','last']){
     const H=harness(),T=H.T,seen=new Set();runs++;let ended=false;
@@ -39,7 +39,7 @@ for(const id of ids){
     }catch(e){problems.push(`${id} (${pick}): crashed: ${e&&e.stack?e.stack.split('\n').slice(0,3).join(' | '):e}`);}
   }
 }
-for(const [id,h] of Object.entries(HATS))if(!(worn[id]&&worn[id].has(h)))problems.push(`${id}: the ${h} hat never went on`);
-for(const [id,s] of Object.entries(worn))for(const h of s)if(HATS[id]!==h)problems.push(`${id}: wears the ${h} hat, which belongs elsewhere`);
+for(const [id,hats] of Object.entries(HATS))for(const h of hats)if(!(worn[id]&&worn[id].has(h)))problems.push(`${id}: the ${h} hat never went on`);
+for(const [id,s] of Object.entries(worn))for(const h of s)if(!HATS[id]?.includes(h))problems.push(`${id}: wears the ${h} hat, which belongs elsewhere`);
 assert.deepEqual(problems,[],'\n'+problems.join('\n'));
 console.log(`PASS: ${ids.length} moments × 3 choice paths (${runs} runs, ${lines} distinct lines), no crashes, stalls or broken lines; hats where they belong.`);

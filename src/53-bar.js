@@ -175,7 +175,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   {wait:1.2},
   // Later. Tired, and the shadow off duty: the filter goes with it. The evening goes very well. The bill comes in the morning.
   function(){G.clock=22*3600+40*60;},
-  ['N','22:40. Three hours in. Ekskyysmi has had the shadow of one drink.'],
+  ['N','22:40. Same bar. Ekskyysmi has had the shadow of one drink.'],
   set({mood:'calm',s:0.9}),
   ['S','I’m just resting my eyes. Keep an eye on… everything.',{quiet:1}],
   function(){G.morko.pose=null;shadowAway();},function(){G.tics.push(tic('z',G.human.x-70,WALLY-150,{life:2.2}));},{wait:1.6},
@@ -185,7 +185,8 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
     {t:'Tell her about the umbrella. With arms.',hush:1,f:function(){G.barStory='arms';},then:[['H','Okay. So. My shadow. Had a DRINK.'],['A','With what arms?'],['H','These arms. And an umbrella. For cover.']]},
     {t:'Tell her everything. Starting with the wave.',hush:1,f:function(){G.barStory='2011';},then:[['H','In 2011 I waved at someone who was waving at someone else.'],['A','No!'],['H','And tonight my shadow had a drink. With an umbrella.']]}
   ]},
-  ['A','That’s the best thing I’ve heard all week.'],
+  ['H','It took the umbrella out of the drink and hid under it. Like this.'],
+  ['A','Oh, I’d have blown its cover. I always take those umbrellas home.'],
   ['T','Here’s the menu, if you want food.'],
   ['H','Thanks, you too.'],
   {wait:0.8},

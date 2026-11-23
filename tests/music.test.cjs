@@ -23,8 +23,8 @@ for(let j=0;j<400000;j++){const g=T.G,s=T.state();if(g.ended&&!g.dayEnd)break;T.
   else if(g.dayEnd)H.fire(H.element('ov'),'click',{target:{getAttribute:k=>k==='data-go'?'next':null}});
   else throw Error('stalled: '+s);}
 const list=k=>[...(where[k]||[])].sort().join(', ');
-assert.strictEqual(list('tuesday'),'chapter2','Tuesday’s song: '+list('tuesday'));
+assert.strictEqual(list('tuesday'),'chapter2, chapter3','Ordinary Evening follows Riitta’s message through the review: '+list('tuesday'));
 assert.strictEqual(list('quiet'),'evenings, quiet','Quiet Arpeggios: '+list('quiet'));
 assert.strictEqual(starts.quiet,1,'Quiet Arpeggios should start once and carry on into Evenings, started '+starts.quiet+'×');
 assert.strictEqual(list('epilogue'),'epilogue','the epilogue’s song: '+list('epilogue'));
-console.log('PASS: music in its places ('+files.length+' songs on disk; Tuesday in chapter 2, Quiet Arpeggios across Quiet. and Evenings. without a restart, the epilogue’s song in the epilogue)');
+console.log('PASS: music in its places ('+files.length+' songs on disk; Ordinary Evening in the message and review, Quiet Arpeggios across Quiet. and Evenings. without a restart, the epilogue’s song in the epilogue)');
