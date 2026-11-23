@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.16 – Tietokoneen koko näytössä otsikko skaalautuu pelialueen korkeuden mukaan.
+
 0.99.15 – Riitan pallot vastaavat hänen työlistaansa. Yövuoron varjot katsovat toisiaan, työpaikkailmoituksen voi säästää väsyneenä ja Android-kuvakkeen suurennuslasi näkyy suurempana.
 
 0.99.14 – Keskitetty aloitusruutu näkyy myös tavallisessa selainikkunassa.

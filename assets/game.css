@@ -241,3 +241,13 @@ html.immersive body.playing .opts.n4{grid-column:1/-1;grid-template-columns:repe
 html.immersive body.playing .opts.n4 .opt{font-size:calc(12.5px * var(--ts,1));padding:6px 8px}
 html.immersive body.playing .opts.n5{grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr))}
 
+
+/* Desktop fullscreen has room for the masthead above the portrait. */
+@media (min-width:900px) and (min-height:560px) and (pointer:fine) {
+  html.immersive .ov.on[data-kind=title] h1.logo {
+    font-size:clamp(50px,9cqh,104px);
+  }
+  html.immersive .ov.on[data-kind=title] .tagline {
+    top:calc(clamp(14px,5cqh,26px) + clamp(50px,9cqh,104px) * 1.2);
+  }
+}
