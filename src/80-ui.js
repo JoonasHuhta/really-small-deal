@@ -39,9 +39,10 @@ function showTitle(){
 }
 function titleHTML(sv){   // 0.89: its own function, so a language change can redraw it
   return '<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
-   '<p class="tagline">'+tr('A small moment.<br>A very long shadow.')+'</p>'+
+   '<p class="tagline">'+tr('A small moment.<br>A very long shadow.').replace('<br>','<br> ')+'</p>'+
+   '<div class="title-actions">'+
    (sv&&!sv.fin?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
-      :'<button class="go" type="button" data-go="start">'+tr('New game')+' <span aria-hidden="true">→</span></button>')+
+      :'<button class="go" type="button" data-go="start">'+tr('New game')+' <span aria-hidden="true">→</span></button>')+'</div>'+
    '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
    (sv&&sv.unlocked>=2||DEVLAB?'<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>':'')+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button><button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
 }

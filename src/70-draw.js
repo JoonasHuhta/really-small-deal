@@ -618,25 +618,40 @@ function pausedNote(){
 }
 var titleEdgeLeft=document.getElementById('title-edge-left'),titleEdgeRight=document.getElementById('title-edge-right');
 function drawTitleEdges(){
-  if(!COMPACT||ov.dataset.kind!=='title'||!ov.classList.contains('on')||cv.clientWidth>=window.innerWidth)return;
+  if(cv.clientWidth>=window.innerWidth)return;
   // Extend the current room colours and floor lines at the exact edges of the camera.
-  var narrow=window.innerWidth<=720;
   var edges=[titleEdgeLeft,titleEdgeRight];
   for(var i=0;i<edges.length;i++){
     var edge=edges[i];
     if(edge.height!==cv.height)edge.height=cv.height;
     var edgeCtx=edge.getContext('2d');
     edgeCtx.drawImage(cv,i?cv.width-1:0,0,1,cv.height,0,0,1,cv.height);
-    if(!i||narrow){
-      edgeCtx.fillStyle=i?'#182a2d20':narrow?'#182a2df9':'#182a2df5';
-      edgeCtx.fillRect(0,0,1,cv.height);
-    }
   }
+}
+function drawTitlePortrait(){
+  var scale=cv.clientWidth*9/16<300?0.65:0.72;
+  var floor=300;
+  ctx.fillStyle='#24383a';ctx.fillRect(0,0,W,floor);
+  var light=ctx.createRadialGradient(530,208,20,530,208,440);
+  light.addColorStop(0,'#c7bf91');light.addColorStop(0.46,'#748077');light.addColorStop(1,'#24383a');
+  ctx.fillStyle=light;ctx.fillRect(0,0,W,floor);
+  var litFloor=ctx.createRadialGradient(522,310,5,522,310,330);
+  litFloor.addColorStop(0,'#879284');litFloor.addColorStop(1,'#344646');
+  ctx.fillStyle=litFloor;ctx.fillRect(0,floor,W,H-floor);
+  ctx.fillStyle='#52635b';ctx.fillRect(0,floor-3,W,4);
+  ctx.strokeStyle='#263a3a29';ctx.lineWidth=1;
+  for(var y=325;y<H;y+=25)line(0,y,W,y);
+  ctx.save();ctx.translate(513-G.human.x*scale,floor-WALLY*scale);ctx.scale(scale,scale);
+  drawPair();ctx.restore();
+  drawTitleEdges();
 }
 function draw(){
   var g=G;
   ctx.setTransform(SC,0,0,SC,0,0);VIEW.l=0;VIEW.r=W;VIEW.t=0;VIEW.z=1;   // unzoomed until applyCamera says otherwise
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+  if(COMPACT&&!g.started&&ov.classList.contains('on')&&ov.dataset.kind==='title'){
+    drawTitlePortrait();return;
+  }
   epiFilterOn();   // the closing montage is drawn soft (37-epilogue.js)
   if(g.chap&&!g.chap.moment){chapCard();if(paused)pausedNote();return;}   // a day: the full card. A moment: over its own scene (momentCard, below)
   if(g.out){drawOutside();return;}
@@ -695,5 +710,4 @@ function draw(){
   if(g.band&&!COMPACT&&!textBelow&&lineInBubble({who:'N'}))band(g.band,H-18);   // 0.85: never in the picture and in the panel at once
   if(g.chap&&g.chap.moment)momentCard();
   if(paused)pausedNote();
-  drawTitleEdges();
 }
