@@ -50,7 +50,7 @@ function glass(x,kind){
 function barFront(){
   var g=G,b=g.bar,y=BARY,i;
   // whoever else is at the bar stands behind it too
-  if(b.sx<W+30)person(b.sx,{body:'#8a4f6a',hair:'#2b2230',facing:b.sFace,walk:Math.abs(b.sx-b.sT)>1});
+  if(b.sx<W+30)person(b.sx,{body:'#688aa7',hair:'#804c37',hairStyle:'bun',facing:b.sFace,walk:Math.abs(b.sx-b.sT)>1});
   ctx.fillStyle='#8a5e3c';ctx.fillRect(-20,y,W+40,16);ctx.fillStyle='#a8774e';ctx.fillRect(-20,y,W+40,4);
   ctx.fillStyle='#5c3b27';ctx.fillRect(-20,y+16,W+40,H-y);
   ctx.strokeStyle='#4a2f1f';ctx.lineWidth=2;for(i=0;i<13;i++)line(40+i*80,y+22,40+i*80,H+10);

@@ -119,6 +119,11 @@ function person(x,o){
   // 0.87: each shoe stays under its own leg (legs swing +lg / −lg); in 0.85 the shoes swapped legs and walked against them
   var hy=FEETY-150+(o.nod||0)*5+fl*3+(o.down?4:0)-(o.walk?Math.abs(Math.sin(G.time*8))*1.5:0)+(o.face==='laugh'&&!RM?Math.abs(Math.sin(G.time*13))*-3:0),hx=x+(o.back?0:f*2);
   if(o.body===SANNA.body){ctx.fillStyle=o.hair;rr(hx-23,hy-17,45,45,18);ctx.fill();}
+  if(o.hairStyle==='bun'){
+    ctx.fillStyle=o.hair;
+    circ(hx-f*18,hy-22,10);ctx.fill();
+    circ(hx-f*14,hy-15,9);ctx.fill();
+  }
   ctx.fillStyle=skin;rr(x-7,top-14,14,23,4);ctx.fill();
   ctx.fillStyle=o.body;ctx.strokeStyle='#34413e';ctx.lineWidth=1.6;rr(x-25,top,50,76+fl*5,13);ctx.fill();ctx.stroke();
   ctx.strokeStyle='#fff4db55';ctx.lineWidth=2;line(x-17,top+64,x+17,top+64);line(x-9,top+5,x+9,top+5);
