@@ -14,6 +14,8 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+0.99.14 – Keskitetty aloitusruutu näkyy myös tavallisessa selainikkunassa.
+
 0.99.13 – Puhelimen ja koko näytön aloitusruudussa Ekskyysmi ja HUMAN seisovat valossa otsikon ja valikkopainikkeiden välissä.
 
 0.99.12 – Päiväleima väistää valikkopainikkeen. Kellonaika näkyy päiväleimassa, ja ilmassa leijuvat ilmoitukset pysyvät sen alapuolella.

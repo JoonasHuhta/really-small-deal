@@ -618,7 +618,7 @@ function pausedNote(){
 }
 var titleEdgeLeft=document.getElementById('title-edge-left'),titleEdgeRight=document.getElementById('title-edge-right');
 function drawTitleEdges(){
-  if(cv.clientWidth>=window.innerWidth)return;
+  if(!COMPACT||cv.clientWidth>=window.innerWidth)return;
   // Extend the current room colours and floor lines at the exact edges of the camera.
   var edges=[titleEdgeLeft,titleEdgeRight];
   for(var i=0;i<edges.length;i++){
@@ -649,7 +649,7 @@ function draw(){
   var g=G;
   ctx.setTransform(SC,0,0,SC,0,0);VIEW.l=0;VIEW.r=W;VIEW.t=0;VIEW.z=1;   // unzoomed until applyCamera says otherwise
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
-  if(COMPACT&&!g.started&&ov.classList.contains('on')&&ov.dataset.kind==='title'){
+  if(!g.started&&ov.classList.contains('on')&&ov.dataset.kind==='title'){
     drawTitlePortrait();return;
   }
   epiFilterOn();   // the closing montage is drawn soft (37-epilogue.js)

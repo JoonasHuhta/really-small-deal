@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.14 – Keskitetty aloitusruutu näkyy myös tavallisessa selainikkunassa.
+
 0.99.13 – Puhelimen ja koko näytön aloitusruudussa nimi, hahmot ja valinnat sommitellaan keskelle.
 
 0.99.12 – Päiväleima väistää valikkopainikkeen. Kellonaika näkyy päiväleimassa, ja ilmassa leijuvat ilmoitukset pysyvät sen alapuolella.
