@@ -464,9 +464,13 @@ function drawNight(){
     var sx=-160+f*(W+320);ctx.fillStyle='rgba(255,236,190,.16)';ctx.beginPath();ctx.moveTo(sx-60,0);ctx.lineTo(sx+60,0);ctx.lineTo(sx+150,WALLY);ctx.lineTo(sx+30,WALLY);ctx.closePath();ctx.fill();
     ctx.fillStyle='rgba(20,16,30,.9)';ctx.beginPath();ctx.moveTo(sx+40,WALLY);ctx.lineTo(sx+110,WALLY);ctx.lineTo(sx-20,10);ctx.lineTo(sx-150,10);ctx.closePath();ctx.fill();}
   for(var k in NIGHT_EYES){if(!n.eyes[k])continue;var p=k==='S'?(function(){var q=geom();return {x:q.bx,y:q.hdY};})():NIGHT_EYES[k],bl=Math.sin(n.t*0.9+p.x)>0.985;
+    var gaze=k==='Y'||k==='W'?-2:2;
+    var startled=k==='S'&&G.cur&&G.cur.who==='S'&&G.cur.look==='stunned'&&!n.sleepS;
+    var radius=startled?6.4:4.6;
+    if(startled)bl=false;
     if(k==='S'&&n.sleepS)bl=true;   // asleep: eyes shut (somebody else has the door)
-    ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';for(i=-1;i<=1;i+=2){if(bl){ctx.fillRect(p.x+i*8-5,p.y,10,1.6);continue;}circ(p.x+i*8,p.y,4.6);ctx.fill();}
-    if(!bl){ctx.fillStyle='#06060f';for(i=-1;i<=1;i+=2){circ(p.x+i*8+1.4,p.y+0.6,2);ctx.fill();}ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';}}
+    ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';for(i=-1;i<=1;i+=2){if(bl){ctx.fillRect(p.x+i*8-5,p.y,10,1.6);continue;}circ(p.x+i*8,p.y,radius);ctx.fill();}
+    if(!bl){ctx.fillStyle='#06060f';for(i=-1;i<=1;i+=2){circ(p.x+i*8+gaze,p.y+0.6,2);ctx.fill();}ctx.fillStyle=k==='S'?'#f6f1e4':'#cfe0f2';}}
 }
 function labNight(){return labScene({set:'home',title:'Night shift.',plan:'Sleep.',clock:23*3600+50*60}).concat([
   nightOn,
@@ -483,7 +487,7 @@ function labNight(){return labScene({set:'home',title:'Night shift.',plan:'Sleep
   {wait:1.2},
   eyesOn('Z'),{wait:0.9},
   ['Z','Evening.'],
-  ['S','Who’s THERE?',{loud:1}],
+  ['S','Who’s THERE?',{loud:1,look:'stunned'}],
   ['Z','It’s me. Sanna’s. It’s dark. We’re the same thing now.'],
   ['S','That’s a breach of privacy.'],
   eyesOn('Y'),{wait:0.7},

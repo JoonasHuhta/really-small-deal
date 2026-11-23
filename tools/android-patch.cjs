@@ -99,3 +99,16 @@ const gradle=path.join(app,'..','..','build.gradle');
 let g=fs.readFileSync(gradle,'utf8');
 g=g.replace(/versionCode\s+\d+/,'versionCode '+code).replace(/versionName\s+"[^"]+"/,'versionName "'+pkg.version+'"');
 fs.writeFileSync(gradle,g);
+// Keep the magnifier legible under Android launcher masks. The source artwork
+// already includes clear space around the handle and lens.
+const adaptiveIcon = `<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@mipmap/ic_launcher_background" />
+    <foreground>
+        <inset android:drawable="@mipmap/ic_launcher_foreground" android:inset="10%" />
+    </foreground>
+</adaptive-icon>
+`;
+for(const file of ['ic_launcher.xml','ic_launcher_round.xml']){
+  fs.writeFileSync(path.join(app,'res','mipmap-anydpi-v26',file),adaptiveIcon);
+}

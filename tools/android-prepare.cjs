@@ -6,8 +6,8 @@ const run=(file,args)=>execFileSync(process.execPath,[file,...args],{cwd:root,st
 const created=!fs.existsSync(path.join(root,'android'));
 if(created)run(cap,['add','android']);
 run(cap,['sync','android']);
-run(path.join(__dirname,'android-patch.cjs'),[]);
 if(created){
   const assets=path.join(root,'node_modules','@capacitor','assets','bin','capacitor-assets');
   run(assets,['generate','--android','--assetPath','resources','--iconBackgroundColor','#202830','--splashBackgroundColor','#12171b']);
 }
+run(path.join(__dirname,'android-patch.cjs'),[]);

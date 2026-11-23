@@ -19,11 +19,10 @@ function labPosting(){return labScene({set:'home',title:'The posting.',plan:'Rea
   ['S','If they weren’t relevant, why would I still have them?'],   // 0.92 (Codex humour round): a perfect argument, to the shadow
   closeArchive,
   {choice:[
-    {t:'Archive it. For safety.',filed:1,f:function(){G.posting='archived';},then:[
+    {t:'Save it for when we’re less tired.',filed:1,f:function(){G.posting='archived';},then:[
       ['S','Done. Filed under “later”.'],
-      ['N','The “later” drawer does not close properly. It has not closed properly for years.'],
-      ['H','I hadn’t decided anything.'],
-      ['S','I decided for both of us. It’s quicker.']]},
+      ['H','Thanks.'],
+      ['N','The “later” drawer does not close properly. It has not closed properly for years.']]},
     {t:'Pre-write their rejection. Save everyone time.',filed:1,f:function(){G.posting='rejected';},then:[
       ['P','Draft: “Dear applicant. Thank you for your interest. You are too long.”'],
       ['H','They haven’t read anything.'],
