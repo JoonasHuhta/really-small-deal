@@ -251,3 +251,17 @@ html.immersive body.playing .opts.n5{grid-column:1/-1;grid-template-columns:repe
     top:calc(clamp(14px,5cqh,26px) + clamp(50px,9cqh,104px) * 1.2);
   }
 }
+
+.ov.on[data-kind=title] .rotate-hint,
+.ov.on[data-kind=title] .title-full { display:none; }
+@media (orientation:portrait) and (max-width:600px) and (pointer:coarse) {
+  .ov.on[data-kind=title] .rotate-hint {
+    display:block;
+    margin:10px 0 0;
+    font-size:12px;
+    color:var(--sage);
+  }
+}
+@media (pointer:fine) and (hover:hover) {
+  .ov.on[data-kind=title] .title-full { display:inline-block; }
+}

@@ -38,13 +38,17 @@ function showTitle(){
   render();
 }
 function titleHTML(sv){   // 0.89: its own function, so a language change can redraw it
+  var browser=!window.Capacitor?.isNativePlatform?.();
+  var rotateHint=browser?'<p class="rotate-hint">'+tr('Turn your phone sideways for the best experience.')+'</p>':'';
+  var fullLink=browser&&fullSupported()
+    ?'<button class="link title-full" type="button" data-go="full">'+tr(fullOn()?'Leave full screen':'Full screen')+'</button>':'';
   return '<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
    '<p class="tagline">'+tr('A small moment.<br>A very long shadow.').replace('<br>','<br> ')+'</p>'+
    '<div class="title-actions">'+
    (sv&&!sv.fin?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
       :'<button class="go" type="button" data-go="start">'+tr('New game')+' <span aria-hidden="true">→</span></button>')+'</div>'+
-   '<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
-   (sv&&sv.unlocked>=2||DEVLAB?'<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>':'')+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button><button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
+   rotateHint+'<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
+   (sv&&sv.unlocked>=2||DEVLAB?'<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>':'')+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button>'+fullLink+'<button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
 }
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
 function showEnd(){
@@ -78,6 +82,7 @@ ov.addEventListener('click',function(e){
   if(t.getAttribute('data-ch')){startChapter(+t.getAttribute('data-ch'));return;}
   if(t.getAttribute('data-lab')){startLab(t.getAttribute('data-lab'));return;}
   if(go==='settings'){if(typeof setTimeout==='function')setTimeout(function(){setMenu(true);},0);else setMenu(true);return;}
+  if(go==='full'){toggleFull();return;}
   if(go==='copyrcpt'){copyReceipt(t);return;}
   if(go==='sharercpt'){shareReceipt(t);return;}
   if(go==='lab'){reset(null);showLab();return;}
@@ -179,8 +184,10 @@ function syncImmersive(){
   var on=!!((narrowMQ&&narrowMQ.matches)||fullOn());
   htmlEl.classList.toggle('immersive',on);
   if(!on)setMenu(false);
-  var b=document.getElementById('full');
-  if(b){b.textContent=tr(fullOn()?'Leave full screen':'Full screen');b.setAttribute('aria-pressed',String(fullOn()));}
+  var label=tr(fullOn()?'Leave full screen':'Full screen');
+  var b=document.getElementById('full'),titleFull=ov.querySelector('.title-full');
+  if(b){b.textContent=label;b.setAttribute('aria-pressed',String(fullOn()));}
+  if(titleFull)titleFull.textContent=label;
   resize();
 }
 function toggleFull(){

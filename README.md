@@ -14,6 +14,8 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+0.99.20 – Selaimen päävalikko neuvoo kääntämään puhelimen vaakaan. Tietokoneella koko näytön voi avata päävalikosta.
+
 0.99.19 – Päävalikossa raollaan olevan oven valo osuu HUMANiin ja Ekskyysmiin.
 
 0.99.18 – Quiet.-lounaan tillikeitosta tulee Sannan ja HUMANin yhteinen vitsi, johon perjantain kutsu palaa.
