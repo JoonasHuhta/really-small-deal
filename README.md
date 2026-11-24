@@ -14,6 +14,8 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+0.99.18 – Quiet.-lounaan tillikeitosta tulee Sannan ja HUMANin yhteinen vitsi, johon perjantain kutsu palaa.
+
 0.99.17 – Baarin Stranger erottuu Sannasta nutturalla ja sinisellä paidalla.
 
 0.99.16 – Tietokoneen koko näytössä otsikko skaalautuu pelialueen korkeuden mukaan.
