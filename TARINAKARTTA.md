@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.19 – Päävalikossa raollaan olevan oven valo osuu HUMANiin ja Ekskyysmiin.
+
 0.99.18 – Quiet.-lounaan tillikeitosta tulee Sannan ja HUMANin yhteinen vitsi, johon perjantain kutsu palaa.
 
 0.99.17 – Baarin Stranger erottuu Sannasta nutturalla ja sinisellä paidalla.

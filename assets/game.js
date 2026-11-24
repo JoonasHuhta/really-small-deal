@@ -6185,19 +6185,23 @@ function drawTitleEdges(){
   }
 }
 function drawTitlePortrait(){
-  var scale=cv.clientWidth*9/16<300?0.65:0.72;
-  var floor=300;
-  ctx.fillStyle='#24383a';ctx.fillRect(0,0,W,floor);
-  var light=ctx.createRadialGradient(530,208,20,530,208,440);
-  light.addColorStop(0,'#c7bf91');light.addColorStop(0.46,'#748077');light.addColorStop(1,'#24383a');
-  ctx.fillStyle=light;ctx.fillRect(0,0,W,floor);
-  var litFloor=ctx.createRadialGradient(522,310,5,522,310,330);
-  litFloor.addColorStop(0,'#879284');litFloor.addColorStop(1,'#344646');
-  ctx.fillStyle=litFloor;ctx.fillRect(0,floor,W,H-floor);
-  ctx.fillStyle='#52635b';ctx.fillRect(0,floor-3,W,4);
-  ctx.strokeStyle='#263a3a29';ctx.lineWidth=1;
-  for(var y=325;y<H;y+=25)line(0,y,W,y);
-  ctx.save();ctx.translate(513-G.human.x*scale,floor-WALLY*scale);ctx.scale(scale,scale);
+  var compact=cv.clientWidth*9/16<300;
+  var floor=compact?286:312;
+  var wall=ctx.createLinearGradient(0,0,W,0);
+  wall.addColorStop(0,'#293838');wall.addColorStop(.48,'#52625b');wall.addColorStop(1,'#293838');
+  ctx.fillStyle=wall;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#34433e';ctx.fillRect(0,floor,W,H-floor);
+  // A half-open door sends one strip of evening light across the wall.
+  var glow=ctx.createLinearGradient(312,0,674,0);
+  glow.addColorStop(0,'#edd292');glow.addColorStop(1,'#a69c76');
+  ctx.fillStyle=glow;ctx.beginPath();ctx.moveTo(307,153);ctx.lineTo(654,126);ctx.lineTo(654,floor);ctx.lineTo(307,floor);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#8c8b69';ctx.beginPath();ctx.moveTo(307,floor);ctx.lineTo(654,floor);ctx.lineTo(597,floor+69);ctx.lineTo(173,floor+69);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#233032';ctx.fillRect(235,148,79,floor-148);
+  ctx.fillStyle='#e3be80';ctx.fillRect(240,153,69,floor-153);
+  ctx.fillStyle='#394847';ctx.beginPath();ctx.moveTo(240,153);ctx.lineTo(292,166);ctx.lineTo(292,floor+9);ctx.lineTo(240,floor);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#cbb48c';ctx.fillRect(279,237,9,2.6);
+  var scale=compact ? 0.58 : 0.76;
+  ctx.save();ctx.translate(537-G.human.x*scale,floor-WALLY*scale);ctx.scale(scale,scale);
   drawPair();ctx.restore();
   drawTitleEdges();
 }
