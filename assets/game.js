@@ -5651,7 +5651,22 @@ function labKickoff(){
 // condition: on the stairs people come the other way and you have to decide; in a lift everyone faces the doors.
 // Riitta gets on for one floor (her shadow juggles eleven things, none of them you). Then two polite people miss their floor.
 function liftFloor(n,up){return function(){var g=G;g.lift.floor=n;g.lift.up=up;g.lift.ding=0.6;sfx('ui');};}
-function stepLift(dt){var l=G.lift;if(!l||G.set!=='lift')return;if(l.ding>0)l.ding=Math.max(0,l.ding-dt);}
+function stepLift(dt){var l=G.lift;if(!l||G.set!=='lift')return;if(l.ding>0)l.ding=Math.max(0,l.ding-dt);l.doors=ease(l.doors||0,l.doorsT||0,(RM?8:2.6)*dt);}
+function liftDoors(on){return function(){G.lift.doorsT=on?1:0;sfx(on?'ui':'turn');};}
+// 0.99.27: the doors at the back actually open, onto a corridor with the floor painted on the wall, and close again.
+// The same room as the epilogue's lift: without a Moment's lift state it is drawn exactly as before.
+function liftRoom(){
+  epiLift();var l=G.lift;if(!l||G.epi)return;var o=clamp(l.doors||0,0,1);if(o<0.01)return;
+  var top=60,bot=WALLY,gap=230*o;
+  ctx.fillStyle='#d8dccf';ctx.fillRect(250,top,460,bot-top);ctx.fillStyle='#b8bda7';ctx.fillRect(250,bot-40,460,40);
+  ctx.fillStyle='#c9cfbf';ctx.fillRect(250,bot-46,460,6);
+  ctx.fillStyle='#6f7f73';ctx.font='800 64px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(l.floor),480,150);
+  ctx.fillStyle='#64816a';ctx.beginPath();ctx.ellipse(612,bot-74,12,26,-.3,0,Math.PI*2);ctx.ellipse(630,bot-82,12,28,.3,0,Math.PI*2);ctx.fill();ctx.fillStyle='#c78d71';ctx.fillRect(606,bot-56,30,16);   // a plant, as every floor has
+  ctx.fillStyle='#a3aaae';ctx.fillRect(250,top,230-gap,bot-top);ctx.fillRect(480+gap,top,230-gap,bot-top);
+  ctx.strokeStyle='#6f767b';ctx.lineWidth=3;ctx.strokeRect(250,top,460,bot-top);line(480-gap,top,480-gap,bot);line(480+gap,top,480+gap,bot);
+  ctx.strokeStyle='#5e6569';ctx.lineWidth=5;line(270,300,690,300);   // the handrail, as before
+}
+SETS.lift=liftRoom;
 function drawLiftPanel(){
   var g=G,l=g.lift;if(!l||g.set!=='lift'||g.out)return;
   ctx.fillStyle='#2b2f33';rr(722,140,46,90,6);ctx.fill();
@@ -5660,7 +5675,7 @@ function drawLiftPanel(){
 }
 MSTEP.push(stepLift);MFRONT.push(drawLiftPanel);
 function labLift(){return labScene({set:'lift',title:'The lift.',plan:'Get to the fourth floor.',clock:8*3600+51*60}).concat([
-  function(){var g=G;g.lift={floor:1,up:true,ding:0};g.noCup=true;g.human.x=g.human.xT=330;g.cowB=true;g.bx2=g.bxT=470;g.bFace=1;},
+  function(){var g=G;g.lift={floor:1,up:true,ding:0,doors:0,doorsT:0};g.noCup=true;g.human.x=g.human.xT=330;g.cowB=true;g.bx2=g.bxT=470;g.bFace=1;},
   ['N','8:51. The lift. Eero. Three floors of each other.'],
   ['B','Morning.'],
   ['H','Morning.'],
@@ -5687,10 +5702,10 @@ function labLift(){return labScene({set:'lift',title:'The lift.',plan:'Get to th
   set({mood:'surprised'}),
   ['S','…That’s a very good reason.'],
   ['Y','I know. He likes the lift. I came up with the reason later.'],
-  liftFloor(2,true),{wait:0.6},
+  liftFloor(2,true),liftDoors(true),{wait:0.9},
   function(){var g=G;g.cowR=true;g.rx=1010;g.rxT=610;g.rPhone=false;},
   ['N','Floor 2. The doors open. Riitta.'],
-  riittaArrives,
+  riittaArrives,liftDoors(false),
   set({s:0.55,mood:'worry'}),
   function(){G.wT=1;},
   ['R','Morning.'],
@@ -5701,10 +5716,10 @@ function labLift(){return labScene({set:'lift',title:'The lift.',plan:'Get to th
   ['S','I can see them.',{quiet:1}],
   ['Y','None of them are us.',{quiet:1}],
   ['S','…That’s weirdly relaxing.',{quiet:1}],
-  liftFloor(3,true),{wait:0.5},
+  liftFloor(3,true),liftDoors(true),{wait:0.7},
   ['R','This is me.'],
   function(){var g=G;g.rxT=1100;g.wT=0;},{wait:1.2},
-  function(){G.cowR=false;},
+  function(){G.cowR=false;},liftDoors(false),{wait:0.6},
   set({s:0.9,mood:'calm'}),
   ['Y','He likes you, you know.'],
   ['S','Who?'],
@@ -5712,7 +5727,7 @@ function labLift(){return labScene({set:'lift',title:'The lift.',plan:'Get to th
   ['S','Quiet is… a compliment?',{look:'stunned'}],
   ['Y','In here it’s the best one.'],
   archive('good',[['THE LIFT','Easy to be quiet with.']]),{wait:2.2},closeArchive,
-  liftFloor(4,true),{wait:0.6},
+  liftFloor(4,true),liftDoors(true),{wait:0.9},
   ['B','This is us.'],
   ['H','After you.'],
   ['B','No, no. After you.'],
@@ -5729,6 +5744,7 @@ function labLift(){return labScene({set:'lift',title:'The lift.',plan:'Get to th
       ['B','No, really, after YOU.'],
       ['S','He matched our warmth. It’s a stand-off.']]}
   ]},
+  liftDoors(false),{wait:1},
   ['N','The doors close. The lift, which has seen this before, goes back down.'],
   liftFloor(3,false),{wait:0.4},
   ['Y','Lovely. More lift.']
@@ -5908,7 +5924,7 @@ function drawMelt(q){var d=G.dream;if(!d||d.melt<=0)return;var k=d.melt/1.4,x=q.
 // Through the door, full screen: July, midnight, a sun that stays up, and the shadow lying forty metres long in the grass.
 // Kept above the phone's reading panel (the horizon is high), so the picture is whole on every screen.
 function drawMeadow(o){
-  var t=RM?0:G.time,i,len=0.32+0.68*(o.stretch!=null?clamp((G.time-o.stretch)/2.4,0,1):0);
+  var t=RM?0:G.time,i,len=0.32+0.68*(o.stretch!=null?(RM?1:clamp((G.time-o.stretch)/2.4,0,1)):0);
   var sk=ctx.createLinearGradient(0,0,0,210);sk.addColorStop(0,'#86aed0');sk.addColorStop(0.7,'#f2d9a4');sk.addColorStop(1,'#f6c67c');ctx.fillStyle=sk;ctx.fillRect(0,0,W,212);
   var sg=ctx.createRadialGradient(812,168,6,812,168,170);sg.addColorStop(0,'rgba(255,244,205,.9)');sg.addColorStop(1,'rgba(255,244,205,0)');ctx.fillStyle=sg;ctx.fillRect(560,0,400,260);
   ctx.fillStyle='#fff3cf';circ(812,168,20);ctx.fill();                                   // 00:00, and up
@@ -6817,6 +6833,22 @@ function drawTitleSnow(floor){
     ctx.fillStyle='rgba(222,228,220,'+(f.a*k)+')';circ(x,y,f.r);ctx.fill();
     ctx.fillStyle='rgba(222,228,220,'+(f.a*k*0.25)+')';circ(x,y,f.r*2.2);ctx.fill();}   // a soft edge: a flake, not a speck
   ctx.restore();}
+// 0.99.27 (Joonas 26.11.: receipts in the main menu; of the ideas, the one that stays): once the week has been played to the
+// end, its receipt is pinned to the dark wall, mended in gold where it was torn. It does not dissolve and it gives no advice.
+// No readable words at this size: grey lines, as on the form's unread questions.
+function drawTitleReceipt(){
+  ctx.save();ctx.translate(150,196);ctx.rotate(-0.05);
+  var w=62,h=92,i;
+  ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(-w/2+4,-h/2+5,w,h);
+  ctx.fillStyle='#bab3a1';ctx.beginPath();ctx.moveTo(-w/2,-h/2);ctx.lineTo(w/2,-h/2);ctx.lineTo(w/2,h/2);
+  for(i=0;i<=8;i++)ctx.lineTo(w/2-i*w/8,h/2+(i%2?-4:0));ctx.closePath();ctx.fill();
+  ctx.fillStyle='#8f8a7c';ctx.fillRect(-w/2+8,-h/2+9,w-16,4);
+  ctx.fillStyle='#a8a292';for(i=0;i<7;i++)ctx.fillRect(-w/2+8,-h/2+22+i*9,(i%3?w-22:w-30),2.4);
+  ctx.strokeStyle='#e2b04a';ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor='rgba(226,176,74,.6)';ctx.shadowBlur=6;
+  ctx.beginPath();ctx.moveTo(-w/2,6);ctx.lineTo(-14,1);ctx.lineTo(-5,9);ctx.lineTo(6,-2);ctx.lineTo(15,5);ctx.lineTo(w/2,-1);ctx.stroke();   // where it was torn
+  ctx.shadowBlur=0;ctx.fillStyle='#c9553f';circ(0,-h/2+3,3.2);ctx.fill();   // a pin
+  ctx.restore();
+}
 function drawTitlePortrait(){
   var compact=cv.clientWidth*9/16<300;
   var floor=compact?286:312;
@@ -6833,6 +6865,7 @@ function drawTitlePortrait(){
   ctx.fillStyle='#e3be80';ctx.fillRect(240,153,69,floor-153);
   ctx.fillStyle='#394847';ctx.beginPath();ctx.moveTo(240,153);ctx.lineTo(292,166);ctx.lineTo(292,floor+9);ctx.lineTo(240,floor);ctx.closePath();ctx.fill();
   ctx.fillStyle='#cbb48c';ctx.fillRect(279,237,9,2.6);
+  if(G.titleDone)drawTitleReceipt();
   drawTitleSnow(floor);
   var scale=compact ? 0.58 : 0.76;
   ctx.save();ctx.translate(537-G.human.x*scale,floor-WALLY*scale);ctx.scale(scale,scale);
@@ -6941,7 +6974,7 @@ function showWeekEnd(){
    receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function showTitle(){
-  var sv=loadProgress();music('title');
+  var sv=loadProgress();music('title');G.titleDone=!!(sv&&sv.done);   // 0.99.27: a finished week leaves its receipt on the title wall
   G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
   showOv(titleHTML(sv));
   render();

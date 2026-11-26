@@ -655,6 +655,22 @@ function drawTitleSnow(floor){
     ctx.fillStyle='rgba(222,228,220,'+(f.a*k)+')';circ(x,y,f.r);ctx.fill();
     ctx.fillStyle='rgba(222,228,220,'+(f.a*k*0.25)+')';circ(x,y,f.r*2.2);ctx.fill();}   // a soft edge: a flake, not a speck
   ctx.restore();}
+// 0.99.27 (Joonas 26.11.: receipts in the main menu; of the ideas, the one that stays): once the week has been played to the
+// end, its receipt is pinned to the dark wall, mended in gold where it was torn. It does not dissolve and it gives no advice.
+// No readable words at this size: grey lines, as on the form's unread questions.
+function drawTitleReceipt(){
+  ctx.save();ctx.translate(150,196);ctx.rotate(-0.05);
+  var w=62,h=92,i;
+  ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(-w/2+4,-h/2+5,w,h);
+  ctx.fillStyle='#bab3a1';ctx.beginPath();ctx.moveTo(-w/2,-h/2);ctx.lineTo(w/2,-h/2);ctx.lineTo(w/2,h/2);
+  for(i=0;i<=8;i++)ctx.lineTo(w/2-i*w/8,h/2+(i%2?-4:0));ctx.closePath();ctx.fill();
+  ctx.fillStyle='#8f8a7c';ctx.fillRect(-w/2+8,-h/2+9,w-16,4);
+  ctx.fillStyle='#a8a292';for(i=0;i<7;i++)ctx.fillRect(-w/2+8,-h/2+22+i*9,(i%3?w-22:w-30),2.4);
+  ctx.strokeStyle='#e2b04a';ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor='rgba(226,176,74,.6)';ctx.shadowBlur=6;
+  ctx.beginPath();ctx.moveTo(-w/2,6);ctx.lineTo(-14,1);ctx.lineTo(-5,9);ctx.lineTo(6,-2);ctx.lineTo(15,5);ctx.lineTo(w/2,-1);ctx.stroke();   // where it was torn
+  ctx.shadowBlur=0;ctx.fillStyle='#c9553f';circ(0,-h/2+3,3.2);ctx.fill();   // a pin
+  ctx.restore();
+}
 function drawTitlePortrait(){
   var compact=cv.clientWidth*9/16<300;
   var floor=compact?286:312;
@@ -671,6 +687,7 @@ function drawTitlePortrait(){
   ctx.fillStyle='#e3be80';ctx.fillRect(240,153,69,floor-153);
   ctx.fillStyle='#394847';ctx.beginPath();ctx.moveTo(240,153);ctx.lineTo(292,166);ctx.lineTo(292,floor+9);ctx.lineTo(240,floor);ctx.closePath();ctx.fill();
   ctx.fillStyle='#cbb48c';ctx.fillRect(279,237,9,2.6);
+  if(G.titleDone)drawTitleReceipt();
   drawTitleSnow(floor);
   var scale=compact ? 0.58 : 0.76;
   ctx.save();ctx.translate(537-G.human.x*scale,floor-WALLY*scale);ctx.scale(scale,scale);

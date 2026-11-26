@@ -72,7 +72,7 @@ function drawMelt(q){var d=G.dream;if(!d||d.melt<=0)return;var k=d.melt/1.4,x=q.
 // Through the door, full screen: July, midnight, a sun that stays up, and the shadow lying forty metres long in the grass.
 // Kept above the phone's reading panel (the horizon is high), so the picture is whole on every screen.
 function drawMeadow(o){
-  var t=RM?0:G.time,i,len=0.32+0.68*(o.stretch!=null?clamp((G.time-o.stretch)/2.4,0,1):0);
+  var t=RM?0:G.time,i,len=0.32+0.68*(o.stretch!=null?(RM?1:clamp((G.time-o.stretch)/2.4,0,1)):0);
   var sk=ctx.createLinearGradient(0,0,0,210);sk.addColorStop(0,'#86aed0');sk.addColorStop(0.7,'#f2d9a4');sk.addColorStop(1,'#f6c67c');ctx.fillStyle=sk;ctx.fillRect(0,0,W,212);
   var sg=ctx.createRadialGradient(812,168,6,812,168,170);sg.addColorStop(0,'rgba(255,244,205,.9)');sg.addColorStop(1,'rgba(255,244,205,0)');ctx.fillStyle=sg;ctx.fillRect(560,0,400,260);
   ctx.fillStyle='#fff3cf';circ(812,168,20);ctx.fill();                                   // 00:00, and up
