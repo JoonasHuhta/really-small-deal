@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.25 – Uusi Moment *The lift.* (kokeilu): kolme kerrosta Eeron kanssa epilogin hississä. Ihmiset sanovat ”morning”, varjot puhuvat. Eeron varjo kertoo syyn mieltymyksenä, ei tilana: portaissa pitää valita puoli, hississä kaikki katsovat oviin. Riitta tulee kyytiin yhdeksi kerrokseksi (yksitoista asiaa, ei yhtäkään sinusta). ”He says you’re easy to be quiet with” menee kultaiseen pinoon, ja kaksi kohteliasta ihmistä ohittaa kerroksensa.
+
 0.99.24 – Uusi Moment *Plus one.* (kokeilu): lounas Sannan kanssa, Eero liittyy seuraan, ja jokaisella heidän repliikillään pöytä pitenee ja ihminen liukuu kauemmas. Sanna huomaa itse (”You went quiet. Good quiet?”), ja Eerolla on oma versionsa samasta: hän täyttää aukot, jotka ihminen mittaa. Uudet Momentit rekisteröivät huoneensa ja kerroksensa itse (`SETS`, `MSTEP`, `MFRONT`), ohje AGENTS.md:ssä.
 
 0.99.23 – Uusi Moment *Snow indoors.* (kokeilu, Joonaksen maalauksen mukaan): pitkän torstain jälkeisessä unessa olohuoneessa sataa lunta, ihminen hiihtää (uusi pidä pohjassa -kohta *ski*) kesään avautuvalle ovelle, ja lumella Ekskyysmi on sininen. Käsikirjoitus on kohdassa 7. package.json sai takaisin alkuperäisen muotoilunsa.
@@ -198,7 +200,7 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 
 Maanantain (#2) alussa ihmisen muki nousee huulelle ennen kuin Ekskyysmi herää. Mukia pitelevä käsi näkyy kupin ulkoreunalla koko liikkeen ajan. Sannan tervehdyksessä kämmen näkyy kasvojen sivulla. Epilogin (#24) ylävitosessa ihminen pitää kätensä posken korkeudella samalla kun Ekskyysmi korjaa tähtäystään.
 
-**Eivät tarinassa** (Moments-valikossa ensimmäisen päivän jälkeen): *Sometime.*, *One small thing.*, *The reply*, *The voice message*, *Footage.* (*The posting.* siirtyi tarinaan 0.74:ssä, #19.) **Kokeilussa** (Moments-valikon osio *New. Being tried*, 0.99.22 alkaen; tarinaan vain Joonaksen kanssa päättäen): *Kick-off.* (keho ensin, tarina perässä; #10:n ”It’s my chest. You just do the commentary.” näytettynä: selostaja tulee myöhässä). *Plus one.* (kolmas tulee pöytään: pöytä on tunne, ihminen ei kutistu; Sannan ja Eeron syvyys). *Snow indoors.* (Joonaksen maalaus: hiihtäjä lumisessa huoneessa, ovi kesään; ”aika ja paikka voi olla ihan jotain toisenlaista”).
+**Eivät tarinassa** (Moments-valikossa ensimmäisen päivän jälkeen): *Sometime.*, *One small thing.*, *The reply*, *The voice message*, *Footage.* (*The posting.* siirtyi tarinaan 0.74:ssä, #19.) **Kokeilussa** (Moments-valikon osio *New. Being tried*, 0.99.22 alkaen; tarinaan vain Joonaksen kanssa päättäen): *Kick-off.* (keho ensin, tarina perässä; #10:n ”It’s my chest. You just do the commentary.” näytettynä: selostaja tulee myöhässä). *Plus one.* (kolmas tulee pöytään: pöytä on tunne, ihminen ei kutistu; Sannan ja Eeron syvyys). *The lift.* (maanantain ”Eero takes the lift for a REASON?” lunastettu näyttämällä, ei nimeämällä). *Snow indoors.* (Joonaksen maalaus: hiihtäjä lumisessa huoneessa, ovi kesään; ”aika ja paikka voi olla ihan jotain toisenlaista”).
 
 **Snow indoors. – käsikirjoitus ennen koodia (0.99.23).** Pitkän torstain jälkeinen yö. Small plan: *Get to the door.*
 1. Olohuoneessa sataa lunta. Ihmisellä on sukset jalassa (”In 2014.” – Ekskyysmillä ne ovat kansiossa ”plans”). Lamppu palaa, ja sen alla lumi on sulanut.
