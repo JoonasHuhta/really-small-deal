@@ -49,6 +49,9 @@ function startLab(id){hotReset();
 // Moments (TYOSUUNNITELMA.md section 4): for players. Extras are named by the situation, so someone can find the one that
 // hurts right now; they open after the first day, because Monday teaches the language. Story moments appear once played,
 // so the ending is never spoiled. The full Scenario lab is a development tool: index.html?lab.
+// 0.99.32 (Joonas 26.11.: "in the test version I'd like access to every scene"): Settings › Unlock all (testing). Remembered on
+// this device. Every chapter in Chapters, every scene in Moments (the story's, the extras, those being tried, the sketches).
+var TESTING=false;try{TESTING=window.localStorage.getItem('ekskyysmi.test')==='on';}catch(e){}
 var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}catch(e){return false;}})();
 var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
 // 0.99.22 (Joonas 26.11.: "let's make scenes into Moments and try all kinds of things"): new scenes start here, outside the story,
@@ -59,18 +62,23 @@ var SITUATION={santa:'Your present, opened in front of everyone.',leaving:'Going
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
 var WIP=['epilogue','mug'];
-function wipList(){if(!DEVLAB)return '';var h='<div class="eyebrow">Work in progress</div><div class="lab-list">';for(var i=0;i<WIP.length;i++)if(LABS[WIP[i]])h+=momentButton(WIP[i],LABS[WIP[i]].blurb);return h+'</div>';}
+function wipList(shown){if(!DEVLAB&&!TESTING)return '';var list=WIP.slice();
+  if(TESTING&&shown)for(var k in LABS)if(list.indexOf(k)<0)list.push(k);   // testing: every scene not listed above, the test clones included, once
+  var h='<div class="eyebrow">'+(TESTING?'Work in progress and test clones':'Work in progress')+'</div><div class="lab-list">',n=0;
+  for(var i=0;i<list.length;i++)if(LABS[list[i]]&&!(shown&&shown[list[i]])){n++;h+=momentButton(list[i],LABS[list[i]].blurb);}
+  return n?h+'</div>':'';}
 function showMoments(){
-  var sv=loadProgress(),top=sv?sv.unlocked||1:1,h='<div class="eyebrow">Moments</div>';
+  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked||1:1,h='<div class="eyebrow">Moments</div>';
   if(top<2){showOv(h+'<h2>Not yet.</h2><p>More moments open after the first day.</p>'+wipList()+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');return;}
   h+='<h2>Play a moment.</h2><p>On its own, outside the story.</p><div class="eyebrow">Situations</div><div class="lab-list">';
-  for(var i=0;i<EXTRAS.length;i++)if(LABS[EXTRAS[i]])h+=momentButton(EXTRAS[i],SITUATION[EXTRAS[i]]);
+  var shown={};function add(k,line){if(!LABS[k]||shown[k])return '';shown[k]=1;return momentButton(k,line);}
+  for(var i=0;i<EXTRAS.length;i++)h+=add(EXTRAS[i],SITUATION[EXTRAS[i]]);
   h+='</div><div class="eyebrow">New. Being tried</div><div class="lab-list">';
-  for(i=0;i<TRYING.length;i++)if(LABS[TRYING[i]])h+=momentButton(TRYING[i],SITUATION[TRYING[i]]);
+  for(i=0;i<TRYING.length;i++)h+=add(TRYING[i],SITUATION[TRYING[i]]);
   h+='</div><div class="eyebrow">From the story</div><div class="lab-list">';
-  var last=sv.done?5:top-1;
-  for(var c=1;c<=last;c++)for(var j=0;AFTER[c]&&j<AFTER[c].length;j++){var id=AFTER[c][j];if(LABS[id])h+=momentButton(id,LABS[id].blurb);}
-  showOv(h+'</div>'+wipList()+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
+  var last=TESTING||sv&&sv.done?5:top-1;
+  for(var c=1;c<=last;c++)for(var j=0;AFTER[c]&&j<AFTER[c].length;j++){var id=AFTER[c][j];h+=add(id,LABS[id]&&LABS[id].blurb);}
+  showOv(h+'</div>'+wipList(shown)+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
 }
 function showLab(){
   var h='<div class="eyebrow">Scenario lab</div><h2>Try a scene.</h2><p>Every short scene on its own, including the ones not in the story yet.</p><div class="lab-list">';

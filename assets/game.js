@@ -58,7 +58,10 @@ function tone(f,t0,dur,type,vol,f2){
 var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
 // Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
 // A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
-var MUSIC={title:'assets/audio/title.mp3',epilogue:'assets/audio/epilogue.mp3',tuesday:'assets/audio/ordinary-evening.mp3',quiet:'assets/audio/quiet-arpeggios.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
+var MUSIC={title:'assets/audio/title.mp3',title2:'assets/audio/title-2.mp3',epilogue:'assets/audio/epilogue.mp3',tuesday:'assets/audio/ordinary-evening.mp3',quiet:'assets/audio/quiet-arpeggios.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
+// 0.99.32 (Joonas 26.11.): a new title song (QQQ2, -15.8 LUFS, the first one -16.1: no level change needed). It is the title song
+// now; in testing mode the title can switch back to the first one, to compare them on a phone while looking at the title.
+var titleSong='title2';try{if(window.localStorage.getItem('ekskyysmi.titlesong')==='title')titleSong='title';}catch(e){}
 var firstTouch=false,BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 // Scene music is background: well under the voices. It fades in, and steps aside for a moment when something lands.
 var MUSICVOLS={epilogue:0.36,tuesday:0.2,quiet:0.15},MUSICFADEIN={tuesday:2,quiet:3},MUSICONCE={epilogue:true},
@@ -3852,6 +3855,9 @@ function startLab(id){hotReset();
 // Moments (TYOSUUNNITELMA.md section 4): for players. Extras are named by the situation, so someone can find the one that
 // hurts right now; they open after the first day, because Monday teaches the language. Story moments appear once played,
 // so the ending is never spoiled. The full Scenario lab is a development tool: index.html?lab.
+// 0.99.32 (Joonas 26.11.: "in the test version I'd like access to every scene"): Settings › Unlock all (testing). Remembered on
+// this device. Every chapter in Chapters, every scene in Moments (the story's, the extras, those being tried, the sketches).
+var TESTING=false;try{TESTING=window.localStorage.getItem('ekskyysmi.test')==='on';}catch(e){}
 var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}catch(e){return false;}})();
 var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
 // 0.99.22 (Joonas 26.11.: "let's make scenes into Moments and try all kinds of things"): new scenes start here, outside the story,
@@ -3862,18 +3868,23 @@ var SITUATION={santa:'Your present, opened in front of everyone.',leaving:'Going
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
 var WIP=['epilogue','mug'];
-function wipList(){if(!DEVLAB)return '';var h='<div class="eyebrow">Work in progress</div><div class="lab-list">';for(var i=0;i<WIP.length;i++)if(LABS[WIP[i]])h+=momentButton(WIP[i],LABS[WIP[i]].blurb);return h+'</div>';}
+function wipList(shown){if(!DEVLAB&&!TESTING)return '';var list=WIP.slice();
+  if(TESTING&&shown)for(var k in LABS)if(list.indexOf(k)<0)list.push(k);   // testing: every scene not listed above, the test clones included, once
+  var h='<div class="eyebrow">'+(TESTING?'Work in progress and test clones':'Work in progress')+'</div><div class="lab-list">',n=0;
+  for(var i=0;i<list.length;i++)if(LABS[list[i]]&&!(shown&&shown[list[i]])){n++;h+=momentButton(list[i],LABS[list[i]].blurb);}
+  return n?h+'</div>':'';}
 function showMoments(){
-  var sv=loadProgress(),top=sv?sv.unlocked||1:1,h='<div class="eyebrow">Moments</div>';
+  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked||1:1,h='<div class="eyebrow">Moments</div>';
   if(top<2){showOv(h+'<h2>Not yet.</h2><p>More moments open after the first day.</p>'+wipList()+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');return;}
   h+='<h2>Play a moment.</h2><p>On its own, outside the story.</p><div class="eyebrow">Situations</div><div class="lab-list">';
-  for(var i=0;i<EXTRAS.length;i++)if(LABS[EXTRAS[i]])h+=momentButton(EXTRAS[i],SITUATION[EXTRAS[i]]);
+  var shown={};function add(k,line){if(!LABS[k]||shown[k])return '';shown[k]=1;return momentButton(k,line);}
+  for(var i=0;i<EXTRAS.length;i++)h+=add(EXTRAS[i],SITUATION[EXTRAS[i]]);
   h+='</div><div class="eyebrow">New. Being tried</div><div class="lab-list">';
-  for(i=0;i<TRYING.length;i++)if(LABS[TRYING[i]])h+=momentButton(TRYING[i],SITUATION[TRYING[i]]);
+  for(i=0;i<TRYING.length;i++)h+=add(TRYING[i],SITUATION[TRYING[i]]);
   h+='</div><div class="eyebrow">From the story</div><div class="lab-list">';
-  var last=sv.done?5:top-1;
-  for(var c=1;c<=last;c++)for(var j=0;AFTER[c]&&j<AFTER[c].length;j++){var id=AFTER[c][j];if(LABS[id])h+=momentButton(id,LABS[id].blurb);}
-  showOv(h+'</div>'+wipList()+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
+  var last=TESTING||sv&&sv.done?5:top-1;
+  for(var c=1;c<=last;c++)for(var j=0;AFTER[c]&&j<AFTER[c].length;j++){var id=AFTER[c][j];h+=add(id,LABS[id]&&LABS[id].blurb);}
+  showOv(h+'</div>'+wipList(shown)+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
 }
 function showLab(){
   var h='<div class="eyebrow">Scenario lab</div><h2>Try a scene.</h2><p>Every short scene on its own, including the ones not in the story yet.</p><div class="lab-list">';
@@ -7135,8 +7146,8 @@ function draw(){
 function showOv(html,kind){ov.innerHTML='<div class="card">'+html+'</div>';ov.className='ov on';ov.dataset.kind=kind||'title';}
 function hideOv(){ov.className='ov';ov.innerHTML='';}
 function showChapters(){
-  var sv=loadProgress(),h='<div class="eyebrow">Chapters</div><h2>Pick a moment.</h2><div class="lab-list">';
-  for(var i=1;sv&&i<=sv.unlocked&&i<=5;i++)h+='<button class="lab" type="button" data-ch="'+i+'"><b>'+CHAPTERS[i].title+'</b><span>'+CHAPTERS[i].day.charAt(0)+CHAPTERS[i].day.slice(1).toLowerCase().replace(/\b(mon|tues|wednes|thurs|fri)day\b/g,function(d){return d.charAt(0).toUpperCase()+d.slice(1);})+'</span></button>';
+  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked:0,h='<div class="eyebrow">Chapters</div><h2>Pick a moment.</h2><div class="lab-list">';
+  for(var i=1;i<=top&&i<=5;i++)h+='<button class="lab" type="button" data-ch="'+i+'"><b>'+CHAPTERS[i].title+'</b><span>'+CHAPTERS[i].day.charAt(0)+CHAPTERS[i].day.slice(1).toLowerCase().replace(/\b(mon|tues|wednes|thurs|fri)day\b/g,function(d){return d.charAt(0).toUpperCase()+d.slice(1);})+'</span></button>';
   showOv(h+'</div><p class="small">Each one starts from its beginning and runs on into the moments after it.</p><button class="go alt" type="button" data-go="menu">Back</button>','menu');
 }
 // The version is already in the page: index.html asks for game.js?v=<version>.
@@ -7165,7 +7176,7 @@ function showWeekEnd(){
    receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function showTitle(){
-  var sv=loadProgress();music('title');titleTagAt=-9;   // the tagline is measured again for the new title
+  var sv=loadProgress();music(titleSong);titleTagAt=-9;   // the tagline is measured again for the new title
   G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
   showOv(titleHTML(sv));
   render();
@@ -7180,8 +7191,9 @@ function titleHTML(sv){   // 0.89: its own function, so a language change can re
    '<div class="title-actions">'+
    (sv&&!sv.fin?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
       :'<button class="go" type="button" data-go="start">'+tr('New game')+' <span aria-hidden="true">→</span></button>')+'</div>'+
-   rotateHint+'<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
-   (sv&&sv.unlocked>=2||DEVLAB?'<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>':'')+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button>'+fullLink+'<button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
+   rotateHint+'<div class="menu-links">'+(sv||TESTING?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
+   (TESTING?'<button class="link" type="button" data-go="song">'+(titleSong==='title2'?'Music: new song':'Music: first song')+'</button>':'')+
+   (sv&&sv.unlocked>=2||DEVLAB||TESTING?'<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>':'')+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button>'+fullLink+'<button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
 }
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
 function showEnd(){
@@ -7221,6 +7233,7 @@ ov.addEventListener('click',function(e){
   if(go==='lab'){reset(null);showLab();return;}
   if(go==='moments'){reset(null);showMoments();return;}
   if(go==='chapters'){showChapters();return;}
+  if(go==='song'){titleSong=titleSong==='title2'?'title':'title2';try{window.localStorage.setItem('ekskyysmi.titlesong',titleSong);}catch(e){}music(titleSong);showOv(titleHTML(loadProgress()));return;}   // testing: compare the two title songs
   if(go==='about'){showAbout();return;}
   if(go==='start')startGame(null,false);
   else if(go==='cont'){var sv=loadProgress();startChapter(sv?sv.ch:1,sv&&sv.at);}
@@ -7283,6 +7296,10 @@ document.getElementById('slow').addEventListener('click',function(){
   slowUI();sfx('pick');
 });
 slowUI();
+function testingUI(){var b=document.getElementById('testing');if(b)b.setAttribute('aria-pressed',String(TESTING));}
+(function(){var b=document.getElementById('testing');if(!b)return;b.addEventListener('click',function(){
+  TESTING=!TESTING;try{window.localStorage.setItem('ekskyysmi.test',TESTING?'on':'off');}catch(e){}testingUI();sfx('pick');
+  if(!G.started&&ov.classList.contains('on')&&ov.dataset.kind==='title')showOv(titleHTML(loadProgress()));});testingUI();})();
 function belowUI(){var b=document.getElementById('below');if(b)b.setAttribute('aria-pressed',String(textBelow));}
 (function(){var b=document.getElementById('below');if(!b)return;b.addEventListener('click',function(){
   textBelow=!textBelow;try{window.localStorage.setItem('ekskyysmi.below',textBelow?'on':'off');}catch(e){}belowUI();render();sfx('pick');});belowUI();})();

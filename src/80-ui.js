@@ -2,8 +2,8 @@
 function showOv(html,kind){ov.innerHTML='<div class="card">'+html+'</div>';ov.className='ov on';ov.dataset.kind=kind||'title';}
 function hideOv(){ov.className='ov';ov.innerHTML='';}
 function showChapters(){
-  var sv=loadProgress(),h='<div class="eyebrow">Chapters</div><h2>Pick a moment.</h2><div class="lab-list">';
-  for(var i=1;sv&&i<=sv.unlocked&&i<=5;i++)h+='<button class="lab" type="button" data-ch="'+i+'"><b>'+CHAPTERS[i].title+'</b><span>'+CHAPTERS[i].day.charAt(0)+CHAPTERS[i].day.slice(1).toLowerCase().replace(/\b(mon|tues|wednes|thurs|fri)day\b/g,function(d){return d.charAt(0).toUpperCase()+d.slice(1);})+'</span></button>';
+  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked:0,h='<div class="eyebrow">Chapters</div><h2>Pick a moment.</h2><div class="lab-list">';
+  for(var i=1;i<=top&&i<=5;i++)h+='<button class="lab" type="button" data-ch="'+i+'"><b>'+CHAPTERS[i].title+'</b><span>'+CHAPTERS[i].day.charAt(0)+CHAPTERS[i].day.slice(1).toLowerCase().replace(/\b(mon|tues|wednes|thurs|fri)day\b/g,function(d){return d.charAt(0).toUpperCase()+d.slice(1);})+'</span></button>';
   showOv(h+'</div><p class="small">Each one starts from its beginning and runs on into the moments after it.</p><button class="go alt" type="button" data-go="menu">Back</button>','menu');
 }
 // The version is already in the page: index.html asks for game.js?v=<version>.
@@ -32,7 +32,7 @@ function showWeekEnd(){
    receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function showTitle(){
-  var sv=loadProgress();music('title');titleTagAt=-9;   // the tagline is measured again for the new title
+  var sv=loadProgress();music(titleSong);titleTagAt=-9;   // the tagline is measured again for the new title
   G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
   showOv(titleHTML(sv));
   render();
@@ -47,8 +47,9 @@ function titleHTML(sv){   // 0.89: its own function, so a language change can re
    '<div class="title-actions">'+
    (sv&&!sv.fin?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
       :'<button class="go" type="button" data-go="start">'+tr('New game')+' <span aria-hidden="true">→</span></button>')+'</div>'+
-   rotateHint+'<div class="menu-links">'+(sv?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
-   (sv&&sv.unlocked>=2||DEVLAB?'<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>':'')+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button>'+fullLink+'<button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
+   rotateHint+'<div class="menu-links">'+(sv||TESTING?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
+   (TESTING?'<button class="link" type="button" data-go="song">'+(titleSong==='title2'?'Music: new song':'Music: first song')+'</button>':'')+
+   (sv&&sv.unlocked>=2||DEVLAB||TESTING?'<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>':'')+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button>'+fullLink+'<button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
 }
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
 function showEnd(){
@@ -88,6 +89,7 @@ ov.addEventListener('click',function(e){
   if(go==='lab'){reset(null);showLab();return;}
   if(go==='moments'){reset(null);showMoments();return;}
   if(go==='chapters'){showChapters();return;}
+  if(go==='song'){titleSong=titleSong==='title2'?'title':'title2';try{window.localStorage.setItem('ekskyysmi.titlesong',titleSong);}catch(e){}music(titleSong);showOv(titleHTML(loadProgress()));return;}   // testing: compare the two title songs
   if(go==='about'){showAbout();return;}
   if(go==='start')startGame(null,false);
   else if(go==='cont'){var sv=loadProgress();startChapter(sv?sv.ch:1,sv&&sv.at);}
@@ -150,6 +152,10 @@ document.getElementById('slow').addEventListener('click',function(){
   slowUI();sfx('pick');
 });
 slowUI();
+function testingUI(){var b=document.getElementById('testing');if(b)b.setAttribute('aria-pressed',String(TESTING));}
+(function(){var b=document.getElementById('testing');if(!b)return;b.addEventListener('click',function(){
+  TESTING=!TESTING;try{window.localStorage.setItem('ekskyysmi.test',TESTING?'on':'off');}catch(e){}testingUI();sfx('pick');
+  if(!G.started&&ov.classList.contains('on')&&ov.dataset.kind==='title')showOv(titleHTML(loadProgress()));});testingUI();})();
 function belowUI(){var b=document.getElementById('below');if(b)b.setAttribute('aria-pressed',String(textBelow));}
 (function(){var b=document.getElementById('below');if(!b)return;b.addEventListener('click',function(){
   textBelow=!textBelow;try{window.localStorage.setItem('ekskyysmi.below',textBelow?'on':'off');}catch(e){}belowUI();render();sfx('pick');});belowUI();})();
