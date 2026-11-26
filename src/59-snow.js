@@ -141,3 +141,4 @@ function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get 
   ['S','It was. I’m keeping the file. It’s wet and it’s empty.'],
   ['S','It’s my favourite.']
  ]);}
+SETS.dream=dreamRoom;MSTEP.push(stepDream);MFRONT.push(drawDreamFront);

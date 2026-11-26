@@ -25,6 +25,7 @@ Older plans are history and partly out of date: `TYOSUUNNITELMA.md`, `CODEX_JATK
 - Speakers: S Ekskyysmi, H human, A Sanna, B Eero, R Riitta, P phone, N narrator, Z/Y/W other people's shadows.
 - Story order: `src/33-moments.js` (`AFTER`). Moments are registered in `LABS` (`src/50-lab.js`).
 - CAPITALS in a line are emphasis and are drawn as such. Use them like a writer, not a shouter.
+- **New Moments being tried** (0.99.22–): one file each, `src/59-<name>.js`. Register the scene in `LABS`, add its id to `TRYING` and a one-line situation to `SITUATION` (`src/50-lab.js`); it then shows under *New. Being tried* in the Moments menu, outside the story. A Moment that needs its own room, a per-frame step or a front layer registers it in `SETS`, `MSTEP` or `MFRONT` (`src/00-core.js`) instead of being wired into the engine. A new hold kind needs its own branch in `holdText`, `holdStep` and `finishHold` (an unknown kind falls through to the comforting pose).
 
 ## Rules of the writing
 - Ekskyysmi is always wrong about scale and often right about the observation. Bureaucratic, sincere, never cruel.

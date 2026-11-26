@@ -707,7 +707,7 @@ function draw(){
     drawTape();drawToss();drawForm();drawDots();drawPaper();
     sannaShadow();eeroShadow();riittaShadow();
     drawCoworkers(1);
-    drawDreamFront();   // Snow indoors.: a few near flakes in front of the pair, under the words
+    for(var mf=0;mf<MFRONT.length;mf++)MFRONT[mf]();   // the new Moments' front layers (snow, a table): in front of the people, under the words
     if(g.set==='bar'&&g.bar)barFront();
     drawLens();
     drawNight();drawPie();   // on the screen, not in the room: the camera does not get to zoom into a feeling

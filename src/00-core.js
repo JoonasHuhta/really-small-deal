@@ -20,6 +20,9 @@ try{var ts=parseInt(window.localStorage.getItem('ekskyysmi.text'),10);if(ts>=0&&
 var WIDE=true,paused=false,appHidden=false,nativePaused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
 var logDialog=document.getElementById('dialogue-log'),modalWasPaused=false,dragging=false;
 var Q=[],WAIT=null,TIMER=0,LOCK=0,CH=null;
+// 0.99.24: the new Moments (59-*.js) register their own rooms, per-frame steps and front layers here, so a scene being tried
+// does not have to be wired into the engine, the update loop and the draw order one by one.
+var SETS={},MSTEP=[],MFRONT=[];
 var NAMES={S:'EKSKYYSMI',H:'HUMAN',A:'SANNA',B:'EERO',P:'PHONE',N:'NARRATOR',R:'RIITTA',Z:'SANNA’S SHADOW',Y:'EERO’S SHADOW',W:'RIITTA’S SHADOW',T:'BARTENDER',X:'A STRANGER',L:'LIBRARIAN'};
 
 function clamp(v,a,b){return v<a?a:v>b?b:v;}
