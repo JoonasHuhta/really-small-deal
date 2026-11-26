@@ -498,6 +498,7 @@ function drawOutside(){
   if(an==='tape'){hx=HOME;h.nod=(t>0.8&&t<1.6)?Math.sin((t-0.8)/0.8*Math.PI):0;aFace=t<1.4?-1:1;}
   else if(an==='none'){h.nod=(t>0.5&&t<1.3)?Math.sin((t-0.5)/0.8*Math.PI):0;h.sip=t>2.2&&t<3.6?Math.sin((t-2.2)/1.4*Math.PI):0;}
   else if(an==='bite'){h.face=t<1.6?'stiff':'neutral';}
+  else if(an==='glance'){h.phone=t>0.45&&t<1.7;h.buzz=t>0.3&&t<0.8?0.7:0;}   // Kick-off.: a buzz, half a look, the phone goes back
   else if(an==='nod'){h.nod=(t>0.5&&t<1.3)?Math.sin((t-0.5)/0.8*Math.PI):(t>1.6&&t<2.4)?Math.sin((t-1.6)/0.8*Math.PI):0;}
   else if(an==='grow'){h.face='stiff';h.flinch=t<1.9?0.8:0.25;h.shake=t<2.8;}
   else if(an==='cover'){h.face='down';h.down=true;if(g.day!=='C'&&t>1&&t<2.8){aFace=-1;aWave=true;}}

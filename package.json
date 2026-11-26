@@ -1,6 +1,6 @@
 {
   "name": "really-small-deal",
-  "version": "0.99.21",
+  "version": "0.99.22",
   "private": true,
   "description": "Really Small Deal. A small moment. A very long shadow.",
   "scripts": {
@@ -15,8 +15,14 @@
     "android:run": "npm run android:sync && npx cap run android",
     "android:icons": "npx @capacitor/assets generate --android --assetPath resources --iconBackgroundColor \"#202830\" --splashBackgroundColor \"#12171b\""
   },
-  "engines": { "node": ">=22.18.0" },
-  "overrides": { "xcode": { "uuid": "11.1.1" } },
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "overrides": {
+    "xcode": {
+      "uuid": "11.1.1"
+    }
+  },
   "dependencies": {
     "@capacitor/android": "7.6.10",
     "@capacitor/app": "7.1.2",

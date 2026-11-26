@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.22 – Uusi Moment *Kick-off.* (kokeilu, ei tarinassa): puhelin värähtää, rintakehä hälyttää ennen kuin kukaan on lukenut mitään, ja Ekskyysmi saapuu arkistosta myöhässä selostamaan. Viesti on kakku; rintakehä kuulee sen viimeisenä. Moments-valikossa on oma osio *New. Being tried* uusille kokeiluille.
+
 0.99.21 – Päävalikon huoneessa sataa hiljaa lunta (Joonaksen maalauksen mukaan: lumi huoneessa, kesä oven takana). Hiutaleet sulavat oven valossa eivätkä tule otsikon tai valintojen päälle. Liikettä vähentävä asetus poistaa lumen.
 
 0.99.20 – Selaimen päävalikko neuvoo kääntämään puhelimen vaakaan. Tietokoneella koko näytön voi avata päävalikosta.
@@ -192,7 +194,7 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 
 Maanantain (#2) alussa ihmisen muki nousee huulelle ennen kuin Ekskyysmi herää. Mukia pitelevä käsi näkyy kupin ulkoreunalla koko liikkeen ajan. Sannan tervehdyksessä kämmen näkyy kasvojen sivulla. Epilogin (#24) ylävitosessa ihminen pitää kätensä posken korkeudella samalla kun Ekskyysmi korjaa tähtäystään.
 
-**Eivät tarinassa** (Moments-valikossa ensimmäisen päivän jälkeen): *Sometime.*, *One small thing.*, *The reply*, *The voice message*, *Footage.* (*The posting.* siirtyi tarinaan 0.74:ssä, #19.) **Vain labrassa:** testikloonit (*Lamp gap.*, *The bag.*) ja prototyyppi *A Tuesday, with a mug.* (merirosvohattu, diili, ”mug or door?”).
+**Eivät tarinassa** (Moments-valikossa ensimmäisen päivän jälkeen): *Sometime.*, *One small thing.*, *The reply*, *The voice message*, *Footage.* (*The posting.* siirtyi tarinaan 0.74:ssä, #19.) **Kokeilussa** (Moments-valikon osio *New. Being tried*, 0.99.22 alkaen; tarinaan vain Joonaksen kanssa päättäen): *Kick-off.* (keho ensin, tarina perässä; #10:n ”It’s my chest. You just do the commentary.” näytettynä: selostaja tulee myöhässä). **Vain labrassa:** testikloonit (*Lamp gap.*, *The bag.*) ja prototyyppi *A Tuesday, with a mug.* (merirosvohattu, diili, ”mug or door?”).
 
 ---
 

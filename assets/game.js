@@ -3816,7 +3816,8 @@ var LABS={
   footage:{title:'Footage.',blurb:'A nice chat with Sanna. Ekskyysmi switches to the corner camera. It only points one way.',script:labFootage},
   enhance:{title:'Enhance.',blurb:'One eyebrow. Four levels of zoom. A forensic investigation nobody asked for.',script:labEnhance},
   mug:{title:'A Tuesday, with a mug.',blurb:'Prototype (VISIO V1): the mug is how much of you there is today. The senses drain it, quiet refills it, and an empty mug makes a monster.',script:labMug},
-  comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments}
+  comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments},
+  kickoff:{title:'Kick-off.',blurb:'The phone buzzes and the chest goes. Ekskyysmi does the commentary. It was in the archive. It missed the kick-off.',script:labKickoff}
 };
 function labScene(o){return [function(){G.chapMusic=null;},scene(o),function(){
   var g=G;g.dayTag=g.moment&&WHEN[g.moment]?WHEN[g.moment].replace(/,\s*\d\d?:\d\d$/,''):null;g.stampT=0;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
@@ -3835,7 +3836,10 @@ function startLab(id){hotReset();
 // so the ending is never spoiled. The full Scenario lab is a development tool: index.html?lab.
 var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}catch(e){return false;}})();
 var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
-var SITUATION={detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
+// 0.99.22 (Joonas 26.11.: "let's make scenes into Moments and try all kinds of things"): new scenes start here, outside the story,
+// under their own heading so a tester knows they are being tried. Whether one joins the week is decided later, with Joonas.
+var TRYING=['kickoff'];
+var SITUATION={kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
@@ -3846,6 +3850,8 @@ function showMoments(){
   if(top<2){showOv(h+'<h2>Not yet.</h2><p>More moments open after the first day.</p>'+wipList()+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');return;}
   h+='<h2>Play a moment.</h2><p>On its own, outside the story.</p><div class="eyebrow">Situations</div><div class="lab-list">';
   for(var i=0;i<EXTRAS.length;i++)if(LABS[EXTRAS[i]])h+=momentButton(EXTRAS[i],SITUATION[EXTRAS[i]]);
+  h+='</div><div class="eyebrow">New. Being tried</div><div class="lab-list">';
+  for(i=0;i<TRYING.length;i++)if(LABS[TRYING[i]])h+=momentButton(TRYING[i],SITUATION[TRYING[i]]);
   h+='</div><div class="eyebrow">From the story</div><div class="lab-list">';
   var last=sv.done?5:top-1;
   for(var c=1;c<=last;c++)for(var j=0;AFTER[c]&&j<AFTER[c].length;j++){var id=AFTER[c][j];if(LABS[id])h+=momentButton(id,LABS[id].blurb);}
@@ -5400,6 +5406,88 @@ function drawStamp(){
   ctx.fillStyle='#3b2531';rr(-41,36,82,5,1);ctx.fill();
   ctx.restore();
 }
+// ---- src/59-kickoff.js ----
+/* ================= Kick-off. (Moment, 0.99.22): the chest goes before anyone has read anything ================= */
+// Joonas 26.11. (the RSD book: body first, story after). The core line of #10 is "It's my chest. You just do the commentary."
+// Here the match kicks off without the commentator: the phone buzzes while Ekskyysmi is in the archive, the chest goes, and the
+// shadow arrives late and has to commentate backwards. The message is cake. The chest is slower to hear that than anyone.
+// Not advice: nobody explains anything, they wait together, and the chest comes down when it comes down.
+function labKickoff(){
+  var empty=['S','—'];   // the wall is empty: the line is the gap (as in Quiet.)
+  return labScene({set:'office',title:'Kick-off.',plan:'Read one message.',clock:10*3600+12*60}).concat([
+  shadowAway,
+  ['N','10:12. A quiet desk. Ekskyysmi is in the archive, re-alphabetising 2011.'],
+  function(){var g=G;g.phoneN=4;g.buzz=0.9;sfx('pop');},{wait:0.45},
+  hit(0.85,'P'),{wait:1.3},
+  ['N','The phone buzzes. The chest goes. Nobody has read anything yet.'],
+  ['H','…Hello?'],
+  empty,
+  function(){shadowBack(0.5);sfx('step');},{wait:0.9},
+  ['S','Sorry— sorry. I was in the archive. Did I miss anything?',{look:'stunned'}],
+  ['H','The chest went.'],
+  set({s:0.75,mood:'alert'}),
+  ['S','WITHOUT me? I do the commentary!'],
+  ['H','It didn’t wait.'],
+  ['S','Look at it. Full alarm. Cold hands. The stomach has left the building.'],
+  ['S','And no commentary. Just noise. That’s not a match. That’s a riot.'],
+  ['H','So commentate.'],
+  ['S','I missed the kick-off! I’ll have to do it backwards.'],
+  {choice:[
+    {t:'It was Riitta. “Quick chat?” Again.',m:'worst',then:[
+      set({s:1.5,mood:'scared'}),
+      ['H','You haven’t read it.'],
+      ['S','I’m reading the CHEST. The chest says Riitta.'],
+      ['S','Look how well it fits. Like a glove. A cold glove.']]},
+    {t:'Turn it face down. Unread, it can’t have happened.',m:'hide',then:[
+      ['H','The chest says it already happened.'],
+      ['S','The chest is not a reliable witness. It goes off at doorbells.'],
+      ['H','And at the microwave.'],
+      ['S','The microwave knows what it did.']]},
+    {t:'Interview the chest. In its own words.',m:'stay',then:[
+      ['S','Chest. In your own words. What happened?'],
+      {wait:1.1},
+      ['S','…It says “buzz”.'],
+      ['H','That’s it?'],
+      ['S','One word. And it’s sticking to it.']]}
+  ]},
+  ['H','I’m reading it.'],
+  ['P','Sanna: “CAKE in the kitchen. Nobody knows whose birthday. Come anyway.”'],
+  set({mood:'surprised',s:0.8}),
+  ['S','…Cake.'],
+  ['H','Nobody knows whose birthday.'],
+  ['S','Then nobody can be left out of it.',{look:'pleased'}]
+ ],outside({title:'WHAT IT LOOKED LIKE',dur:'duration: 0.4 seconds',cap:'A phone buzzed. Someone at a desk glanced at it. That was all.',anim:'glance'}),[
+  calm,
+  // The chest has not had the news. It comes down slower than the story does.
+  function(){var g=G;g.pulse=0.5;g.anx=0.65;g.human.sweatT=0.45;g.human.face='stiff';g.morko.sT=0.9;g.morko.mood='worry';},
+  ['H','It’s cake.'],
+  ['S','The chest doesn’t know that yet.'],
+  ['H','Tell it.'],
+  {choice:[
+    {t:'A memo. Formal.',then:[
+      ['S','To: the chest. From: management. Re: cake. Stand down.',{look:'squint'}],
+      {wait:0.9},
+      ['S','…It doesn’t read memos.']]},
+    {t:'Shout it. CAKE.',then:[
+      ['S','CAKE!',{loud:1}],
+      function(){G.pulse=0.7;},
+      ['H','Now it’s up again.'],
+      ['S','It heard the volume. Not the word.']]},
+    {t:'Wait with it.',m:'stay',then:[
+      ['S','Fine. We wait. I’m good at waiting. I wait for replies professionally.']]}
+  ]},
+  {hold:{kind:'stay',secs:2.6,text:'Staying until the chest catches up.'}},
+  function(){var g=G;g.pulse=0;g.anx=0.15;g.human.sweatT=0;g.human.face='neutral';g.morko.sT=1;g.morko.mood='calm';g.morko.pose=null;},
+  ['N','Ninety seconds later the chest gets the memo. It does not apologise.'],
+  ['S','For the record: the chest kicked off, and I came in at half-time.'],
+  ['H','And?'],
+  ['S','And the score was cake.'],
+  ['H','Coming?'],
+  ['S','To the kitchen? Where the people are?',{look:'stunned'}],
+  ['H','Where the cake is.'],
+  function(){var g=G;g.human.xT=1060;},{wait:0.8},
+  ['S','…Fine. I’ll commentate the cake.']
+ ]);}
 // ---- src/59-toss.js ----
 /* ================= letting go: one card, dragged and dropped. The only thing in the game you throw away. ================= */
 // Drag the card and release it, and it flies. Tap instead, and Ekskyysmi has to be talked into it: two excuses, then it opens its hand.
@@ -6049,6 +6137,7 @@ function drawOutside(){
   if(an==='tape'){hx=HOME;h.nod=(t>0.8&&t<1.6)?Math.sin((t-0.8)/0.8*Math.PI):0;aFace=t<1.4?-1:1;}
   else if(an==='none'){h.nod=(t>0.5&&t<1.3)?Math.sin((t-0.5)/0.8*Math.PI):0;h.sip=t>2.2&&t<3.6?Math.sin((t-2.2)/1.4*Math.PI):0;}
   else if(an==='bite'){h.face=t<1.6?'stiff':'neutral';}
+  else if(an==='glance'){h.phone=t>0.45&&t<1.7;h.buzz=t>0.3&&t<0.8?0.7:0;}   // Kick-off.: a buzz, half a look, the phone goes back
   else if(an==='nod'){h.nod=(t>0.5&&t<1.3)?Math.sin((t-0.5)/0.8*Math.PI):(t>1.6&&t<2.4)?Math.sin((t-1.6)/0.8*Math.PI):0;}
   else if(an==='grow'){h.face='stiff';h.flinch=t<1.9?0.8:0.25;h.shake=t<2.8;}
   else if(an==='cover'){h.face='down';h.down=true;if(g.day!=='C'&&t>1&&t<2.8){aFace=-1;aWave=true;}}
