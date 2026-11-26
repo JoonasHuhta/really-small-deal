@@ -473,6 +473,7 @@ function drawLines(){
       var panelEdge=VIEW.t+SCENE_BOTTOM/VIEW.z;
       bubble(g.bar.tx-45,Math.min(BARY-15,panelEdge-14/VIEW.z),l.text,{maxW:mw||240,reveal:rv,tailX:g.bar.tx});}
     else if(l.who==='X'&&g.bar)bubble(g.bar.sx,FEETY-172,l.text,{maxW:mw,reveal:rv});
+    else if(l.who==='X'&&g.bus&&(g.set==='busstop'||g.set==='bus'))bubble(g.bus.x,FEETY-172,l.text,{maxW:mw,reveal:rv});   // Bus stop.: the colleague from the third floor
     else if(l.who==='L')bubble(760,FEETY-172,l.text,{maxW:mw,reveal:rv});
     else if(g.night&&NIGHT_EYES[l.who])bubble(NIGHT_EYES[l.who].x,NIGHT_EYES[l.who].y-16,l.text,{dark:true,maxW:mw||250,reveal:rv});   // in the dark, a tail points at the eyes that spoke
     else if(l.who==='Z')bubble(g.ax+62,WALLY-178,l.text,{dark:true,noTail:true,reveal:rv});

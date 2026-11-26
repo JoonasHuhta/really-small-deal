@@ -208,7 +208,8 @@ function lineInBubble(l){var g=G;
   if(l.big&&l.who==='S')return true;
   if(l.who==='N')return !!g.band&&!COMPACT;   // the narrator is printed in the scene's bottom band
   if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)return false;if(l.who==='S'&&g.morko.asleep)return false;
-  if(l.who==='T'||l.who==='X')return !!g.bar;
+  if(l.who==='T')return !!g.bar;
+  if(l.who==='X')return !!g.bar||!!(g.bus&&(g.set==='busstop'||g.set==='bus'));   // the bar stranger, or the colleague at the bus stop
   return 'SHABPRLZYW'.indexOf(l.who)>=0;}
 function nope(i){var o=CH[i],L=o.hush?HUSHNOPE:NOPE;o.tried=(o.tried||0)+1;G.nopeMsg=o.note||L[Math.min(o.tried-1,L.length-1)];G.morko.mood='stern';sfx('nope');render();}
 function holdText(){
