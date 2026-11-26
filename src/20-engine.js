@@ -142,7 +142,7 @@ function render(){
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
   // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
-  elLine.classList.toggle('echo',!textBelow&&(g.out?(!g.out.inside&&(g.out.anim==='text'||!COMPACT)):WAIT==='click'&&!!cur&&lineInBubble(cur)));
+  elLine.classList.toggle('echo',!textBelow&&(g.out&&!g.out.inside?(g.out.anim==='text'||!COMPACT):WAIT==='click'&&!!cur&&lineInBubble(cur)));
   elOpts.innerHTML=html;
   elOpts.classList.toggle('who-S',WAIT==='choice'&&(g.choiceWho||'S')==='S');elOpts.classList.toggle('who-H',WAIT==='choice'&&g.choiceWho==='H');
   for(var nn=2;nn<=5;nn++)elOpts.classList.toggle('n'+nn,WAIT==='choice'&&!!CH&&CH.length===nn);   // column count without :has (older Android web views)   // whose words these are, in their colour

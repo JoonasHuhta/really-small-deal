@@ -785,7 +785,7 @@ function render(){
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
   // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
-  elLine.classList.toggle('echo',!textBelow&&(g.out?(!g.out.inside&&(g.out.anim==='text'||!COMPACT)):WAIT==='click'&&!!cur&&lineInBubble(cur)));
+  elLine.classList.toggle('echo',!textBelow&&(g.out&&!g.out.inside?(g.out.anim==='text'||!COMPACT):WAIT==='click'&&!!cur&&lineInBubble(cur)));
   elOpts.innerHTML=html;
   elOpts.classList.toggle('who-S',WAIT==='choice'&&(g.choiceWho||'S')==='S');elOpts.classList.toggle('who-H',WAIT==='choice'&&g.choiceWho==='H');
   for(var nn=2;nn<=5;nn++)elOpts.classList.toggle('n'+nn,WAIT==='choice'&&!!CH&&CH.length===nn);   // column count without :has (older Android web views)   // whose words these are, in their colour
@@ -2140,12 +2140,14 @@ function mondayRepair(){
 var AFTER={
   2:['enhance','rewind'],
   3:['glass','colleagues','evening'],
-  4:['notnow','bar','nothing','library','form','quiet','evenings','posting','night'],   // the library before the form (21.11.): Evenings is THE SAME DAY as Quiet.
+  4:['notnow','bar','nothing','library','form','snow','quiet','evenings','posting','night'],   // the library before the form (21.11.): Evenings is THE SAME DAY as Quiet.
+     // Snow indoors. (0.99.31, Joonas 26.11.: "what the game really needs"): the night after the form. The form says the shadow is
+     // common; the dream says it has a colour. It learns to lie down on duty, and the next morning (Quiet.) the wall is empty.
      // The posting (21.11., Joonas: into the story): the first evening of the part-time job, 22:47, between Evenings and the night.
   5:['comments','epilogue','radiator']   // after the final image: the next Tuesday, by the radiator
 };
 // Extras, not in the story (TYOSUUNNITELMA.md section 4): detail, sometime, reply, voice, footage. (The posting joined the story 21.11.)
-var WHEN={night:'THAT NIGHT',rewind:'LATE TUESDAY, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'MONDAY MORNING',evenings:'THE SAME DAY, 21:00',posting:'LATER THAT EVENING',detail:'THE NEXT AFTERNOON',enhance:'TUESDAY, ONE LAST MEETING',glass:'THURSDAY MORNING',notnow:'A LATER AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'THAT EVENING',
+var WHEN={snow:'A SUNDAY NIGHT',night:'THAT NIGHT',rewind:'LATE TUESDAY, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'MONDAY MORNING',evenings:'THE SAME DAY, 21:00',posting:'LATER THAT EVENING',detail:'THE NEXT AFTERNOON',enhance:'TUESDAY, ONE LAST MEETING',glass:'THURSDAY MORNING',notnow:'A LATER AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'THAT EVENING',
   colleagues:'THURSDAY, AFTER LUNCH',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'THURSDAY, AFTER WORK',voice:'LATER THAT EVENING',library:'A SATURDAY, WEEKS LATER',radiator:'THE NEXT TUESDAY'};
 // Moments that continue the one before them: Night shift is the same evening as Evenings (TYOSUUNNITELMA.md T3).
 var NOCARD={epilogue:1};   // the night has its own card since The posting sits between Evenings and the night   // the epilogue follows the last image straight away (it opens on its own card, “That was the week.”)
@@ -3827,7 +3829,7 @@ var LABS={
   mug:{title:'A Tuesday, with a mug.',blurb:'Prototype (VISIO V1): the mug is how much of you there is today. The senses drain it, quiet refills it, and an empty mug makes a monster.',script:labMug},
   comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments},
   kickoff:{title:'Kick-off.',blurb:'The phone buzzes and the chest goes. Ekskyysmi does the commentary. It was in the archive. It missed the kick-off.',script:labKickoff},
-  snow:{title:'Snow indoors.',blurb:'A dream after a long Thursday. It snows in the living room. A door opens to summer. Ekskyysmi turns out to have a colour.',script:labSnow},
+  snow:{title:'Snow indoors.',blurb:'A Sunday night. It snows in the living room. A door opens to summer. Ekskyysmi turns out to have a colour.',script:labSnow},
   plusone:{title:'Plus one.',blurb:'Lunch with Sanna. Eero joins. With every line between them the table gets a little longer.',script:labPlusOne},
   lift:{title:'The lift.',blurb:'Three floors with Eero. The humans say “morning”. The shadows talk. Eero’s has a reason, and a watch with no hands.',script:labLift},
   busstop:{title:'Bus stop.',blurb:'A colleague from the third floor. Two years of “hi”, name unknown. Ekskyysmi measures the distance in metres. Then one pole on the bus.',script:labBusStop},
@@ -3854,8 +3856,8 @@ var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}
 var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
 // 0.99.22 (Joonas 26.11.: "let's make scenes into Moments and try all kinds of things"): new scenes start here, outside the story,
 // under their own heading so a tester knows they are being tried. Whether one joins the week is decided later, with Joonas.
-var TRYING=['kickoff','snow','plusone','lift','busstop','santa','leaving','call'];
-var SITUATION={santa:'Your present, opened in front of everyone.',leaving:'Going home from a party: say goodbye, or slip out.',call:'Booking something by phone. A live voice.',busstop:'A colleague at the bus stop whose name you never learned.',lift:'A lift with a colleague. Three floors. Nothing to say.',plusone:'Lunch for two, then a third person joins and you drop out.',snow:'A night when it snows indoors and a door opens to summer.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
+var TRYING=['kickoff','plusone','lift','busstop','santa','leaving','call'];   // Snow indoors. joined the story (0.99.31)
+var SITUATION={santa:'Your present, opened in front of everyone.',leaving:'Going home from a party: say goodbye, or slip out.',call:'Booking something by phone. A live voice.',busstop:'A colleague at the bus stop whose name you never learned.',lift:'A lift with a colleague. Three floors. Nothing to say.',plusone:'Lunch for two, then a third person joins and you drop out.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
@@ -6058,7 +6060,7 @@ function labLeaving(){return labScene({set:'party',title:'Leaving.',plan:'Go hom
   ['S','…Fine. Hat off. Party over. It was a good party.']
  ]);}
 // ---- src/59-snow.js ----
-/* ================= Snow indoors. (Moment, 0.99.23): a dream after a long Thursday ================= */
+/* ================= Snow indoors. (0.99.23 Moment; in the story from 0.99.31, #16b): a Sunday night's dream ================= */
 // Joonas 26.11., the painting that matters to him: a skier in a snowy room, a door open to summer. "Time and place can be
 // something else entirely; you can ski out in nature and still be at home." Script first: TARINAKARTTA.md, section 7.
 // The snow is the week's small things: Ekskyysmi tries to file them, and every one is unique and melts. Shadows on snow are
@@ -6158,11 +6160,18 @@ function drawMeadow(o){
   ctx.strokeStyle='#c04a33';ctx.lineWidth=4;line(fx+34,fy+2,fx+30,fy-70);line(fx+42,fy+3,fx+40,fy-68);
   ctx.save();ctx.translate(fx,fy);ctx.scale(0.62,0.62);ctx.translate(-fx,-FEETY);person(fx,{body:'#c98f2e',hair:'#4a3b32',facing:-1,shadow:0});ctx.restore();
   ctx.fillStyle='rgba(20,22,30,.72)';rr(14,14,64,26,6);ctx.fill();ctx.fillStyle='#f3d27a';ctx.font='700 14px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('00:00',46,27);
+  // 0.99.31 (Joonas: no speech bubbles out there): the words, by the same rules as in any scene. The shadow speaks from its
+  // head in the grass, the human from where they stand; the narrator in the band. The panel keeps a line only when no bubble does.
+  var g=G,cur=g.cur;
+  if(cur&&WAIT==='click'&&lineInBubble(cur)){var n=cur.text.length,mw=n>90?330:n>50?290:0,rv=RM?1e9:revealCount(cur.text,g.curT||0,cur);
+    if(cur.who==='S')bubble(clamp(ex+150,170,W-190),ey-40,cur.text,{dark:true,noTail:true,maxW:mw||260,reveal:rv,loud:cur.loud,quiet:cur.quiet});
+    else if(cur.who==='H')bubble(fx+56,fy-104,cur.text,{maxW:mw||230,reveal:rv,tailX:fx+4});}
+  if(g.band&&!COMPACT&&!textBelow&&lineInBubble({who:'N'}))band(g.band,H-18);
 }
 function catchFlake(){var g=G;if(g.dream)g.dream.melt=1.4;g.morko.pose='hold';sfx('pick');}
 function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get to the door.',clock:3*3600+30*60}).concat([
   dreamOn,
-  ['N','After a long Thursday. It is snowing in the living room.'],
+  ['N','Sunday night. It is snowing in the living room.'],
   set({mood:'surprised',s:1.1}),
   ['S','It’s snowing. Indoors. Is that allowed?'],
   ['H','It’s a dream.'],
@@ -6221,7 +6230,7 @@ function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get 
   ['H','On duty.'],
   {wait:1.4},function(){G.out=null;}
  ],outside({title:'WHAT WAS ACTUALLY THERE',dur:'duration: one night',cap:'A sofa. A blanket. The window open a crack, and a little November on the sill.',anim:'text'}),[
-  scene({set:'home',clock:7*3600+10*60}),function(){var g=G;g.dream=null;g.noCup=true;},calm,
+  scene({set:'home',clock:7*3600+10*60,day:'MONDAY'}),function(){var g=G;g.dream=null;g.noCup=true;},calm,   // the morning is Monday's (Quiet. follows at 07:40)
   ['N','Morning. A little water on the windowsill.'],
   ['H','I dreamt I skied through the living room.'],
   ['S','I was there. I was blue.'],

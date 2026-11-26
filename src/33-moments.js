@@ -14,12 +14,14 @@
 var AFTER={
   2:['enhance','rewind'],
   3:['glass','colleagues','evening'],
-  4:['notnow','bar','nothing','library','form','quiet','evenings','posting','night'],   // the library before the form (21.11.): Evenings is THE SAME DAY as Quiet.
+  4:['notnow','bar','nothing','library','form','snow','quiet','evenings','posting','night'],   // the library before the form (21.11.): Evenings is THE SAME DAY as Quiet.
+     // Snow indoors. (0.99.31, Joonas 26.11.: "what the game really needs"): the night after the form. The form says the shadow is
+     // common; the dream says it has a colour. It learns to lie down on duty, and the next morning (Quiet.) the wall is empty.
      // The posting (21.11., Joonas: into the story): the first evening of the part-time job, 22:47, between Evenings and the night.
   5:['comments','epilogue','radiator']   // after the final image: the next Tuesday, by the radiator
 };
 // Extras, not in the story (TYOSUUNNITELMA.md section 4): detail, sometime, reply, voice, footage. (The posting joined the story 21.11.)
-var WHEN={night:'THAT NIGHT',rewind:'LATE TUESDAY, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'MONDAY MORNING',evenings:'THE SAME DAY, 21:00',posting:'LATER THAT EVENING',detail:'THE NEXT AFTERNOON',enhance:'TUESDAY, ONE LAST MEETING',glass:'THURSDAY MORNING',notnow:'A LATER AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'THAT EVENING',
+var WHEN={snow:'A SUNDAY NIGHT',night:'THAT NIGHT',rewind:'LATE TUESDAY, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'MONDAY MORNING',evenings:'THE SAME DAY, 21:00',posting:'LATER THAT EVENING',detail:'THE NEXT AFTERNOON',enhance:'TUESDAY, ONE LAST MEETING',glass:'THURSDAY MORNING',notnow:'A LATER AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'THAT EVENING',
   colleagues:'THURSDAY, AFTER LUNCH',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'THURSDAY, AFTER WORK',voice:'LATER THAT EVENING',library:'A SATURDAY, WEEKS LATER',radiator:'THE NEXT TUESDAY'};
 // Moments that continue the one before them: Night shift is the same evening as Evenings (TYOSUUNNITELMA.md T3).
 var NOCARD={epilogue:1};   // the night has its own card since The posting sits between Evenings and the night   // the epilogue follows the last image straight away (it opens on its own card, “That was the week.”)

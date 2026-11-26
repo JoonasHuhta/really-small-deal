@@ -1,4 +1,4 @@
-/* ================= Snow indoors. (Moment, 0.99.23): a dream after a long Thursday ================= */
+/* ================= Snow indoors. (0.99.23 Moment; in the story from 0.99.31, #16b): a Sunday night's dream ================= */
 // Joonas 26.11., the painting that matters to him: a skier in a snowy room, a door open to summer. "Time and place can be
 // something else entirely; you can ski out in nature and still be at home." Script first: TARINAKARTTA.md, section 7.
 // The snow is the week's small things: Ekskyysmi tries to file them, and every one is unique and melts. Shadows on snow are
@@ -98,11 +98,18 @@ function drawMeadow(o){
   ctx.strokeStyle='#c04a33';ctx.lineWidth=4;line(fx+34,fy+2,fx+30,fy-70);line(fx+42,fy+3,fx+40,fy-68);
   ctx.save();ctx.translate(fx,fy);ctx.scale(0.62,0.62);ctx.translate(-fx,-FEETY);person(fx,{body:'#c98f2e',hair:'#4a3b32',facing:-1,shadow:0});ctx.restore();
   ctx.fillStyle='rgba(20,22,30,.72)';rr(14,14,64,26,6);ctx.fill();ctx.fillStyle='#f3d27a';ctx.font='700 14px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('00:00',46,27);
+  // 0.99.31 (Joonas: no speech bubbles out there): the words, by the same rules as in any scene. The shadow speaks from its
+  // head in the grass, the human from where they stand; the narrator in the band. The panel keeps a line only when no bubble does.
+  var g=G,cur=g.cur;
+  if(cur&&WAIT==='click'&&lineInBubble(cur)){var n=cur.text.length,mw=n>90?330:n>50?290:0,rv=RM?1e9:revealCount(cur.text,g.curT||0,cur);
+    if(cur.who==='S')bubble(clamp(ex+150,170,W-190),ey-40,cur.text,{dark:true,noTail:true,maxW:mw||260,reveal:rv,loud:cur.loud,quiet:cur.quiet});
+    else if(cur.who==='H')bubble(fx+56,fy-104,cur.text,{maxW:mw||230,reveal:rv,tailX:fx+4});}
+  if(g.band&&!COMPACT&&!textBelow&&lineInBubble({who:'N'}))band(g.band,H-18);
 }
 function catchFlake(){var g=G;if(g.dream)g.dream.melt=1.4;g.morko.pose='hold';sfx('pick');}
 function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get to the door.',clock:3*3600+30*60}).concat([
   dreamOn,
-  ['N','After a long Thursday. It is snowing in the living room.'],
+  ['N','Sunday night. It is snowing in the living room.'],
   set({mood:'surprised',s:1.1}),
   ['S','It’s snowing. Indoors. Is that allowed?'],
   ['H','It’s a dream.'],
@@ -161,7 +168,7 @@ function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get 
   ['H','On duty.'],
   {wait:1.4},function(){G.out=null;}
  ],outside({title:'WHAT WAS ACTUALLY THERE',dur:'duration: one night',cap:'A sofa. A blanket. The window open a crack, and a little November on the sill.',anim:'text'}),[
-  scene({set:'home',clock:7*3600+10*60}),function(){var g=G;g.dream=null;g.noCup=true;},calm,
+  scene({set:'home',clock:7*3600+10*60,day:'MONDAY'}),function(){var g=G;g.dream=null;g.noCup=true;},calm,   // the morning is Monday's (Quiet. follows at 07:40)
   ['N','Morning. A little water on the windowsill.'],
   ['H','I dreamt I skied through the living room.'],
   ['S','I was there. I was blue.'],
