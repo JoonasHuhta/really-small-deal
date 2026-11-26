@@ -293,7 +293,7 @@ function drawJournal(q){
   var p=jr.pen,tx=p.x+30*k,ty=p.y-64*k;ctx.strokeStyle='#d9d2c3';ctx.lineWidth=1.6*k;line(p.x,p.y,tx,ty);
   ctx.fillStyle='#efe8da';ctx.beginPath();ctx.moveTo(p.x+8*k,p.y-16*k);ctx.quadraticCurveTo(tx+14*k,ty+14*k,tx+2*k,ty-4*k);ctx.quadraticCurveTo(tx-12*k,ty+20*k,p.x+3*k,p.y-14*k);ctx.closePath();ctx.fill();
   ctx.strokeStyle='#14111d';ctx.lineWidth=2*k;line(p.x,p.y,p.x+3*k,p.y-6*k);ctx.restore();}
-function mcol(){return G.w||G.set==='home'||G.set==='bar'?'#0d0f18':G.dark>0.5?'#14111d':'#28243a';}
+function mcol(){if(G.set==='dream'&&G.dream)return dreamBlue();return G.w||G.set==='home'||G.set==='bar'?'#0d0f18':G.dark>0.5?'#14111d':'#28243a';}
 function selfStamps(q,n){
   ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 '+Math.round(11*q.s)+'px system-ui,sans-serif';
   for(var i=0;i<n;i++){var h1=(Math.sin(i*12.9898)*43758.5453)%1,h2=(Math.sin(i*78.233)*12543.17)%1,h3=(Math.sin(i*3.7)*9187.3)%1;h1=Math.abs(h1);h2=Math.abs(h2);h3=Math.abs(h3);
@@ -447,6 +447,7 @@ function drawPair(humanOpts){
   if(up&&ht.front){ctx.save();ctx.globalAlpha*=fa;morkoArms(q,ht);ctx.restore();}
   if(up)drawStamp();
   if(up&&G.journal&&G.morko.pose==='journal')drawJournal(q);
+  if(up&&G.dream)drawMelt(q);   // Snow indoors.: a filed flake melting
 }
 
 /* ================= drawing: speech ================= */
@@ -706,6 +707,7 @@ function draw(){
     drawTape();drawToss();drawForm();drawDots();drawPaper();
     sannaShadow();eeroShadow();riittaShadow();
     drawCoworkers(1);
+    drawDreamFront();   // Snow indoors.: a few near flakes in front of the pair, under the words
     if(g.set==='bar'&&g.bar)barFront();
     drawLens();
     drawNight();drawPie();   // on the screen, not in the room: the camera does not get to zoom into a feeling

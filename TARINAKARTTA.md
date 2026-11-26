@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.23 – Uusi Moment *Snow indoors.* (kokeilu, Joonaksen maalauksen mukaan): pitkän torstain jälkeisessä unessa olohuoneessa sataa lunta, ihminen hiihtää (uusi pidä pohjassa -kohta *ski*) kesään avautuvalle ovelle, ja lumella Ekskyysmi on sininen. Käsikirjoitus on kohdassa 7. package.json sai takaisin alkuperäisen muotoilunsa.
+
 0.99.22 – Uusi Moment *Kick-off.* (kokeilu, ei tarinassa): puhelin värähtää, rintakehä hälyttää ennen kuin kukaan on lukenut mitään, ja Ekskyysmi saapuu arkistosta myöhässä selostamaan. Viesti on kakku; rintakehä kuulee sen viimeisenä. Moments-valikossa on oma osio *New. Being tried* uusille kokeiluille.
 
 0.99.21 – Päävalikon huoneessa sataa hiljaa lunta (Joonaksen maalauksen mukaan: lumi huoneessa, kesä oven takana). Hiutaleet sulavat oven valossa eivätkä tule otsikon tai valintojen päälle. Liikettä vähentävä asetus poistaa lumen.
@@ -194,7 +196,17 @@ Ennen kuin muutat yhtäkään riviä, katso tästä, mitkä muut rivit langan p�
 
 Maanantain (#2) alussa ihmisen muki nousee huulelle ennen kuin Ekskyysmi herää. Mukia pitelevä käsi näkyy kupin ulkoreunalla koko liikkeen ajan. Sannan tervehdyksessä kämmen näkyy kasvojen sivulla. Epilogin (#24) ylävitosessa ihminen pitää kätensä posken korkeudella samalla kun Ekskyysmi korjaa tähtäystään.
 
-**Eivät tarinassa** (Moments-valikossa ensimmäisen päivän jälkeen): *Sometime.*, *One small thing.*, *The reply*, *The voice message*, *Footage.* (*The posting.* siirtyi tarinaan 0.74:ssä, #19.) **Kokeilussa** (Moments-valikon osio *New. Being tried*, 0.99.22 alkaen; tarinaan vain Joonaksen kanssa päättäen): *Kick-off.* (keho ensin, tarina perässä; #10:n ”It’s my chest. You just do the commentary.” näytettynä: selostaja tulee myöhässä). **Vain labrassa:** testikloonit (*Lamp gap.*, *The bag.*) ja prototyyppi *A Tuesday, with a mug.* (merirosvohattu, diili, ”mug or door?”).
+**Eivät tarinassa** (Moments-valikossa ensimmäisen päivän jälkeen): *Sometime.*, *One small thing.*, *The reply*, *The voice message*, *Footage.* (*The posting.* siirtyi tarinaan 0.74:ssä, #19.) **Kokeilussa** (Moments-valikon osio *New. Being tried*, 0.99.22 alkaen; tarinaan vain Joonaksen kanssa päättäen): *Kick-off.* (keho ensin, tarina perässä; #10:n ”It’s my chest. You just do the commentary.” näytettynä: selostaja tulee myöhässä). *Snow indoors.* (Joonaksen maalaus: hiihtäjä lumisessa huoneessa, ovi kesään; ”aika ja paikka voi olla ihan jotain toisenlaista”).
+
+**Snow indoors. – käsikirjoitus ennen koodia (0.99.23).** Pitkän torstain jälkeinen yö. Small plan: *Get to the door.*
+1. Olohuoneessa sataa lunta. Ihmisellä on sukset jalassa (”In 2014.” – Ekskyysmillä ne ovat kansiossa ”plans”). Lamppu palaa, ja sen alla lumi on sulanut.
+2. Ekskyysmi yrittää arkistoida hiutaleita: jokainen on ainutlaatuinen, järjestelmää ei ole, ja arkistoitu hiutale sulaa. ”The file is wet.” (Kuittien liukenemisidea näkyvässä muodossa ilman käskyä.)
+3. Huoneen päässä aukeaa ovi kesään. Ekskyysmi kasvaa: kesä on paljas, takkeja ei ole (naamio-symboli). Valinta: lumivyöryvaara (pahin), odotetaan kevättä peiton alla (piiloutuminen), ”Ski. I’ll come.” (jääminen).
+4. Pelaaja hiihtää pitämällä pohjassa (uusi hold: *ski*). Lumella Ekskyysmi muuttuu siniseksi, koska varjot ovat lumella sinisiä: ”Nobody told me I had a colour.”
+5. Ovella on kesä ja aurinko, joka ei laske. Ekskyysmi: keskiyöllä se on neljäkymmentä metriä pitkä, makuullaan nurmella, työvuorossa. RSD ei katoa, mutta varjo saa maata.
+6. Ulkoversio ei mitätöi unta: sohva, peitto, ikkuna raollaan ja vähän marraskuuta ikkunalaudalla.
+7. Aamu: ”I tried to file the snow.” – ”It melted. No two alike, and then none at all.” Kansio on märkä ja tyhjä, ja se on Ekskyysmin lempikansio.
+Ei musiikkia (hetket tarinan välissä ovat ilman). Ei neuvoja, ei alkoholia, ei diagnooseja. **Vain labrassa:** testikloonit (*Lamp gap.*, *The bag.*) ja prototyyppi *A Tuesday, with a mug.* (merirosvohattu, diili, ”mug or door?”).
 
 ---
 

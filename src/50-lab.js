@@ -25,7 +25,8 @@ var LABS={
   enhance:{title:'Enhance.',blurb:'One eyebrow. Four levels of zoom. A forensic investigation nobody asked for.',script:labEnhance},
   mug:{title:'A Tuesday, with a mug.',blurb:'Prototype (VISIO V1): the mug is how much of you there is today. The senses drain it, quiet refills it, and an empty mug makes a monster.',script:labMug},
   comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments},
-  kickoff:{title:'Kick-off.',blurb:'The phone buzzes and the chest goes. Ekskyysmi does the commentary. It was in the archive. It missed the kick-off.',script:labKickoff}
+  kickoff:{title:'Kick-off.',blurb:'The phone buzzes and the chest goes. Ekskyysmi does the commentary. It was in the archive. It missed the kick-off.',script:labKickoff},
+  snow:{title:'Snow indoors.',blurb:'A dream after a long Thursday. It snows in the living room. A door opens to summer. Ekskyysmi turns out to have a colour.',script:labSnow}
 };
 function labScene(o){return [function(){G.chapMusic=null;},scene(o),function(){
   var g=G;g.dayTag=g.moment&&WHEN[g.moment]?WHEN[g.moment].replace(/,\s*\d\d?:\d\d$/,''):null;g.stampT=0;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
@@ -46,8 +47,8 @@ var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}
 var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
 // 0.99.22 (Joonas 26.11.: "let's make scenes into Moments and try all kinds of things"): new scenes start here, outside the story,
 // under their own heading so a tester knows they are being tried. Whether one joins the week is decided later, with Joonas.
-var TRYING=['kickoff'];
-var SITUATION={kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
+var TRYING=['kickoff','snow'];
+var SITUATION={snow:'A night when it snows indoors and a door opens to summer.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).

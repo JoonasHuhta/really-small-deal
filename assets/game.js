@@ -835,7 +835,7 @@ elOpts.addEventListener('pointerdown',function(e){var t=e.target&&e.target.close
 window.addEventListener('pointerup',holdUp);window.addEventListener('pointercancel',holdUp);window.addEventListener('blur',holdUp);
 
 /* ================= hands-on moments: used sparingly, about one a day ================= */
-var HOLD_LABEL={rewind:'Hold: rewind',cover:'Hold: cover the eyes',pull:'Hold: walk out',still:'Hold: keep perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign'};
+var HOLD_LABEL={rewind:'Hold: rewind',cover:'Hold: cover the eyes',pull:'Hold: walk out',still:'Hold: keep perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign',ski:'Hold: ski'};
 var NOPE=['That one isn’t available. I’m sitting on it.','Still sitting on it.','It’s very comfortable, actually.','Press it all day. I have nowhere to be.'];
 // “(Say nothing.)” is on the menu all week and greyed out until Thursday rewrites the job: the arc, shown in the interface.
 // hush(then) opens it, hush() keeps it shut. It is always the last option.
@@ -856,6 +856,7 @@ function holdText(){
   if(h.kind==='rewind')return on?'Back… back… to the end of it.':'Rewind. Just the last bit.';
   if(h.kind==='sit')return on?h.o.text:'Hold to sit down. Do nothing else.';
   if(h.kind==='sign')return on?h.o.text:'Hold to sign.';
+  if(h.kind==='ski')return on?'Kick. Glide. Kick. Glide.':'Hold to ski to the door.';
   if(h.kind==='cover')return h.wave?'Sanna is waving. Your human can’t see it.':on?'Hands over the eyes. Nothing gets in.':'Hold to keep the eyes covered.';
   if(h.kind==='pull')return on?'This way. Briskly. Don’t look back.':'Hold to walk out of the room.';
   if(h.kind==='still')return on?'Nobody move. We are a lamp.':'Hold to keep perfectly still.';
@@ -882,6 +883,8 @@ function holdStep(h,on,dt){
     M.sT=0.62;M.mood='calm';g.anx=0.05;if(on&&h.o.clock)g.clock+=60*dt;
   }else if(h.kind==='sign'){
     if(g.form)g.form.sig=f;
+  }else if(h.kind==='ski'){   // Snow indoors.: the human glides to the door; on the snow the shadow turns blue
+    Hm.xT=h.o.from+(h.o.to-h.o.from)*f;M.pose=null;M.mood=on?'alert':'worry';if(g.dream)g.dream.blueT=f;
   }else if(h.kind==='still'){
     M.pose='hold';Hm.face='stiff';Hm.sweatT=0.8;if(!on&&dt)Hm.flinch=Math.max(Hm.flinch,0.5);
     if(g.day!=='C')g.aFace=(h.p>1&&h.p<2.1)?-1:1;
@@ -900,6 +903,7 @@ function finishHold(){
   else if(h.kind==='still'){M.pose='hold';Hm.face='stiff';g.aFace=1;}
   else if(h.kind==='sit'){M.sT=0.62;g.anx=0.05;}
   else if(h.kind==='sign'){if(g.form)g.form.sig=1;}
+  else if(h.kind==='ski'){Hm.xT=h.o.to;M.pose=null;if(g.dream)g.dream.blueT=1;}
   else{M.pose='comfort';M.sT=1.1;M.mood='care';g.anx=0.1;}
   sfx('pick');run();
 }
@@ -1531,7 +1535,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.rxT=null;g.rPhone=false;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.journal=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.journal=null;g.dream=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -3082,7 +3086,7 @@ function home(){
   if(G.snacks){var cols=['#c9553f','#e2b04a','#62887f'];for(var k=G.torn?1:0;k<11;k++){var b=bagPos(k);ctx.fillStyle=cols[k%3];rr(b.x,b.y,26,34,5);ctx.fill();}}
 }
 function homeLamp(){
-  if(G.set!=='home'||G.kitchen||G.w)return;
+  if(G.set!=='home'&&G.set!=='dream'||G.kitchen||G.w)return;   // 0.99.23: the dream has the same lamp
   var lx=G.bed?690:520;   // at night the bed takes the middle of the room: the lamp stands at its foot, not on it
   ctx.strokeStyle='#15171f';ctx.lineWidth=4;ctx.lineCap='round';line(lx,WALLY+62,lx,292);
   ctx.fillStyle=G.lampOff?'#6f6857':'#f3d27a';ctx.beginPath();ctx.moveTo(lx-20,262);ctx.lineTo(lx+20,262);ctx.lineTo(lx+32,296);ctx.lineTo(lx-32,296);ctx.closePath();ctx.fill();
@@ -3099,7 +3103,7 @@ function office(flat){
   ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(774,107,774,237);
   ctx.fillStyle='#8b7355';rr(560,404,330,14,4);ctx.fill();ctx.fillRect(578,418,8,50);ctx.fillRect(864,418,8,50);
 }
-function backdrop(flat){G.roomFront=null;if(G.set==='bar')bar();else if(G.set==='library')library();else if(G.set==='home')home();else if(G.set==='clinic')clinic();else if(G.set==='lift')epiLift();else if(G.set==='office')office(flat);else{room(flat,true);G.roomFront=flat;}}
+function backdrop(flat){G.roomFront=null;if(G.set==='bar')bar();else if(G.set==='library')library();else if(G.set==='home')home();else if(G.set==='dream')dreamRoom();else if(G.set==='clinic')clinic();else if(G.set==='lift')epiLift();else if(G.set==='office')office(flat);else{room(flat,true);G.roomFront=flat;}}
 function sannaShadow(){
   var g=G,k=g.zShow;if(!k||k<0.02||!g.cowA)return;var x=g.ax+62,by=WALLY;
   ctx.save();ctx.globalAlpha=Math.min(1,k);ctx.fillStyle='#3d3554';
@@ -3817,7 +3821,8 @@ var LABS={
   enhance:{title:'Enhance.',blurb:'One eyebrow. Four levels of zoom. A forensic investigation nobody asked for.',script:labEnhance},
   mug:{title:'A Tuesday, with a mug.',blurb:'Prototype (VISIO V1): the mug is how much of you there is today. The senses drain it, quiet refills it, and an empty mug makes a monster.',script:labMug},
   comments:{title:'The group chat',blurb:'A boss fight. Incoming messages look like daggers from a distance. Ekskyysmi has a headband.',script:labComments},
-  kickoff:{title:'Kick-off.',blurb:'The phone buzzes and the chest goes. Ekskyysmi does the commentary. It was in the archive. It missed the kick-off.',script:labKickoff}
+  kickoff:{title:'Kick-off.',blurb:'The phone buzzes and the chest goes. Ekskyysmi does the commentary. It was in the archive. It missed the kick-off.',script:labKickoff},
+  snow:{title:'Snow indoors.',blurb:'A dream after a long Thursday. It snows in the living room. A door opens to summer. Ekskyysmi turns out to have a colour.',script:labSnow}
 };
 function labScene(o){return [function(){G.chapMusic=null;},scene(o),function(){
   var g=G;g.dayTag=g.moment&&WHEN[g.moment]?WHEN[g.moment].replace(/,\s*\d\d?:\d\d$/,''):null;g.stampT=0;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
@@ -3838,8 +3843,8 @@ var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}
 var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
 // 0.99.22 (Joonas 26.11.: "let's make scenes into Moments and try all kinds of things"): new scenes start here, outside the story,
 // under their own heading so a tester knows they are being tried. Whether one joins the week is decided later, with Joonas.
-var TRYING=['kickoff'];
-var SITUATION={kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
+var TRYING=['kickoff','snow'];
+var SITUATION={snow:'A night when it snows indoors and a door opens to summer.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
@@ -5488,6 +5493,150 @@ function labKickoff(){
   function(){var g=G;g.human.xT=1060;},{wait:0.8},
   ['S','…Fine. I’ll commentate the cake.']
  ]);}
+// ---- src/59-snow.js ----
+/* ================= Snow indoors. (Moment, 0.99.23): a dream after a long Thursday ================= */
+// Joonas 26.11., the painting that matters to him: a skier in a snowy room, a door open to summer. "Time and place can be
+// something else entirely; you can ski out in nature and still be at home." Script first: TARINAKARTTA.md, section 7.
+// The snow is the week's small things: Ekskyysmi tries to file them, and every one is unique and melts. Shadows on snow are
+// blue, so for once the shadow has a colour. Behind the door the sun does not set: the shadow stays, lying down in the grass.
+// The outside version does not undo the dream: a sofa, a window open a crack, a little November on the sill.
+var DREAMDOOR={x:812,w:72,top:168};   // on the right: the shadow falls to the human's left, so it follows behind and never covers the summer
+function dreamOn(){var g=G;g.dream={door:0,doorT:0,blue:0,blueT:0,skis:true,melt:0};g.noCup=true;g.human.x=g.human.xT=400;}
+function stepDream(dt){var d=G.dream;if(!d)return;d.door=ease(d.door,d.doorT,(RM?6:1.1)*dt);d.blue=ease(d.blue,d.blueT,1.4*dt);if(d.melt>0)d.melt=Math.max(0,d.melt-dt);}
+function dreamBlue(){var d=G.dream,k=clamp(d.blue,0,1),a=[13,15,24],b=[63,84,136];
+  return 'rgb('+a.map(function(v,i){return Math.round(v+(b[i]-v)*k);}).join(',')+')';}
+function dreamInLight(x,y){var d=G.dream,dx=x-520,dy=(y-300)*1.3;
+  if(dx*dx+dy*dy<95*95)return true;                                                   // the lamp keeps a little warm
+  if(d&&d.door>0.2&&x>DREAMDOOR.x-6&&x<DREAMDOOR.x+DREAMDOOR.w+6&&y>DREAMDOOR.top-6)return true;   // summer, through the door
+  return false;}
+function dreamRoom(){
+  var g=G,d=g.dream||{door:0,blue:0},i;
+  ctx.fillStyle='#2a3245';ctx.fillRect(-20,-20,W+40,WALLY+20);
+  var gr=ctx.createRadialGradient(520,300,10,520,300,330);gr.addColorStop(0,'rgba(255,214,140,.38)');gr.addColorStop(1,'rgba(255,214,140,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);
+  // the same window as at home: night, the moon
+  ctx.fillStyle='#e9e2cf';rr(112,96,170,150,4);ctx.fill();ctx.fillStyle='#12152a';ctx.fillRect(120,104,154,134);sky(120,104,154,134,true);
+  ctx.fillStyle='#f6f1e4';circ(236,134,13);ctx.fill();ctx.fillStyle='#12152a';circ(242,130,11);ctx.fill();
+  ctx.strokeStyle='#e9e2cf';ctx.lineWidth=5;line(197,104,197,238);
+  ctx.fillStyle='#f1f4f8';rr(108,240,178,9,4);ctx.fill();   // snow on the sill, inside
+  // the door, and what is behind it
+  var dx=DREAMDOOR.x,dw=DREAMDOOR.w,dt=DREAMDOOR.top,dh=WALLY-dt,o=clamp(d.door,0,1);
+  ctx.fillStyle='#1d2231';ctx.fillRect(dx-6,dt-6,dw+12,dh+6);
+  if(o>0.01){
+    var sk=ctx.createLinearGradient(0,dt,0,WALLY);sk.addColorStop(0,'#8fc7e6');sk.addColorStop(0.55,'#e8f1d6');sk.addColorStop(0.56,'#7fae5e');sk.addColorStop(1,'#5d8f46');
+    ctx.fillStyle=sk;ctx.fillRect(dx,dt,dw,dh);
+    ctx.fillStyle='#fff3c4';circ(dx+dw-20,dt+30,9);ctx.fill();                       // a sun, low, staying
+    ctx.fillStyle='#7db3cf';ctx.fillRect(dx,dt+dh*0.62,dw,6);                          // a lake
+    ctx.fillStyle='rgba(255,236,170,'+(0.25*o)+')';ctx.beginPath();ctx.moveTo(dx,WALLY);ctx.lineTo(dx+dw,WALLY);ctx.lineTo(dx+dw+40,H);ctx.lineTo(dx-170,H);ctx.closePath();ctx.fill();
+  }else{ctx.fillStyle='#3a4258';ctx.fillRect(dx,dt,dw,dh);}
+  // the door leaf swings into the room
+  var lw=dw*(1-0.78*o);ctx.fillStyle='#454e66';ctx.beginPath();ctx.moveTo(dx,dt);ctx.lineTo(dx+lw,dt+10*o);ctx.lineTo(dx+lw,WALLY+6*o);ctx.lineTo(dx,WALLY);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#c9b48c';ctx.fillRect(dx+lw-11,dt+dh*0.5,7,3);
+  // a snowed floor, bare under the lamp, green at the threshold once the door is open
+  var fl=ctx.createLinearGradient(0,WALLY,0,H);fl.addColorStop(0,'#cfd8e3');fl.addColorStop(1,'#eef2f6');ctx.fillStyle=fl;ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);
+  ctx.fillStyle='#e6ebf1';for(i=0;i<7;i++){ctx.beginPath();ctx.ellipse(40+i*150,WALLY+4,70,9,0,Math.PI,0);ctx.fill();}
+  ctx.fillStyle='rgba(96,102,118,.55)';ctx.beginPath();ctx.ellipse(520,WALLY+44,64,15,0,0,Math.PI*2);ctx.fill();   // wet floor: the lamp melts it
+  if(o>0.05){ctx.fillStyle='rgba(110,160,80,'+(0.8*o)+')';ctx.beginPath();ctx.ellipse(dx+dw/2-14,WALLY+10,60*o,10,0,0,Math.PI*2);ctx.fill();}
+  // a fir in the corner, as one does, indoors, apparently
+  var fx=46,fy=WALLY+28;ctx.fillStyle='#5b3d2a';ctx.fillRect(fx-5,fy-22,10,22);
+  for(i=0;i<3;i++){var tw=62-i*14,ty=fy-22-i*38;ctx.fillStyle='#29473a';ctx.beginPath();ctx.moveTo(fx-tw,ty);ctx.lineTo(fx+tw,ty);ctx.lineTo(fx,ty-62);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#eef2f6';ctx.beginPath();ctx.moveTo(fx-tw*0.55,ty-26);ctx.lineTo(fx+tw*0.5,ty-30);ctx.lineTo(fx,ty-62);ctx.closePath();ctx.fill();}
+  // the lamp itself is drawn by homeLamp, in front of the shadow, as at home
+  drawDreamSnow(0.75,0);
+  if(d.skis)drawSkis();
+}
+// Skis and poles under the human, drawn before the human so the feet stand on them.
+function drawSkis(){
+  var Hm=G.human,x=Hm.x,f=Math.abs(Hm.xT-x)>1?(Hm.xT<x?-1:1):(Hm.facing||1),y=FEETY+3,k;
+  ctx.strokeStyle='#14111d';ctx.lineWidth=2.5;ctx.lineCap='round';
+  var sw=G.walking||Math.abs(Hm.xT-x)>1?Math.sin(G.time*5)*10:0;
+  line(x-6,FEETY-86,x-(26+sw)*f,y);line(x+6,FEETY-86,x-(10-sw)*f,y+2);   // poles, planted behind
+  for(k=0;k<2;k++){var yy=y+k*4,a=x-58*f,b=x+58*f;
+    ctx.strokeStyle=k?'#9e3a28':'#c04a33';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(a,yy);ctx.lineTo(b,yy);ctx.quadraticCurveTo(b+12*f,yy,b+16*f,yy-11);ctx.stroke();}
+}
+var DSNOW=[];for(var dsn=0;dsn<70;dsn++)DSNOW.push({x:snowRnd(dsn+701)*W,y:snowRnd(dsn+801)*H,r:1.4+snowRnd(dsn+901)*1.8,v:12+snowRnd(dsn+1001)*14,ph:snowRnd(dsn+1101)*6.3});
+// back: most of the flakes, behind the pair; front: a few, nearer and bigger, and never over the words (drawn before them)
+function drawDreamSnow(alpha,front){
+  if(RM&&front)return;var t=RM?0:G.time,i,f,x,y,n=front?14:DSNOW.length;
+  for(i=0;i<n;i++){f=DSNOW[i];y=(f.y+f.v*t)%(H+10)-5;x=f.x+Math.sin(t*0.4+f.ph)*12;x=((x%W)+W)%W;
+    if(dreamInLight(x,y))continue;
+    ctx.fillStyle='rgba(244,247,250,'+(front?0.85:alpha)+')';circ(x,y,f.r*(front?1.6:1));ctx.fill();}
+}
+function drawDreamFront(){if(G.set==='dream')drawDreamSnow(0,1);}
+// A flake that Ekskyysmi has just filed, melting between its hands.
+function drawMelt(q){var d=G.dream;if(!d||d.melt<=0)return;var k=d.melt/1.4,x=q.bx,y=q.shY+40*q.s;
+  ctx.fillStyle='rgba(244,247,250,'+k+')';circ(x,y,6*k+2);ctx.fill();ctx.fillStyle='rgba(160,190,220,'+(1-k)*0.9+')';circ(x,y+10*(1-k),2.6);ctx.fill();}
+function catchFlake(){var g=G;if(g.dream)g.dream.melt=1.4;g.morko.pose='hold';sfx('pick');}
+function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get to the door.',clock:3*3600+30*60}).concat([
+  dreamOn,
+  ['N','After a long Thursday. It is snowing in the living room.'],
+  set({mood:'surprised',s:1.1}),
+  ['S','It’s snowing. Indoors. Is that allowed?'],
+  ['H','It’s a dream.'],
+  ['S','How do you know?'],
+  ['H','I’m wearing skis. In the living room.'],
+  ['S','You did buy them.'],
+  ['H','In 2014.'],
+  ['S','I have them filed under “plans”.',{look:'squint'}],
+  set({mood:'alert'}),
+  ['S','Hold on. All this needs filing.'],
+  catchFlake,{wait:1.2},
+  ['S','This one is unique.'],
+  catchFlake,{wait:1},
+  ['S','So is this one. They’re ALL unique. There’s no system.'],
+  ['H','They melt anyway.'],
+  set({pose:null}),
+  ['S','…I filed one and it melted. The file is wet.'],
+  function(){G.dream.doorT=1;sfx('turn');},{wait:1.6},
+  ['N','At the far end of the room a door has opened. Behind it, summer.'],
+  set({mood:'alert',s:1.45}),
+  ['S','No.'],
+  ['H','It’s summer.'],
+  ['S','Summer is exposed. Nobody wears a coat. Everyone can see everything.'],
+  ['H','You can come.'],
+  {choice:[
+    {t:'There is an avalanche risk. In the living room.',m:'worst',then:[
+      ['H','It’s flat.'],
+      ['S','It’s flat NOW.']]},
+    {t:'Wait under the duvet until spring.',m:'hide',then:[
+      ['H','The door is already summer.'],
+      ['S','Then it skipped spring. I don’t trust a season that skips.']]},
+    {t:'Fine. Ski. I’ll come.',m:'stay',then:[
+      ['S','For the record, shadows can’t ski.'],
+      ['H','You’re about to find out.']]}
+  ]},
+  ['H','I’m going.'],
+  {hold:{kind:'ski',secs:3.2,from:400,to:DREAMDOOR.x-54}},
+  set({mood:'surprised',s:1}),
+  ['S','…I’m blue.'],
+  ['H','Shadows on snow are blue.'],
+  ['S','Since WHEN?'],
+  ['H','Always. Ask anyone who paints.'],
+  ['S','Nobody told me I had a colour.',{look:'soft'}],
+  ['N','Through the door: a meadow, a lake, and a sun that will not set tonight.'],
+  ['S','It won’t set?'],
+  ['H','Not in July. Not up here.'],
+  set({mood:'worry',s:1.2}),
+  ['S','Then I don’t get a night off.'],
+  ['H','You get a long one. Look.'],
+  ['S','…At midnight I’m forty metres long.',{look:'stunned'}],
+  ['H','Lying down. In the grass.'],
+  set({mood:'calm',s:0.9}),
+  ['S','Lying down in the grass. On duty.'],
+  ['H','On duty.']
+ ],outside({title:'WHAT WAS ACTUALLY THERE',dur:'duration: one night',cap:'A sofa. A blanket. The window open a crack, and a little November on the sill.',anim:'text'}),[
+  scene({set:'home',clock:7*3600+10*60}),function(){var g=G;g.dream=null;g.noCup=true;},calm,
+  ['N','Morning. A little water on the windowsill.'],
+  ['H','I dreamt I skied through the living room.'],
+  ['S','I was there. I was blue.'],
+  ['H','You were.'],
+  ['S','I tried to file the snow.'],
+  ['H','How did it go?'],
+  ['S','It melted. Every one. No two alike, and then none at all.'],
+  ['H','Sounds like a good night.'],
+  set({s:1,mood:'calm'}),
+  ['S','It was. I’m keeping the file. It’s wet and it’s empty.'],
+  ['S','It’s my favourite.']
+ ]);}
 // ---- src/59-toss.js ----
 /* ================= letting go: one card, dragged and dropped. The only thing in the game you throw away. ================= */
 // Drag the card and release it, and it flies. Tap instead, and Ekskyysmi has to be talked into it: two excuses, then it opens its hand.
@@ -5591,7 +5740,7 @@ function update(dt,elapsed){
     if(g.cards[ci].life!=null&&g.cards[ci].t>g.cards[ci].life)g.cards.splice(ci,1);}
   g.pulse=Math.max(0,g.pulse-dt*0.3);g.shake=Math.max(0,g.shake-dt*2.6);
   if(g.zoom)g.zoom.t+=dt;
-  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);stepToss(dt);stepAuto(dt);if(g.buzz>0)g.buzz=Math.max(0,g.buzz-dt);
+  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);stepToss(dt);stepAuto(dt);stepDream(dt);if(g.buzz>0)g.buzz=Math.max(0,g.buzz-dt);
   var hk=(g.planText||'')+'|'+g.jobDone+'|'+g.hud+'|'+g.chapter+'|'+g.lab+'|'+g.yes+'|'+(g.w?1:0);if(hk!==g.hudKey){g.hudKey=hk;g.hudAge=0;}g.hudAge=(g.hudAge||0)+dt;
   stepFeet();stepMug(dt);stepShadowLife(dt);  stepTics(dt);stepHot(dt);stepEpi(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
   if(WAIT==='fight'&&g.fight&&!paused)stepFight(elapsed);
@@ -5932,7 +6081,7 @@ function drawJournal(q){
   var p=jr.pen,tx=p.x+30*k,ty=p.y-64*k;ctx.strokeStyle='#d9d2c3';ctx.lineWidth=1.6*k;line(p.x,p.y,tx,ty);
   ctx.fillStyle='#efe8da';ctx.beginPath();ctx.moveTo(p.x+8*k,p.y-16*k);ctx.quadraticCurveTo(tx+14*k,ty+14*k,tx+2*k,ty-4*k);ctx.quadraticCurveTo(tx-12*k,ty+20*k,p.x+3*k,p.y-14*k);ctx.closePath();ctx.fill();
   ctx.strokeStyle='#14111d';ctx.lineWidth=2*k;line(p.x,p.y,p.x+3*k,p.y-6*k);ctx.restore();}
-function mcol(){return G.w||G.set==='home'||G.set==='bar'?'#0d0f18':G.dark>0.5?'#14111d':'#28243a';}
+function mcol(){if(G.set==='dream'&&G.dream)return dreamBlue();return G.w||G.set==='home'||G.set==='bar'?'#0d0f18':G.dark>0.5?'#14111d':'#28243a';}
 function selfStamps(q,n){
   ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='800 '+Math.round(11*q.s)+'px system-ui,sans-serif';
   for(var i=0;i<n;i++){var h1=(Math.sin(i*12.9898)*43758.5453)%1,h2=(Math.sin(i*78.233)*12543.17)%1,h3=(Math.sin(i*3.7)*9187.3)%1;h1=Math.abs(h1);h2=Math.abs(h2);h3=Math.abs(h3);
@@ -6086,6 +6235,7 @@ function drawPair(humanOpts){
   if(up&&ht.front){ctx.save();ctx.globalAlpha*=fa;morkoArms(q,ht);ctx.restore();}
   if(up)drawStamp();
   if(up&&G.journal&&G.morko.pose==='journal')drawJournal(q);
+  if(up&&G.dream)drawMelt(q);   // Snow indoors.: a filed flake melting
 }
 
 /* ================= drawing: speech ================= */
@@ -6345,6 +6495,7 @@ function draw(){
     drawTape();drawToss();drawForm();drawDots();drawPaper();
     sannaShadow();eeroShadow();riittaShadow();
     drawCoworkers(1);
+    drawDreamFront();   // Snow indoors.: a few near flakes in front of the pair, under the words
     if(g.set==='bar'&&g.bar)barFront();
     drawLens();
     drawNight();drawPie();   // on the screen, not in the room: the camera does not get to zoom into a feeling

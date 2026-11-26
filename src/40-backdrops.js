@@ -22,7 +22,7 @@ function home(){
   if(G.snacks){var cols=['#c9553f','#e2b04a','#62887f'];for(var k=G.torn?1:0;k<11;k++){var b=bagPos(k);ctx.fillStyle=cols[k%3];rr(b.x,b.y,26,34,5);ctx.fill();}}
 }
 function homeLamp(){
-  if(G.set!=='home'||G.kitchen||G.w)return;
+  if(G.set!=='home'&&G.set!=='dream'||G.kitchen||G.w)return;   // 0.99.23: the dream has the same lamp
   var lx=G.bed?690:520;   // at night the bed takes the middle of the room: the lamp stands at its foot, not on it
   ctx.strokeStyle='#15171f';ctx.lineWidth=4;ctx.lineCap='round';line(lx,WALLY+62,lx,292);
   ctx.fillStyle=G.lampOff?'#6f6857':'#f3d27a';ctx.beginPath();ctx.moveTo(lx-20,262);ctx.lineTo(lx+20,262);ctx.lineTo(lx+32,296);ctx.lineTo(lx-32,296);ctx.closePath();ctx.fill();
@@ -39,7 +39,7 @@ function office(flat){
   ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(774,107,774,237);
   ctx.fillStyle='#8b7355';rr(560,404,330,14,4);ctx.fill();ctx.fillRect(578,418,8,50);ctx.fillRect(864,418,8,50);
 }
-function backdrop(flat){G.roomFront=null;if(G.set==='bar')bar();else if(G.set==='library')library();else if(G.set==='home')home();else if(G.set==='clinic')clinic();else if(G.set==='lift')epiLift();else if(G.set==='office')office(flat);else{room(flat,true);G.roomFront=flat;}}
+function backdrop(flat){G.roomFront=null;if(G.set==='bar')bar();else if(G.set==='library')library();else if(G.set==='home')home();else if(G.set==='dream')dreamRoom();else if(G.set==='clinic')clinic();else if(G.set==='lift')epiLift();else if(G.set==='office')office(flat);else{room(flat,true);G.roomFront=flat;}}
 function sannaShadow(){
   var g=G,k=g.zShow;if(!k||k<0.02||!g.cowA)return;var x=g.ax+62,by=WALLY;
   ctx.save();ctx.globalAlpha=Math.min(1,k);ctx.fillStyle='#3d3554';
