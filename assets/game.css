@@ -116,7 +116,7 @@ html.immersive .ov.on[data-kind=title]{
   position:absolute;top:clamp(43px,17cqh,88px);left:0;right:0;
   max-width:none;margin:0;font-size:clamp(12px,4.1cqh,19px);color:#e2e4d3;
 }
-.ov.on[data-kind=title] .tagline br{display:none}
+.ov.on[data-kind=title] .tagline br{display:none}   /* one line: two lines put the second over the door light on a phone, and took the shadow's room (0.99.29) */
 .title-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
 .title-actions .go{margin:0;min-height:44px}
 .title-actions .go.alt{background:#1e3033a6}

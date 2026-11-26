@@ -32,7 +32,7 @@ function showWeekEnd(){
    receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function showTitle(){
-  var sv=loadProgress();music('title');G.titleDone=!!(sv&&sv.done);   // 0.99.27: a finished week leaves its receipt on the title wall
+  var sv=loadProgress();music('title');titleTagAt=-9;   // the tagline is measured again for the new title
   G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
   showOv(titleHTML(sv));
   render();

@@ -637,40 +637,15 @@ function drawTitleEdges(){
     edgeCtx.drawImage(cv,i?cv.width-1:0,0,1,cv.height,0,0,1,cv.height);
   }
 }
-// 0.99.21 (Joonas, the painting of a skier in a snowy room with a door open to summer): a little snow in the dark half of the
-// room. Sparse, slow, almost grey: November, not a Christmas card. It never reaches the light from the door; there it melts.
-// Behind the human and the shadow, off with reduced motion, and kept off the outermost pixels (the phone edges copy those).
-function snowRnd(n){var v=Math.sin(n*12.9898)*43758.5453;return v-Math.floor(v);}   // fixed scatter: no visible rows
-var SNOW=[];for(var sn=0;sn<40;sn++)SNOW.push({x:snowRnd(sn+1)*W,y:snowRnd(sn+101)*H,r:1.3+snowRnd(sn+201)*1.4,v:10+snowRnd(sn+301)*12,ph:snowRnd(sn+401)*6.3,a:0.3+snowRnd(sn+501)*0.2});
-function inTitleLight(x,y,floor){
-  if(x>=238&&x<=311&&y>=151&&y<=floor)return 1;                                    // the doorway itself
-  if(x>=307&&x<=654){var top=153+(126-153)*(x-307)/347;if(y>=top-6&&y<=floor)return 1;}   // the strip on the wall
-  if(y>floor&&y<=floor+69){var t=(y-floor)/69,l=307+(173-307)*t,r=654+(597-654)*t;if(x>=l-4&&x<=r+4)return 1;}   // and on the floor
-  return 0;}
-function drawTitleSnow(floor){
-  if(RM)return;var t=(G.time||0),i,f,x,y;ctx.save();
-  for(i=0;i<SNOW.length;i++){f=SNOW[i];y=(f.y+f.v*t)%(H+12)-6;x=f.x+Math.sin(t*0.35+f.ph)*10+t*2.5;x=((x%W)+W)%W;
-    if(x<4||x>W-4||inTitleLight(x,y,floor))continue;
-    var k=clamp((y-70)/50,0,1)*clamp((H-50-y)/70,0,1);if(k<=0)continue;   // out of the dark under the title, gone before the buttons
-    ctx.fillStyle='rgba(222,228,220,'+(f.a*k)+')';circ(x,y,f.r);ctx.fill();
-    ctx.fillStyle='rgba(222,228,220,'+(f.a*k*0.25)+')';circ(x,y,f.r*2.2);ctx.fill();}   // a soft edge: a flake, not a speck
-  ctx.restore();}
-// 0.99.27 (Joonas 26.11.: receipts in the main menu; of the ideas, the one that stays): once the week has been played to the
-// end, its receipt is pinned to the dark wall, mended in gold where it was torn. It does not dissolve and it gives no advice.
-// No readable words at this size: grey lines, as on the form's unread questions.
-function drawTitleReceipt(){
-  ctx.save();ctx.translate(150,196);ctx.rotate(-0.05);
-  var w=62,h=92,i;
-  ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(-w/2+4,-h/2+5,w,h);
-  ctx.fillStyle='#bab3a1';ctx.beginPath();ctx.moveTo(-w/2,-h/2);ctx.lineTo(w/2,-h/2);ctx.lineTo(w/2,h/2);
-  for(i=0;i<=8;i++)ctx.lineTo(w/2-i*w/8,h/2+(i%2?-4:0));ctx.closePath();ctx.fill();
-  ctx.fillStyle='#8f8a7c';ctx.fillRect(-w/2+8,-h/2+9,w-16,4);
-  ctx.fillStyle='#a8a292';for(i=0;i<7;i++)ctx.fillRect(-w/2+8,-h/2+22+i*9,(i%3?w-22:w-30),2.4);
-  ctx.strokeStyle='#e2b04a';ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor='rgba(226,176,74,.6)';ctx.shadowBlur=6;
-  ctx.beginPath();ctx.moveTo(-w/2,6);ctx.lineTo(-14,1);ctx.lineTo(-5,9);ctx.lineTo(6,-2);ctx.lineTo(15,5);ctx.lineTo(w/2,-1);ctx.stroke();   // where it was torn
-  ctx.shadowBlur=0;ctx.fillStyle='#c9553f';circ(0,-h/2+3,3.2);ctx.fill();   // a pin
-  ctx.restore();
-}
+function snowRnd(n){var v=Math.sin(n*12.9898)*43758.5453;return v-Math.floor(v);}   // a fixed scatter (the Moments' snow, grass, sleet): no visible rows
+// 0.99.29 (Joonas 26.11., sketch A): the original title's scale in the new layout. The shadow rises almost to the title, as
+// large as this screen allows: its head always stays under the tagline, wherever the tagline sits here.
+var titleTagY=null,titleTagAt=-9;
+function titleTagBottom(){   // the tagline's lower edge in canvas units, re-read twice a second (the page can reflow)
+  var now=Date.now();if(now-titleTagAt<500)return titleTagY;titleTagAt=now;
+  try{var t=ov.querySelector('.tagline'),c=cv.getBoundingClientRect(),r=t&&t.getBoundingClientRect();
+    titleTagY=r&&r.height&&c.height?(r.bottom-c.top)/c.height*H:null;}catch(e){titleTagY=null;}
+  return titleTagY;}
 function drawTitlePortrait(){
   var compact=cv.clientWidth*9/16<300;
   var floor=compact?286:312;
@@ -687,9 +662,8 @@ function drawTitlePortrait(){
   ctx.fillStyle='#e3be80';ctx.fillRect(240,153,69,floor-153);
   ctx.fillStyle='#394847';ctx.beginPath();ctx.moveTo(240,153);ctx.lineTo(292,166);ctx.lineTo(292,floor+9);ctx.lineTo(240,floor);ctx.closePath();ctx.fill();
   ctx.fillStyle='#cbb48c';ctx.fillRect(279,237,9,2.6);
-  if(G.titleDone)drawTitleReceipt();
-  drawTitleSnow(floor);
-  var scale=compact ? 0.58 : 0.76;
+  var M=G.morko,s=M.s||1.25,above=190*s*0.7+11*s+1.8*20*Math.pow(s,0.45),tag=titleTagBottom();   // the head's top, over the floor line
+  var scale=tag==null?(compact?0.58:0.76):clamp((floor-tag-10)/above,0.56,0.98);
   ctx.save();ctx.translate(537-G.human.x*scale,floor-WALLY*scale);ctx.scale(scale,scale);
   drawPair();ctx.restore();
   drawTitleEdges();
