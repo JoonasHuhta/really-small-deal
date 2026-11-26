@@ -111,6 +111,9 @@ Ei kaanonia ennen kuin Joonas päättää. Kirjattu, jotta mahdollinen siirto ta
 - **Lumella varjo on sininen** (*Snow indoors.*): ”Nobody told me I had a colour.” Yöttömässä yössä varjo ei pääse vapaalle, mutta saa maata nurmella neljäkymmentä metriä pitkänä, ”on duty”. RSD ei katoa, varjo lepää.
 - **Muiden varjot** (*The lift.*): Eeron varjon syy on mieltymys, ei tila (”He likes the lift. I came up with the reason later.”). Riitan varjon yksitoista asiaa rauhoittavat: yksikään ei ole ”meistä”.
 - **Täyttäjä ja mittaaja** (*Plus one.*): Eero täyttää aukot, ihminen mittaa niitä. ”Same building. Different floors.”
+- **Riitan pallo putoaa itsestään** (*Secret Santa.*): *Not now.* -kohtauksessa varjo saa pudottaa vain yhden, tahallaan. Lahjasukat pudottavat toisen, koska hän on palellut syyskuusta asti. Riitta saa kaksi sanaa: ”Socks.” ja ”Really.”
+- **Pelko siitä, ettei kukaan huomaa** (*Leaving.*): ”The second one is worse. I’ve checked.” Sanna huomaa minuutissa.
+- **”Sorry to bother you” on Ekskyysmin koko työ** (*The call.*): ”That sentence is my whole job.” Nimen selitys jää edelleen kuitin viimeiselle riville.
 
 ## 8. Kapasiteettia jatkoon (ei vielä toteutettu)
 

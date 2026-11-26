@@ -3830,7 +3830,10 @@ var LABS={
   snow:{title:'Snow indoors.',blurb:'A dream after a long Thursday. It snows in the living room. A door opens to summer. Ekskyysmi turns out to have a colour.',script:labSnow},
   plusone:{title:'Plus one.',blurb:'Lunch with Sanna. Eero joins. With every line between them the table gets a little longer.',script:labPlusOne},
   lift:{title:'The lift.',blurb:'Three floors with Eero. The humans say “morning”. The shadows talk. Eero’s has a reason, and a watch with no hands.',script:labLift},
-  busstop:{title:'Bus stop.',blurb:'A colleague from the third floor. Two years of “hi”, name unknown. Ekskyysmi measures the distance in metres. Then one pole on the bus.',script:labBusStop}
+  busstop:{title:'Bus stop.',blurb:'A colleague from the third floor. Two years of “hi”, name unknown. Ekskyysmi measures the distance in metres. Then one pole on the bus.',script:labBusStop},
+  santa:{title:'Secret Santa.',blurb:'The office Christmas party. You drew Riitta. She opens your present in front of everyone and says one word.',script:labSanta},
+  leaving:{title:'Leaving.',blurb:'Two ways out of a party: interrupt eleven conversations, or find out nobody noticed. Ekskyysmi is wearing a paper hat.',script:labLeaving},
+  call:{title:'The call.',blurb:'One haircut, by phone. A script with fourteen branches. A receptionist who isn’t in any of them.',script:labCall}
 };
 function labScene(o){return [function(){G.chapMusic=null;},scene(o),function(){
   var g=G;g.dayTag=g.moment&&WHEN[g.moment]?WHEN[g.moment].replace(/,\s*\d\d?:\d\d$/,''):null;g.stampT=0;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
@@ -3851,8 +3854,8 @@ var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}
 var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
 // 0.99.22 (Joonas 26.11.: "let's make scenes into Moments and try all kinds of things"): new scenes start here, outside the story,
 // under their own heading so a tester knows they are being tried. Whether one joins the week is decided later, with Joonas.
-var TRYING=['kickoff','snow','plusone','lift','busstop'];
-var SITUATION={busstop:'A colleague at the bus stop whose name you never learned.',lift:'A lift with a colleague. Three floors. Nothing to say.',plusone:'Lunch for two, then a third person joins and you drop out.',snow:'A night when it snows indoors and a door opens to summer.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
+var TRYING=['kickoff','snow','plusone','lift','busstop','santa','leaving','call'];
+var SITUATION={santa:'Your present, opened in front of everyone.',leaving:'Going home from a party: say goodbye, or slip out.',call:'Booking something by phone. A live voice.',busstop:'A colleague at the bus stop whose name you never learned.',lift:'A lift with a colleague. Three floors. Nothing to say.',plusone:'Lunch for two, then a third person joins and you drop out.',snow:'A night when it snows indoors and a door opens to summer.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
@@ -5559,6 +5562,95 @@ function labBusStop(){return labScene({set:'busstop',title:'Bus stop.',plan:'Wai
   ['H','Do you have a J?'],
   ['S','I do now.']
  ]);}
+// ---- src/59-call.js ----
+/* ================= The call. (Moment, 0.99.30): one haircut, booked by phone ================= */
+// The opposite of The reply: no edits, no drafts, a live voice. Ekskyysmi writes a script with fourteen branches (the paper is
+// readable: six lines, large); the real call takes forty-one seconds and leaves the script, twice. The human's first words are
+// "sorry to bother you", which is more or less Ekskyysmi's name. The receptionist finds that funny, warmly.
+// It ends the way calls end here: several byes each, which the choice that makes itself handles.
+function drawCallScript(){
+  var g=G,c=g.call;if(!c||!c.script||g.set!=='home'||g.out)return;
+  ctx.save();ctx.translate(752,170);ctx.rotate(0.025);
+  var w=250,h=170;ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(-w/2+5,-h/2+6,w,h);
+  ctx.fillStyle='#f6f1e4';ctx.fillRect(-w/2,-h/2,w,h);ctx.fillStyle='#c9553f';circ(0,-h/2+6,4);ctx.fill();
+  ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillStyle='#2b2733';ctx.font='800 16px system-ui,sans-serif';ctx.fillText(tr('SCRIPT · VERSION 14'),-w/2+14,-h/2+24);
+  var L=['1. Hello. Sorry to bother you.','2. One haircut, please.','2a. If busy: apologise, hang up.','2b. If “your name?”: say it.','14c. If she laughs: ———'];
+  ctx.font='600 15px system-ui,sans-serif';
+  for(var i=0;i<L.length;i++){ctx.fillStyle=i===4?'#c9553f':'#3a3744';ctx.fillText(tr(L[i]),-w/2+14,-h/2+54+i*24);}
+  if(c.off){ctx.strokeStyle='#c9553f';ctx.lineWidth=4;ctx.lineCap='round';line(-w/2+8,h/2-10,w/2-8,-h/2+38);}   // off script
+  ctx.restore();
+}
+function stepCall(){var g=G;if(g.call&&g.call.live&&g.set==='home')g.phoneN=Math.max(g.phoneN||0,2);}   // the phone stays in hand for the whole call
+MFRONT.push(drawCallScript);MSTEP.push(stepCall);
+function labCall(){return labScene({set:'home',title:'The call.',plan:'Book one haircut.',clock:18*3600+55*60}).concat([
+  function(){var g=G;g.call={script:false,live:false,off:false};g.noCup=true;},
+  ['N','18:55. The salon closes at seven. The hair has reached the eyes. They only take calls.'],   // evening: the room at home is always lamp-lit
+  set({mood:'alert',s:1.3}),
+  ['S','Only calls. No form. No app. A live human voice.',{look:'stunned'}],
+  ['S','I’ve written a script.'],
+  function(){G.call.script=true;sfx('card');},{wait:0.8},
+  ['S','Fourteen branches. If she’s busy. If she’s annoyed. If she says “and your name?”.'],
+  ['H','What’s 14c?'],
+  ['S','Don’t worry about 14c.'],
+  function(){var g=G;g.call.live=true;g.buzz=0.6;sfx('pop');},
+  ['N','It rings.'],
+  {choice:[
+    {t:'Hang up before anyone answers.',m:'hide',then:[
+      ['S','Hung up. Safe. We can try again tomorrow. Or in March.'],
+      function(){G.buzz=0.9;sfx('pop');},{wait:0.8},
+      ['N','The phone rings. It is the salon. Calling back.'],
+      set({mood:'scared',s:1.6}),
+      ['S','They’re calling BACK. That’s an escalation.']]},
+    {t:'Let it ring. Hold the script.',m:'stay',then:[
+      ['S','Steady. Line one. Line one. Line one.']]},
+    {t:'Read the whole script once more. Faster.',m:'worst',then:[
+      ['S','Hello-sorry-to-bother-you-one-haircut-if-busy-apologise-if—']]}
+  ]},
+  ['P','“Hair by Hanna, good morning!”'],
+  ['H','Hi— sorry to bother you—'],
+  ['P','“Bother me? This is the bothering phone. Go ahead!”'],
+  set({mood:'surprised',s:1.1}),
+  ['S','She’s not in the script.'],
+  ['H','One haircut, please.'],
+  ['P','“Same as last time?”'],
+  function(){G.call.off=true;sfx('nope');},
+  set({mood:'scared',s:1.5}),
+  ['S','There’s no branch for “same as last time”! Was last time good? Does she REMEMBER us?'],
+  {choice:[
+    {t:'“Yes. Same.” Trust the past.',m:'stay',then:[
+      ['H','Yes. Same.'],
+      ['P','“Lovely. Bit off the top, leave the ears.”'],
+      ['S','She remembers our EARS.']]},
+    {t:'“Something different.” Become a new person.',m:'worst',then:[
+      ['H','Something different.'],
+      ['P','“Ooh. How different?”'],
+      ['S','We don’t know! We were never meant to get this far!'],
+      ['H','…A bit shorter.'],
+      ['P','“Bold. I love it.”']]},
+    {t:'“Whatever’s easiest for you.”',m:'please',then:[
+      ['H','Whatever’s easiest for you.'],
+      ['P','“Easiest for me is you telling me. Same as last time it is.”']]}
+  ]},
+  ['P','“Thursday at four?”'],
+  ['H','Yes. Thank you.'],
+  ['P','“See you then! Bye-bye-bye-bye.”'],
+  set({mood:'alert',s:1.2}),
+  ['S','Four byes. How many do we send back?'],
+  {auto:{opts:['Bye.','Bye-bye.','Bye-bye-bye-bye.'],pick:2,secs:1.9}},
+  ['H','Bye-bye-bye-bye.'],
+  function(){var g=G;g.call.live=false;g.phoneN=0;}
+ ],outside({title:'WHAT THE CALL WAS',dur:'duration: 41 seconds',cap:'One haircut, Thursday at four. Nobody was bothered. Eight byes in total, which is normal here.',anim:'text'}),[
+  calm,
+  ['S','Forty-one seconds. I wrote fourteen branches.'],
+  ['H','You used one.'],
+  ['S','Line one. “Sorry to bother you.”'],
+  ['H','She liked that one.'],
+  ['S','…That sentence is my whole job.',{look:'soft'}],
+  ['H','I know.'],
+  function(){G.call.script=false;},
+  ['S','Filing the script. Branch 14c, still unused.'],
+  ['H','Good.']
+ ]);}
 // ---- src/59-kickoff.js ----
 /* ================= Kick-off. (Moment, 0.99.22): the chest goes before anyone has read anything ================= */
 // Joonas 26.11. (the RSD book: body first, story after). The core line of #10 is "It's my chest. You just do the commentary."
@@ -5848,6 +5940,122 @@ function labPlusOne(){return labScene({set:'canteen',title:'Plus one.',plan:'Hav
   ['S','He was filling the gaps. I was measuring them.'],
   ['H','Same department?'],
   ['S','…Same building. Different floors.']
+ ]);}
+// ---- src/59-santa.js ----
+/* ================= Secret Santa. and Leaving. (Moments, 0.99.30): the office Christmas party ================= */
+// Two moments on one evening, like Quiet. and Evenings.
+// Secret Santa.: a present is a piece of you, opened in public. You drew Riitta. Her face says nothing ("Socks."), and then
+// one of the eleven things her shadow juggles falls on its own (in Not now. it may drop only one, on purpose: this one
+// falls by itself). She has been cold since September. Riitta gets one human line, in her own short way.
+// Leaving.: the two ways out of a party, and the fear under both: that leaving interrupts, and that nobody notices. Someone does.
+function partyRoom(){
+  room(false,true);
+  ctx.strokeStyle='#6f7d6c';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(-10,54);ctx.quadraticCurveTo(W/2,104,W+10,54);ctx.stroke();   // bunting
+  var cols=['#c9553f','#e2b04a','#62887f','#f4eedb'];
+  for(var i=0;i<17;i++){var u=i/16,x=-10+u*(W+20),y=54+(1-Math.pow(2*u-1,2))*25;ctx.fillStyle=cols[i%4];ctx.beginPath();ctx.moveTo(x-11,y);ctx.lineTo(x+11,y);ctx.lineTo(x,y+20);ctx.closePath();ctx.fill();}
+}
+SETS.party=partyRoom;
+// the present, in Riitta's hands: wrapped, then two grey wool socks
+function drawSanta(){
+  var g=G,s=g.santa;if(!s||g.set!=='party'||g.out||!g.cowR||Math.abs(g.rx-(g.rxT==null?g.rx:g.rxT))>2)return;
+  var x=g.rx-34,y=FEETY-92;
+  if(!s.open){ctx.fillStyle='#c9553f';rr(x-15,y-12,30,24,3);ctx.fill();ctx.fillStyle='#e2b04a';ctx.fillRect(x-2,y-12,4,24);ctx.fillRect(x-15,y-2,30,4);
+    ctx.beginPath();ctx.ellipse(x-5,y-15,6,3.5,-0.5,0,Math.PI*2);ctx.ellipse(x+5,y-15,6,3.5,0.5,0,Math.PI*2);ctx.fill();return;}
+  ctx.fillStyle='#9aa0a6';for(var k=0;k<2;k++){var sx=x-9+k*14;rr(sx,y-16,9,24,3);ctx.fill();rr(sx,y+3,15,8,4);ctx.fill();}
+  ctx.fillStyle='#c9553f';ctx.fillRect(x-9,y-16,9,4);ctx.fillRect(x+5,y-16,9,4);
+}
+MFRONT.push(drawSanta);
+function labSanta(){return labScene({set:'party',title:'Secret Santa.',plan:'Give one present.',clock:16*3600+40*60}).concat([
+  function(){var g=G;g.santa={open:false};g.noCup=true;g.cowA=true;g.ax=g.axT=800;g.aFace=-1;g.cowB=true;g.bx2=g.bxT=880;g.bFace=-1;},
+  hat('party'),
+  ['N','The office Christmas party. Secret Santa. Ten-euro limit. You drew Riitta.'],
+  set({mood:'alert',s:1.3}),
+  ['S','Riitta. Of all the names in the hat.'],
+  ['H','It was a bowl.'],
+  ['S','Of all the names in the BOWL.'],
+  ['S','The present is wrapped. The card is not written. The card is where they get you.'],
+  {choice:[
+    {t:'“Merry Christmas! No pressure to like it.”',m:'please',f:function(){G.santa.card='please';},then:[
+      ['S','A disclaimer. Legally sound. Emotionally airtight.']]},
+    {t:'“Merry Christmas. Receipt inside.”',m:'worst',f:function(){G.santa.card='receipt';},then:[
+      ['S','If she returns it, it was our idea first.']]},
+    {t:'“Merry Christmas.”',m:'stay',f:function(){G.santa.card='plain';},then:[
+      ['S','Two words. No armour. Brave. Horrifying.']]}
+  ]},
+  function(){var g=G;g.cowR=true;g.rx=1010;g.rxT=640;g.rPhone=false;},
+  riittaArrives,
+  ['N','Riitta opens it. In front of everyone. Slowly.'],
+  function(){G.santa.open=true;sfx('flutter');},{wait:0.9},
+  lensHold(function(){return {x:G.rx,y:FEETY-170};},'MOUTH: LEVEL. VERDICT: PENDING.'),{wait:1.6},lensOff,
+  ['R','Socks.'],
+  set({mood:'scared',s:1.6}),
+  ['S','“Socks.” With a FULL STOP.',{loud:1}],
+  function(){G.wT=1;},{wait:1.4},
+  ['S','…Her shadow is juggling. Eleven things. None of them is her face.'],
+  function(){G.wDrop={t:0};sfx('drip');},{wait:1},
+  set({mood:'surprised',s:1.1}),
+  ['W','Oh. That one fell on its own.'],
+  ['S','I thought you were only allowed to drop one. On purpose.'],
+  ['W','I am. This was her feet.'],
+  ['R','I’ve been cold since September.'],
+  {wait:0.8},
+  ['R','Thank you. Really.']
+ ],outside({title:'WHAT RIITTA THOUGHT',dur:'duration: one sock',cap:'Wool. Somebody noticed I am always cold. I have no idea how to say that at a party.',anim:'text'}),[
+  calm,
+  ['H','She liked them.'],
+  ['S','She said “socks”.'],
+  ['H','That’s how she says she likes them.'],
+  function(){var c=G.santa.card;return [['S',c==='receipt'?'And the receipt?':c==='please'?'And the disclaimer?':'And the card?']].concat(
+    c==='receipt'?[['H','She put it in her pocket. With the socks.']]:c==='please'?[['H','She read it twice. I think it made her laugh.']]:[['H','She kept it.']]);},
+  ['S','…I’m going to need a Riitta dictionary.'],
+  ['H','Two words so far.'],
+  ['S','“Socks.” “Really.” It’s a start.'],
+  hat(null)
+ ]);}
+function labLeaving(){return labScene({set:'party',title:'Leaving.',plan:'Go home.',clock:21*3600+40*60}).concat([
+  function(){var g=G;g.leave={way:null};g.noCup=true;g.human.x=g.human.xT=HOME;g.cowA=true;g.ax=g.axT=620;g.aFace=1;g.cowB=true;g.bx2=g.bxT=740;g.bFace=-1;g.cowR=true;g.rx=g.rxT=860;},
+  hat('party'),
+  ['N','21:40. The party is still going. You are done.'],
+  set({mood:'alert',s:1.2}),
+  ['S','There are two ways out of a party.'],
+  ['S','Say goodbye to everyone, and interrupt eleven conversations.'],
+  ['S','Or leave without a word, and find out nobody noticed.'],
+  set({mood:'worry',s:1.4}),
+  ['S','The second one is worse. I’ve checked.'],
+  {choice:[
+    {t:'Goodbye to everyone. Individually.',m:'please',f:function(){G.leave.way='all';},then:[
+      ['H','Bye, Eero.'],
+      ['B','Oh! Bye!'],
+      ['H','Bye, Riitta.'],
+      ['R','Mm. Bye.'],
+      ['N','Four goodbyes later, Eero is somehow in front of you again.'],
+      ['H','…Bye, Eero.'],
+      ['B','Bye again!'],
+      ['S','Twice. We’ve said goodbye to Eero twice. He’ll remember that.']]},
+    {t:'One wave to the whole room.',m:'stay',f:function(){G.leave.way='wave';},then:[
+      ['N','You wave to the room in general.'],
+      ['S','A wave to a room is a wave to nobody. Nobody can wave back to a room.']]},
+    {t:'Leave without a word. Briskly.',m:'hide',f:function(){G.leave.way='quiet';},then:[
+      {hold:{kind:'pull',secs:2.6}}]}
+  ]},
+  function(){G.human.xT=-90;G.human.back=true;},{wait:1.4},
+  scene({set:'busstop',clock:21*3600+47*60}),
+  function(){var g=G;g.human.x=g.human.xT=380;g.noCup=true;},hat('party'),
+  ['N','Outside. Sleet. The bus stop. The party, faintly, through a window.'],
+  set({mood:'worry',s:1.2}),
+  ['S','Nobody has called after us. So nobody noticed. I have that in writing.'],
+  ['H','You have it in nothing.'],
+  function(){var g=G;g.phoneN=4;g.buzz=0.9;},
+  function(){var w=G.leave.way;return [['P',w==='all'?'Sanna: “You said bye to Eero twice, I counted. Get home safe x”':w==='wave'?'Sanna: “Saw your wave! Get home safe x”':'Sanna: “Did you just leave?? Missed you already. Get home safe x”']];},
+  set({mood:'surprised',s:0.9}),
+  ['S','…Somebody noticed.',{look:'soft'}],
+  ['S','That’s the nicest thing that’s ever been reported to me.']
+ ],outside({title:'WHAT THE PARTY NOTICED',dur:'duration: one minute',cap:'Someone went home at 21:40. Sanna noticed at 21:41.',anim:'text'}),[
+  calm,
+  ['H','You’re still wearing the hat.'],
+  ['S','I was going to wear it home. In case anyone else missed us.'],
+  hat(null),
+  ['S','…Fine. Hat off. Party over. It was a good party.']
  ]);}
 // ---- src/59-snow.js ----
 /* ================= Snow indoors. (Moment, 0.99.23): a dream after a long Thursday ================= */

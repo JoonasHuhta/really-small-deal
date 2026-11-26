@@ -29,7 +29,10 @@ var LABS={
   snow:{title:'Snow indoors.',blurb:'A dream after a long Thursday. It snows in the living room. A door opens to summer. Ekskyysmi turns out to have a colour.',script:labSnow},
   plusone:{title:'Plus one.',blurb:'Lunch with Sanna. Eero joins. With every line between them the table gets a little longer.',script:labPlusOne},
   lift:{title:'The lift.',blurb:'Three floors with Eero. The humans say “morning”. The shadows talk. Eero’s has a reason, and a watch with no hands.',script:labLift},
-  busstop:{title:'Bus stop.',blurb:'A colleague from the third floor. Two years of “hi”, name unknown. Ekskyysmi measures the distance in metres. Then one pole on the bus.',script:labBusStop}
+  busstop:{title:'Bus stop.',blurb:'A colleague from the third floor. Two years of “hi”, name unknown. Ekskyysmi measures the distance in metres. Then one pole on the bus.',script:labBusStop},
+  santa:{title:'Secret Santa.',blurb:'The office Christmas party. You drew Riitta. She opens your present in front of everyone and says one word.',script:labSanta},
+  leaving:{title:'Leaving.',blurb:'Two ways out of a party: interrupt eleven conversations, or find out nobody noticed. Ekskyysmi is wearing a paper hat.',script:labLeaving},
+  call:{title:'The call.',blurb:'One haircut, by phone. A script with fourteen branches. A receptionist who isn’t in any of them.',script:labCall}
 };
 function labScene(o){return [function(){G.chapMusic=null;},scene(o),function(){
   var g=G;g.dayTag=g.moment&&WHEN[g.moment]?WHEN[g.moment].replace(/,\s*\d\d?:\d\d$/,''):null;g.stampT=0;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
@@ -50,8 +53,8 @@ var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}
 var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
 // 0.99.22 (Joonas 26.11.: "let's make scenes into Moments and try all kinds of things"): new scenes start here, outside the story,
 // under their own heading so a tester knows they are being tried. Whether one joins the week is decided later, with Joonas.
-var TRYING=['kickoff','snow','plusone','lift','busstop'];
-var SITUATION={busstop:'A colleague at the bus stop whose name you never learned.',lift:'A lift with a colleague. Three floors. Nothing to say.',plusone:'Lunch for two, then a third person joins and you drop out.',snow:'A night when it snows indoors and a door opens to summer.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
+var TRYING=['kickoff','snow','plusone','lift','busstop','santa','leaving','call'];
+var SITUATION={santa:'Your present, opened in front of everyone.',leaving:'Going home from a party: say goodbye, or slip out.',call:'Booking something by phone. A live voice.',busstop:'A colleague at the bus stop whose name you never learned.',lift:'A lift with a colleague. Three floors. Nothing to say.',plusone:'Lunch for two, then a third person joins and you drop out.',snow:'A night when it snows indoors and a door opens to summer.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).

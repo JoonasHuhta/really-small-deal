@@ -11,7 +11,7 @@ assert.ok(ids.length>=10,'LABS was not found in src/50-lab.js');
 const SPEAKERS='SHABPRNZYWTXL';
 const problems=[];let runs=0,lines=0;
 // Hats (0.90, Joonas: "are the hats where they belong?"): each moment that has a costume still puts it on, and nothing ends wearing one.
-const HATS={glass:['detective'],enhance:['detective'],evening:['chef'],mug:['pirate'],epilogue:['chef','party','pirate','detective']},worn={};
+const HATS={glass:['detective'],enhance:['detective'],evening:['chef'],mug:['pirate'],epilogue:['chef','party','pirate','detective'],santa:['party'],leaving:['party']},worn={};
 for(const id of ids){
   for(const pick of ['first','middle','last']){
     const H=harness(),T=H.T,seen=new Set();runs++;let ended=false;

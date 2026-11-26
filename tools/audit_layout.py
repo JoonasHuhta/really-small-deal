@@ -38,7 +38,7 @@ STATES=[
  ('intro-skip',"__T.start()",'time',0),('longline',"__T.start('B',true)",'longline',0),('choice',"__T.start('B',true)",'choice',0),('stretch',"__T.start('B',true)",'stretch',0),('hold',"__T.start('B',true)",'hold',1),
  ('choice4',"__T.chapter(3)",'choice4',0),('fight-flow',"__T.lab('comments')",'flow',0),('fight-paced',"__T.lab('comments')",'paced',1),('chatlog',"__T.lab('comments')",'chatlog',1),
  # 0.99.22–26: the new Moments being tried (their first choice screen; the ski is a hold)
- ('kickoff',"__T.lab('kickoff')",'choice',0),('snow',"__T.lab('snow')",'hold',0),('plusone',"__T.lab('plusone')",'choice',0),('lift',"__T.lab('lift')",'choice',0),('busstop',"__T.lab('busstop')",'choice',0),
+ ('kickoff',"__T.lab('kickoff')",'choice',0),('snow',"__T.lab('snow')",'hold',0),('plusone',"__T.lab('plusone')",'choice',0),('lift',"__T.lab('lift')",'choice',0),('busstop',"__T.lab('busstop')",'choice',0),('santa',"__T.lab('santa')",'choice',0),('leaving',"__T.lab('leaving')",'choice',0),('call',"__T.lab('call')",'choice',0),
  ('glass',"__T.lab('glass')",'choice',0),('bar',"__T.lab('bar')",'choice',0),('lab-end',"__T.lab('enhance')",'ended',0),('monday-end',"__T.start('B',true)",'ended',0),
  ('paused',"__T.start('B',true)",'choice',0),('restart-confirm',"__T.start('B',true)",'choice',0),('journal',"__T.start('B',true)",'choice',0),('menu-open',"__T.start('B',true)",'choice',0),('voice',"__T.lab('voice')",'click',0),('quiet',"__T.lab('quiet')",'auto',0),('form',"__T.lab('form')",'choice',0),('night',"__T.lab('night')",'click',0),('rewind',"__T.lab('rewind')",'choice',0),('week-end',"__T.chapter(5)",'ended',0),
  # 0.89: the Finnish pilot (Monday). Finnish lines run longer, so the same Monday states again in Finnish.
