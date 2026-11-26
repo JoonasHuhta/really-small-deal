@@ -59,7 +59,7 @@ function drawBusFront(){
   if(b.x<W+60)person(b.x,{body:'#5b6f8c',hair:'#2f2a26',facing:Math.abs(b.x-b.xT)>1?(b.xT>b.x?1:-1):-1,walk:Math.abs(b.x-b.xT)>1,wave:b.wave});
 }
 SETS.busstop=busStop;SETS.bus=busInside;MSTEP.push(stepBus);MFRONT.push(drawBusFront);
-function busClosing(){var d=G.bus&&G.bus.dist;return [['S',d==='polite'?'For the record: four metres was correct.':d==='near'?'For the record: one metre was too close. He didn’t mind.':'For the record: the glass was see-through. He saw us anyway.']];}
+function busClosing(){var d=G.bus&&G.bus.dist;return [['S',d==='polite'?'Four metres was correct.':d==='near'?'One metre was too close. He didn’t mind.':'The glass was see-through. He saw us anyway.']];}   // 0.99.27: “for the record” is the week’s thread (paid off in Quiet.), so the new moments mostly leave it alone
 function labBusStop(){return labScene({set:'busstop',title:'Bus stop.',plan:'Wait for the bus.',clock:16*3600+22*60}).concat([
   busOn,
   ['N','16:22. Dark already. The bus is in nine minutes. The stop is empty.'],

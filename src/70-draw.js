@@ -487,6 +487,7 @@ function drawLines(){
 function drawOutside(){
   var g=G,o=g.out,t=o.t,an=o.anim;
   if(an==='chatlog'){drawChatlog(o);return;}
+  if(an==='meadow'){drawMeadow(o);return;}   // Snow indoors.: through the door (an inside picture, not an outside version)
   if(an==='text'){
     ctx.fillStyle='#141a1c';ctx.fillRect(0,0,W,H);ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);
     ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,COMPACT?72:28,29);

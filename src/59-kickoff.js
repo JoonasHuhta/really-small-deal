@@ -9,7 +9,9 @@ function labKickoff(){
   shadowAway,
   ['N','10:12. A quiet desk. Ekskyysmi is in the archive, re-alphabetising 2011.'],
   function(){var g=G;g.phoneN=4;g.buzz=0.9;sfx('pop');},{wait:0.45},
-  hit(0.85,'P'),{wait:1.3},
+  // 0.99.27: the body is seen going first: the same X-ray as One small thing., with nobody on the wall
+  function(){return jolt({tag:'BUZZ. NOTHING READ YET.',label:'a buzz, before reading',mins:20});},
+  function(){var g=G;g.band=null;g.pulse=0.85;g.darkT=0.7;g.human.blush=0.7;g.human.flinch=0.6;g.human.face='stiff';g.anx=0.9;},{wait:0.8},
   ['N','The phone buzzes. The chest goes. Nobody has read anything yet.'],
   ['H','…Hello?'],
   empty,

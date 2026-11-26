@@ -88,7 +88,7 @@ function labLift(){return labScene({set:'lift',title:'The lift.',plan:'Get to th
   ['Y','Lovely. More lift.']
  ],outside({title:'WHAT IT LOOKED LIKE',dur:'duration: 40 seconds',cap:'Two colleagues in a lift. One “morning” each. They missed their floor being polite.',anim:'text'}),[
   calm,
-  ['S','For the record, we missed our floor.'],
+  ['S','We missed our floor.'],
   ['H','We did.'],
   ['S','Being polite.'],
   ['H','Both of us.'],

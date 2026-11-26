@@ -90,7 +90,7 @@ function render(){
   document.getElementById('pause').disabled=!g.started||g.ended;
   document.getElementById('journal').disabled=!history.length;
   document.getElementById('chapter').textContent=g.ended?(g.labEnd?(DEVLAB?'Scenario lab':'Moments'):g.dayEnd?'End of Monday':'For now'):g.started?(g.lab?'':['','I · ','II · ','III · '][storyPart()])+tr(g.chap&&g.chap.part?g.chap.title:g.label|| (g.w?'The walk home':'Oh, hi.')):tr('A small social adventure');
-  document.getElementById('perspective').textContent=tr(g.chap&&g.chap.part?g.chap.day:g.finalFrame?'FOR NOW':g.out?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION');
+  document.getElementById('perspective').textContent=tr(g.chap&&g.chap.part?g.chap.day:g.finalFrame?'FOR NOW':g.out&&!g.out.inside?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION');
   cv.classList.toggle('stretching',WAIT==='stretch');
   cv.setAttribute('aria-label',g.chap&&g.chap.part?g.chap.day+'. '+g.chap.title:g.finalFrame?'The human is asleep. A lamp stays on. Ekskyysmi makes a bird with its hands.':'A human and a very large shadow');
   if(WAIT==='choice'&&CH){
@@ -142,7 +142,7 @@ function render(){
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
   // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
-  elLine.classList.toggle('echo',!textBelow&&(g.out?(g.out.anim==='text'||!COMPACT):WAIT==='click'&&!!cur&&lineInBubble(cur)));
+  elLine.classList.toggle('echo',!textBelow&&(g.out?(!g.out.inside&&(g.out.anim==='text'||!COMPACT)):WAIT==='click'&&!!cur&&lineInBubble(cur)));
   elOpts.innerHTML=html;
   elOpts.classList.toggle('who-S',WAIT==='choice'&&(g.choiceWho||'S')==='S');elOpts.classList.toggle('who-H',WAIT==='choice'&&g.choiceWho==='H');
   for(var nn=2;nn<=5;nn++)elOpts.classList.toggle('n'+nn,WAIT==='choice'&&!!CH&&CH.length===nn);   // column count without :has (older Android web views)   // whose words these are, in their colour

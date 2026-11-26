@@ -41,5 +41,10 @@ for(const id of ids){
 }
 for(const [id,hats] of Object.entries(HATS))for(const h of hats)if(!(worn[id]&&worn[id].has(h)))problems.push(`${id}: the ${h} hat never went on`);
 for(const [id,s] of Object.entries(worn))for(const h of s)if(!HATS[id]?.includes(h))problems.push(`${id}: wears the ${h} hat, which belongs elsewhere`);
+// 0.99.27: "for the record" is the week's thread, paid off in Quiet. ("Nobody said 'for the record'. All day."). The moments
+// being tried may use it once between them, or the payoff wears thin.
+const trySrc=fs.readdirSync(path.join(root,'src')).filter(f=>/^59-/.test(f)).map(f=>fs.readFileSync(path.join(root,'src',f),'utf8').replace(/\/\/[^\n]*/g,'')).join('\n');
+const ftr=(trySrc.match(/for the record/gi)||[]).length;
+if(ftr>1)problems.push(`the moments being tried say "for the record" ${ftr} times (at most once: it belongs to the week)`);
 assert.deepEqual(problems,[],'\n'+problems.join('\n'));
 console.log(`PASS: ${ids.length} moments × 3 choice paths (${runs} runs, ${lines} distinct lines), no crashes, stalls or broken lines; hats where they belong.`);

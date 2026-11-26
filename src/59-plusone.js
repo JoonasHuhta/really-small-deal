@@ -46,7 +46,7 @@ function labPlusOne(){return labScene({set:'canteen',title:'Plus one.',plan:'Hav
       ['S','Overlap. He won. He didn’t know it was a race.']]},
     {t:'Too small. Wait for a better gap.',m:'hide',then:[
       ['S','That gap was the size of a comma. We need a full stop. Ideally a paragraph.']]},
-    {t:'Laugh along. Slightly late.',m:'worst',then:[
+    {t:'Laugh along. Slightly late.',m:'please',then:[
       ['H','Ha.'],
       ['S','One second after everyone. That second is now on file.']]}
   ]},
@@ -77,10 +77,10 @@ function labPlusOne(){return labScene({set:'canteen',title:'Plus one.',plan:'Hav
   ['B','Sorry. I talk too much when there’s three. Two, I’m fine. Three, I panic and fill it.'],
   ['H','I go quiet.'],
   ['B','Between us that’s about right.'],
-  ['A','So, on average, one normal person.']
+  ['A','Between the two of you, that’s one excellent conversationalist.']
  ],outside({title:'WHAT IT LOOKED LIKE',dur:'duration: one lunch',cap:'Three people at a table for four. Two talking, one listening. Nobody moved. Nobody meant anything by it.',anim:'text'}),[
   calm,
-  ['S','For the record, it was a normal table.'],
+  ['S','It was a normal table, wasn’t it.'],
   ['H','It was.'],
   ['S','It felt like a train.'],
   ['H','It did.'],

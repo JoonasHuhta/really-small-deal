@@ -69,6 +69,36 @@ function drawDreamFront(){if(G.set==='dream')drawDreamSnow(0,1);}
 // A flake that Ekskyysmi has just filed, melting between its hands.
 function drawMelt(q){var d=G.dream;if(!d||d.melt<=0)return;var k=d.melt/1.4,x=q.bx,y=q.shY+40*q.s;
   ctx.fillStyle='rgba(244,247,250,'+k+')';circ(x,y,6*k+2);ctx.fill();ctx.fillStyle='rgba(160,190,220,'+(1-k)*0.9+')';circ(x,y+10*(1-k),2.6);ctx.fill();}
+// Through the door, full screen: July, midnight, a sun that stays up, and the shadow lying forty metres long in the grass.
+// Kept above the phone's reading panel (the horizon is high), so the picture is whole on every screen.
+function drawMeadow(o){
+  var t=RM?0:G.time,i,len=0.32+0.68*(o.stretch!=null?clamp((G.time-o.stretch)/2.4,0,1):0);
+  var sk=ctx.createLinearGradient(0,0,0,210);sk.addColorStop(0,'#86aed0');sk.addColorStop(0.7,'#f2d9a4');sk.addColorStop(1,'#f6c67c');ctx.fillStyle=sk;ctx.fillRect(0,0,W,212);
+  var sg=ctx.createRadialGradient(812,168,6,812,168,170);sg.addColorStop(0,'rgba(255,244,205,.9)');sg.addColorStop(1,'rgba(255,244,205,0)');ctx.fillStyle=sg;ctx.fillRect(560,0,400,260);
+  ctx.fillStyle='#fff3cf';circ(812,168,20);ctx.fill();                                   // 00:00, and up
+  ctx.fillStyle='#2f4a3a';ctx.beginPath();ctx.moveTo(0,212);for(i=0;i<=48;i++){ctx.lineTo(i*20,196-((i*37)%11)*1.6-(i%3?0:9));}ctx.lineTo(W,214);ctx.lineTo(0,214);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#8fb7cc';ctx.fillRect(0,212,W,16);ctx.fillStyle='rgba(255,226,150,.75)';ctx.fillRect(786,214,52,3);ctx.fillRect(796,220,32,3);
+  var gm=ctx.createLinearGradient(0,228,0,H);gm.addColorStop(0,'#94b35e');gm.addColorStop(1,'#5b873c');ctx.fillStyle=gm;ctx.fillRect(0,228,W,H-228);
+  ctx.strokeStyle='#4f7a34';ctx.lineWidth=2;ctx.lineCap='round';
+  for(i=0;i<70;i++){var gx=snowRnd(i+1601)*W,gy=240+snowRnd(i+1701)*(H-250),sw=Math.sin(t*1.3+i)*1.5;line(gx,gy,gx+sw-2,gy-6);line(gx+3,gy,gx+3+sw,gy-8);}
+  for(i=0;i<26;i++){ctx.fillStyle=i%3?'#f6f1e4':'#f3d27a';circ(snowRnd(i+1801)*W,246+snowRnd(i+1901)*(H-260),2.2);ctx.fill();}
+  // the long shadow, from the human's feet towards the left, away from the sun; the head at the far end, eyes on the sky
+  var fx=744,fy=338,ex=fx-140-560*len,ey=fy+16,hw=10+16*len;
+  ctx.fillStyle='#29324a';ctx.beginPath();ctx.moveTo(fx-6,fy-3);ctx.lineTo(fx+6,fy+4);
+  ctx.quadraticCurveTo(ex+70,ey+hw*0.9,ex+24,ey+hw);ctx.lineTo(ex+24,ey-hw);ctx.quadraticCurveTo(ex+70,ey-hw*0.7,fx-6,fy-3);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.ellipse(ex+24,ey,14,hw,0,0,Math.PI*2);ctx.fill();                 // round shoulders, joined to the head
+  ctx.strokeStyle='#29324a';ctx.lineWidth=8;ctx.lineCap='round';                   // arms out in the grass
+  ctx.beginPath();ctx.moveTo(ex+30,ey-hw*0.6);ctx.quadraticCurveTo(ex+38,ey-hw*1.6,ex+52,ey-hw*2.1);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ex+30,ey+hw*0.6);ctx.quadraticCurveTo(ex+40,ey+hw*1.5,ex+56,ey+hw*1.9);ctx.stroke();
+  ctx.beginPath();ctx.ellipse(ex+6,ey,19,15,0,0,Math.PI*2);ctx.fill();ctx.fillRect(ex+6,ey-9,18,18);   // the head, on the shoulders
+  var blink=!RM&&(t%5.3)<0.12,wide=G.cur&&G.cur.who==='S'&&G.cur.look==='stunned'?1.3:1;
+  ctx.fillStyle='#f6f1e4';ctx.beginPath();ctx.ellipse(ex-1,ey-2,4*wide,blink?0.6:5*wide,0,0,Math.PI*2);ctx.ellipse(ex+12,ey-2,4*wide,blink?0.6:5*wide,0,0,Math.PI*2);ctx.fill();
+  if(!blink){ctx.fillStyle='#14111d';circ(ex,ey-5,1.9);ctx.fill();circ(ex+13,ey-5,1.9);ctx.fill();}   // looking up, at a sky that stays light
+  // the human, small and far, the skis stuck upright in the grass beside them
+  ctx.strokeStyle='#c04a33';ctx.lineWidth=4;line(fx+34,fy+2,fx+30,fy-70);line(fx+42,fy+3,fx+40,fy-68);
+  ctx.save();ctx.translate(fx,fy);ctx.scale(0.62,0.62);ctx.translate(-fx,-FEETY);person(fx,{body:'#c98f2e',hair:'#4a3b32',facing:-1,shadow:0});ctx.restore();
+  ctx.fillStyle='rgba(20,22,30,.72)';rr(14,14,64,26,6);ctx.fill();ctx.fillStyle='#f3d27a';ctx.font='700 14px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('00:00',46,27);
+}
 function catchFlake(){var g=G;if(g.dream)g.dream.melt=1.4;g.morko.pose='hold';sfx('pick');}
 function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get to the door.',clock:3*3600+30*60}).concat([
   dreamOn,
@@ -105,7 +135,7 @@ function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get 
       ['H','The door is already summer.'],
       ['S','Then it skipped spring. I don’t trust a season that skips.']]},
     {t:'Fine. Ski. I’ll come.',m:'stay',then:[
-      ['S','For the record, shadows can’t ski.'],
+      ['S','Point of order: shadows can’t ski.'],
       ['H','You’re about to find out.']]}
   ]},
   ['H','I’m going.'],
@@ -116,17 +146,20 @@ function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get 
   ['S','Since WHEN?'],
   ['H','Always. Ask anyone who paints.'],
   ['S','Nobody told me I had a colour.',{look:'soft'}],
+  function(){var g=G;g.out={anim:'meadow',inside:true,t:0,title:'',dur:'',cap:''};g.lines=[];g.band=null;g.cur=null;sfx('turn');},{wait:1.2},
   ['N','Through the door: a meadow, a lake, and a sun that will not set tonight.'],
   ['S','It won’t set?'],
   ['H','Not in July. Not up here.'],
   set({mood:'worry',s:1.2}),
   ['S','Then I don’t get a night off.'],
   ['H','You get a long one. Look.'],
+  function(){G.out.stretch=G.time;sfx('grow');},{wait:2.6},
   ['S','…At midnight I’m forty metres long.',{look:'stunned'}],
   ['H','Lying down. In the grass.'],
   set({mood:'calm',s:0.9}),
   ['S','Lying down in the grass. On duty.'],
-  ['H','On duty.']
+  ['H','On duty.'],
+  {wait:1.4},function(){G.out=null;}
  ],outside({title:'WHAT WAS ACTUALLY THERE',dur:'duration: one night',cap:'A sofa. A blanket. The window open a crack, and a little November on the sill.',anim:'text'}),[
   scene({set:'home',clock:7*3600+10*60}),function(){var g=G;g.dream=null;g.noCup=true;},calm,
   ['N','Morning. A little water on the windowsill.'],

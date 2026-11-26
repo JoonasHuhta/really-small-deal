@@ -733,7 +733,7 @@ function render(){
   document.getElementById('pause').disabled=!g.started||g.ended;
   document.getElementById('journal').disabled=!history.length;
   document.getElementById('chapter').textContent=g.ended?(g.labEnd?(DEVLAB?'Scenario lab':'Moments'):g.dayEnd?'End of Monday':'For now'):g.started?(g.lab?'':['','I · ','II · ','III · '][storyPart()])+tr(g.chap&&g.chap.part?g.chap.title:g.label|| (g.w?'The walk home':'Oh, hi.')):tr('A small social adventure');
-  document.getElementById('perspective').textContent=tr(g.chap&&g.chap.part?g.chap.day:g.finalFrame?'FOR NOW':g.out?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION');
+  document.getElementById('perspective').textContent=tr(g.chap&&g.chap.part?g.chap.day:g.finalFrame?'FOR NOW':g.out&&!g.out.inside?'THE OUTSIDE VERSION':g.w?'THE MOMENT HAS PASSED. MOSTLY.':'THE INSIDE VERSION');
   cv.classList.toggle('stretching',WAIT==='stretch');
   cv.setAttribute('aria-label',g.chap&&g.chap.part?g.chap.day+'. '+g.chap.title:g.finalFrame?'The human is asleep. A lamp stays on. Ekskyysmi makes a bird with its hands.':'A human and a very large shadow');
   if(WAIT==='choice'&&CH){
@@ -785,7 +785,7 @@ function render(){
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
   // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
   // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
-  elLine.classList.toggle('echo',!textBelow&&(g.out?(g.out.anim==='text'||!COMPACT):WAIT==='click'&&!!cur&&lineInBubble(cur)));
+  elLine.classList.toggle('echo',!textBelow&&(g.out?(!g.out.inside&&(g.out.anim==='text'||!COMPACT)):WAIT==='click'&&!!cur&&lineInBubble(cur)));
   elOpts.innerHTML=html;
   elOpts.classList.toggle('who-S',WAIT==='choice'&&(g.choiceWho||'S')==='S');elOpts.classList.toggle('who-H',WAIT==='choice'&&g.choiceWho==='H');
   for(var nn=2;nn<=5;nn++)elOpts.classList.toggle('n'+nn,WAIT==='choice'&&!!CH&&CH.length===nn);   // column count without :has (older Android web views)   // whose words these are, in their colour
@@ -2450,8 +2450,9 @@ function drawXray(){
   var gr=ctx.createRadialGradient(W/2,H/2,40,W/2,H/2,620);gr.addColorStop(0,'#0d2638');gr.addColorStop(1,'#030a12');ctx.fillStyle=gr;ctx.fillRect(-20,-20,W+40,H+40);
   if(!RM){ctx.fillStyle='rgba(160,220,255,.05)';for(var y=(G.time*80)%5;y<H;y+=5)ctx.fillRect(0,y,W,1.5);}
   ctx.strokeStyle='rgba(160,220,255,.12)';ctx.lineWidth=1;line(0,FEETY+2,W,FEETY+2);
-  // Ekskyysmi has no bones. It turns out to be mostly filing cabinet.
-  ctx.save();ctx.strokeStyle='rgba(150,210,255,.45)';ctx.lineWidth=2;ctx.setLineDash&&ctx.setLineDash([6,6]);
+  // Ekskyysmi has no bones. It turns out to be mostly filing cabinet. (Kick-off.: when it is away, the wall is simply empty.)
+  var away=g.morko.asleep;
+  if(!away){ctx.save();ctx.strokeStyle='rgba(150,210,255,.45)';ctx.lineWidth=2;ctx.setLineDash&&ctx.setLineDash([6,6]);
   ctx.beginPath();ctx.moveTo(q.bx-q.shW,q.by);ctx.lineTo(q.bx-q.shW,q.shY+10);ctx.quadraticCurveTo(q.bx,q.shY-18,q.bx+q.shW,q.shY+10);ctx.lineTo(q.bx+q.shW,q.by);ctx.stroke();
   ctx.beginPath();ctx.arc(q.bx,q.hdY,q.hdR,0,Math.PI*2);ctx.stroke();ctx.setLineDash&&ctx.setLineDash([]);
   var cw=Math.min(74,q.shW*1.15),ch=Math.min(150,(q.by-q.shY)*0.62),cx=q.bx-cw/2,cy=q.shY+(q.by-q.shY)*0.18;
@@ -2460,13 +2461,13 @@ function drawXray(){
   for(var i=0;i<4;i++){var dy=cy+6+i*(ch-12)/4,dh=(ch-12)/4-5;ctx.strokeRect(cx+5,dy,cw-10,dh);ctx.beginPath();ctx.moveTo(cx+cw/2-8,dy+dh/2);ctx.lineTo(cx+cw/2+8,dy+dh/2);ctx.stroke();
     ctx.shadowBlur=0;ctx.fillStyle='#d6f0ff';ctx.font='700 '+Math.max(8,Math.min(11,dh*0.36))+'px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(tr(labels[i]),cx+cw/2,dy+dh*0.28);ctx.shadowBlur=10;}
   ctx.restore();
-  ctx.fillStyle='#d6f0ff';ctx.fillRect(q.bx-q.hdR*0.45,q.hdY-3,5,6);ctx.fillRect(q.bx+q.hdR*0.2,q.hdY-3,5,6);
+  ctx.fillStyle='#d6f0ff';ctx.fillRect(q.bx-q.hdR*0.45,q.hdY-3,5,6);ctx.fillRect(q.bx+q.hdR*0.2,q.hdY-3,5,6);}
   skeleton(g.human.x,false,true);
   if(g.cowB)skeleton(g.bx2,true,false);if(g.cowA)skeleton(g.ax,true,false);
   ctx.textAlign='left';ctx.textBaseline='middle';
   ctx.fillStyle='rgba(3,10,18,.8)';rr(26,24,420,62,6);ctx.fill();
   ctx.fillStyle='#ff6a55';ctx.font='800 15px system-ui,sans-serif';ctx.fillText(tr('● X-RAY · CHEST · ')+tr(g.jolt?g.jolt.tag:'ONE SMALL THING'),40,44);
-  ctx.fillStyle='#bfe3ff';ctx.font='600 12px system-ui,sans-serif';ctx.fillText(tr('SHADOW: NO BONES DETECTED. FILING CABINET DETECTED.'),40,68);
+  ctx.fillStyle='#bfe3ff';ctx.font='600 12px system-ui,sans-serif';ctx.fillText(tr(away?'SHADOW: NOT DETECTED. OUT OF OFFICE.':'SHADOW: NO BONES DETECTED. FILING CABINET DETECTED.'),40,68);
   if(g.cowB||g.cowA){ctx.textAlign='center';ctx.fillStyle='rgba(191,227,255,.7)';ctx.font='700 11px system-ui,sans-serif';ctx.fillText(tr('HEART RATE: NORMAL'),g.cowB?g.bx2:g.ax,FEETY-186);}
 }
 
@@ -5480,7 +5481,7 @@ function drawBusFront(){
   if(b.x<W+60)person(b.x,{body:'#5b6f8c',hair:'#2f2a26',facing:Math.abs(b.x-b.xT)>1?(b.xT>b.x?1:-1):-1,walk:Math.abs(b.x-b.xT)>1,wave:b.wave});
 }
 SETS.busstop=busStop;SETS.bus=busInside;MSTEP.push(stepBus);MFRONT.push(drawBusFront);
-function busClosing(){var d=G.bus&&G.bus.dist;return [['S',d==='polite'?'For the record: four metres was correct.':d==='near'?'For the record: one metre was too close. He didn’t mind.':'For the record: the glass was see-through. He saw us anyway.']];}
+function busClosing(){var d=G.bus&&G.bus.dist;return [['S',d==='polite'?'Four metres was correct.':d==='near'?'One metre was too close. He didn’t mind.':'The glass was see-through. He saw us anyway.']];}   // 0.99.27: “for the record” is the week’s thread (paid off in Quiet.), so the new moments mostly leave it alone
 function labBusStop(){return labScene({set:'busstop',title:'Bus stop.',plan:'Wait for the bus.',clock:16*3600+22*60}).concat([
   busOn,
   ['N','16:22. Dark already. The bus is in nine minutes. The stop is empty.'],
@@ -5570,7 +5571,9 @@ function labKickoff(){
   shadowAway,
   ['N','10:12. A quiet desk. Ekskyysmi is in the archive, re-alphabetising 2011.'],
   function(){var g=G;g.phoneN=4;g.buzz=0.9;sfx('pop');},{wait:0.45},
-  hit(0.85,'P'),{wait:1.3},
+  // 0.99.27: the body is seen going first: the same X-ray as One small thing., with nobody on the wall
+  function(){return jolt({tag:'BUZZ. NOTHING READ YET.',label:'a buzz, before reading',mins:20});},
+  function(){var g=G;g.band=null;g.pulse=0.85;g.darkT=0.7;g.human.blush=0.7;g.human.flinch=0.6;g.human.face='stiff';g.anx=0.9;},{wait:0.8},
   ['N','The phone buzzes. The chest goes. Nobody has read anything yet.'],
   ['H','…Hello?'],
   empty,
@@ -5731,7 +5734,7 @@ function labLift(){return labScene({set:'lift',title:'The lift.',plan:'Get to th
   ['Y','Lovely. More lift.']
  ],outside({title:'WHAT IT LOOKED LIKE',dur:'duration: 40 seconds',cap:'Two colleagues in a lift. One “morning” each. They missed their floor being polite.',anim:'text'}),[
   calm,
-  ['S','For the record, we missed our floor.'],
+  ['S','We missed our floor.'],
   ['H','We did.'],
   ['S','Being polite.'],
   ['H','Both of us.'],
@@ -5788,7 +5791,7 @@ function labPlusOne(){return labScene({set:'canteen',title:'Plus one.',plan:'Hav
       ['S','Overlap. He won. He didn’t know it was a race.']]},
     {t:'Too small. Wait for a better gap.',m:'hide',then:[
       ['S','That gap was the size of a comma. We need a full stop. Ideally a paragraph.']]},
-    {t:'Laugh along. Slightly late.',m:'worst',then:[
+    {t:'Laugh along. Slightly late.',m:'please',then:[
       ['H','Ha.'],
       ['S','One second after everyone. That second is now on file.']]}
   ]},
@@ -5819,10 +5822,10 @@ function labPlusOne(){return labScene({set:'canteen',title:'Plus one.',plan:'Hav
   ['B','Sorry. I talk too much when there’s three. Two, I’m fine. Three, I panic and fill it.'],
   ['H','I go quiet.'],
   ['B','Between us that’s about right.'],
-  ['A','So, on average, one normal person.']
+  ['A','Between the two of you, that’s one excellent conversationalist.']
  ],outside({title:'WHAT IT LOOKED LIKE',dur:'duration: one lunch',cap:'Three people at a table for four. Two talking, one listening. Nobody moved. Nobody meant anything by it.',anim:'text'}),[
   calm,
-  ['S','For the record, it was a normal table.'],
+  ['S','It was a normal table, wasn’t it.'],
   ['H','It was.'],
   ['S','It felt like a train.'],
   ['H','It did.'],
@@ -5902,6 +5905,36 @@ function drawDreamFront(){if(G.set==='dream')drawDreamSnow(0,1);}
 // A flake that Ekskyysmi has just filed, melting between its hands.
 function drawMelt(q){var d=G.dream;if(!d||d.melt<=0)return;var k=d.melt/1.4,x=q.bx,y=q.shY+40*q.s;
   ctx.fillStyle='rgba(244,247,250,'+k+')';circ(x,y,6*k+2);ctx.fill();ctx.fillStyle='rgba(160,190,220,'+(1-k)*0.9+')';circ(x,y+10*(1-k),2.6);ctx.fill();}
+// Through the door, full screen: July, midnight, a sun that stays up, and the shadow lying forty metres long in the grass.
+// Kept above the phone's reading panel (the horizon is high), so the picture is whole on every screen.
+function drawMeadow(o){
+  var t=RM?0:G.time,i,len=0.32+0.68*(o.stretch!=null?clamp((G.time-o.stretch)/2.4,0,1):0);
+  var sk=ctx.createLinearGradient(0,0,0,210);sk.addColorStop(0,'#86aed0');sk.addColorStop(0.7,'#f2d9a4');sk.addColorStop(1,'#f6c67c');ctx.fillStyle=sk;ctx.fillRect(0,0,W,212);
+  var sg=ctx.createRadialGradient(812,168,6,812,168,170);sg.addColorStop(0,'rgba(255,244,205,.9)');sg.addColorStop(1,'rgba(255,244,205,0)');ctx.fillStyle=sg;ctx.fillRect(560,0,400,260);
+  ctx.fillStyle='#fff3cf';circ(812,168,20);ctx.fill();                                   // 00:00, and up
+  ctx.fillStyle='#2f4a3a';ctx.beginPath();ctx.moveTo(0,212);for(i=0;i<=48;i++){ctx.lineTo(i*20,196-((i*37)%11)*1.6-(i%3?0:9));}ctx.lineTo(W,214);ctx.lineTo(0,214);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#8fb7cc';ctx.fillRect(0,212,W,16);ctx.fillStyle='rgba(255,226,150,.75)';ctx.fillRect(786,214,52,3);ctx.fillRect(796,220,32,3);
+  var gm=ctx.createLinearGradient(0,228,0,H);gm.addColorStop(0,'#94b35e');gm.addColorStop(1,'#5b873c');ctx.fillStyle=gm;ctx.fillRect(0,228,W,H-228);
+  ctx.strokeStyle='#4f7a34';ctx.lineWidth=2;ctx.lineCap='round';
+  for(i=0;i<70;i++){var gx=snowRnd(i+1601)*W,gy=240+snowRnd(i+1701)*(H-250),sw=Math.sin(t*1.3+i)*1.5;line(gx,gy,gx+sw-2,gy-6);line(gx+3,gy,gx+3+sw,gy-8);}
+  for(i=0;i<26;i++){ctx.fillStyle=i%3?'#f6f1e4':'#f3d27a';circ(snowRnd(i+1801)*W,246+snowRnd(i+1901)*(H-260),2.2);ctx.fill();}
+  // the long shadow, from the human's feet towards the left, away from the sun; the head at the far end, eyes on the sky
+  var fx=744,fy=338,ex=fx-140-560*len,ey=fy+16,hw=10+16*len;
+  ctx.fillStyle='#29324a';ctx.beginPath();ctx.moveTo(fx-6,fy-3);ctx.lineTo(fx+6,fy+4);
+  ctx.quadraticCurveTo(ex+70,ey+hw*0.9,ex+24,ey+hw);ctx.lineTo(ex+24,ey-hw);ctx.quadraticCurveTo(ex+70,ey-hw*0.7,fx-6,fy-3);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.ellipse(ex+24,ey,14,hw,0,0,Math.PI*2);ctx.fill();                 // round shoulders, joined to the head
+  ctx.strokeStyle='#29324a';ctx.lineWidth=8;ctx.lineCap='round';                   // arms out in the grass
+  ctx.beginPath();ctx.moveTo(ex+30,ey-hw*0.6);ctx.quadraticCurveTo(ex+38,ey-hw*1.6,ex+52,ey-hw*2.1);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ex+30,ey+hw*0.6);ctx.quadraticCurveTo(ex+40,ey+hw*1.5,ex+56,ey+hw*1.9);ctx.stroke();
+  ctx.beginPath();ctx.ellipse(ex+6,ey,19,15,0,0,Math.PI*2);ctx.fill();ctx.fillRect(ex+6,ey-9,18,18);   // the head, on the shoulders
+  var blink=!RM&&(t%5.3)<0.12,wide=G.cur&&G.cur.who==='S'&&G.cur.look==='stunned'?1.3:1;
+  ctx.fillStyle='#f6f1e4';ctx.beginPath();ctx.ellipse(ex-1,ey-2,4*wide,blink?0.6:5*wide,0,0,Math.PI*2);ctx.ellipse(ex+12,ey-2,4*wide,blink?0.6:5*wide,0,0,Math.PI*2);ctx.fill();
+  if(!blink){ctx.fillStyle='#14111d';circ(ex,ey-5,1.9);ctx.fill();circ(ex+13,ey-5,1.9);ctx.fill();}   // looking up, at a sky that stays light
+  // the human, small and far, the skis stuck upright in the grass beside them
+  ctx.strokeStyle='#c04a33';ctx.lineWidth=4;line(fx+34,fy+2,fx+30,fy-70);line(fx+42,fy+3,fx+40,fy-68);
+  ctx.save();ctx.translate(fx,fy);ctx.scale(0.62,0.62);ctx.translate(-fx,-FEETY);person(fx,{body:'#c98f2e',hair:'#4a3b32',facing:-1,shadow:0});ctx.restore();
+  ctx.fillStyle='rgba(20,22,30,.72)';rr(14,14,64,26,6);ctx.fill();ctx.fillStyle='#f3d27a';ctx.font='700 14px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('00:00',46,27);
+}
 function catchFlake(){var g=G;if(g.dream)g.dream.melt=1.4;g.morko.pose='hold';sfx('pick');}
 function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get to the door.',clock:3*3600+30*60}).concat([
   dreamOn,
@@ -5938,7 +5971,7 @@ function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get 
       ['H','The door is already summer.'],
       ['S','Then it skipped spring. I don’t trust a season that skips.']]},
     {t:'Fine. Ski. I’ll come.',m:'stay',then:[
-      ['S','For the record, shadows can’t ski.'],
+      ['S','Point of order: shadows can’t ski.'],
       ['H','You’re about to find out.']]}
   ]},
   ['H','I’m going.'],
@@ -5949,17 +5982,20 @@ function labSnow(){return labScene({set:'dream',title:'Snow indoors.',plan:'Get 
   ['S','Since WHEN?'],
   ['H','Always. Ask anyone who paints.'],
   ['S','Nobody told me I had a colour.',{look:'soft'}],
+  function(){var g=G;g.out={anim:'meadow',inside:true,t:0,title:'',dur:'',cap:''};g.lines=[];g.band=null;g.cur=null;sfx('turn');},{wait:1.2},
   ['N','Through the door: a meadow, a lake, and a sun that will not set tonight.'],
   ['S','It won’t set?'],
   ['H','Not in July. Not up here.'],
   set({mood:'worry',s:1.2}),
   ['S','Then I don’t get a night off.'],
   ['H','You get a long one. Look.'],
+  function(){G.out.stretch=G.time;sfx('grow');},{wait:2.6},
   ['S','…At midnight I’m forty metres long.',{look:'stunned'}],
   ['H','Lying down. In the grass.'],
   set({mood:'calm',s:0.9}),
   ['S','Lying down in the grass. On duty.'],
-  ['H','On duty.']
+  ['H','On duty.'],
+  {wait:1.4},function(){G.out=null;}
  ],outside({title:'WHAT WAS ACTUALLY THERE',dur:'duration: one night',cap:'A sofa. A blanket. The window open a crack, and a little November on the sill.',anim:'text'}),[
   scene({set:'home',clock:7*3600+10*60}),function(){var g=G;g.dream=null;g.noCup=true;},calm,
   ['N','Morning. A little water on the windowsill.'],
@@ -6613,6 +6649,7 @@ function drawLines(){
 function drawOutside(){
   var g=G,o=g.out,t=o.t,an=o.anim;
   if(an==='chatlog'){drawChatlog(o);return;}
+  if(an==='meadow'){drawMeadow(o);return;}   // Snow indoors.: through the door (an inside picture, not an outside version)
   if(an==='text'){
     ctx.fillStyle='#141a1c';ctx.fillRect(0,0,W,H);ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);
     ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,COMPACT?72:28,29);
