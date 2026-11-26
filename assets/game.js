@@ -6184,6 +6184,24 @@ function drawTitleEdges(){
     edgeCtx.drawImage(cv,i?cv.width-1:0,0,1,cv.height,0,0,1,cv.height);
   }
 }
+// 0.99.21 (Joonas, the painting of a skier in a snowy room with a door open to summer): a little snow in the dark half of the
+// room. Sparse, slow, almost grey: November, not a Christmas card. It never reaches the light from the door; there it melts.
+// Behind the human and the shadow, off with reduced motion, and kept off the outermost pixels (the phone edges copy those).
+function snowRnd(n){var v=Math.sin(n*12.9898)*43758.5453;return v-Math.floor(v);}   // fixed scatter: no visible rows
+var SNOW=[];for(var sn=0;sn<40;sn++)SNOW.push({x:snowRnd(sn+1)*W,y:snowRnd(sn+101)*H,r:1.3+snowRnd(sn+201)*1.4,v:10+snowRnd(sn+301)*12,ph:snowRnd(sn+401)*6.3,a:0.3+snowRnd(sn+501)*0.2});
+function inTitleLight(x,y,floor){
+  if(x>=238&&x<=311&&y>=151&&y<=floor)return 1;                                    // the doorway itself
+  if(x>=307&&x<=654){var top=153+(126-153)*(x-307)/347;if(y>=top-6&&y<=floor)return 1;}   // the strip on the wall
+  if(y>floor&&y<=floor+69){var t=(y-floor)/69,l=307+(173-307)*t,r=654+(597-654)*t;if(x>=l-4&&x<=r+4)return 1;}   // and on the floor
+  return 0;}
+function drawTitleSnow(floor){
+  if(RM)return;var t=(G.time||0),i,f,x,y;ctx.save();
+  for(i=0;i<SNOW.length;i++){f=SNOW[i];y=(f.y+f.v*t)%(H+12)-6;x=f.x+Math.sin(t*0.35+f.ph)*10+t*2.5;x=((x%W)+W)%W;
+    if(x<4||x>W-4||inTitleLight(x,y,floor))continue;
+    var k=clamp((y-70)/50,0,1)*clamp((H-50-y)/70,0,1);if(k<=0)continue;   // out of the dark under the title, gone before the buttons
+    ctx.fillStyle='rgba(222,228,220,'+(f.a*k)+')';circ(x,y,f.r);ctx.fill();
+    ctx.fillStyle='rgba(222,228,220,'+(f.a*k*0.25)+')';circ(x,y,f.r*2.2);ctx.fill();}   // a soft edge: a flake, not a speck
+  ctx.restore();}
 function drawTitlePortrait(){
   var compact=cv.clientWidth*9/16<300;
   var floor=compact?286:312;
@@ -6200,6 +6218,7 @@ function drawTitlePortrait(){
   ctx.fillStyle='#e3be80';ctx.fillRect(240,153,69,floor-153);
   ctx.fillStyle='#394847';ctx.beginPath();ctx.moveTo(240,153);ctx.lineTo(292,166);ctx.lineTo(292,floor+9);ctx.lineTo(240,floor);ctx.closePath();ctx.fill();
   ctx.fillStyle='#cbb48c';ctx.fillRect(279,237,9,2.6);
+  drawTitleSnow(floor);
   var scale=compact ? 0.58 : 0.76;
   ctx.save();ctx.translate(537-G.human.x*scale,floor-WALLY*scale);ctx.scale(scale,scale);
   drawPair();ctx.restore();

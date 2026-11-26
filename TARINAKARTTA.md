@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.21 – Päävalikon huoneessa sataa hiljaa lunta (Joonaksen maalauksen mukaan: lumi huoneessa, kesä oven takana). Hiutaleet sulavat oven valossa eivätkä tule otsikon tai valintojen päälle. Liikettä vähentävä asetus poistaa lumen.
+
 0.99.20 – Selaimen päävalikko neuvoo kääntämään puhelimen vaakaan. Tietokoneella koko näytön voi avata päävalikosta.
 
 0.99.19 – Päävalikossa raollaan olevan oven valo osuu HUMANiin ja Ekskyysmiin.
