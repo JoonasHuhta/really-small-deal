@@ -104,6 +104,14 @@ Vain kolmena yönä (#3 yö 03:07, #5 *Rewind* uusintojen jälkeen, #6 23:15–0
 
 ---
 
+## 7b. Kokeilussa (Moments: *New. Being tried*, 0.99.22–)
+
+Ei kaanonia ennen kuin Joonas päättää. Kirjattu, jotta mahdollinen siirto tarinaan pysyy johdonmukaisena.
+- **Selostaja tulee myöhässä** (*Kick-off.*): keho hälyttää ennen tarinaa. Röntgen näyttää tyhjän seinän (”SHADOW: NOT DETECTED. OUT OF OFFICE.”). Ydinlauseen (#10) ”You just do the commentary” näyttämöllistys, ei uusi sääntö.
+- **Lumella varjo on sininen** (*Snow indoors.*): ”Nobody told me I had a colour.” Yöttömässä yössä varjo ei pääse vapaalle, mutta saa maata nurmella neljäkymmentä metriä pitkänä, ”on duty”. RSD ei katoa, varjo lepää.
+- **Muiden varjot** (*The lift.*): Eeron varjon syy on mieltymys, ei tila (”He likes the lift. I came up with the reason later.”). Riitan varjon yksitoista asiaa rauhoittavat: yksikään ei ole ”meistä”.
+- **Täyttäjä ja mittaaja** (*Plus one.*): Eero täyttää aukot, ihminen mittaa niitä. ”Same building. Different floors.”
+
 ## 8. Kapasiteettia jatkoon (ei vielä toteutettu)
 
 - **Ekskyysmin oma ”oh”.** Patterilla se kokee itse sen, mitä ihminen koki maanantaina (”She said it with a FULL STOP.”). Tämän voi syventää.
