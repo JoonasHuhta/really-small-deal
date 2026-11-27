@@ -705,7 +705,7 @@ function draw(){
   if(g.out){drawOutside();return;}
   if(g.rep){drawReplay();return;}
   if(g.zoom){drawZoom();return;}
-  if((g.jolt&&joltPhase())||(g.epi&&g.epi.o&&g.epi.o.xray)){drawXray();return;}
+  if((g.jolt&&joltPhase())||(g.epi&&g.epi.o&&g.epi.o.xray)){if(g.epi&&g.epi.o&&g.epi.o.file){ctx.save();applyCamera();drawXray();ctx.restore();}else drawXray();return;}   // 0.99.42: the epilogue's archive close-up goes through the camera
   if(g.epi&&g.epi.o&&g.epi.o.meadow){ctx.save();applyCamera();drawMeadow(g.epi.meadowO||{});ctx.restore();drawEpi();return;}   // 0.99.34: the epilogue visits the meadow
   ctx.save();applyCamera();
   if(g.w){drawWalk();drawLines();}

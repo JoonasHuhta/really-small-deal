@@ -38,7 +38,11 @@ function dreamRoom(){
   // a snowed floor, bare under the lamp, green at the threshold once the door is open
   var fl=ctx.createLinearGradient(0,WALLY,0,H);fl.addColorStop(0,'#cfd8e3');fl.addColorStop(1,'#eef2f6');ctx.fillStyle=fl;ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);
   ctx.fillStyle='#e6ebf1';for(i=0;i<7;i++){ctx.beginPath();ctx.ellipse(40+i*150,WALLY+4,70,9,0,Math.PI,0);ctx.fill();}
-  ctx.fillStyle='rgba(96,102,118,.55)';ctx.beginPath();ctx.ellipse(520,WALLY+44,64,15,0,0,Math.PI*2);ctx.fill();   // wet floor: the lamp melts it
+  // the bare floor under the lamp (its warmth melts the snow): round the lamp's foot (homeLamp: x 520, down to WALLY+62), lit
+  // warm, soft at the edge. 0.99.42 (Joonas 27.11.: "is the circle under the lamp wrong?"): it was a grey disc behind the foot.
+  ctx.save();ctx.translate(520,WALLY+60);ctx.scale(1,0.24);var pool=ctx.createRadialGradient(0,0,8,0,0,74);
+  pool.addColorStop(0,'rgba(176,150,112,.85)');pool.addColorStop(0.62,'rgba(170,156,136,.55)');pool.addColorStop(1,'rgba(207,216,227,0)');
+  ctx.fillStyle=pool;ctx.beginPath();ctx.arc(0,0,74,0,Math.PI*2);ctx.fill();ctx.restore();
   if(o>0.05){ctx.fillStyle='rgba(110,160,80,'+(0.8*o)+')';ctx.beginPath();ctx.ellipse(dx+dw/2-14,WALLY+10,60*o,10,0,0,Math.PI*2);ctx.fill();}
   // a fir in the corner, as one does, indoors, apparently
   var fx=46,fy=WALLY+28;ctx.fillStyle='#5b3d2a';ctx.fillRect(fx-5,fy-22,10,22);

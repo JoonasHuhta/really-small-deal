@@ -196,6 +196,23 @@ function skeleton(x,calm,heart){
     ctx.shadowBlur=0;ctx.strokeStyle='#fffbe0';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-3,-6);ctx.lineTo(2,-1);ctx.lineTo(-2,1);ctx.lineTo(3,7);ctx.stroke();ctx.restore();
   }
 }
+// 0.99.42 (epilogue, the X-ray close-up): the TODAY drawer opens, the week's receipt comes down from the head and goes in, the
+// drawer closes. That is what filing looks like from inside. Shot time: open 0.6–0.95 s, the receipt 1.1–2.2 s, shut 2.8–3.15 s.
+function xrayFiling(){var e=G.epi,o=e&&e.o;if(!o||!o.file)return null;var t=e.ct||0,ease=function(k){return k*k*(3-2*k);};
+  return {open:ease(clamp((t-0.6)/0.35,0,1))*(1-ease(clamp((t-2.8)/0.35,0,1))),drop:ease(clamp((t-1.1)/1.1,0,1))};}
+function drawFiled(cx,dy,cw,dh,fo){
+  var k=fo.open,ox=5*k,oy=10*k,L=cx+5,R=cx+cw-5;
+  if(k>0.02){ctx.save();ctx.shadowBlur=0;ctx.fillStyle='#071521';   // the drawer, pulled toward us: its inside shows above the front
+    ctx.beginPath();ctx.moveTo(L,dy);ctx.lineTo(R,dy);ctx.lineTo(R+ox,dy+oy);ctx.lineTo(L-ox,dy+oy);ctx.closePath();ctx.fill();ctx.restore();
+    ctx.beginPath();ctx.moveTo(L,dy);ctx.lineTo(L-ox,dy+oy);ctx.moveTo(R,dy);ctx.lineTo(R+ox,dy+oy);ctx.stroke();
+    ctx.save();ctx.lineWidth=1.5;for(var j=0;j<4;j++){var fx=L+4+j*(R-L-14)/3;ctx.strokeRect(fx,dy+oy-6*k,7,6*k);}ctx.restore();}   // folder tabs
+  // the receipt: from the head, down, into the drawer, behind its front
+  if(fo.drop>0&&fo.drop<1){var q=geom(),x=cx+cw/2,y0=q.hdY+q.hdR*0.5,y1=dy+oy+14,y=y0+(y1-y0)*fo.drop,w=18,h=24;
+    ctx.save();ctx.beginPath();ctx.rect(cx-60,y0-60,cw+120,(dy+oy)-(y0-60));ctx.clip();
+    ctx.beginPath();ctx.moveTo(x-w/2,y-h);ctx.lineTo(x+w/2,y-h);ctx.lineTo(x+w/2,y);for(var z=0;z<4;z++){ctx.lineTo(x+w/2-(z+0.5)*w/4,y-3);ctx.lineTo(x+w/2-(z+1)*w/4,y);}
+    ctx.closePath();ctx.save();ctx.shadowBlur=0;ctx.fillStyle='#0b1d2c';ctx.fill();ctx.restore();ctx.stroke();   // opaque: paper, passing in front of the old years
+    ctx.lineWidth=1.5;for(var r=0;r<3;r++)line(x-w/2+3,y-h+6+r*5,x+w/2-3-(r===2?6:0),y-h+6+r*5);ctx.restore();}
+}
 function drawXray(){
   var g=G,q=geom(),ph=joltPhase();
   if(ph==='white'){ctx.fillStyle='#fbfdff';ctx.fillRect(-20,-20,W+40,H+40);return;}
@@ -210,16 +227,19 @@ function drawXray(){
   ctx.beginPath();ctx.arc(q.bx,q.hdY,q.hdR,0,Math.PI*2);ctx.stroke();ctx.setLineDash&&ctx.setLineDash([]);
   var cw=Math.min(74,q.shW*1.15),ch=Math.min(150,(q.by-q.shY)*0.62),cx=q.bx-cw/2,cy=q.shY+(q.by-q.shY)*0.18;
   ctx.shadowColor='#7fd0ff';ctx.shadowBlur=10;ctx.strokeStyle='#d6f0ff';ctx.lineWidth=2.5;ctx.strokeRect(cx,cy,cw,ch);
-  var labels=['2011','2016','2019','TODAY'];
-  for(var i=0;i<4;i++){var dy=cy+6+i*(ch-12)/4,dh=(ch-12)/4-5;ctx.strokeRect(cx+5,dy,cw-10,dh);ctx.beginPath();ctx.moveTo(cx+cw/2-8,dy+dh/2);ctx.lineTo(cx+cw/2+8,dy+dh/2);ctx.stroke();
-    ctx.shadowBlur=0;ctx.fillStyle='#d6f0ff';ctx.font='700 '+Math.max(8,Math.min(11,dh*0.36))+'px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(tr(labels[i]),cx+cw/2,dy+dh*0.28);ctx.shadowBlur=10;}
+  var labels=['2011','2016','2019','TODAY'],fo=xrayFiling();
+  for(var i=0;i<4;i++){var dy=cy+6+i*(ch-12)/4,dh=(ch-12)/4-5,ox=0,oy=0;
+    if(i===3&&fo){ox=5*fo.open;oy=10*fo.open;drawFiled(cx,dy,cw,dh,fo);   // TODAY comes out toward us, a little
+      if(fo.open>0.02){ctx.save();ctx.shadowBlur=0;ctx.fillStyle='#071521';ctx.fillRect(cx+5-ox,dy+oy,cw-10+2*ox,dh);ctx.restore();}}
+    ctx.strokeRect(cx+5-ox,dy+oy,cw-10+2*ox,dh);ctx.beginPath();ctx.moveTo(cx+cw/2-8,dy+oy+dh/2);ctx.lineTo(cx+cw/2+8,dy+oy+dh/2);ctx.stroke();
+    ctx.shadowBlur=0;stillText([labels[i]],cx+cw/2,dy+oy+dh*0.28,'700 '+Math.max(8,Math.min(11,dh*0.36))+'px system-ui,sans-serif','#d6f0ff',0,0,false,true);ctx.shadowBlur=10;}   // a picture of the label: steady in the close-up
   ctx.restore();
   ctx.fillStyle='#d6f0ff';ctx.fillRect(q.bx-q.hdR*0.45,q.hdY-3,5,6);ctx.fillRect(q.bx+q.hdR*0.2,q.hdY-3,5,6);}
   skeleton(g.human.x,false,true);
   if(g.cowB)skeleton(g.bx2,true,false);if(g.cowA)skeleton(g.ax,true,false);
   ctx.textAlign='left';ctx.textBaseline='middle';
   ctx.fillStyle='rgba(3,10,18,.8)';rr(26,24,420,62,6);ctx.fill();
-  ctx.fillStyle='#ff6a55';ctx.font='800 15px system-ui,sans-serif';ctx.fillText(tr('● X-RAY · CHEST · ')+tr(g.jolt?g.jolt.tag:'ONE SMALL THING'),40,44);
+  ctx.fillStyle='#ff6a55';ctx.font='800 15px system-ui,sans-serif';var eo=g.epi&&g.epi.o;ctx.fillText(tr('● X-RAY · CHEST · ')+tr(g.jolt?g.jolt.tag:eo&&typeof eo.xray==='string'?eo.xray:'ONE SMALL THING'),40,44);
   ctx.fillStyle='#bfe3ff';ctx.font='600 12px system-ui,sans-serif';ctx.fillText(tr(away?'SHADOW: NOT DETECTED. OUT OF OFFICE.':'SHADOW: NO BONES DETECTED. FILING CABINET DETECTED.'),40,68);
   if(g.cowB||g.cowA){ctx.textAlign='center';ctx.fillStyle='rgba(191,227,255,.7)';ctx.font='700 11px system-ui,sans-serif';ctx.fillText(tr('HEART RATE: NORMAL'),g.cowB?g.bx2:g.ax,FEETY-186);}
 }

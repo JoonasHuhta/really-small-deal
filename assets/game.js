@@ -2492,6 +2492,23 @@ function skeleton(x,calm,heart){
     ctx.shadowBlur=0;ctx.strokeStyle='#fffbe0';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-3,-6);ctx.lineTo(2,-1);ctx.lineTo(-2,1);ctx.lineTo(3,7);ctx.stroke();ctx.restore();
   }
 }
+// 0.99.42 (epilogue, the X-ray close-up): the TODAY drawer opens, the week's receipt comes down from the head and goes in, the
+// drawer closes. That is what filing looks like from inside. Shot time: open 0.6–0.95 s, the receipt 1.1–2.2 s, shut 2.8–3.15 s.
+function xrayFiling(){var e=G.epi,o=e&&e.o;if(!o||!o.file)return null;var t=e.ct||0,ease=function(k){return k*k*(3-2*k);};
+  return {open:ease(clamp((t-0.6)/0.35,0,1))*(1-ease(clamp((t-2.8)/0.35,0,1))),drop:ease(clamp((t-1.1)/1.1,0,1))};}
+function drawFiled(cx,dy,cw,dh,fo){
+  var k=fo.open,ox=5*k,oy=10*k,L=cx+5,R=cx+cw-5;
+  if(k>0.02){ctx.save();ctx.shadowBlur=0;ctx.fillStyle='#071521';   // the drawer, pulled toward us: its inside shows above the front
+    ctx.beginPath();ctx.moveTo(L,dy);ctx.lineTo(R,dy);ctx.lineTo(R+ox,dy+oy);ctx.lineTo(L-ox,dy+oy);ctx.closePath();ctx.fill();ctx.restore();
+    ctx.beginPath();ctx.moveTo(L,dy);ctx.lineTo(L-ox,dy+oy);ctx.moveTo(R,dy);ctx.lineTo(R+ox,dy+oy);ctx.stroke();
+    ctx.save();ctx.lineWidth=1.5;for(var j=0;j<4;j++){var fx=L+4+j*(R-L-14)/3;ctx.strokeRect(fx,dy+oy-6*k,7,6*k);}ctx.restore();}   // folder tabs
+  // the receipt: from the head, down, into the drawer, behind its front
+  if(fo.drop>0&&fo.drop<1){var q=geom(),x=cx+cw/2,y0=q.hdY+q.hdR*0.5,y1=dy+oy+14,y=y0+(y1-y0)*fo.drop,w=18,h=24;
+    ctx.save();ctx.beginPath();ctx.rect(cx-60,y0-60,cw+120,(dy+oy)-(y0-60));ctx.clip();
+    ctx.beginPath();ctx.moveTo(x-w/2,y-h);ctx.lineTo(x+w/2,y-h);ctx.lineTo(x+w/2,y);for(var z=0;z<4;z++){ctx.lineTo(x+w/2-(z+0.5)*w/4,y-3);ctx.lineTo(x+w/2-(z+1)*w/4,y);}
+    ctx.closePath();ctx.save();ctx.shadowBlur=0;ctx.fillStyle='#0b1d2c';ctx.fill();ctx.restore();ctx.stroke();   // opaque: paper, passing in front of the old years
+    ctx.lineWidth=1.5;for(var r=0;r<3;r++)line(x-w/2+3,y-h+6+r*5,x+w/2-3-(r===2?6:0),y-h+6+r*5);ctx.restore();}
+}
 function drawXray(){
   var g=G,q=geom(),ph=joltPhase();
   if(ph==='white'){ctx.fillStyle='#fbfdff';ctx.fillRect(-20,-20,W+40,H+40);return;}
@@ -2506,16 +2523,19 @@ function drawXray(){
   ctx.beginPath();ctx.arc(q.bx,q.hdY,q.hdR,0,Math.PI*2);ctx.stroke();ctx.setLineDash&&ctx.setLineDash([]);
   var cw=Math.min(74,q.shW*1.15),ch=Math.min(150,(q.by-q.shY)*0.62),cx=q.bx-cw/2,cy=q.shY+(q.by-q.shY)*0.18;
   ctx.shadowColor='#7fd0ff';ctx.shadowBlur=10;ctx.strokeStyle='#d6f0ff';ctx.lineWidth=2.5;ctx.strokeRect(cx,cy,cw,ch);
-  var labels=['2011','2016','2019','TODAY'];
-  for(var i=0;i<4;i++){var dy=cy+6+i*(ch-12)/4,dh=(ch-12)/4-5;ctx.strokeRect(cx+5,dy,cw-10,dh);ctx.beginPath();ctx.moveTo(cx+cw/2-8,dy+dh/2);ctx.lineTo(cx+cw/2+8,dy+dh/2);ctx.stroke();
-    ctx.shadowBlur=0;ctx.fillStyle='#d6f0ff';ctx.font='700 '+Math.max(8,Math.min(11,dh*0.36))+'px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(tr(labels[i]),cx+cw/2,dy+dh*0.28);ctx.shadowBlur=10;}
+  var labels=['2011','2016','2019','TODAY'],fo=xrayFiling();
+  for(var i=0;i<4;i++){var dy=cy+6+i*(ch-12)/4,dh=(ch-12)/4-5,ox=0,oy=0;
+    if(i===3&&fo){ox=5*fo.open;oy=10*fo.open;drawFiled(cx,dy,cw,dh,fo);   // TODAY comes out toward us, a little
+      if(fo.open>0.02){ctx.save();ctx.shadowBlur=0;ctx.fillStyle='#071521';ctx.fillRect(cx+5-ox,dy+oy,cw-10+2*ox,dh);ctx.restore();}}
+    ctx.strokeRect(cx+5-ox,dy+oy,cw-10+2*ox,dh);ctx.beginPath();ctx.moveTo(cx+cw/2-8,dy+oy+dh/2);ctx.lineTo(cx+cw/2+8,dy+oy+dh/2);ctx.stroke();
+    ctx.shadowBlur=0;stillText([labels[i]],cx+cw/2,dy+oy+dh*0.28,'700 '+Math.max(8,Math.min(11,dh*0.36))+'px system-ui,sans-serif','#d6f0ff',0,0,false,true);ctx.shadowBlur=10;}   // a picture of the label: steady in the close-up
   ctx.restore();
   ctx.fillStyle='#d6f0ff';ctx.fillRect(q.bx-q.hdR*0.45,q.hdY-3,5,6);ctx.fillRect(q.bx+q.hdR*0.2,q.hdY-3,5,6);}
   skeleton(g.human.x,false,true);
   if(g.cowB)skeleton(g.bx2,true,false);if(g.cowA)skeleton(g.ax,true,false);
   ctx.textAlign='left';ctx.textBaseline='middle';
   ctx.fillStyle='rgba(3,10,18,.8)';rr(26,24,420,62,6);ctx.fill();
-  ctx.fillStyle='#ff6a55';ctx.font='800 15px system-ui,sans-serif';ctx.fillText(tr('● X-RAY · CHEST · ')+tr(g.jolt?g.jolt.tag:'ONE SMALL THING'),40,44);
+  ctx.fillStyle='#ff6a55';ctx.font='800 15px system-ui,sans-serif';var eo=g.epi&&g.epi.o;ctx.fillText(tr('● X-RAY · CHEST · ')+tr(g.jolt?g.jolt.tag:eo&&typeof eo.xray==='string'?eo.xray:'ONE SMALL THING'),40,44);
   ctx.fillStyle='#bfe3ff';ctx.font='600 12px system-ui,sans-serif';ctx.fillText(tr(away?'SHADOW: NOT DETECTED. OUT OF OFFICE.':'SHADOW: NO BONES DETECTED. FILING CABINET DETECTED.'),40,68);
   if(g.cowB||g.cowA){ctx.textAlign='center';ctx.fillStyle='rgba(191,227,255,.7)';ctx.font='700 11px system-ui,sans-serif';ctx.fillText(tr('HEART RATE: NORMAL'),g.cowB?g.bx2:g.ax,FEETY-186);}
 }
@@ -2844,8 +2864,11 @@ var EPI=[
   {cut:'hard',set:'busstop',clock:16*3600+31*60,s:1.3,mood:'alert',hx:150,bus:{x:540},cam:[1.1,380,262, 1.1,380,262],
     at:[[0.2,function(){G.bus.lightsT=1;sfx('car');}],[1.0,function(){G.bus.wave=true;var M=G.morko;M.mood='surprised';M.sT=1.05;}]],
     l:'BUSES, WAVED DOWN',v:'1',note:'by him. for both of us.'},
-  {cut:'hard',set:'bus',clock:16*3600+40*60,s:0.8,mood:'pleased',hx:430,bus:{x:570},face:'smile',cam:[1.2,500,252, 1.25,500,256],
-    at:[[0.7,function(){G.bus.announce=2.6;sfx('ui');G.morko.mood='surprised';}]],l:'NAMES, LEARNED',v:'1 (JARI)',note:'ours: drowned out by LIBRARY.'},
+  // One step out of the comfort zone (0.99.42: from the after-part, in place of a fifth bus; Jari's name is on the roll). The shadow
+  // grows, then settles: it came too. It always does; it is a shadow.
+  {cut:'hard',set:'room',clock:16*3600,s:0.95,mood:'worry',hx:215,zone:1,cam:[1,480,270, 1,480,270],   // at the left: the chalk circle clear of the caption
+    at:[[0.25,epiTic('COMFORT ZONE',215,440,{life:3,size:15})],[0.9,function(){G.human.xT=G.human.x+120;G.morko.sT=1.25;G.morko.mood='alert';}],[2.0,function(){G.morko.sT=0.95;G.morko.mood='pleased';}]],
+    l:'COMFORT ZONES, LEFT',v:'1 STEP',note:'shadow: came along.'},
   {cut:'hard',set:'room',clock:16*3600+2*60,s:1.2,mood:'pleased',hx:500,face:'smile',pose:'journal',cam:[1.75,420,280,2.05,420,275],
     at:[[0,function(){G.journal={at:G.time};}],[1.2,function(){G.journal.shutAt=G.time;sfx('stamp');}]],
     l:'NOS, SAID OUT LOUD',v:function(){return String((G.quiet?1:0)+(G.no?1:0));},note:function(){return !G.no?'next time, then.':'wobbling: allowed';}},   // 0.92: the quiet Monday’s “No. Sorry.” counts too (Codex),
@@ -2881,6 +2904,7 @@ var EPI=[
 ];
 // The rows that are on the roll only (ALSO ON FILE): things the week did that the pictures do not show.
 var EPIROWS=[
+  {l:'NAMES, LEARNED',v:'1 (JARI)',note:'ours: drowned out by LIBRARY.'},
   {l:'UMBRELLA STORIES, TOLD',v:'1',note:'classified: not any more'},
   {l:'RIDES HOME',v:'1',note:'one in the car. one running behind.'},
   {l:'APPLICATIONS, SENT',v:'1',note:'drafted by one. sent by the other.'},
@@ -3043,8 +3067,10 @@ var EPIB=[
 // Part C: after the receipt, things nobody has seen yet (Joonas 20.11.: no repeats), cut faster (27.11.): the headband years,
 // the waiting room, the small scratch, three faces, and the long shadow in the summer grass.
 function epiTic(t,x,y,o){return function(){G.tics.push(tic(t,x,y,o||{life:1.6,size:18}));};}
-// 0.99.40: after the receipt there are 26 seconds to the last card (the receipt now ends on the fanfare at 2:14): the form, the
-// application sent, one step out of the comfort zone, the hats, three faces, the meadow and the laugh, once.
+// 0.99.40: after the receipt (it ends on the fanfare at 2:14) about 28 seconds to the last card: the form, the application sent,
+// the X-ray (0.99.42: wide, then the archive close; the comfort zone moved to the opening), four faces in four hats, the meadow
+// and the laugh, once.
+var XRAYCAM=[2.0,413,236, 2.15,413,240];   // the filing cabinet in Ekskyysmi's chest, framed (0.99.42)
 var EPIN=[
   // The form, page 3 (Joonas 21.11.: questions and scribbled answers, and Ekskyysmi signs). No diagnosis, no advice.
   {bars:3,cut:'hard',set:'clinic',clock:14*3600+10*60,s:1.3,mood:'worry',hx:330,cam:[1.15,480,262, 1.2,480,262],form:1,
@@ -3054,17 +3080,17 @@ var EPIN=[
   {bars:1.5,cut:'hard',set:'home',clock:22*3600+47*60,s:1.15,mood:'alert',hx:470,cam:[1.4,500,262, 1.5,500,258],
     at:[[0.05,epiDraft('Page four: “…in conclusion, sorry.”')],
         [1.6,epiDraft('Sent: three lines. No apology.')],[1.65,function(){sfx('pop');var M=G.morko;M.mood='surprised';M.sT=0.8;}]]},
-  {bars:1.5,cut:'hard',set:'room',clock:16*3600,s:0.95,mood:'worry',hx:430,zone:1,cam:[1.3,480,290, 1.3,480,290],
-    at:[[0.25,epiTic('COMFORT ZONE',430,440,{life:3,size:15})],[0.9,function(){G.human.xT=G.human.x+120;G.morko.sT=1.25;G.morko.mood='alert';}],[2.0,function(){G.morko.sT=0.95;G.morko.mood='pleased';G.tics.push(tic('one step out. filed.',300,190,{life:1.3,size:15}));}]]},
-  // Same face in the same place: the hat changes on each beat.
-  {bars:0.25,cut:'hard',set:'home',hx:490,s:1.45,hat:'chef',cam:[2.25,415,180,2.25,415,180]},
-  {bars:0.25,cut:'hard',set:'room',hx:490,s:1.45,hat:'party',cam:[2.25,415,180,2.25,415,180]},
-  {bars:0.25,cut:'hard',set:'office',hx:490,s:1.45,hat:'pirate',cam:[2.25,415,180,2.25,415,180]},
-  {bars:0.25,cut:'hard',set:'office',hx:490,s:1.45,hat:'detective',cam:[2.25,415,180,2.25,415,180]},
-  // Three faces, three punch-ins (0.99.34, Joonas: "Ekskyysmi in close-up, pulling faces")
-  {bars:0.5,cut:'hard',set:'home',clock:21*3600,hx:470,s:1.1,mood:'calm',look:'squint',closeup:{z:2.0,dx:0}},
-  {bars:0.5,cut:'hard',set:'home',clock:21*3600,hx:470,s:1.1,mood:'calm',look:'stunned',closeup:{z:2.6,dx:0}},
-  {bars:0.5,cut:'hard',set:'home',clock:21*3600,hx:470,s:1.1,mood:'calm',look:'soft',closeup:{z:3.2,dx:0}},
+  // Ekskyysmi's X-ray (0.99.9; back in 0.99.42, Joonas 27.11.: "keep the X-ray, and linger: from far, then a cut to a close-up,
+  // so you really see it is the archive filing system"). Wide: the office in X-ray, the lightning heart, Eero's calm skeleton. Close:
+  // the cabinet. TODAY opens, the week's receipt goes in, it closes. The archive is still there after a good week; it has this in it.
+  {bars:1.25,cut:'hard',set:'office',hx:490,b:680,s:1.6,xray:'END OF WEEK',cam:[1,480,270,1,480,270]},
+  {bars:1.75,cut:'hard',set:'office',hx:490,b:680,s:1.6,xray:'END OF WEEK',file:1,cam:XRAYCAM},
+  // Faces and hats in one (0.99.42; the faces 0.99.34, Joonas: "Ekskyysmi in close-up, pulling faces"; the hats 0.99.9, one from
+  // each of their Moments): the same face, a little closer on every beat, a new look and a new hat each time. Four cuts, not seven.
+  {bars:0.375,cut:'hard',set:'home',clock:21*3600,hx:470,s:1.1,mood:'calm',look:'squint',hat:'chef',closeup:{z:2.0,dx:0}},
+  {bars:0.375,cut:'hard',set:'home',clock:21*3600,hx:470,s:1.1,mood:'calm',look:'stunned',hat:'pirate',closeup:{z:2.2,dx:0}},
+  {bars:0.375,cut:'hard',set:'home',clock:21*3600,hx:470,s:1.1,mood:'calm',look:'soft',hat:'detective',closeup:{z:2.4,dx:0}},
+  {bars:0.375,cut:'hard',set:'home',clock:21*3600,hx:470,s:1.1,mood:'pleased',hat:'party',closeup:{z:2.55,dx:0}},
   // Snow indoors., through the door: midnight in July, and the shadow forty metres long in the grass
   {bars:1.5,cut:'fade',meadow:1,cam:[1.0,480,270, 1.05,460,270]},
   {bars:2,cut:'fade',set:'home',clock:21*3600,hx:470,s:1,mood:'pleased',face:'laugh',pose:'shoulder',cam:[1.55,440,265,1.35,455,285],
@@ -6234,7 +6260,11 @@ function dreamRoom(){
   // a snowed floor, bare under the lamp, green at the threshold once the door is open
   var fl=ctx.createLinearGradient(0,WALLY,0,H);fl.addColorStop(0,'#cfd8e3');fl.addColorStop(1,'#eef2f6');ctx.fillStyle=fl;ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);
   ctx.fillStyle='#e6ebf1';for(i=0;i<7;i++){ctx.beginPath();ctx.ellipse(40+i*150,WALLY+4,70,9,0,Math.PI,0);ctx.fill();}
-  ctx.fillStyle='rgba(96,102,118,.55)';ctx.beginPath();ctx.ellipse(520,WALLY+44,64,15,0,0,Math.PI*2);ctx.fill();   // wet floor: the lamp melts it
+  // the bare floor under the lamp (its warmth melts the snow): round the lamp's foot (homeLamp: x 520, down to WALLY+62), lit
+  // warm, soft at the edge. 0.99.42 (Joonas 27.11.: "is the circle under the lamp wrong?"): it was a grey disc behind the foot.
+  ctx.save();ctx.translate(520,WALLY+60);ctx.scale(1,0.24);var pool=ctx.createRadialGradient(0,0,8,0,0,74);
+  pool.addColorStop(0,'rgba(176,150,112,.85)');pool.addColorStop(0.62,'rgba(170,156,136,.55)');pool.addColorStop(1,'rgba(207,216,227,0)');
+  ctx.fillStyle=pool;ctx.beginPath();ctx.arc(0,0,74,0,Math.PI*2);ctx.fill();ctx.restore();
   if(o>0.05){ctx.fillStyle='rgba(110,160,80,'+(0.8*o)+')';ctx.beginPath();ctx.ellipse(dx+dw/2-14,WALLY+10,60*o,10,0,0,Math.PI*2);ctx.fill();}
   // a fir in the corner, as one does, indoors, apparently
   var fx=46,fy=WALLY+28;ctx.fillStyle='#5b3d2a';ctx.fillRect(fx-5,fy-22,10,22);
@@ -7243,7 +7273,7 @@ function draw(){
   if(g.out){drawOutside();return;}
   if(g.rep){drawReplay();return;}
   if(g.zoom){drawZoom();return;}
-  if((g.jolt&&joltPhase())||(g.epi&&g.epi.o&&g.epi.o.xray)){drawXray();return;}
+  if((g.jolt&&joltPhase())||(g.epi&&g.epi.o&&g.epi.o.xray)){if(g.epi&&g.epi.o&&g.epi.o.file){ctx.save();applyCamera();drawXray();ctx.restore();}else drawXray();return;}   // 0.99.42: the epilogue's archive close-up goes through the camera
   if(g.epi&&g.epi.o&&g.epi.o.meadow){ctx.save();applyCamera();drawMeadow(g.epi.meadowO||{});ctx.restore();drawEpi();return;}   // 0.99.34: the epilogue visits the meadow
   ctx.save();applyCamera();
   if(g.w){drawWalk();drawLines();}

@@ -673,14 +673,18 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
  assert.ok(week.includes("['P','You: “Fine.”']")&&second.includes('Someone said “fine”.')&&week.includes("['H','You were asleep. That one was all me.']"),'the Fine. thread is broken');
  // 8. The epilogue is cut to the song: the montage stays 32 bars and the bird keeps at least five seconds before the last hit.
  {const ep=src('37-epilogue.js'),B=Function('return '+ep.match(/var EPIBARS=(\[[^\]]*\])/)[1])(),A=Function('return '+ep.match(/var EPIA=(\[[^\]]*\])/)[1])();
-  const nb=[...ep.slice(ep.indexOf('var EPIN=')).matchAll(/^\s*\{bars:([\d.]+)/gm)].reduce((a,m)=>a+ +m[1],0),bt=k=>k<B.length?B[k]:B[B.length-1]+(k-B.length+1)*2.25;
+  const nb=[...ep.slice(ep.indexOf('var EPIN=')).matchAll(/^\s*\{bars:([\d.]+)/gm)].reduce((a,m)=>a+ +m[1],0),bt0=k=>k<B.length?B[k]:B[B.length-1]+(k-B.length+1)*2.25,bt=k=>{const i=Math.floor(k),f=k-i;return f?bt0(i)+(bt0(i+1)-bt0(i))*f:bt0(i);};   // half and quarter bars, as barT
   assert.equal(A.reduce((a,b)=>a+b,0),24,'the opening montage must stay 24 bars (the receipt rolls on the song’s quiet middle)');
   const RE=+ep.match(/ROLLEND=(\d+)/)[1],RF=+ep.match(/ROLLFANFARE=(\d+)/)[1],RS=+ep.match(/ROLLSTART=(\d+)/)[1];
   assert.equal(RS,25,'the receipt starts on the song’s quiet middle');
   // 0.99.40 (Joonas 27.11.): the end of the receipt lands on the song's fanfare, about 2:02–2:14, and then the last part begins
   assert.ok(bt(RF)>=121&&bt(RF)<=124,'the receipt’s last part must start on the fanfare (about 2:02), not at '+bt(RF).toFixed(1)+' s');
   assert.ok(bt(RE)>=132.5&&bt(RE)<=135,'the receipt must end at about 2:14, not at '+bt(RE).toFixed(1)+' s');
-  assert.ok(169.4-bt(RE+nb)>=5,'the credit needs at least five seconds before the last hit');}
+  assert.ok(169.4-bt(RE+nb)>=5,'the credit needs at least five seconds before the last hit');
+  // 0.99.42 (Joonas 27.11.: "the X-ray must stay in the epilogue; linger: from far, then a cut to a close-up"): after the receipt,
+  // the archive X-ray wide and then its close-up, where TODAY files the week's receipt
+  const C=ep.slice(ep.indexOf('var EPIN='),ep.indexOf('\n];',ep.indexOf('var EPIN=')));
+  assert.ok(/xray:'END OF WEEK',cam:\[1,/.test(C)&&/xray:'END OF WEEK',file:1,cam:XRAYCAM/.test(C),'the X-ray stays in the after-part: a wide shot, then the archive close-up');}
  // 9. Codex review of 0.76 (21.11.): the part label follows the map, and a part card names itself.
  {T.chapter(4);const seen={};let k=0;
   while(T.G.chapter===4&&!T.G.ended&&k++<40000){T.unlock();T.draw();const g=T.G;if(g.moment)seen[g.moment]=element('chapter').textContent;if(g.chap&&g.chap.part===2)seen.part2=element('chapter').textContent;

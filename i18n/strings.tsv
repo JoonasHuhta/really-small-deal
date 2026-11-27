@@ -1459,10 +1459,10 @@ WORST CASES THAT HAPPENED	ui		epilogue
 prepared: {n}	ui		epilogue	template: prepared: 7 | prepared: 5 | prepared: 3
 BUSES, WAVED DOWN	ui		epilogue	
 by him. for both of us.	ui		epilogue	
-NAMES, LEARNED	ui		epilogue	
-1 (JARI)	canvas		epilogue	has a number
-ours: drowned out by LIBRARY.	ui		epilogue	
-NEXT STOP: LIBRARY	canvas		epilogue	
+COMFORT ZONE	ui		epilogue	
+COMFORT ZONES, LEFT	ui		epilogue	
+1 STEP	canvas		epilogue	has a number
+shadow: came along.	ui		epilogue	
 NOS, SAID OUT LOUD	ui		epilogue	
 wobbling: allowed	ui		epilogue	
 UMBRELLAS, HELD	ui		epilogue	
@@ -1491,6 +1491,9 @@ both signatures on file.	ui		epilogue
 REALLY SMALL DEAL	canvas		epilogue	
 RECEIPT · CONTINUED	ui		epilogue	
 ALSO ON FILE	ui		epilogue	
+NAMES, LEARNED	ui		epilogue	
+1 (JARI)	canvas		epilogue	has a number
+ours: drowned out by LIBRARY.	ui		epilogue	
 UMBRELLA STORIES, TOLD	ui		epilogue	
 classified: not any more	ui		epilogue	
 RIDES HOME	ui		epilogue	
@@ -1520,6 +1523,7 @@ cold since september: handled.	ui		epilogue
 DRAWINGS SHARED	ui		epilogue	
 legs: five. accounts closed: 0.	ui		epilogue	has a number
 DAMAGE REPORT	ui		epilogue	
+NEXT STOP: LIBRARY	canvas		epilogue	
 RIITTA’S EDIT	ui		epilogue	
 1 WORD	canvas		epilogue	has a number
 “Shorter.”	ui		epilogue	
@@ -1574,9 +1578,7 @@ only the ones that happened.	ui		epilogue
 signature (the shadow)	canvas		epilogue	
 Page four: “…in conclusion, sorry.”	line	P	epilogue	
 Sent: three lines. No apology.	line	P	epilogue	
-COMFORT ZONE	ui		epilogue	
-one step out. filed.	ui		epilogue	
-HA	ui		epilogue	
+HEART RATE: NORMAL	ui		epilogue	
 Still open: one meeting. Tuesday, by the radiator.	canvas		epilogue	
 Ekskyysmi and Sanna’s shadow.	canvas		epilogue	
 THE NEXT TUESDAY	card		radiator	
@@ -1707,6 +1709,7 @@ PAGE 212. NOBODY HAS DIED YET.	ui		week end	has a number
 AUDIENCE: STILL HERE.	ui		week end	
 The receipt for the whole week. Every line is here in Dialogue.	ui		week end	
 Signed: Ekskyysmi	ui		week end	
+END OF WEEK	ui		week end	
 The roles swap. Pick the human’s advice.	ui		week end	
 One “no” was said out loud. Everyone survived, including Eero.	ui		week end	
 For now	ui		week end	
@@ -1879,6 +1882,7 @@ In my defence, from a distance “ok.” looks EXACTLY like a dagger.	line	S	com
 Everything looks like a dagger from a distance.	line	H	comments	
 That’s why I keep my distance.	line	S	comments	
 next time, then.	ui		epilogue	
+HA	ui		epilogue	
 “Just say hi.” As if it’s nothing.	line	S	radiator	
 It is nothing.	line	H	radiator	
 It is a WHOLE WORD.	line	S	radiator	
@@ -2277,7 +2281,6 @@ Eero is handing back the slides. His slides. That you made. At midnight. He is s
 These are really good, by the way.	line	B	detail	
 Good. Accept the compliment. Do not make eye contact with it.	line	S	detail	
 Just one small thing.	line	B	detail	
-HEART RATE: NORMAL	ui		detail	
 Yeah. It’s nothing.	line	H	detail	
 It is NOT nothing. I have the X-ray.	line	S	detail	
 Show him the X-ray.	choice		detail	
