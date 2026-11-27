@@ -2486,7 +2486,9 @@ function skeleton(x,calm,heart){
   bone(x-8,FEETY-44,x-10,FEETY-24,6);bone(x-10,FEETY-24,x-10,FEETY-4,5);bone(x+8,FEETY-44,x+10,FEETY-24,6);bone(x+10,FEETY-24,x+10,FEETY-4,5);
   ctx.restore();
   if(heart){
-    var pu=RM?1:1+0.18*Math.sin(G.time*30),hx=x-6,hyy=top+24;
+    // 0.99.43 (Joonas 27.11.: "the heart is on the wrong side"): the skeleton faces us, so the human's left, where the heart
+    // sits, is on our right.
+    var pu=RM?1:1+0.18*Math.sin(G.time*30),hx=x+6,hyy=top+24;
     ctx.save();ctx.shadowColor='#ff4a3a';ctx.shadowBlur=24;ctx.fillStyle='#ff5a44';ctx.translate(hx,hyy);ctx.scale(pu,pu);
     ctx.beginPath();ctx.moveTo(0,9);ctx.bezierCurveTo(-14,0,-9,-11,0,-4);ctx.bezierCurveTo(9,-11,14,0,0,9);ctx.fill();
     ctx.shadowBlur=0;ctx.strokeStyle='#fffbe0';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-3,-6);ctx.lineTo(2,-1);ctx.lineTo(-2,1);ctx.lineTo(3,7);ctx.stroke();ctx.restore();
