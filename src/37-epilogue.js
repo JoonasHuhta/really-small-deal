@@ -328,7 +328,7 @@ function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · CONTINUED'}
   if(g.sips)r.push({l:'SIPS LOST',v:String(g.sips)},{n:g.bigSip?'the biggest: '+g.bigSip.t+' (−'+g.bigSip.n+')':'one at a time.'});
   if(g.mugMended)r.push({l:'MUGS BROKEN',v:'1'},{n:'repaired: gold.'});
   if(g.fineSent)r.push({l:'“FINE.”S SENT',v:'1'},{n:'repaired on a friday. in person.'});
-  var mine=mineRows();if(mine.length){r.push({gap:1},{h:'EKSKYYSMI’S METHODS'});mine.forEach(function(m){r.push(m);});}
+  // 0.99.44: the methods are on the roll once, in the opening montage's methods shot (mine:1); the week's receipt keeps its own list
   // What it felt like from inside: time, effort and bravery nobody else could see. No diagnosis, no advice: bookkeeping.
   r.push({gap:1},{h:'WHAT IT FELT LIKE'});epiInsideRows().forEach(function(x){r.push(x);});
   r.push({gap:1},{l:'SUBTOTAL',v:'ONE FILED WEEK'},{l:'DISCOUNTS',v:'NONE NEEDED'},{l:'TOTAL',v:'LIVED ONCE'},{gap:1},{h:'Made by Joonas Huhta'},{h:'MoshBitSurfers'},{gap:1},

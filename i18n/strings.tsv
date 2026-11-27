@@ -828,7 +828,7 @@ Seventeen minutes. I counted.	line	H	bar
 Ha! Of course you did. Next one’s on me.	line	A	bar	
 Ha!	line	H	bar	
 To being furniture.	line	S	bar	
-22:40. Same bar. Ekskyysmi has had the shadow of one drink.	line	N	bar	has a number
+22:40. Same bar. Ekskyysmi has had the shadow of one ginger beer, and a very long day.	line	N	bar	has a number
 I’m just resting my eyes. Keep an eye on… everything.	line	S	bar	
 Vacant.	ui		bar	
 Ekskyysmi is off duty. Nobody is reviewing anything.	line	N	bar	
@@ -1267,8 +1267,8 @@ A Friday. Not necessarily that one.	line	N	chapter 5
 PART THREE	card		chapter 5	
 Still here.	card		chapter 5	
 Friday. Same room. Same coffee. I’d like to flag that I’m calm.	line	S	chapter 5	
-You’ve brought the whole archive.	line	H	chapter 5	
 Say the thing.	ui		chapter 5	
+You’ve brought the whole archive.	line	H	chapter 5	
 Just the travel edition.	line	S	chapter 5	
 It has wheels.	line	S	chapter 5	
 You’re vibrating.	line	H	chapter 5	
@@ -1321,20 +1321,19 @@ I know. Sorry.	line	H	chapter 5
 Thanks for saying it.	line	A	chapter 5	
 That was a real sorry. Not one of mine.	line	S	chapter 5	
 Oh. Daylight. You look smaller.	line	Z	chapter 5	
-Oh.	line	H	chapter 5	
 Evenings. Nights. And Fridays.	line	S	chapter 5	
 I checked. Tuesday works.	line	Z	chapter 5	
 By the radiator.	line	S	chapter 5	
 I moved a worry.	line	Z	chapter 5	
 …Filed. Under the other pile.	line	S	chapter 5	
-There’s another pile?	line	H	chapter 5	
 She told me herself.	ui		chapter 5	
+There’s another pile?	line	H	chapter 5	
 It’s new.	line	S	chapter 5	
 Is that why you used to vanish at lunch? We stopped asking. I thought asking was pressure.	line	A	chapter 5	
 I thought not being asked was the verdict.	line	H	chapter 5	
-I was going to ask you on Monday. You looked busy.	line	A	chapter 5	
+I was going to ask you that Monday. You looked busy.	line	A	chapter 5	
 Looking busy was my idea.	line	S	chapter 5	
-So we’ve been being polite AT each other. For a year.	line	A	chapter 5	
+So we were being polite AT each other. For a year.	line	A	chapter 5	
 She says “fine” carefully. Like it might break. Tell her.	line	S	chapter 5	
 For the record: when I say “fine”, it’s the good kind.	line	H	chapter 5	
 …The good kind. Noted.	line	A	chapter 5	
@@ -1345,6 +1344,7 @@ Say yes. Old habits.	choice		chapter 5
 Not this time, Eero.	line	H	chapter 5	
 He’s going to—	line	S	chapter 5	
 Oh. I told Riitta you probably could.	line	B	chapter 5	
+Oh.	line	H	chapter 5	
 Take it back. Quick. Say you can.	choice		chapter 5	
 Say nothing. Stand next to them.	choice		chapter 5	
 Say you can. It’s one Monday. It’s ONE Monday.	line	S	chapter 5	
@@ -1421,8 +1421,8 @@ I’m leaving the drawing up.	line	H	comments
 I let them all come close. Every single one.	line	S	comments	
 Mostly… cats. People liked the cat.	line	S	comments	
 BOSS DEFEATED. Correction: there was no boss.	line	N	comments	
-NOT A BOSS · THE GROUP CHAT	canvas		comments	
 Year two. Somebody laughed.	line	S	comments	
+NOT A BOSS · THE GROUP CHAT	canvas		comments	
 This time I left it up.	line	H	comments	
 …I’ll update the file.	line	S	comments	
 Shared a drawing. Left it up.	canvas		comments	
@@ -1435,7 +1435,7 @@ misplaced. Filed here.	canvas		comments
 Eero hates presenting. Kept.	canvas		comments	
 Not posted.	canvas		comments	
 Someone else loves lighthouses	canvas		comments	
-She was going to ask on Monday.	canvas		comments	
+She was going to ask. That	canvas		comments	
 The drawing. Before anyone	canvas		comments	
 You kept these?	line	H	comments	
 I keep everything. It’s the job.	line	S	comments	
@@ -1521,9 +1521,9 @@ SOCKS, GIVEN	ui		epilogue
 1 PAIR	canvas		epilogue	has a number
 cold since september: handled.	ui		epilogue	
 DRAWINGS SHARED	ui		epilogue	
+NEXT STOP: LIBRARY	canvas		epilogue	
 legs: five. accounts closed: 0.	ui		epilogue	has a number
 DAMAGE REPORT	ui		epilogue	
-NEXT STOP: LIBRARY	canvas		epilogue	
 RIITTA’S EDIT	ui		epilogue	
 1 WORD	canvas		epilogue	has a number
 “Shorter.”	ui		epilogue	
@@ -1535,7 +1535,6 @@ MUGS BROKEN	ui		epilogue
 repaired: gold.	ui		epilogue	
 “FINE.”S SENT	ui		epilogue	
 repaired on a friday. in person.	ui		epilogue	
-EKSKYYSMI’S METHODS	ui		epilogue	
 WHAT IT FELT LIKE	ui		epilogue	
 TIME OUTSIDE THE COMFORT ZONE	ui		epilogue	
 source: eero.	ui		epilogue	
@@ -1579,6 +1578,7 @@ signature (the shadow)	canvas		epilogue
 Page four: “…in conclusion, sorry.”	line	P	epilogue	
 Sent: three lines. No apology.	line	P	epilogue	
 HEART RATE: NORMAL	ui		epilogue	
+HA	ui		epilogue	
 Still open: one meeting. Tuesday, by the radiator.	canvas		epilogue	
 Ekskyysmi and Sanna’s shadow.	canvas		epilogue	
 THE NEXT TUESDAY	card		radiator	
@@ -1882,7 +1882,6 @@ In my defence, from a distance “ok.” looks EXACTLY like a dagger.	line	S	com
 Everything looks like a dagger from a distance.	line	H	comments	
 That’s why I keep my distance.	line	S	comments	
 next time, then.	ui		epilogue	
-HA	ui		epilogue	
 “Just say hi.” As if it’s nothing.	line	S	radiator	
 It is nothing.	line	H	radiator	
 It is a WHOLE WORD.	line	S	radiator	
@@ -2762,5 +2761,5 @@ Back to title	ui		menus
 What is this?	ui		menus	
 You play Ekskyysmi, the overprotective shadow of a perfectly ordinary human. The human has one small plan: ask Sanna from work to lunch. You have concerns.	ui		menus	
 It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.	ui		menus	has a number
-About 50 minutes. It saves as you go. Only one thing is timed, and it’s unfair on purpose.	ui		menus	has a number
+About an hour. It saves as you go. Only one thing is timed, and it’s unfair on purpose.	ui		menus	
 Alpha{v}, still changing. Made by Joonas Huhta (MoshBitSurfers).	ui		menus	

@@ -735,7 +735,7 @@ function choose(i){
   if(o.m){var mm=G.methods||(G.methods={});mm[o.m]=(mm[o.m]||0)+1;}
   if(o.filed)G.pop={text:'Ekskyysmi filed that.',t:0};   // only on choices that come back later: the parody of “X will remember that”   // Ekskyysmi’s methods, for the week’s receipt
   var then=typeof o.then==='function'?o.then():(o.then||[]);
-  Q=(o.hush?[]:[[G.choiceWho||'S',o.t]]).concat(then,Q);run();
+  Q=(o.hush||o.echo===false?[]:[[G.choiceWho||'S',o.t]]).concat(then,Q);run();   // echo:false: the option's own next line asks it (0.99.44)
 }
 function setLine(who,text,o){
   var g=G,en=text;text=tr(text);   // 0.89: Finnish pilot
@@ -985,7 +985,7 @@ function archive(kind,items){return function(){
 function keep(id){return function(){var k=G.kept||(G.kept=[]);if(k.indexOf(id)<0)k.push(id);};}
 var KEPT={hi:['MONDAY','She said hi first.'],compliments:['TUESDAY','Three compliments. Not misplaced. Filed here.'],
   eero:['WEDNESDAY','Eero hates presenting. Kept. Not posted.'],library:['PAGE 212','Someone else loves lighthouses too.'],
-  asked:['FRIDAY','She was going to ask on Monday.'],askedYes:['FRIDAY','She was glad she asked.'],drawing:['YEAR 2','The drawing. Before anyone laughed.']};
+  asked:['FRIDAY','She was going to ask. That Monday.'],askedYes:['FRIDAY','She was glad she asked.'],drawing:['YEAR 2','The drawing. Before anyone laughed.']};
 function openDrawer(){var g=G,ids=(g.kept||[]).filter(function(k){return KEPT[k];}).concat(['drawing']).slice(0,6);g.cards=[];
   for(var i=0;i<ids.length;i++){var c=KEPT[ids[i]];g.cards.push({kind:'good',year:c[0],text:c[1],t:-0.4-i*0.75,life:null,x:i%2?795:165,y:115+Math.floor(i/2)*125,rot:(i%2?1:-1)*0.025});}   // two side columns: the middle stays free for the two of them
   g.drawer=true;sfx('card');}
@@ -1553,7 +1553,7 @@ function scWalk(){
     ['S','Cats have four. Five gets laughed at.'],
     ['S','It goes in the drawer. We have a file on drawings.',{quiet:1}],
     archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.']]),
-    ['H','…Drawer. For now.'],function(){closeArchive();G.note.aT=0;G.catStarted=true;},
+    ['H','…Drawer. For now.'],function(){closeArchive();G.note.aT=0;},
     {wait:0.9},
     showEnd
   ];
@@ -1583,7 +1583,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.rxT=null;g.rPhone=false;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.journal=null;g.dream=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.journal=null;g.dream=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.fadeCol=null;g.fromOv=false;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -2036,10 +2036,10 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   ['A','Is that why you used to vanish at lunch? We stopped asking. I thought asking was pressure.'],
   ['H','I thought not being asked was the verdict.'],
   function(){var g=G;   // 0.97 (Codex): she did ask, on the route where the human answered in time; and after a real exclusion her apology says it better
-    if(g.lunch===1)return [['A','I’m glad I asked you on Monday.'],keep('askedYes'),shot('crash'),aside(['S','I was against it. For three seconds.'])];
+    if(g.lunch===1)return [['A','I’m glad I asked you that Monday.'],keep('askedYes'),shot('crash'),aside(['S','I was against it. For three seconds.'])];
     if(g.real)return [];
-    return [['A','I was going to ask you on Monday. You looked busy.'],keep('asked'),shot('crash'),aside(['S','Looking busy was my idea.'])];},
-  ['A','So we’ve been being polite AT each other. For a year.'],
+    return [['A','I was going to ask you that Monday. You looked busy.'],keep('asked'),shot('crash'),aside(['S','Looking busy was my idea.'])];},
+  ['A','So we were being polite AT each other. For a year.'],
   ['S','She says “fine” carefully. Like it might break. Tell her.',{quiet:1}],
   ['H','For the record: when I say “fine”, it’s the good kind.'],
   ['A','…The good kind. Noted.'],
@@ -3115,7 +3115,7 @@ function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · CONTINUED'}
   if(g.sips)r.push({l:'SIPS LOST',v:String(g.sips)},{n:g.bigSip?'the biggest: '+g.bigSip.t+' (−'+g.bigSip.n+')':'one at a time.'});
   if(g.mugMended)r.push({l:'MUGS BROKEN',v:'1'},{n:'repaired: gold.'});
   if(g.fineSent)r.push({l:'“FINE.”S SENT',v:'1'},{n:'repaired on a friday. in person.'});
-  var mine=mineRows();if(mine.length){r.push({gap:1},{h:'EKSKYYSMI’S METHODS'});mine.forEach(function(m){r.push(m);});}
+  // 0.99.44: the methods are on the roll once, in the opening montage's methods shot (mine:1); the week's receipt keeps its own list
   // What it felt like from inside: time, effort and bravery nobody else could see. No diagnosis, no advice: bookkeeping.
   r.push({gap:1},{h:'WHAT IT FELT LIKE'});epiInsideRows().forEach(function(x){r.push(x);});
   r.push({gap:1},{l:'SUBTOTAL',v:'ONE FILED WEEK'},{l:'DISCOUNTS',v:'NONE NEEDED'},{l:'TOTAL',v:'LIVED ONCE'},{gap:1},{h:'Made by Joonas Huhta'},{h:'MoshBitSurfers'},{gap:1},
@@ -3618,9 +3618,9 @@ function afterForm(){
     ['H','You. Mostly. Kindly.'],
     ['S','…Kindly.',{look:'stunned'}],
     {choice:[
-      {t:'Ask what the bag does.',m:'stay',then:function(){return ask('bag');}},
-      {t:'Ask what the chair does.',m:'stay',then:function(){return ask('chair');}},
-      {t:'Ask if I’m being replaced.',m:'hide',then:function(){return ask('me');}}
+      {t:'Ask what the bag does.',m:'stay',echo:false,then:function(){return ask('bag');}},
+      {t:'Ask what the chair does.',m:'stay',echo:false,then:function(){return ask('chair');}},
+      {t:'Ask if I’m being replaced.',m:'hide',echo:false,then:function(){return ask('me');}}
     ]},
     rest,
     ['S','And? Is it working?'],
@@ -3842,7 +3842,7 @@ function nightOn(){var g=G,M=g.morko;g.night={eyes:{S:1},t:0};g.bed=true;g.human
 function eyesOn(k){return function(){G.night.eyes[k]=1;sfx('pop');};}
 function eyesOff(){var e=G.night.eyes;for(var k in e)if(k!=='S')e[k]=0;sfx('dotsOff');}
 function passingCar(){G.night.car=0;sfx('car');}
-function dawn(){var g=G,M=g.morko;g.night=null;g.lampOff=false;g.darkT=0;M.dim=null;M.s=0.3;M.sT=1;M.mood='calm';g.dawn=1;}
+function dawn(){var g=G,M=g.morko;g.night=null;g.lampOff=false;g.darkT=0;M.dim=null;M.s=0.3;M.sT=1;M.mood='calm';}
 function wakeUp(){var g=G,Hm=g.human;g.bed=false;Hm.gone=false;Hm.x=Hm.xT=470;Hm.face='neutral';Hm.facing=1;}
 function drawBed(){
   if(!G.bed)return;var x=330,y=FEETY-44;
@@ -5002,7 +5002,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   {wait:1.2},
   // Later. Tired, and the shadow off duty: the filter goes with it. The evening goes very well. The bill comes in the morning.
   function(){G.clock=22*3600+40*60;},
-  ['N','22:40. Same bar. Ekskyysmi has had the shadow of one drink.'],
+  ['N','22:40. Same bar. Ekskyysmi has had the shadow of one ginger beer, and a very long day.'],
   set({mood:'calm',s:0.9}),
   ['S','I’m just resting my eyes. Keep an eye on… everything.',{quiet:1}],
   function(){G.morko.pose=null;shadowAway();},function(){G.tics.push(tic('z',G.human.x-70,WALLY-150,{life:2.2}));},{wait:1.6},
@@ -7348,7 +7348,7 @@ function showAbout(){
    // 0.98: what it is about, in plain words first (the term is not common knowledge); loneliness as “wanting company”, shame as
    // a situation in the content note rather than abstract nouns. “Conversations don’t wait either” went: only one thing is timed.
    '<p>'+tr('It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.')+'</p>'+
-   '<p>'+tr('About 50 minutes. It saves as you go. Only one thing is timed, and it’s unfair on purpose.')+'</p>'+
+   '<p>'+tr('About an hour. It saves as you go. Only one thing is timed, and it’s unfair on purpose.')+'</p>'+
    '<p class="small">'+tr('Alpha{v}, still changing. Made by Joonas Huhta (MoshBitSurfers).').replace('{v}',gameVersion())+'</p>'+
    '<button class="go alt" type="button" data-go="menu">'+tr('Back')+'</button>','menu');
 }

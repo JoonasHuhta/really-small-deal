@@ -221,9 +221,9 @@ function afterForm(){
     ['H','You. Mostly. Kindly.'],
     ['S','…Kindly.',{look:'stunned'}],
     {choice:[
-      {t:'Ask what the bag does.',m:'stay',then:function(){return ask('bag');}},
-      {t:'Ask what the chair does.',m:'stay',then:function(){return ask('chair');}},
-      {t:'Ask if I’m being replaced.',m:'hide',then:function(){return ask('me');}}
+      {t:'Ask what the bag does.',m:'stay',echo:false,then:function(){return ask('bag');}},
+      {t:'Ask what the chair does.',m:'stay',echo:false,then:function(){return ask('chair');}},
+      {t:'Ask if I’m being replaced.',m:'hide',echo:false,then:function(){return ask('me');}}
     ]},
     rest,
     ['S','And? Is it working?'],
@@ -445,7 +445,7 @@ function nightOn(){var g=G,M=g.morko;g.night={eyes:{S:1},t:0};g.bed=true;g.human
 function eyesOn(k){return function(){G.night.eyes[k]=1;sfx('pop');};}
 function eyesOff(){var e=G.night.eyes;for(var k in e)if(k!=='S')e[k]=0;sfx('dotsOff');}
 function passingCar(){G.night.car=0;sfx('car');}
-function dawn(){var g=G,M=g.morko;g.night=null;g.lampOff=false;g.darkT=0;M.dim=null;M.s=0.3;M.sT=1;M.mood='calm';g.dawn=1;}
+function dawn(){var g=G,M=g.morko;g.night=null;g.lampOff=false;g.darkT=0;M.dim=null;M.s=0.3;M.sT=1;M.mood='calm';}
 function wakeUp(){var g=G,Hm=g.human;g.bed=false;Hm.gone=false;Hm.x=Hm.xT=470;Hm.face='neutral';Hm.facing=1;}
 function drawBed(){
   if(!G.bed)return;var x=330,y=FEETY-44;

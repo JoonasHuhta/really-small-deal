@@ -175,7 +175,7 @@ function labBar(){return labScene({set:'bar',title:'A quiet drink.',plan:'Order 
   {wait:1.2},
   // Later. Tired, and the shadow off duty: the filter goes with it. The evening goes very well. The bill comes in the morning.
   function(){G.clock=22*3600+40*60;},
-  ['N','22:40. Same bar. Ekskyysmi has had the shadow of one drink.'],
+  ['N','22:40. Same bar. Ekskyysmi has had the shadow of one ginger beer, and a very long day.'],
   set({mood:'calm',s:0.9}),
   ['S','I’m just resting my eyes. Keep an eye on… everything.',{quiet:1}],
   function(){G.morko.pose=null;shadowAway();},function(){G.tics.push(tic('z',G.human.x-70,WALLY-150,{life:2.2}));},{wait:1.6},

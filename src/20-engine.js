@@ -55,7 +55,7 @@ function choose(i){
   if(o.m){var mm=G.methods||(G.methods={});mm[o.m]=(mm[o.m]||0)+1;}
   if(o.filed)G.pop={text:'Ekskyysmi filed that.',t:0};   // only on choices that come back later: the parody of “X will remember that”   // Ekskyysmi’s methods, for the week’s receipt
   var then=typeof o.then==='function'?o.then():(o.then||[]);
-  Q=(o.hush?[]:[[G.choiceWho||'S',o.t]]).concat(then,Q);run();
+  Q=(o.hush||o.echo===false?[]:[[G.choiceWho||'S',o.t]]).concat(then,Q);run();   // echo:false: the option's own next line asks it (0.99.44)
 }
 function setLine(who,text,o){
   var g=G,en=text;text=tr(text);   // 0.89: Finnish pilot
@@ -305,7 +305,7 @@ function archive(kind,items){return function(){
 function keep(id){return function(){var k=G.kept||(G.kept=[]);if(k.indexOf(id)<0)k.push(id);};}
 var KEPT={hi:['MONDAY','She said hi first.'],compliments:['TUESDAY','Three compliments. Not misplaced. Filed here.'],
   eero:['WEDNESDAY','Eero hates presenting. Kept. Not posted.'],library:['PAGE 212','Someone else loves lighthouses too.'],
-  asked:['FRIDAY','She was going to ask on Monday.'],askedYes:['FRIDAY','She was glad she asked.'],drawing:['YEAR 2','The drawing. Before anyone laughed.']};
+  asked:['FRIDAY','She was going to ask. That Monday.'],askedYes:['FRIDAY','She was glad she asked.'],drawing:['YEAR 2','The drawing. Before anyone laughed.']};
 function openDrawer(){var g=G,ids=(g.kept||[]).filter(function(k){return KEPT[k];}).concat(['drawing']).slice(0,6);g.cards=[];
   for(var i=0;i<ids.length;i++){var c=KEPT[ids[i]];g.cards.push({kind:'good',year:c[0],text:c[1],t:-0.4-i*0.75,life:null,x:i%2?795:165,y:115+Math.floor(i/2)*125,rot:(i%2?1:-1)*0.025});}   // two side columns: the middle stays free for the two of them
   g.drawer=true;sfx('card');}

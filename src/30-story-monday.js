@@ -248,7 +248,7 @@ function scWalk(){
     ['S','Cats have four. Five gets laughed at.'],
     ['S','It goes in the drawer. We have a file on drawings.',{quiet:1}],
     archive('bad',[['YEAR 2','Showed someone a drawing. Somebody laughed.']]),
-    ['H','…Drawer. For now.'],function(){closeArchive();G.note.aT=0;G.catStarted=true;},
+    ['H','…Drawer. For now.'],function(){closeArchive();G.note.aT=0;},
     {wait:0.9},
     showEnd
   ];
