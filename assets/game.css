@@ -133,11 +133,11 @@ html.immersive .ov.on[data-kind=title]{
 html.immersive .card:has(.lab-list){max-width:none;width:100%}html.immersive .lab-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:8px 0}html.immersive .lab{padding:8px 10px;min-height:44px;align-content:start}html.immersive .lab b{font-size:13.5px}html.immersive .lab span{font-size:11px;line-height:1.35}html.immersive .end-note{margin:8px 0;padding:8px 12px}
 /* the words: a band along the bottom of the scene */
 html.immersive body.playing .play-panel{position:absolute;z-index:3;left:50%;bottom:0;transform:translateX(-50%);width:var(--stage);min-height:0;max-height:64dvh;overflow-y:auto;
-  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:8px 12px calc(8px + env(safe-area-inset-bottom));
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:8px 12px calc(8px + env(safe-area-inset-bottom)) calc(12px + clamp(0px,(var(--stage) - 600px) * .16,190px));
   background:linear-gradient(#10161bb0,#10161be6 40%);border-top:1px solid #ffffff26;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 html.immersive body.playing .play-panel.hidden{display:none}
 html.immersive body.playing .line{display:block;min-height:0;margin:0}html.immersive body.playing .speaker-icon{display:none}
-html.immersive body.playing .line b{display:inline;margin:0 8px 0 0;font-size:10px;letter-spacing:1.4px}html.immersive body.playing .line p{display:inline;font-size:calc(15px * var(--ts,1));line-height:1.4}
+html.immersive body.playing .line b{display:inline;margin:0 10px 0 0;font-size:calc(13px * var(--ts,1));letter-spacing:1.2px}html.immersive body.playing .line p{display:inline;font-size:calc(15px * var(--ts,1));line-height:1.4}
 html.immersive body.playing .opts{grid-template-columns:1fr;gap:6px;margin:0;min-height:0}
 html.immersive body.playing .opts:has(.opt:not(.cont)),html.immersive body.playing .opts:has(.stretch-controls,.hold-controls,.chat-transcript){grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr))}
 html.immersive body.playing .opts:has(.opt:nth-child(4)){grid-template-columns:repeat(4,minmax(0,1fr))}html.immersive body.playing .opts:has(.opt:nth-child(4)) .opt{font-size:calc(12.5px * var(--ts,1));padding:6px 8px}
@@ -274,3 +274,5 @@ html.immersive .ov[data-kind=menu] .card p{max-width:none}
 .cont-row{grid-column:1/-1;display:flex;justify-content:flex-end;align-items:stretch;gap:8px;flex-wrap:wrap}.cont-row .opt.cont{justify-self:auto}
 .opt.cont.ghost{background:transparent;color:var(--sage);border-color:#59645e;min-width:0;font-weight:600}.opt.cont.ghost:hover:not(:disabled),.opt.cont.ghost:focus-visible{background:#ffffff0d;border-color:var(--sage);color:var(--ink)}
 .playing .cont-row .opt.cont:not(.ghost){flex:1 1 auto}html.immersive body.playing .opts:has(.cont-row){grid-column:auto;grid-template-columns:1fr}
+/* 0.99.53 (Joonas 27.11.): in the bottom bar the speaker's name follows the text size (it was a fixed 10 px), and the bar's content
+   starts further in on wide screens (about 18 px on the smallest phone, 160 px on a 1500 px screen), so reading does not begin in the corner. */
