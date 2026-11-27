@@ -346,7 +346,7 @@ function puppetBird(x,y,s){
   ctx.beginPath();ctx.moveTo(x-3*k,y-2*k);ctx.lineTo(x,y-11*k);ctx.lineTo(x+3*k,y-2*k);ctx.closePath();ctx.fill();
 }
 // The one-line look on the shadow's current line, if any (also read by the body: the 'edge' look lifts a shoulder).
-function lookNow(){var M=G.morko;return M.st==='free'&&!M.coat&&G.cur&&G.cur.who==='S'&&G.cur.look||null;}
+function lookNow(){var M=G.morko;if(G.epi&&G.epi.look)return G.epi.look;return M.st==='free'&&!M.coat&&G.cur&&G.cur.who==='S'&&G.cur.look||null;}
 // Which shoulder: the one nearer Sanna's shadow, if it is in the room (the edge she liked), otherwise the right.
 function edgeSide(x){return G.cowA&&G.zShow>0.02&&G.ax+62<x?-1:1;}
 function morkoFace(q){
@@ -354,7 +354,7 @@ function morkoFace(q){
   var M=G.morko,r=q.hdR,cx=q.bx,cy=q.hdY,ex=r*0.42;
   var m=M.st==='frozen'||M.st==='hide'?'scared':M.st==='pokka'?'pokka':M.mood,look=m==='pokka'?-1:1;
   // A look lasts exactly one line: {look:'squint'} on the line, and the face goes back to whatever it was.
-  var lk=M.st==='free'&&G.cur&&G.cur.who==='S'&&G.cur.look;if(lk)m=lk;
+  var lk=(G.epi&&G.epi.look)||M.st==='free'&&G.cur&&G.cur.who==='S'&&G.cur.look;if(lk)m=lk;
   var er=r*0.2,pr=0.45,brow=null,i,py=0;
   if(m==='stunned'){er=r*0.36;pr=0.13;}
   else if(m==='soft'){er=r*0.23;pr=0.66;brow='out';py=0.18;}
@@ -681,6 +681,7 @@ function draw(){
   if(g.rep){drawReplay();return;}
   if(g.zoom){drawZoom();return;}
   if((g.jolt&&joltPhase())||(g.epi&&g.epi.o&&g.epi.o.xray)){drawXray();return;}
+  if(g.epi&&g.epi.o&&g.epi.o.meadow){ctx.save();applyCamera();drawMeadow(g.epi.meadowO||{});ctx.restore();drawEpi();return;}   // 0.99.34: the epilogue visits the meadow
   ctx.save();applyCamera();
   if(g.w){drawWalk();drawLines();}
   else{
