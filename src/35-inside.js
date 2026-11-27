@@ -134,24 +134,34 @@ function receiptCanvas(title,rows,foot,inWorld){
 }
 function shareReceipt(btn){
   var r=G.receipt;if(!r)return;
-  function say(t){if(btn)btn.textContent=t;}
+  function say(t){if(btn)btn.textContent=tr(t);}
   function fallback(){copyReceipt(btn);}
   var c;try{c=receiptCanvas(r.title,r.rows,r.foot);}catch(e){fallback();return;}
+  // 0.99.52 (review T10): inside the app, the picture goes to the app's cache and Android's share sheet opens.
+  // Any step failing copies the text, as before; closing the share sheet only puts the label back.
+  var Cap=window.Capacitor,P=Cap&&Cap.Plugins;
+  if(Cap&&Cap.isNativePlatform&&Cap.isNativePlatform()){
+    var ok=P&&P.Filesystem&&P.Share&&(!Cap.isPluginAvailable||Cap.isPluginAvailable('Filesystem')&&Cap.isPluginAvailable('Share'));
+    if(!ok){fallback();return;}
+    var data;try{data=c.toDataURL('image/png').split(',')[1];}catch(e){fallback();return;}
+    P.Filesystem.writeFile({path:'really-small-deal-receipt.png',data:data,directory:'CACHE'}).then(function(w){
+      return P.Share.share({files:[w.uri],title:'Really Small Deal',text:'My receipt.'});
+    }).then(function(){say('Sent. Probably fine.');},function(err){if(/cancel/i.test(String(err&&err.message||err)))say('Save as picture');else fallback();});
+    return;}
   if(!c.toBlob){fallback();return;}
   c.toBlob(function(blob){
     if(!blob){fallback();return;}
     var file=null;try{file=new File([blob],'really-small-deal-receipt.png',{type:'image/png'});}catch(e){}
     try{if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
       navigator.share({files:[file],title:'Really Small Deal',text:'My receipt.'}).then(function(){say('Sent. Probably fine.');},function(){say('Save as picture');});return;}}catch(e){}
-    // No share sheet: a plain download in a browser. Inside the app there is nowhere to download to, so the text goes to the clipboard instead.
-    if(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform()){fallback();return;}
+    // No share sheet: a plain download in a browser (the app shares natively above).
     try{var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='really-small-deal-receipt.png';document.body.appendChild(a);a.click();a.remove();
       setTimeout(function(){URL.revokeObjectURL(u);},4000);say('Saved. Check your downloads.');}catch(e){fallback();}
   },'image/png');
 }
 function copyReceipt(btn){
   var t=G.receiptText||'';
-  function done(ok){if(btn)btn.textContent=ok?'Copied. Paste it anywhere.':'Could not copy, sorry.';}
+  function done(ok){if(btn)btn.textContent=tr(ok?'Copied. Paste it anywhere.':'Could not copy, sorry.');}
   try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){done(true);},function(){done(false);});return;}}catch(e){}
   try{var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();var ok=document.execCommand('copy');ta.remove();done(ok);}catch(e){done(false);}
 }

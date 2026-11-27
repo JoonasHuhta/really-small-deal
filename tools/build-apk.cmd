@@ -2,7 +2,7 @@
 setlocal
 cd /d "%~dp0.."
 if exist "%ProgramFiles%\Android\Android Studio\jbr\bin\java.exe" set "JAVA_HOME=%ProgramFiles%\Android\Android Studio\jbr"
-if not exist node_modules\@capacitor\cli\package.json (
+if not exist node_modules\@capacitor\share\package.json (
   call npm ci
   if errorlevel 1 exit /b 1
 )

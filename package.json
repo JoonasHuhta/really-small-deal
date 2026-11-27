@@ -1,6 +1,6 @@
 {
   "name": "really-small-deal",
-  "version": "0.99.51",
+  "version": "0.99.52",
   "private": true,
   "description": "Really Small Deal. A small moment. A very long shadow.",
   "scripts": {
@@ -22,7 +22,9 @@
   "dependencies": {
     "@capacitor/android": "7.6.10",
     "@capacitor/app": "7.1.2",
-    "@capacitor/core": "7.6.10"
+    "@capacitor/core": "7.6.10",
+    "@capacitor/filesystem": "7.1.9",
+    "@capacitor/share": "7.0.4"
   },
   "devDependencies": {
     "@capacitor/assets": "4.0.0",

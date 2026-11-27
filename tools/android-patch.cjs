@@ -112,3 +112,16 @@ const adaptiveIcon = `<?xml version="1.0" encoding="utf-8"?>
 for(const file of ['ic_launcher.xml','ic_launcher_round.xml']){
   fs.writeFileSync(path.join(app,'res','mipmap-anydpi-v26',file),adaptiveIcon);
 }
+// 5. The receipt picture (0.99.52): @capacitor/share hands Android a content:// link through the app's FileProvider,
+//    for a file the game writes to its cache. Capacitor's template has both; this only adds what an older android/ lacks.
+{const xmlDir=path.join(app,'res','xml'),fp=path.join(xmlDir,'file_paths.xml');let mm=fs.readFileSync(mf,'utf8');
+  if(!/androidx\.core\.content\.FileProvider/.test(mm)){
+    if(!/<\/application>/.test(mm))throw new Error('No </application> in AndroidManifest.xml');
+    mm=mm.replace(/<\/application>/,'    <provider\n            android:name="androidx.core.content.FileProvider"\n            android:authorities="${applicationId}.fileprovider"\n            android:exported="false"\n            android:grantUriPermissions="true">\n            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>\n        </provider>\n    </application>');
+    fs.writeFileSync(mf,mm);console.log('AndroidManifest.xml: FileProvider added (receipt picture).');
+  }else console.log('AndroidManifest.xml: FileProvider already there.');
+  if(!fs.existsSync(fp)){fs.mkdirSync(xmlDir,{recursive:true});
+    fs.writeFileSync(fp,'<?xml version="1.0" encoding="utf-8"?>\n<paths xmlns:android="http://schemas.android.com/apk/res/android">\n    <external-path name="my_images" path="." />\n    <cache-path name="my_cache_images" path="." />\n</paths>\n');console.log('file_paths.xml: written (receipt picture).');
+  }else if(!/<cache-path\b/.test(fs.readFileSync(fp,'utf8'))){
+    fs.writeFileSync(fp,fs.readFileSync(fp,'utf8').replace(/<\/paths>/,'    <cache-path name="my_cache_images" path="." />\n</paths>'));console.log('file_paths.xml: cache path added (receipt picture).');
+  }else console.log('file_paths.xml: cache path already there.');}

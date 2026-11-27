@@ -31,6 +31,9 @@ for(const icon of manifest.icons)local(icon.src,packed);
 assert.ok(fs.existsSync(path.join(packed,config.server.errorPath)),'WebView help must work offline');
 const plugins=JSON.parse(fs.readFileSync(path.join(native,'assets','capacitor.plugins.json')));
 assert.ok(plugins.some(p=>p.pkg==='@capacitor/app'),'App plugin missing: back/pause will not work');
+assert.ok(plugins.some(p=>p.pkg==='@capacitor/filesystem')&&plugins.some(p=>p.pkg==='@capacitor/share'),'Filesystem/Share plugins missing: the receipt picture falls back to text (run npm ci, then npm run android:sync)');
+assert.match(fs.readFileSync(path.join(native,'AndroidManifest.xml'),'utf8'),/androidx\.core\.content\.FileProvider/,'No FileProvider: the receipt picture cannot be shared (run tools/android-patch.cjs)');
+assert.match(fs.readFileSync(path.join(native,'res','xml','file_paths.xml'),'utf8'),/<cache-path\b/,'file_paths.xml has no cache path: the receipt picture cannot be shared');
 assert.deepEqual(JSON.parse(fs.readFileSync(path.join(native,'assets','capacitor.config.json'))),config,'Capacitor config is stale');
 assert.match(fs.readFileSync(path.join(native,'AndroidManifest.xml'),'utf8'),/android:screenOrientation="sensorLandscape"/);
 assert.match(fs.readFileSync(path.join(native,'AndroidManifest.xml'),'utf8'),/<application\b[^>]*android:name="\.GameApp"/,'Whole-screen mode is not registered');
@@ -39,4 +42,4 @@ assert.match(fs.readFileSync(path.join(native,'java',...config.appId.split('.'),
 assert.equal(config.android.adjustMarginsForEdgeToEdge,'disable','The page handles its own safe areas');
 const gradle=fs.readFileSync(path.join(root,'android','app','build.gradle'),'utf8');
 assert.ok(gradle.includes('versionName "'+require('../package.json').version+'"'),'APK version is stale');
-console.log(`PASS: ${count} bundled files match; local fonts/icons, offline entry, App plugin, landscape, whole-screen mode, screen kept on and version checked.`);
+console.log(`PASS: ${count} bundled files match; local fonts/icons, offline entry, App, Filesystem and Share plugins, receipt FileProvider, landscape, whole-screen mode, screen kept on and version checked.`);

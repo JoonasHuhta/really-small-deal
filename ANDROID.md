@@ -19,6 +19,8 @@ Komento kokoaa pelin, ajaa testit, synkronoi Capacitorin, ajaa `assembleDebug li
 
 Rakennus käyttää tämän koneen Android Studion Javaa: `C:\Program Files\Android\Android Studio\jbr` (JDK 21). Node-vaatimus on vähintään 22.18. Riippuvuuksien tarkat versiot ovat `package-lock.json`:ssa; ensimmäisellä ajolla puuttuvat paketit asennetaan komennolla `npm ci`.
 
+**0.99.52: kuitti kuvana.** Sovellus käyttää nyt kahta uutta Capacitor-liitännäistä, `@capacitor/filesystem` ja `@capacitor/share`. Ensimmäinen `tools\build-apk.cmd` 0.99.52:n jälkeen ajaa itse `npm ci`:n, koska `node_modules\@capacitor\share` puuttuu. `android-patch.cjs` varmistaa FileProviderin ja välimuistipolun (`res/xml/file_paths.xml`), ja `android-check.cjs` pysäyttää rakennuksen, jos liitännäiset tai FileProvider puuttuvat. **Puhelintesti:** pelaa maanantai loppuun (tai mikä tahansa päivä), paina kuitin alla *Save as picture*. Androidin jakovalikon pitää aueta kuitin kuvan kanssa. Jos valikon sulkee, napin teksti palaa ennalleen. Jos jokin vaihe epäonnistuu, nappi kopioi tekstin kuten ennen (*Copied. Paste it anywhere.*).
+
 Vastaavat vaiheet käsin:
 
 ```bat
