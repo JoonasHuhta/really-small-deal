@@ -1210,7 +1210,7 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
     {t:'New policy: never suggest anything again.',then:[['S','Effective immediately. No ideas. No deadlines. No Thursdays.'],['H','You can’t ban Thursdays.']]},
     {t:'Put it on record: I am not exaggerating.',then:[['S','For once I’d like it noted that I added nothing.'],['H','Noted.']]}
   ]},
-  ['H','Yeah. That one was a bit sharp.'],
+  ['H','Her “not now” was a bit sharp, though.'],   // 0.99.38: “That one” read as the human's own long sentence
   set({mood:'surprised'}),
   ['S','…You agree?'],
   ['H','She was short with me. It happened.']
@@ -1606,7 +1606,7 @@ function wedMorning(){return [
   ['S','Are you awake?'],
   ['H','I am now. It’s three in the morning.'],
   ['S','Out there, yes. In here it’s about Thursday. I did the afternoon twice.'],
-  ['S','Good. I’ve prepared your nine o’clock. Three scenarios.',{look:'pleased'}],
+  ['S','So. I’ve prepared your nine o’clock. Three scenarios.',{look:'pleased'}],   // 0.99.38: “Good.” answered its own line above it
   {choice:[
     {t:'Scenario one: “We need to talk about your attitude.”',m:'worst',then:[['S','You say: “I don’t have an attitude.” Which is an attitude.'],['H','I’ll just listen.'],['S','Listening is suspicious.']]},
     {t:'Scenario two: she isn’t angry. She’s disappointed.',m:'worst',then:[['H','Oh no.'],['S','I know. I shouldn’t have said it out loud. Now it’s in the room.']]},
@@ -7464,9 +7464,9 @@ function appVisibility(){
 document.addEventListener('visibilitychange',appVisibility);
 
 // Browsers and the Android WebView hold all sound until the first touch or key. Whatever was waiting starts then.
-// 0.99.36 (Joonas 27.11.: "the music in the menu doesn't work"): on a phone a finger going DOWN does not count as a gesture
-// (Chrome and the WebView count the finger coming up, a click or a key). The title song tried to start on touchstart, was
-// refused, and was never asked again. Since 0.34 the menu was silent on phones until something else changed the song.
+// 0.99.36 (Joonas 27.11.: "the music in the menu doesn't work"): the APK and desktop browsers allow the title song at launch.
+// A phone BROWSER does not, and there a finger going DOWN is not yet a gesture (the finger coming up, a click or a key is).
+// The song was refused on touchstart and never asked again, so the menu stayed silent behind a link.
 // Now the finger going down only starts the download, and every real gesture retries a song the browser refused.
 (function(){function warm(){firstTouch=true;if(musicEl&&musicEl.preload==='none')musicEl.preload='auto';}
   function kick(){warm();if(musicEl&&musicEl.blocked)syncMusic();}

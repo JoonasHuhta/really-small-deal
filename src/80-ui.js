@@ -229,9 +229,9 @@ function appVisibility(){
 document.addEventListener('visibilitychange',appVisibility);
 
 // Browsers and the Android WebView hold all sound until the first touch or key. Whatever was waiting starts then.
-// 0.99.36 (Joonas 27.11.: "the music in the menu doesn't work"): on a phone a finger going DOWN does not count as a gesture
-// (Chrome and the WebView count the finger coming up, a click or a key). The title song tried to start on touchstart, was
-// refused, and was never asked again. Since 0.34 the menu was silent on phones until something else changed the song.
+// 0.99.36 (Joonas 27.11.: "the music in the menu doesn't work"): the APK and desktop browsers allow the title song at launch.
+// A phone BROWSER does not, and there a finger going DOWN is not yet a gesture (the finger coming up, a click or a key is).
+// The song was refused on touchstart and never asked again, so the menu stayed silent behind a link.
 // Now the finger going down only starts the download, and every real gesture retries a song the browser refused.
 (function(){function warm(){firstTouch=true;if(musicEl&&musicEl.preload==='none')musicEl.preload='auto';}
   function kick(){warm();if(musicEl&&musicEl.blocked)syncMusic();}

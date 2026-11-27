@@ -73,7 +73,7 @@ function wedMorning(){return [
   ['S','Are you awake?'],
   ['H','I am now. It’s three in the morning.'],
   ['S','Out there, yes. In here it’s about Thursday. I did the afternoon twice.'],
-  ['S','Good. I’ve prepared your nine o’clock. Three scenarios.',{look:'pleased'}],
+  ['S','So. I’ve prepared your nine o’clock. Three scenarios.',{look:'pleased'}],   // 0.99.38: “Good.” answered its own line above it
   {choice:[
     {t:'Scenario one: “We need to talk about your attitude.”',m:'worst',then:[['S','You say: “I don’t have an attitude.” Which is an attitude.'],['H','I’ll just listen.'],['S','Listening is suspicious.']]},
     {t:'Scenario two: she isn’t angry. She’s disappointed.',m:'worst',then:[['H','Oh no.'],['S','I know. I shouldn’t have said it out loud. Now it’s in the room.']]},

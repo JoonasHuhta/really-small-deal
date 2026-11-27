@@ -103,7 +103,7 @@ function labNotNow(){return labScene({set:'office',title:'Not now.',plan:'Sugges
     {t:'New policy: never suggest anything again.',then:[['S','Effective immediately. No ideas. No deadlines. No Thursdays.'],['H','You can’t ban Thursdays.']]},
     {t:'Put it on record: I am not exaggerating.',then:[['S','For once I’d like it noted that I added nothing.'],['H','Noted.']]}
   ]},
-  ['H','Yeah. That one was a bit sharp.'],
+  ['H','Her “not now” was a bit sharp, though.'],   // 0.99.38: “That one” read as the human's own long sentence
   set({mood:'surprised'}),
   ['S','…You agree?'],
   ['H','She was short with me. It happened.']
