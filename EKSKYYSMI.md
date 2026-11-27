@@ -119,7 +119,7 @@ Ei kaanonia ennen kuin Joonas päättää. Kirjattu, jotta mahdollinen siirto ta
 
 - **Ekskyysmin oma ”oh”.** Patterilla se kokee itse sen, mitä ihminen koki maanantaina (”She said it with a FULL STOP.”). Tämän voi syventää.
 - **Muiden varjojen erilaisuus.** Muiden varjot ovat aina pienempiä ja laskevat vuoronsa yöksi, eli ero on voimakkuudessa, ei siinä onko varjoa. Tämä pidetään.
-- **Hyvä arkisto.** Laatikko, joka jätetään raolleen (”Leave it open a crack.”), on varjon kasvun mittari. Voisiko se näkyä kuitissa?
+- **Hyvä arkisto.** Laatikko, joka jätetään raolleen (”Leave it open a crack.”), on varjon kasvun mittari. Voisiko se näkyä kuitissa? Näkyy epilogin röntgenissä (0.99.46): pieni nimetön laatikko kaapin vieressä raollaan, raossa lämmin valo.
 
 ---
 

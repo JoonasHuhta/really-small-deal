@@ -235,6 +235,13 @@ function drawXray(){
       if(fo.open>0.02){ctx.save();ctx.shadowBlur=0;ctx.fillStyle='#071521';ctx.fillRect(cx+5-ox,dy+oy,cw-10+2*ox,dh);ctx.restore();}}
     ctx.strokeRect(cx+5-ox,dy+oy,cw-10+2*ox,dh);ctx.beginPath();ctx.moveTo(cx+cw/2-8,dy+oy+dh/2);ctx.lineTo(cx+cw/2+8,dy+oy+dh/2);ctx.stroke();
     ctx.shadowBlur=0;stillText([labels[i]],cx+cw/2,dy+oy+dh*0.28,'700 '+Math.max(8,Math.min(11,dh*0.36))+'px system-ui,sans-serif','#d6f0ff',0,0,false,true);ctx.shadowBlur=10;}   // a picture of the label: steady in the close-up
+  if(g.epi&&g.epi.o&&g.epi.o.xray){   // 0.99.46 (review D5): beside the cabinet, the good archive as #23 left it: open a crack, warm inside. No label.
+    // On the cabinet's left: on its right the human's skull stands in front of it in both epilogue shots
+    var kx=cx-8-30,ky=cy+ch-26,kw=30,kh=18,ky2=ky+4+3;
+    ctx.strokeRect(kx,ky,kw,kh);
+    ctx.save();ctx.shadowColor='#ffd98a';ctx.shadowBlur=9;ctx.fillStyle='#ffd98a';ctx.fillRect(kx+3,ky+4,kw-6,3);ctx.restore();   // the crack: light from inside
+    ctx.save();ctx.shadowBlur=0;ctx.fillStyle='#071521';ctx.fillRect(kx+1.5,ky2,kw-3,kh-8);ctx.restore();   // the front, 3 px out
+    ctx.strokeRect(kx+1.5,ky2,kw-3,kh-8);ctx.beginPath();ctx.moveTo(kx+kw/2-4,ky2+(kh-8)/2);ctx.lineTo(kx+kw/2+4,ky2+(kh-8)/2);ctx.stroke();}
   ctx.restore();
   ctx.fillStyle='#d6f0ff';ctx.fillRect(q.bx-q.hdR*0.45,q.hdY-3,5,6);ctx.fillRect(q.bx+q.hdR*0.2,q.hdY-3,5,6);}
   skeleton(g.human.x,false,true);
