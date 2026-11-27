@@ -4,6 +4,14 @@ Joonaksen pyyntö: analysoi peli kunnolla, ja korjataan sitten ehdotusten mukaan
 
 **Tila 27.11.2026 klo 17.47:** Joonas hyväksyi kaikki ehdotukset (”olen kaikesta samaa mieltä”). Myös päätöstä odottaneet tehtävät ovat nyt hyväksyttyjä. Toteutusjärjestys on §11:ssä ja valmis kehote toteuttavalle mallille §12:ssa.
 
+**Tila 27.11.2026 klo 20.55: toteutettu 0.99.44–0.99.52.** Kaikki §8:n tehtävät on tehty §11:n järjestyksessä, ja jokainen versio on GitHubissa, C:\RSD:ssä ja artefaktissa (yksityiskohdat TARINAKARTTA.md:n versiolokissa). Poikkeamat ohjeesta, koska koodi oli totuus:
+- **D5:** laatikko on kaapin *vasemmalla* puolella, koska oikealla ihmisen pääkallo peittää sen kummassakin epilogin röntgenkuvassa.
+- **T8:** Auto etenee myös hiljaisesta kuvasta (`{still}`, lyhin lukuaika 1,4 s), ja iso repliikki odottaa, kunnes se on kokonaan seinällä. Ilman tätä Auto pysähtyi sunnuntain ryhmächatin jälkeen.
+- **T9:** kelaus ohittaa myös nähtyjen rivien väliset tauot (`{wait}`), muuten se pysähtyisi lähes jokaisen rivin jälkeen. Vertailu tehdään vain siihen, mitä oli nähty ennen tämän pelikerran alkua, joten ensimmäisellä kerralla nappia ei näy edes kahdesti sanotulle repliikille.
+- **T10:** uusien liitännäisten vuoksi `tools\build-apk.cmd` ajaa `npm ci`:n, jos `@capacitor/share` puuttuu, ja `android-patch.cjs` / `android-check.cjs` huolehtivat FileProviderista.
+- **Lisäksi 0.99.47:** löytyi bugi, joka ei ollut listalla. 0.99.35:n kommentilta puuttui rivinvaihto, ja päivityssilmukan rivin loppu ei ajanut: Ekskyysmi oli näkymätön pelin alussa heräämisensä jälkeen, eivätkä Sannan, Eeron ja Riitan varjot tulleet näkyviin. Korjattu ja testattu.
+- **Avoinna:** T10:n puhelintesti (ANDROID.md).
+
 **Lyhyesti**
 
 1. **Peli on hyvässä kunnossa.** Käsikirjoitus on pelin vahvin osa: tiivis, hauska ja RSD:n suhteen tarkka. Haarat pysyvät koossa, ja testit pelaavat ne kaikki läpi.
