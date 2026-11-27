@@ -98,6 +98,8 @@ function storyRows(){
   if(g.posting)rows.push(g.applied?['applications sent, friday','1']:['applications sent','0 (yet)']);
   if(g.quiet)rows.push(['one quiet Monday, lived','1.0 days']);
   if(g.nothings)rows.push(['“it’s nothing”, said','×'+g.nothings]);
+  if(g.friWarning){if(g.monWarning)rows.push(['alarm size, monday','×'+g.monWarning.toFixed(1)]);   // 0.99.48: Friday's alarm, opened like Monday's
+    rows.push(['alarm size, friday','×'+g.friWarning.toFixed(1)],['stayed anyway','friday']);}
   // Ekskyysmi’s methods this week: what the player chose, counted. The choices were the joke; this is the bill.
   var M=g.methods||{},ML={worst:'worst cases, prepared',draft:'scripts, drafted',please:'people, pleased',hide:'exits, taken',stay:'times we stayed',hush:'silences, kept'};
   var mk=Object.keys(ML).filter(function(k){return M[k]>0;}).sort(function(a,b){return M[b]-M[a];});

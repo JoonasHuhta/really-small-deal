@@ -691,7 +691,7 @@ function reset(day){
      ax:1010,axT:1010,bx2:1090,bxT:1090,aFace:-1,bFace:-1,aWave:false,cowA:false,cowB:false,cupLeft:false,
      cz:1.025,cx:W/2,cy:H/2,
      lines:[],band:null,out:null,w:null,card:0,
-     hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0};
+     hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0,warningSize:null,monWarning:null,friWarning:null};   // 0.99.48: a new week starts without last week's alarm sizes
   G.handout=false;G.afterparty=false;G.sips=0;G.files=0;G.bigSip=null;G.fineSent=false;G.applied=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.coatNo=false;G.kept=[];G.methods={};G.endSeen=false;G.stamp=null;
   G.choiceWho='S';G.finalFrame=false;G.barStory=null;G.quietDrawing=false;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
@@ -1079,6 +1079,7 @@ function nightlightEnding(){return [scene({set:'home',clock:23*3600+10*60}),func
 var SAVE_KEY='ekskyysmi.save';
 var METHODS=['worst','draft','please','hide','stay','hush'];
 function cleanMethods(m){var o={};METHODS.forEach(function(k){var v=m&&m[k];if(Number.isFinite(v)&&v>0)o[k]=clamp(Math.floor(v),0,99);});return o;}
+function alarmSize(v){return Number.isFinite(v)?clamp(v,1.8,3.8):null;}
 function checkpoint(g){
   return {day:['A','B','C'].indexOf(g.day)>=0?g.day:'B',
     lunch:[0,1,2].indexOf(g.lunch)>=0?g.lunch:0,real:g.real===1?1:0,bit:!!g.bit,
@@ -1094,6 +1095,8 @@ function checkpoint(g){
     bigSip:g.bigSip&&typeof g.bigSip.t==='string'?{t:g.bigSip.t.slice(0,40),n:clamp(Math.floor(g.bigSip.n)||0,0,5)}:null,methods:cleanMethods(g.methods),kept:Array.isArray(g.kept)?g.kept.filter(function(k){return typeof k==='string'&&KEPT[k];}).slice(0,12):[],
     // 0.77 (Codex review): what the end screens read. Without these, Continue rewrote the week: five days became one, Friday's "no" went back in its box.
     no:!!g.no,quiet:!!g.quiet,mugMended:!!g.mugMended,applied:!!g.applied,
+    // 0.99.48: the alarm sizes the player chose on Monday and Friday, for Friday's comparison and the receipt
+    warningSize:alarmSize(g.warningSize),monWarning:alarmSize(g.monWarning),friWarning:alarmSize(g.friWarning),
     run:Array.isArray(g.run)?g.run.map(cleanDay).filter(Boolean).slice(0,40):[],day0:cleanDay(g.day0)};
 }
 // A lived day, as the receipts need it (35-inside.js). Storage can be old or edited, so every field is checked.
@@ -1981,6 +1984,13 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   set({aFace:1}),hit(0.8,'A'),drain(1,'it still went off'),{wait:1.3},
   ['S','…It still went off. Even though we got it right.'],
   ['H','I felt it.'],
+  // 0.99.48 (review D3): the same alarm, opened by the player as on Monday. Any size is allowed and the human stays; the receipt compares
+  function(){G.monWarning=G.warningSize;},
+  {stretch:true},
+  function(){var a=G.monWarning,b=G.warningSize;G.friWarning=b;
+    if(!a)return [['S','Full size. Still here.'],['H','Big is allowed.']];
+    return b>=a-0.05?[['S','Monday size. I checked.'],['H','Big is allowed.']]:
+      [['S','A bit smaller than Monday. Don’t read into it.'],['H','Big would have been allowed too.']];},
   fridayReflex,
   ['H','I know. Stay.'],
   {hold:{kind:'stay',secs:2.6,text:'Staying. In public. With everyone looking.'}},
@@ -5481,6 +5491,8 @@ function storyRows(){
   if(g.posting)rows.push(g.applied?['applications sent, friday','1']:['applications sent','0 (yet)']);
   if(g.quiet)rows.push(['one quiet Monday, lived','1.0 days']);
   if(g.nothings)rows.push(['“it’s nothing”, said','×'+g.nothings]);
+  if(g.friWarning){if(g.monWarning)rows.push(['alarm size, monday','×'+g.monWarning.toFixed(1)]);   // 0.99.48: Friday's alarm, opened like Monday's
+    rows.push(['alarm size, friday','×'+g.friWarning.toFixed(1)],['stayed anyway','friday']);}
   // Ekskyysmi’s methods this week: what the player chose, counted. The choices were the joke; this is the bill.
   var M=g.methods||{},ML={worst:'worst cases, prepared',draft:'scripts, drafted',please:'people, pleased',hide:'exits, taken',stay:'times we stayed',hush:'silences, kept'};
   var mk=Object.keys(ML).filter(function(k){return M[k]>0;}).sort(function(a,b){return M[b]-M[a];});

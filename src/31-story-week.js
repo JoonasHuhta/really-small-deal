@@ -408,6 +408,13 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   set({aFace:1}),hit(0.8,'A'),drain(1,'it still went off'),{wait:1.3},
   ['S','…It still went off. Even though we got it right.'],
   ['H','I felt it.'],
+  // 0.99.48 (review D3): the same alarm, opened by the player as on Monday. Any size is allowed and the human stays; the receipt compares
+  function(){G.monWarning=G.warningSize;},
+  {stretch:true},
+  function(){var a=G.monWarning,b=G.warningSize;G.friWarning=b;
+    if(!a)return [['S','Full size. Still here.'],['H','Big is allowed.']];
+    return b>=a-0.05?[['S','Monday size. I checked.'],['H','Big is allowed.']]:
+      [['S','A bit smaller than Monday. Don’t read into it.'],['H','Big would have been allowed too.']];},
   fridayReflex,
   ['H','I know. Stay.'],
   {hold:{kind:'stay',secs:2.6,text:'Staying. In public. With everyone looking.'}},

@@ -2,6 +2,7 @@
 var SAVE_KEY='ekskyysmi.save';
 var METHODS=['worst','draft','please','hide','stay','hush'];
 function cleanMethods(m){var o={};METHODS.forEach(function(k){var v=m&&m[k];if(Number.isFinite(v)&&v>0)o[k]=clamp(Math.floor(v),0,99);});return o;}
+function alarmSize(v){return Number.isFinite(v)?clamp(v,1.8,3.8):null;}
 function checkpoint(g){
   return {day:['A','B','C'].indexOf(g.day)>=0?g.day:'B',
     lunch:[0,1,2].indexOf(g.lunch)>=0?g.lunch:0,real:g.real===1?1:0,bit:!!g.bit,
@@ -17,6 +18,8 @@ function checkpoint(g){
     bigSip:g.bigSip&&typeof g.bigSip.t==='string'?{t:g.bigSip.t.slice(0,40),n:clamp(Math.floor(g.bigSip.n)||0,0,5)}:null,methods:cleanMethods(g.methods),kept:Array.isArray(g.kept)?g.kept.filter(function(k){return typeof k==='string'&&KEPT[k];}).slice(0,12):[],
     // 0.77 (Codex review): what the end screens read. Without these, Continue rewrote the week: five days became one, Friday's "no" went back in its box.
     no:!!g.no,quiet:!!g.quiet,mugMended:!!g.mugMended,applied:!!g.applied,
+    // 0.99.48: the alarm sizes the player chose on Monday and Friday, for Friday's comparison and the receipt
+    warningSize:alarmSize(g.warningSize),monWarning:alarmSize(g.monWarning),friWarning:alarmSize(g.friWarning),
     run:Array.isArray(g.run)?g.run.map(cleanDay).filter(Boolean).slice(0,40):[],day0:cleanDay(g.day0)};
 }
 // A lived day, as the receipts need it (35-inside.js). Storage can be old or edited, so every field is checked.

@@ -170,7 +170,7 @@ const checkpointFixture={version:2,ch:5,unlocked:5,chapters:{
   1:{day:'A'},
   3:{day:'A',lunch:1,leak:'cover',fear:2,fb:'ask',yes:0},
   4:{day:'B',lunch:2,leak:'grow',yes:5,handout:true,afterparty:true,fb:'explain'},
-  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true,coatNo:true,methods:{worst:4,please:3,hush:1},kept:['hi','eero'],fineSent:false,sips:0,files:0,bigSip:null,no:true,quiet:true,mugMended:true,applied:false,run:[{label:'A MONDAY',start:30660,outside:57600,extra:12000,hits:2,trigAt:5000,stayAt:null,ledger:[{label:'replays',n:2,secs:3000}],trigMult:2,ratio:1.21}],day0:null}
+  5:{day:'C',real:1,leak:'exit',fear:3,yes:5,handout:true,afterparty:true,txt:'cancel',fb:'explain',lunch:0,bit:false,peeked:false,reflected:false,metSannaShadow:true,posting:'open',nothings:2,rehearsal:true,barStory:'arms',quietDrawing:true,coatNo:true,methods:{worst:4,please:3,hush:1},kept:['hi','eero'],fineSent:false,sips:0,files:0,bigSip:null,no:true,quiet:true,mugMended:true,applied:false,warningSize:null,monWarning:null,friWarning:null,run:[{label:'A MONDAY',start:30660,outside:57600,extra:12000,hits:2,trigAt:5000,stayAt:null,ledger:[{label:'replays',n:2,secs:3000}],trigMult:2,ratio:1.21}],day0:null}
 }};
 savedItems.set(saveKey,JSON.stringify(checkpointFixture));
 T.chapter(3);
@@ -408,7 +408,7 @@ function labUntil(text){
     if(T.G.cur&&T.G.cur.text===text)return;
     T.unlock();const s=T.state();
     if(s==='click')T.advance();else if(s==='time'||s==='view')T.tick(6);
-    else if(s==='hold')T.advance();
+    else if(s==='hold'||s==='stretch')T.advance();
     else if(s==='choice')T.choose(T.options().some(o=>o.t==='Pretend to be a coat.')?1:T.options().some(o=>o.t==='Stay. Wobble visibly.')?2:0);
     else throw Error('Unexpected state before gag: '+s);
     if(s==='view'){T.unlock();T.advance();}

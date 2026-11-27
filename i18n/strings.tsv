@@ -1292,6 +1292,8 @@ It came out before yours.	line	H	chapter 5
 −1  it still went off	canvas		chapter 5	has a number
 …It still went off. Even though we got it right.	line	S	chapter 5	
 I felt it.	line	H	chapter 5	
+Monday size. I checked.	line	S	chapter 5	
+Big is allowed.	line	H	chapter 5	
 Every part of me wants to become furniture again.	line	S	chapter 5	
 I know. Stay.	line	H	chapter 5	
 I’ve got a verdict ready. Three, actually. They’re very good.	line	S	chapter 5	
@@ -1328,14 +1330,13 @@ I know. Sorry.	line	H	chapter 5
 Thanks for saying it.	line	A	chapter 5	
 That was a real sorry. Not one of mine.	line	S	chapter 5	
 Oh. Daylight. You look smaller.	line	Z	chapter 5	
-Oh.	line	H	chapter 5	
 Evenings. Nights. And Fridays.	line	S	chapter 5	
 I checked. Tuesday works.	line	Z	chapter 5	
 By the radiator.	line	S	chapter 5	
 I moved a worry.	line	Z	chapter 5	
 …Filed. Under the other pile.	line	S	chapter 5	
-There’s another pile?	line	H	chapter 5	
 She told me herself.	ui		chapter 5	
+There’s another pile?	line	H	chapter 5	
 It’s new.	line	S	chapter 5	
 Is that why you used to vanish at lunch? We stopped asking. I thought asking was pressure.	line	A	chapter 5	
 I thought not being asked was the verdict.	line	H	chapter 5	
@@ -1352,6 +1353,7 @@ Say yes. Old habits.	choice		chapter 5
 Not this time, Eero.	line	H	chapter 5	
 He’s going to—	line	S	chapter 5	
 Oh. I told Riitta you probably could.	line	B	chapter 5	
+Oh.	line	H	chapter 5	
 Take it back. Quick. Say you can.	choice		chapter 5	
 Say nothing. Stand next to them.	choice		chapter 5	
 Say you can. It’s one Monday. It’s ONE Monday.	line	S	chapter 5	
@@ -1430,8 +1432,8 @@ I’m leaving the drawing up.	line	H	comments
 I let them all come close. Every single one.	line	S	comments	
 Mostly… cats. People liked the cat.	line	S	comments	
 BOSS DEFEATED. Correction: there was no boss.	line	N	comments	
-NOT A BOSS · THE GROUP CHAT	canvas		comments	
 Year two. Somebody laughed.	line	S	comments	
+NOT A BOSS · THE GROUP CHAT	canvas		comments	
 This time I left it up.	line	H	comments	
 …I’ll update the file.	line	S	comments	
 Shared a drawing. Left it up.	canvas		comments	
