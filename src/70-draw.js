@@ -154,7 +154,8 @@ function person(x,o){
   if(o.wet){ctx.fillStyle='rgba(40,30,20,.16)';for(var wi=0;wi<9;wi++){var wx=x-20+((wi*37)%40),wy=top+6+((wi*23)%66);ctx.beginPath();ctx.ellipse(wx,wy,5+(wi%3)*2,7+(wi%2)*3,0,0,Math.PI*2);ctx.fill();}   // soaked patches
     ctx.fillStyle='rgba(170,215,240,.85)';for(var wj=0;wj<7;wj++){var dx=x-18+((wj*29)%36),dy=top+10+(((wj*41)+(RM?0:G.time*40))%70);ctx.beginPath();ctx.ellipse(dx,dy,1.6,2.6,0,0,Math.PI*2);ctx.fill();}}   // and drops running down
   ctx.strokeStyle=o.body;ctx.lineWidth=10;
-  if(o.reach){bentSleeve(x+f*18,top+14,x+f*31,top+6,o.reach.x,o.reach.y+5);ctx.fillStyle=skin;circ(o.reach.x,o.reach.y,6);ctx.fill();}
+  if(o.reach){bentSleeve(x+f*18,top+14,o.reach.ex!=null?o.reach.ex:x+f*31,o.reach.ey!=null?o.reach.ey:top+6,o.reach.x,o.reach.y+5);   // ex/ey: an elbow of its own (Riitta holding the present)
+ ctx.fillStyle=skin;circ(o.reach.x,o.reach.y,6);ctx.fill();}
   else{line(x-f*18,top+17,x-f*28,top+61);ctx.fillStyle=skin;circ(x-f*28,top+64,5);ctx.fill();}
   ctx.fillStyle=skin;ctx.strokeStyle='#34413e';ctx.lineWidth=1.8;circ(hx,hy,21);ctx.fill();ctx.stroke();
   circ(hx-f*20,hy+3,5);ctx.fill();ctx.stroke();
@@ -250,7 +251,7 @@ function drawCoworkers(alpha){
   var lf=g.lensView?(g.lens&&g.lens.honest?'smile':'frown'):undefined;   // the glass makes faces worse; an honest glass (epilogue) shows the smile that was there
   if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:Math.abs(g.ax-g.axT)>1?(g.axT>g.ax?1:-1):g.aFace,face:lf,wave:g.aWave,alpha:alpha,walk:Math.abs(g.ax-g.axT)>1,sweat:g.aSweat});
   if(g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:Math.abs(g.bx2-g.bxT)>1?(g.bxT>g.bx2?1:-1):g.bFace,face:lf,alpha:alpha,cup:Math.abs(g.bx2-g.bxT)<1&&g.bxT<1000,walk:Math.abs(g.bx2-g.bxT)>1});
-  if(g.cowR&&g.rx<W+60){var rMove=g.rxT!=null&&Math.abs(g.rx-g.rxT)>1;person(g.rx,{body:RIITTA.body,hair:RIITTA.hair,facing:rMove?(g.rxT>g.rx?1:-1):-1,alpha:alpha,brow:g.rBrow,walk:rMove,phone:!!g.rPhone&&!rMove});}   // 0.88: Riitta can walk, and hold a phone
+  if(g.cowR&&g.rx<W+60){var rMove=g.rxT!=null&&Math.abs(g.rx-g.rxT)>1;person(g.rx,{body:RIITTA.body,hair:RIITTA.hair,facing:rMove?(g.rxT>g.rx?1:-1):-1,alpha:alpha,brow:g.rBrow,walk:rMove,phone:!!g.rPhone&&!rMove,reach:santaHand()});}   // 0.88: Riitta can walk, and hold a phone (0.99.40: and a present)
 }
 
 /* ================= drawing: the shadow ================= */

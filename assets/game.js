@@ -2875,7 +2875,9 @@ var EPI=[
   // scene early. The maker is in the roll. 0.99.34 (Joonas: "what does the appointment at the end mean?"): “One appointment
   // outstanding.” read as the clinic's appointment from The form. It is the shadows' meeting on Tuesday, and now it says so.
   // 0.99.40: the two of them sitting, quiet; the bird has had its long turn under the receipt’s fanfare
-  {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,sitting:1,cam:[1.05,475,290, 1.05,475,290],credit:'Outstanding: one meeting. Tuesday, by the radiator.'}
+  {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,sitting:1,cam:[1.05,475,290, 1.05,475,290],credit:['Still open: one meeting. Tuesday, by the radiator.','Ekskyysmi and Sanna’s shadow.']}
+  // 0.99.40 (Joonas 27.11.: "I don't understand the radiator ending"): “Outstanding” reads as “excellent” to a Finn, and the card
+  // never said whose meeting it was. The shadows agreed on it in Colleagues. (#8) and on Friday (#22); By the radiator. (#25) is next.
 ];
 // The rows that are on the roll only (ALSO ON FILE): things the week did that the pictures do not show.
 var EPIROWS=[
@@ -2903,7 +2905,8 @@ function epiTell(o){
     for(var i=0;i<rows.length;i++){var r=rows[i];if(r.h)epiSay('N',tr(r.h),true);
       else if(r.l){var v=typeof r.v==='function'?r.v():r.v,n=rows[i+1]&&rows[i+1].n;epiSay('N',tr(r.l)+': '+trQ(String(v))+(n?' — '+tr(n):''),true);if(n)i++;}
       else if(r.n)epiSay('N',tr(r.n),true);}}
-  if(o.credit)epiSay('N',o.credit);
+  if(o.credit){var cr=[].concat(o.credit);cr.forEach(function(c){epiSay('N',c,true);});
+    try{var sr=document.getElementById('epi-sr');if(sr)sr.textContent=cr.map(function(c){return trQ(c);}).join(' ');}catch(_){}}
 }
 function epiShot(o){return function(){
   epiTell(o);
@@ -2974,7 +2977,9 @@ function drawEpi(){
   if(!rows.length&&!o.title&&!o.credit)return;
   var lead=Math.min(0.8,(o.secs||5.5)*0.12),a=clamp((e.ct-lead)/0.4,0,1)*clamp(((o.secs||5.5)-0.15-e.ct)/0.35,0,1);if(a<=0)return;   // short shots: caption early and held to the cut
   ctx.save();ctx.globalAlpha=a;ctx.textBaseline='middle';
-  if(o.credit){ctx.textAlign='center';ctx.font='500 22px Fraunces,Georgia,serif';ctx.fillStyle='#f4eddf';ctx.fillText(o.credit,W/2,H-58,W-60);ctx.restore();return;}
+  if(o.credit){var cr=[].concat(o.credit),cy=H-(cr.length>1?76:58);ctx.textAlign='center';ctx.font='500 22px Fraunces,Georgia,serif';ctx.fillStyle='#f4eddf';ctx.fillText(cr[0],W/2,cy,W-60);
+    if(cr[1]){ctx.font='italic 400 18px Fraunces,Georgia,serif';ctx.fillStyle='#d8cdb8';ctx.fillText(cr[1],W/2,cy+30,W-60);}   // who: a quieter second line
+    ctx.restore();return;}
   var note=typeof o.note==='function'?o.note():o.note,mono='"DM Mono",ui-monospace,Menlo,monospace';
   ctx.font='500 12px '+mono;var w=Math.max(380,note?ctx.measureText(note).width+40:0),lh=24;
   if(!o.title){ctx.font='600 14px '+mono;rows.forEach(function(r){var v=typeof r.v==='function'?r.v():r.v;w=Math.max(w,ctx.measureText(r.l).width+ctx.measureText(String(v)).width+70);});}
@@ -6079,8 +6084,12 @@ function partyRoom(){
 }
 SETS.party=partyRoom;
 // the present, in Riitta's hands: wrapped, then a pair of grey wool socks
+// 0.99.40 (Joonas 27.11.: "a hand under the socks, so she holds them"): while the present is out, Riitta's arm comes forward
+// and her hand is under it (person() reach, elbow down by her side). The present is drawn after her, over her fingers.
+function santaHand(){var g=G,s=g.santa;if(!s||g.set!=='party'||g.out||!g.cowR||Math.abs(g.rx-(g.rxT==null?g.rx:g.rxT))>2)return null;
+  return {x:g.rx-(s.open?35:32),y:FEETY-(s.open?83:77),ex:g.rx-21,ey:FEETY-64};}
 function drawSanta(){
-  var g=G,s=g.santa;if(!s||g.set!=='party'||g.out||!g.cowR||Math.abs(g.rx-(g.rxT==null?g.rx:g.rxT))>2)return;
+  var g=G,s=g.santa;if(!santaHand())return;
   var x=g.rx-34,y=FEETY-92;
   if(!s.open){ctx.fillStyle='#c9553f';rr(x-15,y-12,30,24,3);ctx.fill();ctx.fillStyle='#e2b04a';ctx.fillRect(x-2,y-12,4,24);ctx.fillRect(x-15,y-2,30,4);
     ctx.beginPath();ctx.ellipse(x-5,y-15,6,3.5,-0.5,0,Math.PI*2);ctx.ellipse(x+5,y-15,6,3.5,0.5,0,Math.PI*2);ctx.fill();return;}
@@ -6240,9 +6249,18 @@ function drawSkis(){
   var Hm=G.human,x=Hm.x,f=Math.abs(Hm.xT-x)>1?(Hm.xT<x?-1:1):(Hm.facing||1),y=FEETY+3,k;
   ctx.strokeStyle='#14111d';ctx.lineWidth=2.5;ctx.lineCap='round';
   var sw=G.walking||Math.abs(Hm.xT-x)>1?Math.sin(G.time*5)*10:0;
-  line(x-6,FEETY-86,x-(26+sw)*f,y);line(x+6,FEETY-86,x-(10-sw)*f,y+2);   // poles, planted behind
+  line(x+6,FEETY-86,x-(10-sw)*f,y+2);   // the far pole, behind the body; the near one is in the hand, in front (drawSkiPole)
   for(k=0;k<2;k++){var yy=y+k*4,a=x-58*f,b=x+58*f;
     ctx.strokeStyle=k?'#9e3a28':'#c04a33';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(a,yy);ctx.lineTo(b,yy);ctx.quadraticCurveTo(b+12*f,yy,b+16*f,yy-11);ctx.stroke();}
+}
+// 0.99.40 (Joonas 27.11.: "the pole stays behind the human"): the near pole is drawn in front of the human, through the hanging
+// hand (person(): x−f·28, top+64), its tip planted behind; the hand is drawn again over it, holding it.
+function drawSkiPole(){
+  var g=G,d=g.dream,Hm=g.human;if(!d||!d.skis||Hm.gone||Hm.pose||Hm.reach)return;
+  var x=Hm.x,f=Math.abs(Hm.xT-x)>1?(Hm.xT<x?-1:1):(Hm.facing||1),top=FEETY-118-(Hm.flinch||0)*5,hx=x-f*28,hy=top+64;
+  var sw=g.walking||Math.abs(Hm.xT-x)>1?Math.sin(g.time*5)*10:0;
+  ctx.save();ctx.strokeStyle='#14111d';ctx.lineWidth=2.5;ctx.lineCap='round';line(hx+f*2,hy-13,x-(40+sw)*f,FEETY+3);
+  ctx.fillStyle='#e4bba2';circ(hx,hy,5);ctx.fill();ctx.restore();
 }
 var DSNOW=[];for(var dsn=0;dsn<70;dsn++)DSNOW.push({x:snowRnd(dsn+701)*W,y:snowRnd(dsn+801)*H,r:1.4+snowRnd(dsn+901)*1.8,v:12+snowRnd(dsn+1001)*14,ph:snowRnd(dsn+1101)*6.3});
 // back: most of the flakes, behind the pair; front: a few, nearer and bigger, and never over the words (drawn before them)
@@ -6252,7 +6270,7 @@ function drawDreamSnow(alpha,front){
     if(dreamInLight(x,y))continue;
     ctx.fillStyle='rgba(244,247,250,'+(front?0.85:alpha)+')';circ(x,y,f.r*(front?1.6:1));ctx.fill();}
 }
-function drawDreamFront(){if(G.set==='dream')drawDreamSnow(0,1);}
+function drawDreamFront(){if(G.set==='dream'){drawSkiPole();drawDreamSnow(0,1);}}
 // A flake that Ekskyysmi has just filed, melting between its hands.
 function drawMelt(q){var d=G.dream;if(!d||d.melt<=0)return;var k=d.melt/1.4,x=q.bx,y=q.shY+40*q.s;
   ctx.fillStyle='rgba(244,247,250,'+k+')';circ(x,y,6*k+2);ctx.fill();ctx.fillStyle='rgba(160,190,220,'+(1-k)*0.9+')';circ(x,y+10*(1-k),2.6);ctx.fill();}
@@ -6674,7 +6692,8 @@ function person(x,o){
   if(o.wet){ctx.fillStyle='rgba(40,30,20,.16)';for(var wi=0;wi<9;wi++){var wx=x-20+((wi*37)%40),wy=top+6+((wi*23)%66);ctx.beginPath();ctx.ellipse(wx,wy,5+(wi%3)*2,7+(wi%2)*3,0,0,Math.PI*2);ctx.fill();}   // soaked patches
     ctx.fillStyle='rgba(170,215,240,.85)';for(var wj=0;wj<7;wj++){var dx=x-18+((wj*29)%36),dy=top+10+(((wj*41)+(RM?0:G.time*40))%70);ctx.beginPath();ctx.ellipse(dx,dy,1.6,2.6,0,0,Math.PI*2);ctx.fill();}}   // and drops running down
   ctx.strokeStyle=o.body;ctx.lineWidth=10;
-  if(o.reach){bentSleeve(x+f*18,top+14,x+f*31,top+6,o.reach.x,o.reach.y+5);ctx.fillStyle=skin;circ(o.reach.x,o.reach.y,6);ctx.fill();}
+  if(o.reach){bentSleeve(x+f*18,top+14,o.reach.ex!=null?o.reach.ex:x+f*31,o.reach.ey!=null?o.reach.ey:top+6,o.reach.x,o.reach.y+5);   // ex/ey: an elbow of its own (Riitta holding the present)
+ ctx.fillStyle=skin;circ(o.reach.x,o.reach.y,6);ctx.fill();}
   else{line(x-f*18,top+17,x-f*28,top+61);ctx.fillStyle=skin;circ(x-f*28,top+64,5);ctx.fill();}
   ctx.fillStyle=skin;ctx.strokeStyle='#34413e';ctx.lineWidth=1.8;circ(hx,hy,21);ctx.fill();ctx.stroke();
   circ(hx-f*20,hy+3,5);ctx.fill();ctx.stroke();
@@ -6770,7 +6789,7 @@ function drawCoworkers(alpha){
   var lf=g.lensView?(g.lens&&g.lens.honest?'smile':'frown'):undefined;   // the glass makes faces worse; an honest glass (epilogue) shows the smile that was there
   if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:Math.abs(g.ax-g.axT)>1?(g.axT>g.ax?1:-1):g.aFace,face:lf,wave:g.aWave,alpha:alpha,walk:Math.abs(g.ax-g.axT)>1,sweat:g.aSweat});
   if(g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:Math.abs(g.bx2-g.bxT)>1?(g.bxT>g.bx2?1:-1):g.bFace,face:lf,alpha:alpha,cup:Math.abs(g.bx2-g.bxT)<1&&g.bxT<1000,walk:Math.abs(g.bx2-g.bxT)>1});
-  if(g.cowR&&g.rx<W+60){var rMove=g.rxT!=null&&Math.abs(g.rx-g.rxT)>1;person(g.rx,{body:RIITTA.body,hair:RIITTA.hair,facing:rMove?(g.rxT>g.rx?1:-1):-1,alpha:alpha,brow:g.rBrow,walk:rMove,phone:!!g.rPhone&&!rMove});}   // 0.88: Riitta can walk, and hold a phone
+  if(g.cowR&&g.rx<W+60){var rMove=g.rxT!=null&&Math.abs(g.rx-g.rxT)>1;person(g.rx,{body:RIITTA.body,hair:RIITTA.hair,facing:rMove?(g.rxT>g.rx?1:-1):-1,alpha:alpha,brow:g.rBrow,walk:rMove,phone:!!g.rPhone&&!rMove,reach:santaHand()});}   // 0.88: Riitta can walk, and hold a phone (0.99.40: and a present)
 }
 
 /* ================= drawing: the shadow ================= */

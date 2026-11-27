@@ -15,8 +15,12 @@ function partyRoom(){
 }
 SETS.party=partyRoom;
 // the present, in Riitta's hands: wrapped, then a pair of grey wool socks
+// 0.99.40 (Joonas 27.11.: "a hand under the socks, so she holds them"): while the present is out, Riitta's arm comes forward
+// and her hand is under it (person() reach, elbow down by her side). The present is drawn after her, over her fingers.
+function santaHand(){var g=G,s=g.santa;if(!s||g.set!=='party'||g.out||!g.cowR||Math.abs(g.rx-(g.rxT==null?g.rx:g.rxT))>2)return null;
+  return {x:g.rx-(s.open?35:32),y:FEETY-(s.open?83:77),ex:g.rx-21,ey:FEETY-64};}
 function drawSanta(){
-  var g=G,s=g.santa;if(!s||g.set!=='party'||g.out||!g.cowR||Math.abs(g.rx-(g.rxT==null?g.rx:g.rxT))>2)return;
+  var g=G,s=g.santa;if(!santaHand())return;
   var x=g.rx-34,y=FEETY-92;
   if(!s.open){ctx.fillStyle='#c9553f';rr(x-15,y-12,30,24,3);ctx.fill();ctx.fillStyle='#e2b04a';ctx.fillRect(x-2,y-12,4,24);ctx.fillRect(x-15,y-2,30,4);
     ctx.beginPath();ctx.ellipse(x-5,y-15,6,3.5,-0.5,0,Math.PI*2);ctx.ellipse(x+5,y-15,6,3.5,0.5,0,Math.PI*2);ctx.fill();return;}

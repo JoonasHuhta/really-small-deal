@@ -52,7 +52,7 @@ for(const pick of [0,1]){
  }
  // 0.79: everything the epilogue writes on screen can be read again in Dialogue (and reaches a screen reader)
  {const h=a.T.history().map(x=>x.text);
-  for(const want of ['That was the week. (Ekskyysmi kept the receipts)','Sent: three lines. No apology.','7. How do you usually take criticism?','personally.','Signed: Ekskyysmi','Outstanding: one meeting. Tuesday, by the radiator.'])assert.ok(h.includes(want),'Dialogue is missing an epilogue line: '+want);
+  for(const want of ['That was the week. (Ekskyysmi kept the receipts)','Sent: three lines. No apology.','7. How do you usually take criticism?','personally.','Signed: Ekskyysmi','Still open: one meeting. Tuesday, by the radiator.','Ekskyysmi and Sanna’s shadow.'])assert.ok(h.includes(want),'Dialogue is missing an epilogue line: '+want);
   assert.ok(h.some(t=>/^WEEKDAYS FILED: 5$/.test(t)),'the rolling receipt is in Dialogue, row by row');
   assert.ok(h.includes('RIITTA’S EDIT: 1 WORD — “Shorter.”'),'the receipt keeps Riitta’s edit and its note');
   // 0.92: a counted value is read as its number, never as code; the quiet Monday's “No. Sorry.” counts with Friday's answer

@@ -38,7 +38,7 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
 | “hands at the same height. (married.)” | epilogin rulla | bussin tanko: kädet samalla korkeudella näyttävät pariskunnalta |
 | “after you. no, after YOU.” | epilogi | kohteliaisuussilmukka hississä |
 | “AUDIENCE: STILL HERE.” | epilogi | Ekskyysmi tutkii suurennuslasilla katsojaa |
-| “Outstanding: one meeting. Tuesday, by the radiator.” | epilogin viimeinen kortti | **tapaaminen, ei vastaanottoaika** (lomakkeella on ”An appointment.”); lupaa patterikohtauksen |
+| “Still open: one meeting. Tuesday, by the radiator.” + “Ekskyysmi and Sanna’s shadow.” | epilogin viimeinen kortti, kaksi riviä | **tapaaminen, ei vastaanottoaika** (lomakkeella on ”An appointment.”). Toinen rivi kertoo, kenen tapaaminen. Lupaa patterikohtauksen. Ei sanaa ”outstanding” (0.99.41: luettiin ”erinomaiseksi”). |
 | “ekskyysmi: finnish for ‘excuse me’” | rullan viimeinen rivi | suomeksi vitsi on toisin päin: keksi oma viimeinen rivi (esim. nimen alkuperä tai ”ekskyysmi: suomeksi anteeksi”) |
 
 ## Rakenteet, joissa on luku

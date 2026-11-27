@@ -53,9 +53,18 @@ function drawSkis(){
   var Hm=G.human,x=Hm.x,f=Math.abs(Hm.xT-x)>1?(Hm.xT<x?-1:1):(Hm.facing||1),y=FEETY+3,k;
   ctx.strokeStyle='#14111d';ctx.lineWidth=2.5;ctx.lineCap='round';
   var sw=G.walking||Math.abs(Hm.xT-x)>1?Math.sin(G.time*5)*10:0;
-  line(x-6,FEETY-86,x-(26+sw)*f,y);line(x+6,FEETY-86,x-(10-sw)*f,y+2);   // poles, planted behind
+  line(x+6,FEETY-86,x-(10-sw)*f,y+2);   // the far pole, behind the body; the near one is in the hand, in front (drawSkiPole)
   for(k=0;k<2;k++){var yy=y+k*4,a=x-58*f,b=x+58*f;
     ctx.strokeStyle=k?'#9e3a28':'#c04a33';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(a,yy);ctx.lineTo(b,yy);ctx.quadraticCurveTo(b+12*f,yy,b+16*f,yy-11);ctx.stroke();}
+}
+// 0.99.40 (Joonas 27.11.: "the pole stays behind the human"): the near pole is drawn in front of the human, through the hanging
+// hand (person(): x−f·28, top+64), its tip planted behind; the hand is drawn again over it, holding it.
+function drawSkiPole(){
+  var g=G,d=g.dream,Hm=g.human;if(!d||!d.skis||Hm.gone||Hm.pose||Hm.reach)return;
+  var x=Hm.x,f=Math.abs(Hm.xT-x)>1?(Hm.xT<x?-1:1):(Hm.facing||1),top=FEETY-118-(Hm.flinch||0)*5,hx=x-f*28,hy=top+64;
+  var sw=g.walking||Math.abs(Hm.xT-x)>1?Math.sin(g.time*5)*10:0;
+  ctx.save();ctx.strokeStyle='#14111d';ctx.lineWidth=2.5;ctx.lineCap='round';line(hx+f*2,hy-13,x-(40+sw)*f,FEETY+3);
+  ctx.fillStyle='#e4bba2';circ(hx,hy,5);ctx.fill();ctx.restore();
 }
 var DSNOW=[];for(var dsn=0;dsn<70;dsn++)DSNOW.push({x:snowRnd(dsn+701)*W,y:snowRnd(dsn+801)*H,r:1.4+snowRnd(dsn+901)*1.8,v:12+snowRnd(dsn+1001)*14,ph:snowRnd(dsn+1101)*6.3});
 // back: most of the flakes, behind the pair; front: a few, nearer and bigger, and never over the words (drawn before them)
@@ -65,7 +74,7 @@ function drawDreamSnow(alpha,front){
     if(dreamInLight(x,y))continue;
     ctx.fillStyle='rgba(244,247,250,'+(front?0.85:alpha)+')';circ(x,y,f.r*(front?1.6:1));ctx.fill();}
 }
-function drawDreamFront(){if(G.set==='dream')drawDreamSnow(0,1);}
+function drawDreamFront(){if(G.set==='dream'){drawSkiPole();drawDreamSnow(0,1);}}
 // A flake that Ekskyysmi has just filed, melting between its hands.
 function drawMelt(q){var d=G.dream;if(!d||d.melt<=0)return;var k=d.melt/1.4,x=q.bx,y=q.shY+40*q.s;
   ctx.fillStyle='rgba(244,247,250,'+k+')';circ(x,y,6*k+2);ctx.fill();ctx.fillStyle='rgba(160,190,220,'+(1-k)*0.9+')';circ(x,y+10*(1-k),2.6);ctx.fill();}

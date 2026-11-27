@@ -110,7 +110,9 @@ var EPI=[
   // scene early. The maker is in the roll. 0.99.34 (Joonas: "what does the appointment at the end mean?"): “One appointment
   // outstanding.” read as the clinic's appointment from The form. It is the shadows' meeting on Tuesday, and now it says so.
   // 0.99.40: the two of them sitting, quiet; the bird has had its long turn under the receipt’s fanfare
-  {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,sitting:1,cam:[1.05,475,290, 1.05,475,290],credit:'Outstanding: one meeting. Tuesday, by the radiator.'}
+  {cut:'fade',set:'home',clock:23*3600+1,s:0.9,mood:'calm',hx:470,sitting:1,cam:[1.05,475,290, 1.05,475,290],credit:['Still open: one meeting. Tuesday, by the radiator.','Ekskyysmi and Sanna’s shadow.']}
+  // 0.99.40 (Joonas 27.11.: "I don't understand the radiator ending"): “Outstanding” reads as “excellent” to a Finn, and the card
+  // never said whose meeting it was. The shadows agreed on it in Colleagues. (#8) and on Friday (#22); By the radiator. (#25) is next.
 ];
 // The rows that are on the roll only (ALSO ON FILE): things the week did that the pictures do not show.
 var EPIROWS=[
@@ -138,7 +140,8 @@ function epiTell(o){
     for(var i=0;i<rows.length;i++){var r=rows[i];if(r.h)epiSay('N',tr(r.h),true);
       else if(r.l){var v=typeof r.v==='function'?r.v():r.v,n=rows[i+1]&&rows[i+1].n;epiSay('N',tr(r.l)+': '+trQ(String(v))+(n?' — '+tr(n):''),true);if(n)i++;}
       else if(r.n)epiSay('N',tr(r.n),true);}}
-  if(o.credit)epiSay('N',o.credit);
+  if(o.credit){var cr=[].concat(o.credit);cr.forEach(function(c){epiSay('N',c,true);});
+    try{var sr=document.getElementById('epi-sr');if(sr)sr.textContent=cr.map(function(c){return trQ(c);}).join(' ');}catch(_){}}
 }
 function epiShot(o){return function(){
   epiTell(o);
@@ -209,7 +212,9 @@ function drawEpi(){
   if(!rows.length&&!o.title&&!o.credit)return;
   var lead=Math.min(0.8,(o.secs||5.5)*0.12),a=clamp((e.ct-lead)/0.4,0,1)*clamp(((o.secs||5.5)-0.15-e.ct)/0.35,0,1);if(a<=0)return;   // short shots: caption early and held to the cut
   ctx.save();ctx.globalAlpha=a;ctx.textBaseline='middle';
-  if(o.credit){ctx.textAlign='center';ctx.font='500 22px Fraunces,Georgia,serif';ctx.fillStyle='#f4eddf';ctx.fillText(o.credit,W/2,H-58,W-60);ctx.restore();return;}
+  if(o.credit){var cr=[].concat(o.credit),cy=H-(cr.length>1?76:58);ctx.textAlign='center';ctx.font='500 22px Fraunces,Georgia,serif';ctx.fillStyle='#f4eddf';ctx.fillText(cr[0],W/2,cy,W-60);
+    if(cr[1]){ctx.font='italic 400 18px Fraunces,Georgia,serif';ctx.fillStyle='#d8cdb8';ctx.fillText(cr[1],W/2,cy+30,W-60);}   // who: a quieter second line
+    ctx.restore();return;}
   var note=typeof o.note==='function'?o.note():o.note,mono='"DM Mono",ui-monospace,Menlo,monospace';
   ctx.font='500 12px '+mono;var w=Math.max(380,note?ctx.measureText(note).width+40:0),lh=24;
   if(!o.title){ctx.font='600 14px '+mono;rows.forEach(function(r){var v=typeof r.v==='function'?r.v():r.v;w=Math.max(w,ctx.measureText(r.l).width+ctx.measureText(String(v)).width+70);});}

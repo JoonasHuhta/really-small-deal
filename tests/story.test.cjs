@@ -695,7 +695,7 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
  // 11. The phone menu: two equal columns, the language row spans both (five buttons were cut off on every phone size).
  {const css=fs4.readFileSync(p4.join(root,'assets','game.css'),'utf8');assert.ok(css.includes('grid-template-columns:minmax(0,1fr) minmax(0,1fr)')&&css.includes('nav .lang-row{grid-column:1/-1}'),'the immersive menu grid lost its fix');}
  // 12. The epilogue is not the end: no “The End.” card, and the last card before the radiator promises it.
- {const ep=src('37-epilogue.js');assert.ok(!ep.includes("fillText('The End.'")&&/credit:'Outstanding: one meeting\. Tuesday, by the radiator\.'/.test(ep),'players stopped at the epilogue: keep the radiator promised');}
+ {const ep=src('37-epilogue.js');assert.ok(!ep.includes("fillText('The End.'")&&/credit:\['Still open: one meeting\. Tuesday, by the radiator\.','Ekskyysmi and Sanna’s shadow\.'\]/.test(ep)&&!/credit:[^\n]*Outstanding/.test(ep),'players stopped at the epilogue: keep the radiator promised');}
  // 12b. 0.99.34: “appointment” meant the shadows' meeting but read as the clinic's (The form). The promise names the place.
  {const ep=src('37-epilogue.js');assert.ok(!/credit:'[^']*appointment/i.test(ep),'the last card must not say “appointment”: the form has one');
   const B=[...ep.slice(ep.indexOf('var EPIB='),ep.indexOf('var EPIN=')).matchAll(/^\s*\{bars:([\d.]+)/gm)].reduce((a,m)=>a+ +m[1],0);
