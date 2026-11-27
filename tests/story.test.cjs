@@ -758,4 +758,17 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
    throw new Error('auto week stalled: '+st);}
   assert.ok(T3.G.ended&&!T3.G.dayEnd,'with Auto on, the week reaches Friday’s end on ticks alone');assert.ok(ticked>500&&viewsSeen>5);
   H3.fire(H3.element('auto'),'click');assert.equal(H3.savedItems.get('ekskyysmi.auto'),'off');}
+ // 19. Skip seen (0.99.51, review T9). The first time through there is no button, not even for a line said twice; on the second
+ //     Monday it appears at once and goes to the first choice or unseen line; seen lines are remembered on the device.
+ {const H4=require('./harness.cjs')(),T4=H4.T,opts=H4.element('opts');let shown=0;
+  T4.start('B',false);for(let i=0;i<3000&&!T4.G.dayEnd;i++){T4.unlock();T4.draw();if(/data-i="seen"/.test(opts.innerHTML))shown++;const st=T4.state();
+   if(st==='click')T4.advance();else if(st==='choice')T4.choose(0);else if(st==='view'){T4.tick(6);T4.advance();}else if(st==='qte'){T4.advance();T4.tick(1);}
+   else if(st==='toss'){T4.advance();T4.tick(0.4);}else if(st==='time')T4.tick(6);else T4.advance();}
+  assert.ok(T4.G.dayEnd,'Monday ends');assert.equal(shown,0,'no Skip seen on the first playthrough');
+  T4.start('B',false);let k=0;while(!(T4.state()==='click'&&/data-i="seen"/.test(opts.innerHTML))&&k++<200){T4.unlock();T4.draw();const st=T4.state();if(st==='time')T4.tick(6);else if(st==='click')T4.advance();else break;}
+  assert.ok(/data-i="seen"/.test(opts.innerHTML),'the second Monday offers Skip seen');
+  const before=T4.history().length;H4.fire(opts,'click',{detail:1,target:{getAttribute:x=>x==='data-i'?'seen':null}});
+  assert.ok(T4.history().length>before+5,'Skip seen moves on more than a few lines');
+  assert.ok(T4.state()!=='click'||!T4.G.curSeen,'Skip seen stops at a choice, a hands-on step or an unseen line ('+T4.state()+')');
+  assert.ok((H4.savedItems.get('ekskyysmi.seen')||'').split(',').length>100,'seen lines are remembered on the device');}
  console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, transitions, mug principle, the Fine. thread, epilogue bars, part labels, radiator speakers, phone menu, the appointment.');}

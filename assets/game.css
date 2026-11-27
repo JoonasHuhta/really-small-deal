@@ -269,3 +269,8 @@ html.immersive body.playing .opts.n5{grid-column:1/-1;grid-template-columns:repe
 /* 0.99.39: a longer language must fit the About page on a phone held sideways: the text uses the width it has */
 html.immersive .ov[data-kind=menu] .card{max-width:min(520px,100%)}
 html.immersive .ov[data-kind=menu] .card p{max-width:none}
+
+/* 0.99.51: Skip seen sits left of Continue, quieter */
+.cont-row{grid-column:1/-1;display:flex;justify-content:flex-end;align-items:stretch;gap:8px;flex-wrap:wrap}.cont-row .opt.cont{justify-self:auto}
+.opt.cont.ghost{background:transparent;color:var(--sage);border-color:#59645e;min-width:0;font-weight:600}.opt.cont.ghost:hover:not(:disabled),.opt.cont.ghost:focus-visible{background:#ffffff0d;border-color:var(--sage);color:var(--ink)}
+.playing .cont-row .opt.cont:not(.ghost){flex:1 1 auto}html.immersive body.playing .opts:has(.cont-row){grid-column:auto;grid-template-columns:1fr}

@@ -226,7 +226,7 @@ if(fullBtn){if(fullSupported())fullBtn.addEventListener('click',toggleFull);else
 function appVisibility(){
   var hidden=!!document.hidden||nativePaused;if(hidden===appHidden)return;appHidden=hidden;
   if(hidden){
-    goneAway();holdUp();dragging=false;setMenu(false);
+    saveSeen();goneAway();holdUp();dragging=false;setMenu(false);
     if(G&&G.started&&!G.ended)paused=true;
     if(logDialog.open||ov.dataset.kind==='restart'&&ov.classList.contains('on'))modalWasPaused=true;
   }else cameBack();
