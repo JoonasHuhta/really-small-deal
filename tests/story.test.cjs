@@ -737,4 +737,25 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
   for(const f of fs4.readdirSync(p4.join(root,'src')))src(f).split('\n').forEach((l,i)=>{let q=null,j=0;
     for(;j<l.length;j++){const c=l[j];if(q){if(c==='\\'){j++;continue;}if(c===q)q=null;continue;}if(c==="'"||c==='"'||c==='`'){q=c;continue;}if(c==='/'&&l[j+1]==='/'&&l[j-1]!==':')break;}
     if(j<l.length)assert.ok(!/[a-z]\.?[A-Z]?[a-zA-Z]*\.[a-zA-Z]+=ease\(|;(if|var|for|return)\b|\)\{/.test(l.slice(j+2).replace(/`[^`]*`/g,'')),f+':'+(i+1)+' code after a // comment never runs');});}
+ // 18. Auto: reading pace (0.99.50, review T8). With the setting on, a whole week runs on ticks alone wherever a line waits for a
+ //     click; outside views, holds, the slider and choices still wait for the player, and a view keeps its minimum time.
+ {const H3=require('./harness.cjs')(),T3=H3.T;H3.fire(H3.element('auto'),'click');
+  assert.equal(H3.savedItems.get('ekskyysmi.auto'),'on','the auto setting is remembered');
+  T3.start('B',false);let step=0,ticked=0,viewsSeen=0;
+  while(!(T3.G.ended&&!T3.G.dayEnd)&&step++<90000){T3.unlock();const st=T3.state();
+   if(st==='click'){const before=T3.history().length;T3.tick(0.5);ticked++;continue;}
+   if(st==='view'){const o=T3.G.out;T3.tick(0.5);assert.equal(T3.state(),'view','auto must not leave an outside view');assert.equal(T3.G.out,o);
+     T3.tick(6);T3.advance();viewsSeen++;continue;}
+   if(st==='choice'){T3.tick(4);assert.equal(T3.state(),'choice','auto must not pick for the player');T3.choose(0);continue;}
+   if(st==='hold'){T3.tick(3);assert.equal(T3.state(),'hold','auto must not do a hold');T3.advance();continue;}
+   if(st==='stretch'){T3.tick(3);assert.equal(T3.state(),'stretch','auto must not set the size');T3.advance();continue;}
+   if(st==='time'||st==='auto'){T3.tick(3);continue;}
+   if(st==='toss'){T3.advance();T3.tick(0.4);continue;}
+   if(st==='lamp'){T3.advance();continue;}
+   if(st==='fight'){if(T3.G.fight.paced){T3.swat();T3.tick(0.6);}else T3.tick(0.25);continue;}
+   if(st==='qte'){T3.tick(1);continue;}
+   if(st===null&&T3.G.dayEnd){T3.tick(5);assert.equal(T3.G.dayEnd,true,'auto must not leave the day’s receipt');H3.fire(H3.element('ov'),'click',{target:{getAttribute(k){return k==='data-go'?'next':null}}});continue;}
+   throw new Error('auto week stalled: '+st);}
+  assert.ok(T3.G.ended&&!T3.G.dayEnd,'with Auto on, the week reaches Friday’s end on ticks alone');assert.ok(ticked>500&&viewsSeen>5);
+  H3.fire(H3.element('auto'),'click');assert.equal(H3.savedItems.get('ekskyysmi.auto'),'off');}
  console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, transitions, mug principle, the Fine. thread, epilogue bars, part labels, radiator speakers, phone menu, the appointment.');}

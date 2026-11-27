@@ -21,9 +21,9 @@ window.addEventListener('resize',resize);
 var RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 // Two settings the player can change at any time. Slow reality only ever makes the window longer:
 // the joke is that the window is impossible, and a player who needs more time still gets the joke.
-var TEXT_STEPS=[1,1.18,1.38],textStep=1,slowReality=false;
+var TEXT_STEPS=[1,1.18,1.38],textStep=1,slowReality=false,autoRead=false;   // autoRead (0.99.50): lines move on at a reading pace
 try{var ts=parseInt(window.localStorage.getItem('ekskyysmi.text'),10);if(ts>=0&&ts<TEXT_STEPS.length)textStep=ts;
-    slowReality=window.localStorage.getItem('ekskyysmi.slow')==='on';}catch(e){}
+    slowReality=window.localStorage.getItem('ekskyysmi.slow')==='on';autoRead=window.localStorage.getItem('ekskyysmi.auto')==='on';}catch(e){}
 var WIDE=true,paused=false,appHidden=false,nativePaused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
 var logDialog=document.getElementById('dialogue-log'),modalWasPaused=false,dragging=false;
 var Q=[],WAIT=null,TIMER=0,LOCK=0,CH=null;

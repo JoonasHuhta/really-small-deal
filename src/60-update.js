@@ -9,6 +9,17 @@ function updHands(dt){
   M.h[0].x+=(ht.a.x-M.h[0].x)*k;M.h[0].y+=(ht.a.y-M.h[0].y)*k;
   M.h[1].x+=(ht.b.x-M.h[1].x)*k;M.h[1].y+=(ht.b.y-M.h[1].y)*k;
 }
+// 0.99.50 (review T8): "Auto: reading pace". A fully shown line moves on after max(1.4, words/200*60+0.9) seconds. Only the
+// 'click' state: choices, holds, outside views, the size slider, the window to respond correctly, the toss, the lamp and the
+// swatting always wait for the player. Not while paused, in the Dialogue log, over an overlay, in the epilogue or before a part card's wait.
+function readSecs(text){var n=String(text||'').split(/\s+/).filter(Boolean).length;return Math.max(1.4,n/200*60+0.9);}
+function stepAutoRead(elapsed){
+  var g=G,c=g.cur;
+  if(!autoRead||WAIT!=='click'||paused||g.epi||LOCK>0||(g.chap&&g.chap.part&&g.chap.t<PARTWAIT)||(logDialog&&logDialog.open)||(ov&&ov.classList.contains('on'))||revealing()||
+     (c&&c.big&&!RM&&revealCount(c.text,g.curT||0,c)<c.text.length)){g.autoReadT=0;g.autoReadOf=c;return;}   // a big line counts once it is all on the wall
+  if(g.autoReadOf!==c){g.autoReadOf=c;g.autoReadT=0;}   // no line (a {still} beat, the picture held): the shortest reading time
+  g.autoReadT=(g.autoReadT||0)+elapsed;if(g.autoReadT>=readSecs(c&&c.text)){g.autoReadT=0;advance();}
+}
 function update(dt,elapsed){
   // Reading/input delays follow elapsed time even when the browser draws fewer frames.
   elapsed=elapsed==null?dt:elapsed;
@@ -33,7 +44,7 @@ function update(dt,elapsed){
     if(g.cards[ci].life!=null&&g.cards[ci].t>g.cards[ci].life)g.cards.splice(ci,1);}
   g.pulse=Math.max(0,g.pulse-dt*0.3);g.shake=Math.max(0,g.shake-dt*2.6);
   if(g.zoom)g.zoom.t+=dt;
-  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);stepToss(dt);stepAuto(dt);for(var mi=0;mi<MSTEP.length;mi++)MSTEP[mi](dt);if(g.buzz>0)g.buzz=Math.max(0,g.buzz-dt);
+  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);stepToss(dt);stepAuto(dt);stepAutoRead(elapsed);for(var mi=0;mi<MSTEP.length;mi++)MSTEP[mi](dt);if(g.buzz>0)g.buzz=Math.max(0,g.buzz-dt);
   var hk=(g.planText||'')+'|'+g.jobDone+'|'+g.hud+'|'+g.chapter+'|'+g.lab+'|'+g.yes+'|'+(g.w?1:0);if(hk!==g.hudKey){g.hudKey=hk;g.hudAge=0;}g.hudAge=(g.hudAge||0)+dt;
   stepFeet();stepMug(dt);stepShadowLife(dt);  stepTics(dt);stepHot(dt);stepEpi(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
   if(WAIT==='fight'&&g.fight&&!paused)stepFight(elapsed);

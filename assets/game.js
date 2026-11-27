@@ -25,9 +25,9 @@ window.addEventListener('resize',resize);
 var RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 // Two settings the player can change at any time. Slow reality only ever makes the window longer:
 // the joke is that the window is impossible, and a player who needs more time still gets the joke.
-var TEXT_STEPS=[1,1.18,1.38],textStep=1,slowReality=false;
+var TEXT_STEPS=[1,1.18,1.38],textStep=1,slowReality=false,autoRead=false;   // autoRead (0.99.50): lines move on at a reading pace
 try{var ts=parseInt(window.localStorage.getItem('ekskyysmi.text'),10);if(ts>=0&&ts<TEXT_STEPS.length)textStep=ts;
-    slowReality=window.localStorage.getItem('ekskyysmi.slow')==='on';}catch(e){}
+    slowReality=window.localStorage.getItem('ekskyysmi.slow')==='on';autoRead=window.localStorage.getItem('ekskyysmi.auto')==='on';}catch(e){}
 var WIDE=true,paused=false,appHidden=false,nativePaused=false,lastDay=null,G=null,C={z:1.025,fx:W/2,fy:H/2},history=[],previewSaved=null;
 var logDialog=document.getElementById('dialogue-log'),modalWasPaused=false,dragging=false;
 var Q=[],WAIT=null,TIMER=0,LOCK=0,CH=null;
@@ -663,6 +663,7 @@ function trRow(r){if(!Array.isArray(r))return r;var m=/^(.*?)( ×\d+)?$/.exec(r[
 "A small moment.<br>A very long shadow.":"Pieni hetki.<br>Hyvin pitkä varjo.","Continue":"Jatka","New game":"Uusi peli","Chapters":"Luvut","Moments":"Hetket","Settings":"Asetukset","About":"Tietoa",
 "Quick chat?":"Pikainen juttu?","Resume":"Jatka","Pause":"Tauko","Text: small":"Teksti: pieni","Text: normal":"Teksti: normaali","Text: large":"Teksti: suuri",
 "Slow reality":"Hidas todellisuus","Slow reality: on":"Hidas todellisuus: päällä",
+"Auto: off":"Automaattinen: pois","Auto: reading pace":"Automaattinen: lukutahti","Lines move on by themselves. Choices and hands-on moments wait for you.":"Repliikit etenevät itsestään. Valinnat ja tekemiset odottavat sinua.","Every line waits for you.":"Jokainen repliikki odottaa sinua.",
 "The window to respond correctly lasts about nine seconds.":"Oikean vastauksen ikkuna kestää noin yhdeksän sekuntia.","Give yourself about nine seconds to respond correctly.":"Anna itsellesi noin yhdeksän sekuntia vastata oikein.",
 "Full screen":"Koko näyttö","Leave full screen":"Poistu koko näytöstä","Sound on":"Ääni päällä","Sound off":"Ääni pois",
 "Less motion":"Vähemmän liikettä","Text below":"Teksti alle","Dialogue":"Dialogi","Restart":"Aloita alusta","The conversation so far":"Keskustelu tähän asti","Back to the moment":"Takaisin hetkeen",
@@ -6552,6 +6553,17 @@ function updHands(dt){
   M.h[0].x+=(ht.a.x-M.h[0].x)*k;M.h[0].y+=(ht.a.y-M.h[0].y)*k;
   M.h[1].x+=(ht.b.x-M.h[1].x)*k;M.h[1].y+=(ht.b.y-M.h[1].y)*k;
 }
+// 0.99.50 (review T8): "Auto: reading pace". A fully shown line moves on after max(1.4, words/200*60+0.9) seconds. Only the
+// 'click' state: choices, holds, outside views, the size slider, the window to respond correctly, the toss, the lamp and the
+// swatting always wait for the player. Not while paused, in the Dialogue log, over an overlay, in the epilogue or before a part card's wait.
+function readSecs(text){var n=String(text||'').split(/\s+/).filter(Boolean).length;return Math.max(1.4,n/200*60+0.9);}
+function stepAutoRead(elapsed){
+  var g=G,c=g.cur;
+  if(!autoRead||WAIT!=='click'||paused||g.epi||LOCK>0||(g.chap&&g.chap.part&&g.chap.t<PARTWAIT)||(logDialog&&logDialog.open)||(ov&&ov.classList.contains('on'))||revealing()||
+     (c&&c.big&&!RM&&revealCount(c.text,g.curT||0,c)<c.text.length)){g.autoReadT=0;g.autoReadOf=c;return;}   // a big line counts once it is all on the wall
+  if(g.autoReadOf!==c){g.autoReadOf=c;g.autoReadT=0;}   // no line (a {still} beat, the picture held): the shortest reading time
+  g.autoReadT=(g.autoReadT||0)+elapsed;if(g.autoReadT>=readSecs(c&&c.text)){g.autoReadT=0;advance();}
+}
 function update(dt,elapsed){
   // Reading/input delays follow elapsed time even when the browser draws fewer frames.
   elapsed=elapsed==null?dt:elapsed;
@@ -6576,7 +6588,7 @@ function update(dt,elapsed){
     if(g.cards[ci].life!=null&&g.cards[ci].t>g.cards[ci].life)g.cards.splice(ci,1);}
   g.pulse=Math.max(0,g.pulse-dt*0.3);g.shake=Math.max(0,g.shake-dt*2.6);
   if(g.zoom)g.zoom.t+=dt;
-  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);stepToss(dt);stepAuto(dt);for(var mi=0;mi<MSTEP.length;mi++)MSTEP[mi](dt);if(g.buzz>0)g.buzz=Math.max(0,g.buzz-dt);
+  stepLens(dt);stepBar(dt);stepDraft(dt);stepQte(dt);stepJolt(dt);stepStamp(dt);stepToss(dt);stepAuto(dt);stepAutoRead(elapsed);for(var mi=0;mi<MSTEP.length;mi++)MSTEP[mi](dt);if(g.buzz>0)g.buzz=Math.max(0,g.buzz-dt);
   var hk=(g.planText||'')+'|'+g.jobDone+'|'+g.hud+'|'+g.chapter+'|'+g.lab+'|'+g.yes+'|'+(g.w?1:0);if(hk!==g.hudKey){g.hudKey=hk;g.hudAge=0;}g.hudAge=(g.hudAge||0)+dt;
   stepFeet();stepMug(dt);stepShadowLife(dt);  stepTics(dt);stepHot(dt);stepEpi(dt);if(g.dish)g.dish.t+=dt;carTics();if(g.smileT>0){g.smileT-=dt;if(g.smileT<=0&&g.human.face==='smile')g.human.face='neutral';}
   if(WAIT==='fight'&&g.fight&&!paused)stepFight(elapsed);
@@ -7541,6 +7553,12 @@ document.getElementById('slow').addEventListener('click',function(){
   slowUI();sfx('pick');
 });
 slowUI();
+// 0.99.50 (review T8): Auto: reading pace. Only a shown line moves on by itself; everything the player does still waits for them.
+function autoUI(){var b=document.getElementById('auto');if(!b)return;b.setAttribute('aria-pressed',String(autoRead));
+  b.textContent=tr(autoRead?'Auto: reading pace':'Auto: off');
+  b.title=tr(autoRead?'Lines move on by themselves. Choices and hands-on moments wait for you.':'Every line waits for you.');}
+(function(){var b=document.getElementById('auto');if(!b)return;b.addEventListener('click',function(){
+  autoRead=!autoRead;try{window.localStorage.setItem('ekskyysmi.auto',autoRead?'on':'off');}catch(e){}autoUI();sfx('pick');});autoUI();})();
 function testingUI(){var b=document.getElementById('testing');if(b)b.setAttribute('aria-pressed',String(TESTING));}
 (function(){var b=document.getElementById('testing');if(!b)return;b.addEventListener('click',function(){
   TESTING=!TESTING;try{window.localStorage.setItem('ekskyysmi.test',TESTING?'on':'off');}catch(e){}testingUI();if(typeof pseudoUI==='function')pseudoUI();sfx('pick');
@@ -7667,7 +7685,7 @@ function chromeText(){
   for(id in ids){e=document.getElementById(id);if(e)e.textContent=tr(ids[id]);}
   e=document.querySelector('#menu .menu-label');if(e)e.textContent=tr('Menu');e=document.getElementById('menu');if(e&&e.setAttribute)e.setAttribute('aria-label',tr('Menu and settings'));
   e=document.querySelector('.lang-row span');if(e)e.textContent=tr('Language');
-  soundUI();textUI();slowUI();e=document.getElementById('pause');if(e)e.textContent=tr(paused?'Resume':'Pause');
+  soundUI();textUI();slowUI();autoUI();e=document.getElementById('pause');if(e)e.textContent=tr(paused?'Resume':'Pause');
   e=document.getElementById('full');if(e)e.textContent=tr(fullOn()?'Leave full screen':'Full screen');
 }   // 0.89: Finnish pilot (Monday); new lines follow the choice at once
 // ---- src/90-loop.js ----

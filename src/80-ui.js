@@ -150,6 +150,12 @@ document.getElementById('slow').addEventListener('click',function(){
   slowUI();sfx('pick');
 });
 slowUI();
+// 0.99.50 (review T8): Auto: reading pace. Only a shown line moves on by itself; everything the player does still waits for them.
+function autoUI(){var b=document.getElementById('auto');if(!b)return;b.setAttribute('aria-pressed',String(autoRead));
+  b.textContent=tr(autoRead?'Auto: reading pace':'Auto: off');
+  b.title=tr(autoRead?'Lines move on by themselves. Choices and hands-on moments wait for you.':'Every line waits for you.');}
+(function(){var b=document.getElementById('auto');if(!b)return;b.addEventListener('click',function(){
+  autoRead=!autoRead;try{window.localStorage.setItem('ekskyysmi.auto',autoRead?'on':'off');}catch(e){}autoUI();sfx('pick');});autoUI();})();
 function testingUI(){var b=document.getElementById('testing');if(b)b.setAttribute('aria-pressed',String(TESTING));}
 (function(){var b=document.getElementById('testing');if(!b)return;b.addEventListener('click',function(){
   TESTING=!TESTING;try{window.localStorage.setItem('ekskyysmi.test',TESTING?'on':'off');}catch(e){}testingUI();if(typeof pseudoUI==='function')pseudoUI();sfx('pick');
@@ -276,6 +282,6 @@ function chromeText(){
   for(id in ids){e=document.getElementById(id);if(e)e.textContent=tr(ids[id]);}
   e=document.querySelector('#menu .menu-label');if(e)e.textContent=tr('Menu');e=document.getElementById('menu');if(e&&e.setAttribute)e.setAttribute('aria-label',tr('Menu and settings'));
   e=document.querySelector('.lang-row span');if(e)e.textContent=tr('Language');
-  soundUI();textUI();slowUI();e=document.getElementById('pause');if(e)e.textContent=tr(paused?'Resume':'Pause');
+  soundUI();textUI();slowUI();autoUI();e=document.getElementById('pause');if(e)e.textContent=tr(paused?'Resume':'Pause');
   e=document.getElementById('full');if(e)e.textContent=tr(fullOn()?'Leave full screen':'Full screen');
 }   // 0.89: Finnish pilot (Monday); new lines follow the choice at once
