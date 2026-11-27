@@ -691,7 +691,7 @@ function reset(day){
      ax:1010,axT:1010,bx2:1090,bxT:1090,aFace:-1,bFace:-1,aWave:false,cowA:false,cowB:false,cupLeft:false,
      cz:1.025,cx:W/2,cy:H/2,
      lines:[],band:null,out:null,w:null,card:0,
-     hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0,warningSize:null,monWarning:null,friWarning:null};   // 0.99.48: a new week starts without last week's alarm sizes
+     hud:false,plan:false,job:null,jobDone:false,bit:false,set:'room',chapter:1,label:null,planText:null,yes:0,no:false,fb:null,txt:null,rx:760,cowR:false,zShow:0,zT:0,fade:0,chap:null,bigNote:null,snacks:false,dayEnd:false,hold:null,peeked:false,pulse:0,shake:0,nopeMsg:null,prevented:0,pop:null,real:0,lunch:0,startles:0,fear:1,leak:'none',advice:0,warningSize:null,monWarning:null,friWarning:null,dealWho:null};   // 0.99.48: a new week starts without last week's alarm sizes
   G.handout=false;G.afterparty=false;G.sips=0;G.files=0;G.bigSip=null;G.fineSent=false;G.applied=false;G.posting=null;G.nothings=0;G.rehearsal=false;G.metSannaShadow=false;G.coatNo=false;G.kept=[];G.methods={};G.endSeen=false;G.stamp=null;
   G.choiceWho='S';G.finalFrame=false;G.barStory=null;G.quietDrawing=false;
   Q=[];WAIT=null;CH=null;history=[];previewSaved=null;dragging=false;paused=false;
@@ -1097,6 +1097,7 @@ function checkpoint(g){
     no:!!g.no,quiet:!!g.quiet,mugMended:!!g.mugMended,applied:!!g.applied,
     // 0.99.48: the alarm sizes the player chose on Monday and Friday, for Friday's comparison and the receipt
     warningSize:alarmSize(g.warningSize),monWarning:alarmSize(g.monWarning),friWarning:alarmSize(g.friWarning),
+    dealWho:['door','mug','torn'].indexOf(g.dealWho)>=0?g.dealWho:null,   // 0.99.49: who was talking at Friday's deal
     run:Array.isArray(g.run)?g.run.map(cleanDay).filter(Boolean).slice(0,40):[],day0:cleanDay(g.day0)};
 }
 // A lived day, as the receipts need it (35-inside.js). Storage can be old or edited, so every field is checked.
@@ -1590,7 +1591,7 @@ function scene(o){return function(){
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.rxT=null;g.rPhone=false;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
-  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.journal=null;g.dream=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
+  M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.journal=null;g.dream=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.pie=null;g.deal=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
   g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.fadeCol=null;g.fromOv=false;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
@@ -1963,6 +1964,16 @@ function weekBill(){var m=G.methods||{},best=null;['hide','please','worst','draf
   return [['H',best?fmtN(BILL[best],m[best]):'You’ve had me apologising to furniture all week.']];}
 function wobbleOn(){var m=G.morko;m.wobble={t:0};m.pose='balance';m.mood='worry';G.anx=0.2;}
 function wobbleOff(){var m=G.morko;m.wobble=null;m.pose=null;if(RM)updHands(1);}
+// Friday's deal (0.99.49): is it the mug talking, or the door? Two sips or fewer, and it is honestly the mug: a compromise.
+// Otherwise it was the door wearing the mug's coat. Nothing is punished either way (VISIO pillar 4).
+function mugOrDoor(who){
+  var low=!!(G.mug&&G.mug.v<=2),q=who==='H'?['H','Is that the mug talking, or the door?']:['S','Is that the mug talking… or the door?',{quiet:1}];
+  if(low)return [q,['S','…The mug. Honestly. It’s low.',{quiet:1}],['H','Then soup. No dessert. Back in forty minutes.'],
+    function(){if(G.deal)G.deal.now='soup. no dessert. back in forty.';},dealSign(true),function(){G.dealWho='mug';},
+    ['S','A fair deal. I do write those. Occasionally.']];
+  return [q,{wait:0.8},['S','…The door.',{quiet:1}],['H','Thought so.'],dealSign(false),function(){G.dealWho='door';},
+    ['S','The mug was a very convenient witness.']];
+}
 function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).concat([
   function(){G.mugMended=true;},mugOn(4),
   set({cowB:1,bx:880}),
@@ -2084,6 +2095,18 @@ function scFri(){return begin(5,{plan:'Say the thing.',clock:9*3600+41*60}).conc
   set({aFace:-1,mood:'calm'}),
   // 0.84 (Codex 22.11.): why lunch with Sanna. She knows the soup they both like; the human's "oh" for once means what it sounds like.
   function(){return G.lunch===2?[['A','It’s Friday. No dentist.'],['A','Soup? The one with too much dill.']]:[['A','Soup? The one with too much dill.']];},
+  // 0.99.49 (review D1): the mug's first real decision. The honest answer depends on the mug's real level; lunch always happens
+  set({mood:'alert'}),
+  dealOffer('skip lunch. a quiet hour at the desk.','it’s friday. she asked first.'),
+  ['S','Before you answer. I’ve drawn up a small deal.'],
+  ['S','Skip lunch. A quiet hour at the desk. The mug gets a rest.'],
+  {choice:[
+    {t:'The mug needs it. Sign here.',m:'hide',then:function(){return mugOrDoor('H');}},
+    {t:'Ask myself first: the mug, or the door?',m:'stay',echo:false,then:function(){return mugOrDoor('S');}},   // echo:false (T6): the question itself is the line
+    {t:'Tear it up. It’s soup.',m:'stay',then:[dealSign(false),function(){G.dealWho='torn';},
+      ['S','Torn. Along the dotted line. I added a dotted line.']]}
+  ]},
+  ['A','…Soup?'],
   ['H','Oh, good. That one.'],
   ['S','It’s a tr—'],
   ['S','…No. It’s lunch.',{look:'soft'}],
@@ -5493,6 +5516,7 @@ function storyRows(){
   if(g.nothings)rows.push(['“it’s nothing”, said','×'+g.nothings]);
   if(g.friWarning){if(g.monWarning)rows.push(['alarm size, monday','×'+g.monWarning.toFixed(1)]);   // 0.99.48: Friday's alarm, opened like Monday's
     rows.push(['alarm size, friday','×'+g.friWarning.toFixed(1)],['stayed anyway','friday']);}
+  if(g.dealWho)rows.push(['deals, offered','1'],['who was talking',{door:'the door',mug:'the mug',torn:'nobody. torn.'}[g.dealWho]]);   // 0.99.49: Friday's deal
   // Ekskyysmi’s methods this week: what the player chose, counted. The choices were the joke; this is the bill.
   var M=g.methods||{},ML={worst:'worst cases, prepared',draft:'scripts, drafted',please:'people, pleased',hide:'exits, taken',stay:'times we stayed',hush:'silences, kept'};
   var mk=Object.keys(ML).filter(function(k){return M[k]>0;}).sort(function(a,b){return M[b]-M[a];});

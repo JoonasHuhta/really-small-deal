@@ -1363,6 +1363,21 @@ That was awkward. I was right about that one.	line	S	chapter 5
 …I’m staying anyway.	line	S	chapter 5	
 It’s Friday. No dentist.	line	A	chapter 5	
 Soup? The one with too much dill.	line	A	chapter 5	
+Before you answer. I’ve drawn up a small deal.	line	S	chapter 5	
+Skip lunch. A quiet hour at the desk. The mug gets a rest.	line	S	chapter 5	
+A REALLY SMALL DEAL	canvas		chapter 5	
+NOW: skip lunch. a quiet hour at the desk.	canvas		chapter 5	
+LATER: it’s friday. she asked first.	canvas		chapter 5	
+signed: ___________  witnessed: E.	canvas		chapter 5	
+The mug needs it. Sign here.	choice		chapter 5	
+Ask myself first: the mug, or the door?	choice		chapter 5	
+Tear it up. It’s soup.	choice		chapter 5	
+Is that the mug talking, or the door?	line	H	chapter 5	
+…The door.	line	S	chapter 5	
+Thought so.	line	H	chapter 5	
+The mug was a very convenient witness.	line	S	chapter 5	
+…Soup?	line	A	chapter 5	
+NO DEAL	canvas		chapter 5	
 Oh, good. That one.	line	H	chapter 5	
 It’s a tr—	line	S	chapter 5	
 …No. It’s lunch.	line	S	chapter 5	
@@ -1863,6 +1878,12 @@ Don’t tell the folder.	line	S	chapter 5
 Next time, then.	line	S	chapter 5	
 Next time.	line	H	chapter 5	
 I’ll put the “no” in the archive. Under “pending”.	line	S	chapter 5	
+Is that the mug talking… or the door?	line	S	chapter 5	
+…The mug. Honestly. It’s low.	line	S	chapter 5	
+Then soup. No dessert. Back in forty minutes.	line	H	chapter 5	
+A fair deal. I do write those. Occasionally.	line	S	chapter 5	
+NOW: soup. no dessert. back in forty.	canvas		chapter 5	
+DEAL	canvas		chapter 5	
 That rejection letter you wrote? I’m applying anyway.	line	H	chapter 5	
 They’ve already turned you down. I have the letter.	line	S	chapter 5	
 You have the letter because you wrote it.	line	H	chapter 5	
@@ -1895,6 +1916,7 @@ In my defence, from a distance “ok.” looks EXACTLY like a dagger.	line	S	com
 Everything looks like a dagger from a distance.	line	H	comments	
 That’s why I keep my distance.	line	S	comments	
 next time, then.	ui		epilogue	
+TIMES WE STAYED	ui		epilogue	
 “Just say hi.” As if it’s nothing.	line	S	radiator	
 It is nothing.	line	H	radiator	
 It is a WHOLE WORD.	line	S	radiator	
@@ -2025,13 +2047,13 @@ By the way, thanks for the handout. You didn’t have to do that.	line	B	chapter
 He says that NOW.	line	S	chapter 5	
 He didn’t actually ask for it.	line	H	chapter 5	
 I may have supplied the asking.	line	S	chapter 5	
+Torn. Along the dotted line. I added a dotted line.	line	S	chapter 5	
 And tonight I’m sending that application.	line	H	chapter 5	
 I’ll pre-write their—	line	S	chapter 5	
 You can draft. I’ll send.	line	H	chapter 5	
 …Deal. A small one.	line	S	chapter 5	
 What headband?	line	H	comments	
 For emergencies. I’ve never needed it. I’ve always needed it.	line	S	comments	
-TIMES WE STAYED	ui		epilogue	
 Then it’s a radiator. I’ve spent time with worse.	line	S	radiator	
 You’re doing my voice.	line	H	radiator	
 I learned from the best. Unfortunately.	line	S	radiator	
@@ -2376,17 +2398,14 @@ Take a carrot. Fight fire with fire.	choice		mug
 Become furniture until he finishes.	choice		mug	
 See you at lunch? Sanna’s coming too.	line	B	mug	
 Parley.	line	S	mug	
-A REALLY SMALL DEAL	canvas		mug	
 NOW: no lunch. a quiet hour at the desk.	canvas		mug	
 LATER: Sanna has asked twice. She may stop asking.	canvas		mug	
-signed: ___________  witnessed: E.	canvas		mug	
 I’ve drawn up a small deal. You eat at your desk. I get you a quiet hour. The mug stays where it is.	line	S	mug	
 It’s a good deal. I wrote it.	line	S	mug	
 Take the deal. Save the mug.	choice		mug	
 No deal. Lunch with Sanna.	choice		mug	
 Ask: is that the mug talking, or the door?	choice		mug	
 Signed. Witnessed. Filed.	line	S	mug	
-DEAL	canvas		mug	
 …She did ask twice.	line	H	mug	
 That’s a LATER problem. Later is a different department.	line	S	mug	
 The lift up to Riitta. Somebody’s perfume. All of it.	line	N	mug	
@@ -2421,7 +2440,6 @@ A Tuesday, with a mug.	ui		mug
 Now WE are chewing. I hate it here.	line	S	mug	
 That will cost a sip.	line	S	mug	
 −1  lunch, worth it	canvas		mug	has a number
-NO DEAL	canvas		mug	
 Then it costs a sip.	line	H	mug	
 …Was it worth it?	line	S	mug	
 Ask me after.	line	H	mug	
@@ -2434,10 +2452,6 @@ lunch, worth it	ui		mug
 Sanna, “same tomorrow?”	ui		mug	
 Furniture doesn’t hear carrots.	line	S	mug	
 Furniture hears everything.	line	H	mug	
-Is that the mug talking, or the door?	line	H	mug	
-…The door.	line	S	mug	
-Thought so.	line	H	mug	
-The mug was a very convenient witness.	line	S	mug	
 …I’ll send you notes.	line	R	mug	
 Moments / The group chat	ui		comments	
 10:12. A quiet desk. Ekskyysmi is in the archive, re-alphabetising 2011.	line	N	kickoff	has a number

@@ -20,6 +20,7 @@ function checkpoint(g){
     no:!!g.no,quiet:!!g.quiet,mugMended:!!g.mugMended,applied:!!g.applied,
     // 0.99.48: the alarm sizes the player chose on Monday and Friday, for Friday's comparison and the receipt
     warningSize:alarmSize(g.warningSize),monWarning:alarmSize(g.monWarning),friWarning:alarmSize(g.friWarning),
+    dealWho:['door','mug','torn'].indexOf(g.dealWho)>=0?g.dealWho:null,   // 0.99.49: who was talking at Friday's deal
     run:Array.isArray(g.run)?g.run.map(cleanDay).filter(Boolean).slice(0,40):[],day0:cleanDay(g.day0)};
 }
 // A lived day, as the receipts need it (35-inside.js). Storage can be old or edited, so every field is checked.
