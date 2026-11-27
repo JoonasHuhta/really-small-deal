@@ -12,7 +12,7 @@ function scPrelude(){return [
     Hm.gone=true;Hm.x=Hm.xT=1010;Hm.facing=-1;g.noCup=true;g.mugFixed=false;M.asleep=true;M.wake=0;M.s=M.sT=0.3;
     g.chap={day:CHAPTERS[1].day,title:CHAPTERS[1].title,t:0};g.chapter=1;g.dayTag='MONDAY';g.stampT=0;newDay();sfx('card');},
   function(){return partCard(1);},
-  function(){G.chap=null;G.fade=1;G.fadeRate=0.36;},
+  function(){G.chap=null;G.fade=1;G.fadeRate=0.36;G.fadeCol=CARDCOL;},
   addTic('Nobody here yet.',300,96,{at:0.9,life:3.4,size:19}),   // 0.85: the day stamp says MONDAY · 08:51; this line used to say it again, a minute off, on top of it
   {wait:2.6},
   function(){var Hm=G.human;Hm.gone=false;Hm.xT=815;},

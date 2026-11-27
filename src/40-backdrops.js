@@ -96,8 +96,9 @@ function partCardDraw(c){
 }
 function chapCard(){
   if(G.chap.part){partCardDraw(G.chap);return;}
-  var c=G.chap,a=clamp(c.t/0.5,0,1)*(c.part?1:clamp((2.8-c.t)/0.5,0,1)),cy=COMPACT?H*0.32:H/2;
+  var c=G.chap,a=clamp((c.t-(c.snap?0.3:0))/0.5,0,1)*(c.part?1:clamp((2.8-c.t)/0.5,0,1)),cy=COMPACT?H*0.32:H/2;
   ctx.fillStyle='#182a2d';ctx.fillRect(0,0,W,H);
+  if(c.snap){if(c.t<0.5)drawSnap(c.snap,1-c.t/0.5);else c.snap=null;}   // the last picture dissolves into the card
   ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.font='700 18px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(tr(c.day),W/2,cy-52);
   ctx.font='650 64px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(tr(c.title),W/2,cy+6);
@@ -106,8 +107,9 @@ function chapCard(){
 // Direction B (TARINAKARTTA §8, 21.11.): a moment is a window into the same life, not a new day. Its card is lighter:
 // the scene stays visible under a veil, the time floats in small letters, the title is smaller and set in italics.
 function momentCard(){
-  var c=G.chap,a=clamp(c.t/0.4,0,1)*clamp((2.4-c.t)/0.45,0,1),cy=COMPACT?H*0.34:H/2;
-  ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.fillStyle='rgba(14,22,25,'+(0.8*Math.max(a,0.35))+')';ctx.fillRect(0,0,W,H);
+  var c=G.chap,a=clamp((c.t-0.2)/0.4,0,1)*clamp((2.0-c.t)/0.4,0,1),v=0.8*clamp((2.4-c.t)/0.5,0,1),cy=COMPACT?H*0.34:H/2;
+  ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.fillStyle='rgba(14,22,25,'+v+')';ctx.fillRect(0,0,W,H);
+  if(c.snap){if(c.t<0.5)drawSnap(c.snap,1-c.t/0.5);else c.snap=null;}
   ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.font='600 '+(COMPACT?17:14)+'px system-ui,sans-serif';ctx.fillStyle='#c9b48a';ctx.fillText(tr(c.day),W/2,cy-36);
   ctx.fillStyle='rgba(226,176,74,.55)';ctx.fillRect(W/2-22,cy-18,44,2);

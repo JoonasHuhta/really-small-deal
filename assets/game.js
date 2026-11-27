@@ -1004,15 +1004,22 @@ function pokka(){G.morko.st='pokka';G.morko.sT=1.5;}
 function free(){G.morko.st='free';G.morko.mood='alert';}
 // ---- src/27-parts.js ----
 /* Three breaths in one story. These cards wait for the reader, not the animation. */
+// 0.99.35 (Joonas 27.11.: "look at the transitions between scenes: is the fade enough, room to breathe"). Before a card the
+// last words go and the picture holds for a beat; then the card dissolves in over that picture instead of cutting to black.
+// Not after the receipt overlay (the overlay was the beat) and not in a Moment played on its own (no card there).
+var CARDCOL='24,42,45';   // the card's teal, as rgb for the fades on both sides of it
+function breath(){var g=G;if(g.lab||g.fromOv||!g.started||!(g.cur||(g.lines&&g.lines.length)))return [];g.lines=[];g.cur=null;g.band=null;g.breath=true;return [{wait:0.45},function(){G.breath=false;}];}   // g.breath: still the old picture
+function cardSnap(){var g=G;if(g.fromOv){g.fromOv=false;return null;}return typeof epiSnap==='function'?epiSnap():null;}
+function drawSnap(s,a){if(!s||a<=0)return;try{ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=a;ctx.drawImage(s,0,0,cv.width,cv.height);ctx.restore();}catch(e){}}
 var PARTS=[null,
   {day:'PART ONE',title:'Better safe.',caption:'A Monday. One small plan.'},
   {day:'PART TWO',title:'A little room.',caption:'Later. Some things take more than a week.'},
   {day:'PART THREE',title:'Still here.',caption:'A Friday. Not necessarily that one.'}
 ];
-function partCard(n){return [function(){
-  var p=PARTS[n],g=G;g.chap={day:p.day,title:p.title,caption:p.caption,t:0,part:n};g.lines=[];g.cur=null;g.band=null;
+function partCard(n){return [breath,function(){
+  var p=PARTS[n],g=G;if(!g.snap)g.snap=cardSnap();g.chap={day:p.day,title:p.title,caption:p.caption,t:0,part:n};g.lines=[];g.cur=null;g.band=null;
   stopVoice();sfx('card');
-},['N',PARTS[n].caption],function(){G.chap=null;G.band=null;G.cur=null;}];}
+},['N',PARTS[n].caption],function(){G.chap=null;G.band=null;G.cur=null;G.lines=[];}];}   // no words left: what follows dissolves from the card, without a beat of the old scene
 function storyPart(){
   var g=G;if(g.chap&&g.chap.part)return g.chap.part;
   if(g.chapter>=5)return 3;
@@ -1111,7 +1118,7 @@ function scPrelude(){return [
     Hm.gone=true;Hm.x=Hm.xT=1010;Hm.facing=-1;g.noCup=true;g.mugFixed=false;M.asleep=true;M.wake=0;M.s=M.sT=0.3;
     g.chap={day:CHAPTERS[1].day,title:CHAPTERS[1].title,t:0};g.chapter=1;g.dayTag='MONDAY';g.stampT=0;newDay();sfx('card');},
   function(){return partCard(1);},
-  function(){G.chap=null;G.fade=1;G.fadeRate=0.36;},
+  function(){G.chap=null;G.fade=1;G.fadeRate=0.36;G.fadeCol=CARDCOL;},
   addTic('Nobody here yet.',300,96,{at:0.9,life:3.4,size:19}),   // 0.85: the day stamp says MONDAY · 08:51; this line used to say it again, a minute off, on top of it
   {wait:2.6},
   function(){var Hm=G.human;Hm.gone=false;Hm.xT=815;},
@@ -1541,12 +1548,12 @@ function scene(o){return function(){
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.journal=null;g.dream=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.dawn=0;g.pie=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
   if(o.clock!=null)g.clock=o.clock;if(o.cowR)g.cowR=true;g.snacks=!!o.snacks;g.torn=false;g.gapWalk=false;g.gapOnce=false;
-  g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
+  g.cz=1.025;g.cx=W/2;g.cy=H/2;g.fade=1;g.fadeRate=1.6;g.fadeCol=null;g.fromOv=false;g.skippable=false;g.noCup=!((g.set==='room'||g.set==='office')&&(o.clock==null||(o.clock>=7*3600&&o.clock<12.5*3600)));g.phoneN=0;g.mugFixed=true;M.asleep=false;Hm.facing=1;Hm.sipT=0;
 };}
-function begin(n,o){return [function(){G.chapMusic=CHAPTERS[n].music||null;},scene(o),function(){
+function begin(n,o){return [breath,function(){G.chapMusic=CHAPTERS[n].music||null;G.cSnap=n===5?null:cardSnap();},scene(o),function(){
   var g=G;g.dayTag=CHAPTERS[n].wd;g.stampT=0;g.chapter=n;g.moment=null;if(!g.day0||g.day0.label!==CHAPTERS[n].day)newDay();g.planText=o.plan;g.label=CHAPTERS[n].title;g.hud=true;g.plan=true;g.fade=0;
-  g.morko.s=1;g.morko.off=-70;g.chap={day:CHAPTERS[n].card||CHAPTERS[n].day,title:CHAPTERS[n].title,t:0};saveProgress(n);stopVoice();sfx('card');
- },function(){return n===5?partCard(3):[{wait:2.8}];},function(){G.chap=null;G.fade=1;}];}
+  g.morko.s=1;g.morko.off=-70;g.chap={day:CHAPTERS[n].card||CHAPTERS[n].day,title:CHAPTERS[n].title,t:0,snap:g.cSnap||null};g.cSnap=null;saveProgress(n);stopVoice();sfx('card');
+ },function(){return n===5?partCard(3):[{wait:2.8}];},function(){G.chap=null;G.fade=1;G.fadeCol=CARDCOL;}];}
 // Ekskyysmi's tell: whenever it says it is fine and is not, it shrinks a little, then grows back.
 function fib(){var M=G.morko;M.s=Math.max(0.3,M.s-0.07);}
 function shadowHit(){var g=G;trigger();addLived('the one that landed',LIVED.shadowHit);sfx('hit');g.pulse=0.9;g.shake=RM?0:0.8;g.lines=[];g.cur=null;g.flash=0.8;g.morko.sT=0.62;g.morko.mood='scared';g.morko.pose=null;g.anx=0.9;g.cz=1.08;g.cx=W/2-30;g.cy=300;}
@@ -3247,8 +3254,9 @@ function partCardDraw(c){
 }
 function chapCard(){
   if(G.chap.part){partCardDraw(G.chap);return;}
-  var c=G.chap,a=clamp(c.t/0.5,0,1)*(c.part?1:clamp((2.8-c.t)/0.5,0,1)),cy=COMPACT?H*0.32:H/2;
+  var c=G.chap,a=clamp((c.t-(c.snap?0.3:0))/0.5,0,1)*(c.part?1:clamp((2.8-c.t)/0.5,0,1)),cy=COMPACT?H*0.32:H/2;
   ctx.fillStyle='#182a2d';ctx.fillRect(0,0,W,H);
+  if(c.snap){if(c.t<0.5)drawSnap(c.snap,1-c.t/0.5);else c.snap=null;}   // the last picture dissolves into the card
   ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.font='700 18px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText(tr(c.day),W/2,cy-52);
   ctx.font='650 64px Fraunces,Georgia,serif';ctx.fillStyle='#f1ebdd';ctx.fillText(tr(c.title),W/2,cy+6);
@@ -3257,8 +3265,9 @@ function chapCard(){
 // Direction B (TARINAKARTTA §8, 21.11.): a moment is a window into the same life, not a new day. Its card is lighter:
 // the scene stays visible under a veil, the time floats in small letters, the title is smaller and set in italics.
 function momentCard(){
-  var c=G.chap,a=clamp(c.t/0.4,0,1)*clamp((2.4-c.t)/0.45,0,1),cy=COMPACT?H*0.34:H/2;
-  ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.fillStyle='rgba(14,22,25,'+(0.8*Math.max(a,0.35))+')';ctx.fillRect(0,0,W,H);
+  var c=G.chap,a=clamp((c.t-0.2)/0.4,0,1)*clamp((2.0-c.t)/0.4,0,1),v=0.8*clamp((2.4-c.t)/0.5,0,1),cy=COMPACT?H*0.34:H/2;
+  ctx.save();ctx.setTransform(SC,0,0,SC,0,0);ctx.fillStyle='rgba(14,22,25,'+v+')';ctx.fillRect(0,0,W,H);
+  if(c.snap){if(c.t<0.5)drawSnap(c.snap,1-c.t/0.5);else c.snap=null;}
   ctx.globalAlpha=a;ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.font='600 '+(COMPACT?17:14)+'px system-ui,sans-serif';ctx.fillStyle='#c9b48a';ctx.fillText(tr(c.day),W/2,cy-36);
   ctx.fillStyle='rgba(226,176,74,.55)';ctx.fillRect(W/2-22,cy-18,44,2);
@@ -3917,14 +3926,14 @@ var LABS={
   leaving:{title:'Leaving.',blurb:'Two ways out of a party: interrupt eleven conversations, or find out nobody noticed. Ekskyysmi is wearing a paper hat.',script:labLeaving},
   call:{title:'The call.',blurb:'One haircut, by phone. A script with fourteen branches. A receptionist who isn’t in any of them.',script:labCall}
 };
-function labScene(o){return [function(){G.chapMusic=null;},scene(o),function(){
+function labScene(o){return [breath,function(){G.chapMusic=null;G.cSnap=G.lab||NOCARD[G.moment]?null:cardSnap();},scene(o),function(){
   var g=G;g.dayTag=g.moment&&WHEN[g.moment]?WHEN[g.moment].replace(/,\s*\d\d?:\d\d$/,''):null;g.stampT=0;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
   g.planText=o.plan;g.hud=true;g.plan=true;g.fade=0;
   if(g.lab){g.label=(DEVLAB?'Scenario lab / ':'Moments / ')+o.title;newDay();return;}
   // In the story the same scene opens with a card, like any other moment.
   g.label=o.title;if(NOCARD[g.moment]){g.fade=1;return;}   // continues the moment before it, without a new card
-  g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0,moment:true};stopVoice();sfx('card');
- },function(){return G.lab||NOCARD[G.moment]?[]:[{wait:2.4},function(){G.chap=null;G.fade=1;}];}];}
+  g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0,moment:true,snap:g.cSnap||null};g.cSnap=null;stopVoice();sfx('card');
+ },function(){return G.lab||NOCARD[G.moment]?[]:[{wait:2.4},function(){G.chap=null;}];}];}   // 0.99.35: the veil has lifted already; the old G.fade=1 here dipped the scene to black a second time
 function startLab(id){hotReset();
   reset('B');var g=G;g.started=true;g.lab=id;
   Q=LABS[id].script().concat([function(){showLabEnd(id);}]);run();
@@ -6447,7 +6456,7 @@ function update(dt,elapsed){
       if(hh.p>=hh.secs)finishHold();
     }
   }
-  if(g.card>0)g.card-=dt;if(g.job)g.job.t+=elapsed;if(g.chap)g.chap.t+=dt;g.stampT=(g.stampT||0)+dt;if(g.bigNote)g.bigNote.t+=dt;if(g.fade>0)g.fade=Math.max(0,g.fade-dt*(g.fadeRate||1.6));Hm.sip=ease(Hm.sip||0,Hm.sipT||0,8*dt);titleIdle(dt);M.wake=ease(M.wake==null?1:M.wake,M.asleep?0:M.dim!=null?M.dim:1,2.6*dt);if(g.anx>0.3)g.anx=Math.max(0.3,g.anx-0.06*dt);g.zShow=ease(g.zShow,g.zT,2*dt);g.yShow=ease(g.yShow||0,g.yT||0,2*dt);g.wShow=ease(g.wShow||0,g.wT||0,2*dt);if(g.wDrop)g.wDrop.t+=dt;g.yx=approach(g.yx||0,g.yxT||0,(RM?400:75)*dt);if(g.out)g.out.t+=dt;if(g.pop){g.pop.t+=dt;if(g.pop.t>2.6)g.pop=null;}
+  if(g.card>0)g.card-=dt;if(g.job)g.job.t+=elapsed;if(g.chap)g.chap.t+=dt;g.stampT=(g.stampT||0)+dt;if(g.bigNote)g.bigNote.t+=dt;if(g.fade>0||g.fadeRate<0){g.fade=clamp(g.fade-dt*(g.fadeRate||1.6),0,1);if(!g.fade)g.fadeCol=null;}   // 0.99.35: a fade-out (negative rate) starts from 0; until now it never didHm.sip=ease(Hm.sip||0,Hm.sipT||0,8*dt);titleIdle(dt);M.wake=ease(M.wake==null?1:M.wake,M.asleep?0:M.dim!=null?M.dim:1,2.6*dt);if(g.anx>0.3)g.anx=Math.max(0.3,g.anx-0.06*dt);g.zShow=ease(g.zShow,g.zT,2*dt);g.yShow=ease(g.yShow||0,g.yT||0,2*dt);g.wShow=ease(g.wShow||0,g.wT||0,2*dt);if(g.wDrop)g.wDrop.t+=dt;g.yx=approach(g.yx||0,g.yxT||0,(RM?400:75)*dt);if(g.out)g.out.t+=dt;if(g.pop){g.pop.t+=dt;if(g.pop.t>2.6)g.pop=null;}
   var base=M.sT,offT=-70-(M.s-1)*12;
   if(g.w){var lb=lampBase();base=M.sT+lb.s;offT=lb.off-(M.sT-1)*45;g.w.x=approach(g.w.x,g.w.xT,g.w.speed*dt);g.walking=g.w.x<g.w.xT-0.5&&g.w.speed>0;offT-=gapStep(dt);}
   if(M.st==='free'||M.st==='pokka')M.s=approach(M.s,base,(M.s<base?1.5:1.1)*dt);
@@ -7203,7 +7212,7 @@ function draw(){
   if(g.bigNote)bigNote();
   if(g.cards.length)drawCards();
   if(g.drawer&&g.cards.length&&!g.w){ctx.save();applyCamera();drawLines();ctx.restore();}   // the other drawer stays open while they talk: words above the cards
-  if(g.fade>0.01){ctx.fillStyle='rgba(10,12,16,'+g.fade+')';ctx.fillRect(0,0,W,H);}
+  if(g.fade>0.01){ctx.fillStyle='rgba('+(g.fadeCol||'10,12,16')+','+g.fade+')';ctx.fillRect(0,0,W,H);}   // after a card the fade is the card's colour, not black
   if(g.draft)drawDraft();
   if(g.boss)drawBoss();
   if(g.rec)drawRec();
@@ -7313,7 +7322,7 @@ ov.addEventListener('click',function(e){
   if(go==='about'){showAbout();return;}
   if(go==='start')startGame(null,false);
   else if(go==='cont'){var sv=loadProgress();startChapter(sv?sv.ch:1,sv&&sv.at);}
-  else if(go==='next'){hideOv();G.ended=false;G.dayEnd=false;Q=chain(2);run();}
+  else if(go==='next'){hideOv();G.ended=false;G.dayEnd=false;G.fromOv=true;Q=chain(2);run();}
   else if(go==='menu'){reset(null);showTitle();}
   else if(go==='again'){TRIES++;startGame(null,true);}
   else if(go==='same'){TRIES++;startGame(G.day,true);}

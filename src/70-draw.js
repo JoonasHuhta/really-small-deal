@@ -720,7 +720,7 @@ function draw(){
   if(g.bigNote)bigNote();
   if(g.cards.length)drawCards();
   if(g.drawer&&g.cards.length&&!g.w){ctx.save();applyCamera();drawLines();ctx.restore();}   // the other drawer stays open while they talk: words above the cards
-  if(g.fade>0.01){ctx.fillStyle='rgba(10,12,16,'+g.fade+')';ctx.fillRect(0,0,W,H);}
+  if(g.fade>0.01){ctx.fillStyle='rgba('+(g.fadeCol||'10,12,16')+','+g.fade+')';ctx.fillRect(0,0,W,H);}   // after a card the fade is the card's colour, not black
   if(g.draft)drawDraft();
   if(g.boss)drawBoss();
   if(g.rec)drawRec();

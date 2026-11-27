@@ -712,4 +712,12 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
  {const mo=src('30-story-monday.js');
   assert.ok(mo.includes("['S','Wait. Before the door.']")&&/if\(done\.oh\)return \[\];/.test(mo),'the walk home must end with the review if the player did not choose it');
   assert.ok(mo.includes("['N','After a loud day, the human draws. Small things, on sticky notes.']")&&mo.includes("['H','That’s why I draw them.']"),'the cat needs its reason');}
- console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, mug principle, the Fine. thread, epilogue bars, part labels, radiator speakers, phone menu, the appointment.');}
+ // 17. Transitions (0.99.35, Joonas 27.11.): a fade-out runs from 0 (the office before the walk home, the door before the
+ //     toast, the epilogue's last hit never faded: the update only counted down), a card's end fades in its own colour, and a
+ //     Moment's card does not dip to black a second time when it ends.
+ {const H2=require('./harness.cjs')();H2.T.start('B',false);const g=H2.T.G;g.fade=0;g.fadeRate=-1;H2.T.tick(0.5);
+  assert.ok(g.fade>0.4,'a fade-out from black never starts ('+g.fade+')');H2.T.tick(1);assert.equal(g.fade,1,'a fade-out ends at black');
+  g.fade=0.5;g.fadeRate=1.6;g.fadeCol='24,42,45';H2.T.tick(1);assert.equal(g.fadeCol,null,'the card colour stays after its fade');
+  assert.ok(!/G\.chap=null;G\.fade=1;\}\];\}\];\}/.test(src('50-lab.js')),'a moment card dips to black again at its end');
+  assert.ok(src('27-parts.js').includes('function breath()')&&/\[breath,/.test(src('50-lab.js'))&&/\[breath,/.test(src('31-story-week.js')),'the beat before a card is gone');}
+ console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, transitions, mug principle, the Fine. thread, epilogue bars, part labels, radiator speakers, phone menu, the appointment.');}

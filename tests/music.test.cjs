@@ -14,7 +14,7 @@ const where={},starts={};let last=null;
 for(let j=0;j<400000;j++){const g=T.G,s=T.state();if(g.ended&&!g.dayEnd)break;T.unlock();
   const m=T.music(),at=g.moment||'chapter'+g.chapter;
   if(m!==last){starts[m]=(starts[m]||0)+1;last=m;}
-  (where[m]=where[m]||new Set()).add(at);
+  if(!g.breath)(where[m]=where[m]||new Set()).add(at);   // 0.99.35: the beat before a card still belongs to the scene before it
   if(s==='click'||s==='stretch'||s==='lamp')T.advance();
   else if(s==='choice'){const os=T.options(),ok=os.map((o,i)=>i).filter(i=>!os[i].off);T.choose(ok[0]);}
   else if(s==='hold'){T.holdDown();T.tick(.12);}

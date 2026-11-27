@@ -91,7 +91,7 @@ ov.addEventListener('click',function(e){
   if(go==='about'){showAbout();return;}
   if(go==='start')startGame(null,false);
   else if(go==='cont'){var sv=loadProgress();startChapter(sv?sv.ch:1,sv&&sv.at);}
-  else if(go==='next'){hideOv();G.ended=false;G.dayEnd=false;Q=chain(2);run();}
+  else if(go==='next'){hideOv();G.ended=false;G.dayEnd=false;G.fromOv=true;Q=chain(2);run();}
   else if(go==='menu'){reset(null);showTitle();}
   else if(go==='again'){TRIES++;startGame(null,true);}
   else if(go==='same'){TRIES++;startGame(G.day,true);}

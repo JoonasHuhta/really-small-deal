@@ -34,14 +34,14 @@ var LABS={
   leaving:{title:'Leaving.',blurb:'Two ways out of a party: interrupt eleven conversations, or find out nobody noticed. Ekskyysmi is wearing a paper hat.',script:labLeaving},
   call:{title:'The call.',blurb:'One haircut, by phone. A script with fourteen branches. A receptionist who isn’t in any of them.',script:labCall}
 };
-function labScene(o){return [function(){G.chapMusic=null;},scene(o),function(){
+function labScene(o){return [breath,function(){G.chapMusic=null;G.cSnap=G.lab||NOCARD[G.moment]?null:cardSnap();},scene(o),function(){
   var g=G;g.dayTag=g.moment&&WHEN[g.moment]?WHEN[g.moment].replace(/,\s*\d\d?:\d\d$/,''):null;g.stampT=0;if(!g.lab||g.lab!=='mug')g.mug=null;g.deal=null;   // a moment starts without the last chapter's mug; it brings its own if it needs one
   g.planText=o.plan;g.hud=true;g.plan=true;g.fade=0;
   if(g.lab){g.label=(DEVLAB?'Scenario lab / ':'Moments / ')+o.title;newDay();return;}
   // In the story the same scene opens with a card, like any other moment.
   g.label=o.title;if(NOCARD[g.moment]){g.fade=1;return;}   // continues the moment before it, without a new card
-  g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0,moment:true};stopVoice();sfx('card');
- },function(){return G.lab||NOCARD[G.moment]?[]:[{wait:2.4},function(){G.chap=null;G.fade=1;}];}];}
+  g.chap={day:WHEN[g.moment]||'SOME TIME LATER',title:o.title,t:0,moment:true,snap:g.cSnap||null};g.cSnap=null;stopVoice();sfx('card');
+ },function(){return G.lab||NOCARD[G.moment]?[]:[{wait:2.4},function(){G.chap=null;}];}];}   // 0.99.35: the veil has lifted already; the old G.fade=1 here dipped the scene to black a second time
 function startLab(id){hotReset();
   reset('B');var g=G;g.started=true;g.lab=id;
   Q=LABS[id].script().concat([function(){showLabEnd(id);}]);run();

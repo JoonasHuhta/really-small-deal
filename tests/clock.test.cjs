@@ -8,7 +8,7 @@ const hm=c=>String(Math.floor(c/3600)%24).padStart(2,'0')+':'+String(Math.floor(
 for(let i=0;i<200000;i++){T.unlock();const h=T.history();
  const g=T.G,key=g.moment||'ch'+g.chapter;
  if(['glass','colleagues','evening'].includes(key))assert.equal(g.day0.label,'A THURSDAY');
- if(key!==previous){week.push([key,g.dayTag,hm(g.clock)]);previous=key;}
+ if(key!==previous&&!g.breath){week.push([key,g.dayTag,hm(g.clock)]);previous=key;}   // 0.99.35: during the breath before a card the old scene is still showing
  while(seen<h.length){const l=h[seen++];const m=/^(\d{1,2})[:.](\d\d)\b/.exec(l.text);
   if(l.who==='R'&&l.text.startsWith('One small thing: the summary')){
    assert.equal(g.dayTag,'WEDNESDAY');
