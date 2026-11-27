@@ -58,10 +58,7 @@ function tone(f,t0,dur,type,vol,f2){
 var SAMPLES={/* hit:'assets/audio/hit.ogg', swat:'assets/audio/swat.ogg' */};
 // Music is streamed through an <audio> element, not decoded into memory: a three-minute track would cost a phone ~60 MB.
 // A browser will not start it before the first touch or key, so anything that fails to start is retried on the first gesture.
-var MUSIC={title:'assets/audio/title.mp3',title2:'assets/audio/title-2.mp3',epilogue:'assets/audio/epilogue.mp3',tuesday:'assets/audio/ordinary-evening.mp3',quiet:'assets/audio/quiet-arpeggios.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
-// 0.99.32 (Joonas 26.11.): a new title song (QQQ2, -15.8 LUFS, the first one -16.1: no level change needed). It is the title song
-// now; in testing mode the title can switch back to the first one, to compare them on a phone while looking at the title.
-var titleSong='title2';try{if(window.localStorage.getItem('ekskyysmi.titlesong')==='title')titleSong='title';}catch(e){}
+var MUSIC={title:'assets/audio/title.mp3',epilogue:'assets/audio/epilogue.mp3',tuesday:'assets/audio/ordinary-evening.mp3',quiet:'assets/audio/quiet-arpeggios.mp3' /* , walk:'assets/audio/walk-home.mp3', night:'assets/audio/0307.mp3' */};   // Monday’s track was tried (0.43) and removed (0.50): the first scene plays without music
 var firstTouch=false,BUF={},LOADING={},musicEl=null,musicName=null,MUSICVOL=0.45,fading=[];
 // Scene music is background: well under the voices. It fades in, and steps aside for a moment when something lands.
 var MUSICVOLS={epilogue:0.36,tuesday:0.2,quiet:0.15},MUSICFADEIN={tuesday:2,quiet:3},MUSICONCE={epilogue:true},
@@ -7176,7 +7173,7 @@ function showWeekEnd(){
    receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
 }
 function showTitle(){
-  var sv=loadProgress();music(titleSong);titleTagAt=-9;   // the tagline is measured again for the new title
+  var sv=loadProgress();music('title');titleTagAt=-9;   // 0.99.33: the first title song stays (QQQ2 was tried on a phone, 27.11., and did not fit)   // the tagline is measured again for the new title
   G.human.x=G.human.xT=755;G.morko.s=G.morko.sT=1.25;G.morko.off=-75;G.morko.mood='care';updHands(1);
   showOv(titleHTML(sv));
   render();
@@ -7192,7 +7189,6 @@ function titleHTML(sv){   // 0.89: its own function, so a language change can re
    (sv&&!sv.fin?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
       :'<button class="go" type="button" data-go="start">'+tr('New game')+' <span aria-hidden="true">→</span></button>')+'</div>'+
    rotateHint+'<div class="menu-links">'+(sv||TESTING?'<button class="link" type="button" data-go="chapters">'+tr('Chapters')+'</button>':'')+
-   (TESTING?'<button class="link" type="button" data-go="song">'+(titleSong==='title2'?'Music: new song':'Music: first song')+'</button>':'')+
    (sv&&sv.unlocked>=2||DEVLAB||TESTING?'<button class="link" type="button" data-go="moments">'+tr('Moments')+'</button>':'')+(DEVLAB?'<button class="link" type="button" data-go="lab">Scenario lab</button>':'')+'<button class="link" type="button" data-go="settings">'+tr('Settings')+'</button>'+fullLink+'<button class="link" type="button" data-go="about">'+tr('About')+'</button></div>';
 }
 var DAYNAME={A:'benign',B:'sensitive',C:'dismissive'};
@@ -7233,7 +7229,6 @@ ov.addEventListener('click',function(e){
   if(go==='lab'){reset(null);showLab();return;}
   if(go==='moments'){reset(null);showMoments();return;}
   if(go==='chapters'){showChapters();return;}
-  if(go==='song'){titleSong=titleSong==='title2'?'title':'title2';try{window.localStorage.setItem('ekskyysmi.titlesong',titleSong);}catch(e){}music(titleSong);showOv(titleHTML(loadProgress()));return;}   // testing: compare the two title songs
   if(go==='about'){showAbout();return;}
   if(go==='start')startGame(null,false);
   else if(go==='cont'){var sv=loadProgress();startChapter(sv?sv.ch:1,sv&&sv.at);}

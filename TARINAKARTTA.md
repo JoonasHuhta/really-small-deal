@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.33 – Päävalikossa soi taas alkuperäinen kappale (QQQ2 kokeiltiin puhelimella 27.11., eikä se sopinut). Vaihtolinkki poistui, ja testitila jäi. `title-2.mp3` jää kansioon, mutta APK jättää sen pois, koska peli ei viittaa siihen.
+
 0.99.32 – Päävalikon uusi kappale (Joonaksen QQQ2, 79 s, `assets/audio/title-2.mp3`, −16,2 LUFS, vanha −16,1, joten tasoa ei säädetty). Testitila: *Settings › Unlock all (testing)*, muistetaan laitteella. Kaikki viisi päivää ovat Chaptersissa ja kaikki 33 kohtausta Momentsissa (tarinan, ekstrat, kokeilut, keskeneräiset ja testikloonit, kukin kerran). Päävalikossa on vaihto *Music: new song / first song*, jolla kappaleita voi verrata puhelimella päävalikkoa katsellen. Valinta muistetaan. Ilman testitilaa soi uusi kappale.
 
 0.99.31 – *Snow indoors.* tarinaan (Joonas 26.11.: ”mitä peli tosissaan kaipaa, vaihtelua ja mielikuvituksellista ilmettä toimiston ja betonilähiöiden lomassa”). Paikka on #16b, lomakkeen jälkeinen sunnuntaiyö ennen Quietia: lomake sanoi varjon olevan yleinen, uni antaa sille värin, ja varjo oppii makaamaan työvuorossa. Aamulla seinä on tyhjä. Torstaiyö ei käynyt, koska *Not now.* on uuden työn ensimmäinen koe ja tulee heti torstain jälkeen (testi vartioi tätä). Niityllä on nyt puhekuplat ja kertojan nauha kuten muissakin kohtauksissa. Peli kestää arviolta 54 minuuttia.
