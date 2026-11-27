@@ -68,7 +68,8 @@ function music(name){
 }
 function syncMusic(){
   var el=musicEl;if(!el||el.held)return;
-  try{if(soundOn&&!paused&&!appHidden){var p=el.play();if(p&&p.catch)p.catch(function(){});}else el.pause();}catch(e){}
+  try{if(soundOn&&!paused&&!appHidden){el.blocked=true;var p=el.play();   // blocked until the browser says yes: a refused song is retried on the next gesture
+    if(p&&p.then)p.then(function(){el.blocked=false;},function(){el.blocked=true;});else el.blocked=false;}else el.pause();}catch(e){}
   if(paused||appHidden||!soundOn)for(var i=0;i<fading.length;i++){try{fading[i].pause();}catch(e){}}
 }
 // One voice per character: waveform, pitch, loudness. The shadow's pitch drops as it grows.

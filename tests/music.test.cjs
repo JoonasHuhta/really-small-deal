@@ -27,4 +27,9 @@ assert.strictEqual(list('tuesday'),'chapter2, chapter3','Ordinary Evening follow
 assert.strictEqual(list('quiet'),'evenings, quiet','Quiet Arpeggios: '+list('quiet'));
 assert.strictEqual(starts.quiet,1,'Quiet Arpeggios should start once and carry on into Evenings, started '+starts.quiet+'×');
 assert.strictEqual(list('epilogue'),'epilogue','the epilogue’s song: '+list('epilogue'));
+// 0.99.36: on a phone the finger going down is not a gesture: the menu song stayed silent from 0.34 on. A refused song is
+// retried on the gestures that count, not marked done on the first touchstart.
+{const ui=fs.readFileSync(path.join(root,'src/80-ui.js'),'utf8'),au=fs.readFileSync(path.join(root,'src/10-audio.js'),'utf8');
+ assert.ok(/\['pointerup','touchend','click','keydown'\]\.forEach\(function\(k\)\{document\.addEventListener\(k,kick,true\)/.test(ui),'the music must retry on touchend/click, the gestures a phone counts');
+ assert.ok(!/addEventListener\('touchstart',first/.test(ui)&&/el\.blocked=true/.test(au),'a refused song is never asked again');}
 console.log('PASS: music in its places ('+files.length+' songs on disk; Ordinary Evening in the message and review, Quiet Arpeggios across Quiet. and Evenings. without a restart, the epilogue’s song in the epilogue)');

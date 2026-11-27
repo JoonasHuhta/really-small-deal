@@ -229,8 +229,14 @@ function appVisibility(){
 document.addEventListener('visibilitychange',appVisibility);
 
 // Browsers and the Android WebView hold all sound until the first touch or key. Whatever was waiting starts then.
-(function(){var done=false;function first(){if(done)return;done=true;firstTouch=true;if(musicEl&&musicEl.preload==='none')musicEl.preload='auto';syncMusic();}
-  if(document.addEventListener){document.addEventListener('pointerdown',first,true);document.addEventListener('keydown',first,true);document.addEventListener('touchstart',first,true);}})();
+// 0.99.36 (Joonas 27.11.: "the music in the menu doesn't work"): on a phone a finger going DOWN does not count as a gesture
+// (Chrome and the WebView count the finger coming up, a click or a key). The title song tried to start on touchstart, was
+// refused, and was never asked again. Since 0.34 the menu was silent on phones until something else changed the song.
+// Now the finger going down only starts the download, and every real gesture retries a song the browser refused.
+(function(){function warm(){firstTouch=true;if(musicEl&&musicEl.preload==='none')musicEl.preload='auto';}
+  function kick(){warm();if(musicEl&&musicEl.blocked)syncMusic();}
+  if(document.addEventListener){['pointerdown','touchstart'].forEach(function(k){document.addEventListener(k,warm,true);});
+    ['pointerup','touchend','click','keydown'].forEach(function(k){document.addEventListener(k,kick,true);});}})();
 
 // The screen stays on while someone is reading. In a browser this is the Wake Lock API: held while a story is running,
 // unpaused and visible, and let go after five minutes without a touch, so a phone left on the table can still sleep.
