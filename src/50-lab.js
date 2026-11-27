@@ -322,6 +322,8 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   ['P','You: “made a thing” [drawing.png]'],
   function(){G.ninja=true;G.boss={name:'THE GROUP CHAT',friendly:false};G.morko.sT=1.6;G.morko.mood='stern';sfx('card');},
   {wait:0.8},
+  ['S','More light. More of me.',{quiet:1}],   // 0.99.45 (review D4): a shadow is made of light; being seen costs a bigger one. Said once, here
+  ['H','I know. I want the light.'],
   ['S','Headband on. Replies incoming. I will handle anything that looks sharp.'],
   ['H','Everything looks sharp to you.'],
   ['S','Then I will handle everything.'],

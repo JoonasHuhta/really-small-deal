@@ -3547,7 +3547,8 @@ function labForm(){
   function ticked(i,k,lines){return [formTick(i,k)].concat(lines||[]);}
   return labScene({set:'clinic',title:'The form.',plan:'Fill it in.',clock:14*3600+10*60,mood:'alert'}).concat([
   function(){G.human.x=G.human.xT=430;formOpen();},
-  ['N','A waiting room. A clipboard. Eighteen questions.'],
+  ['N','A waiting room. Five weeks after the phone call.'],   // 0.99.45 (review D6): #14 promised a call; the wait is a fact, not a comment
+  ['N','A clipboard. Eighteen questions.'],
   ['S','A form! Finally. Somebody professional.',{look:'pleased'}],
   ['S','Give it here. I’ll do the boxes.'],
   formQ(0),
@@ -4268,6 +4269,8 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
   ['P','You: “made a thing” [drawing.png]'],
   function(){G.ninja=true;G.boss={name:'THE GROUP CHAT',friendly:false};G.morko.sT=1.6;G.morko.mood='stern';sfx('card');},
   {wait:0.8},
+  ['S','More light. More of me.',{quiet:1}],   // 0.99.45 (review D4): a shadow is made of light; being seen costs a bigger one. Said once, here
+  ['H','I know. I want the light.'],
   ['S','Headband on. Replies incoming. I will handle anything that looks sharp.'],
   ['H','Everything looks sharp to you.'],
   ['S','Then I will handle everything.'],
@@ -5292,6 +5295,11 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
   ['H','Yes, please.']
  ],outside({title:'WHAT THE LIBRARIAN SAW',dur:'duration: 2 minutes',cap:'A late book, four euros sixty, and somebody else who likes lighthouses.',anim:'text'}),[
   calm,
+  // 0.99.45 (review D7): the other half of RSD. Warmth lands as big as a no would; the human calibrates, and the due date comes straight after
+  ['S','Somebody else likes lighthouses.',{look:'up'}],
+  ['S','That’s a friendship. I’ve planned the trip. Bengtskär. Two thermoses.'],
+  ['H','She reserved me a book.'],
+  ['S','…Separate boats, then. We’ll wave.'],
   ['S','We came in for a telling-off. We’re leaving with a second volume.'],
   ['H','And a due date.'],
   ['S','Twenty-eight days. I’ll start worrying on day twenty-nine.'],

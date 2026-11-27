@@ -950,6 +950,10 @@ There’s a second volume. More lighthouses. Shall I put you down for it?	line	L
 Yes, please.	line	H	library	
 WHAT THE LIBRARIAN SAW	outside		library	
 A late book, four euros sixty, and somebody else who likes lighthouses.	outside		library	
+Somebody else likes lighthouses.	line	S	library	
+That’s a friendship. I’ve planned the trip. Bengtskär. Two thermoses.	line	S	library	
+She reserved me a book.	line	H	library	
+…Separate boats, then. We’ll wave.	line	S	library	
 We came in for a telling-off. We’re leaving with a second volume.	line	S	library	
 And a due date.	line	H	library	
 Twenty-eight days. I’ll start worrying on day twenty-nine.	line	S	library	
@@ -990,9 +994,10 @@ Two words so far.	line	H	santa
 A WEEKDAY, 14:10	card		form	has a number
 The form.	card		form	
 Fill it in.	ui		form	
-A waiting room. A clipboard. Eighteen questions.	line	N	form	
+A waiting room. Five weeks after the phone call.	line	N	form	
 ABOUT YOU	canvas		form	
 18 questions. Take your time.	canvas		form	has a number
+A clipboard. Eighteen questions.	line	N	form	
 A form! Finally. Somebody professional.	line	S	form	
 Give it here. I’ll do the boxes.	line	S	form	
 How often do you replay a conversation after it has ended?	line	N	form	
@@ -1267,8 +1272,8 @@ A Friday. Not necessarily that one.	line	N	chapter 5
 PART THREE	card		chapter 5	
 Still here.	card		chapter 5	
 Friday. Same room. Same coffee. I’d like to flag that I’m calm.	line	S	chapter 5	
-Say the thing.	ui		chapter 5	
 You’ve brought the whole archive.	line	H	chapter 5	
+Say the thing.	ui		chapter 5	
 Just the travel edition.	line	S	chapter 5	
 It has wheels.	line	S	chapter 5	
 You’re vibrating.	line	H	chapter 5	
@@ -1321,13 +1326,14 @@ I know. Sorry.	line	H	chapter 5
 Thanks for saying it.	line	A	chapter 5	
 That was a real sorry. Not one of mine.	line	S	chapter 5	
 Oh. Daylight. You look smaller.	line	Z	chapter 5	
+Oh.	line	H	chapter 5	
 Evenings. Nights. And Fridays.	line	S	chapter 5	
 I checked. Tuesday works.	line	Z	chapter 5	
 By the radiator.	line	S	chapter 5	
 I moved a worry.	line	Z	chapter 5	
 …Filed. Under the other pile.	line	S	chapter 5	
-She told me herself.	ui		chapter 5	
 There’s another pile?	line	H	chapter 5	
+She told me herself.	ui		chapter 5	
 It’s new.	line	S	chapter 5	
 Is that why you used to vanish at lunch? We stopped asking. I thought asking was pressure.	line	A	chapter 5	
 I thought not being asked was the verdict.	line	H	chapter 5	
@@ -1344,7 +1350,6 @@ Say yes. Old habits.	choice		chapter 5
 Not this time, Eero.	line	H	chapter 5	
 He’s going to—	line	S	chapter 5	
 Oh. I told Riitta you probably could.	line	B	chapter 5	
-Oh.	line	H	chapter 5	
 Take it back. Quick. Say you can.	choice		chapter 5	
 Say nothing. Stand next to them.	choice		chapter 5	
 Say you can. It’s one Monday. It’s ONE Monday.	line	S	chapter 5	
@@ -1391,6 +1396,8 @@ It is intentional.	line	H	comments
 Good. We have a statement.	line	S	comments	
 You: “made a thing” [drawing.png]	line	P	comments	
 BOSS · THE GROUP CHAT	canvas		comments	
+More light. More of me.	line	S	comments	
+I know. I want the light.	line	H	comments	
 Headband on. Replies incoming. I will handle anything that looks sharp.	line	S	comments	
 Everything looks sharp to you.	line	H	comments	
 Then I will handle everything.	line	S	comments	
@@ -1421,8 +1428,8 @@ I’m leaving the drawing up.	line	H	comments
 I let them all come close. Every single one.	line	S	comments	
 Mostly… cats. People liked the cat.	line	S	comments	
 BOSS DEFEATED. Correction: there was no boss.	line	N	comments	
-Year two. Somebody laughed.	line	S	comments	
 NOT A BOSS · THE GROUP CHAT	canvas		comments	
+Year two. Somebody laughed.	line	S	comments	
 This time I left it up.	line	H	comments	
 …I’ll update the file.	line	S	comments	
 Shared a drawing. Left it up.	canvas		comments	

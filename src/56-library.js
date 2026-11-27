@@ -67,6 +67,11 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
   ['H','Yes, please.']
  ],outside({title:'WHAT THE LIBRARIAN SAW',dur:'duration: 2 minutes',cap:'A late book, four euros sixty, and somebody else who likes lighthouses.',anim:'text'}),[
   calm,
+  // 0.99.45 (review D7): the other half of RSD. Warmth lands as big as a no would; the human calibrates, and the due date comes straight after
+  ['S','Somebody else likes lighthouses.',{look:'up'}],
+  ['S','That’s a friendship. I’ve planned the trip. Bengtskär. Two thermoses.'],
+  ['H','She reserved me a book.'],
+  ['S','…Separate boats, then. We’ll wave.'],
   ['S','We came in for a telling-off. We’re leaving with a second volume.'],
   ['H','And a due date.'],
   ['S','Twenty-eight days. I’ll start worrying on day twenty-nine.'],

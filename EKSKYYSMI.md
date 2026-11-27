@@ -41,7 +41,7 @@ RSD:ssä torjunnan tai kritiikin tuntu, todellinen tai kuviteltu, iskee nopeasti
 
 ## 3. Symbolit
 
-- **Varjo syntyy valosta.** Ekskyysmi on olemassa vain siksi, että ihminen on valossa eli nähtävissä. Se on näkyväksi tulemisen hinta. Siksi RSD ei katoa: varjoa ei voi riisua sammuttamatta valoa.
+- **Varjo syntyy valosta.** Ekskyysmi on olemassa vain siksi, että ihminen on valossa eli nähtävissä. Se on näkyväksi tulemisen hinta. Siksi RSD ei katoa: varjoa ei voi riisua sammuttamatta valoa. Sanotaan pelissä kerran: #23, kun piirros lähtee (0.99.45).
 - **Lattia ja seinä.** Rauhallisena tai unessa Ekskyysmi on tavallinen lattiavarjo. Hälytyksessä se nousee seinälle.
 - **Lamppu.** *Evenings*-kohtauksessa (#18) pelaaja sytyttää lampun, ja varjo kysyy: ”…Am I allowed?” Valon antaminen on varjon sallimista. Loppukuvassa lamppu jää palamaan.
 - **Lintu.** *”What a shadow does when there is nothing to prevent: a bird, made of two hands.”* Kun Ekskyysmin ei tarvitse estää mitään, se luo jotain. Se on Ekskyysmin oma piirustus.

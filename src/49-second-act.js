@@ -150,7 +150,8 @@ function labForm(){
   function ticked(i,k,lines){return [formTick(i,k)].concat(lines||[]);}
   return labScene({set:'clinic',title:'The form.',plan:'Fill it in.',clock:14*3600+10*60,mood:'alert'}).concat([
   function(){G.human.x=G.human.xT=430;formOpen();},
-  ['N','A waiting room. A clipboard. Eighteen questions.'],
+  ['N','A waiting room. Five weeks after the phone call.'],   // 0.99.45 (review D6): #14 promised a call; the wait is a fact, not a comment
+  ['N','A clipboard. Eighteen questions.'],
   ['S','A form! Finally. Somebody professional.',{look:'pleased'}],
   ['S','Give it here. I’ll do the boxes.'],
   formQ(0),
