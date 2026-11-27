@@ -1,6 +1,8 @@
 # Syvätarkastus 27.11.2026 (versio 0.99.43)
 
-Joonaksen pyyntö: analysoi peli kunnolla, ja korjataan sitten ehdotusten mukaan. Tarkastus kattaa RSD:n kuvauksen, huumorin, sujuvuuden, sen onko Ekskyysmistä otettu kaikki irti, dialogipuiden ja haarojen yhteispelin sekä puuttuvat mekaniikat. Kevyemmät mallit voivat toteuttaa §8:n tehtävät yksi kerrallaan. Jokaisessa tehtävässä kerrotaan, missä tiedostossa työ on, milloin se on valmis ja tarvitaanko ensin Joonaksen päätös.
+Joonaksen pyyntö: analysoi peli kunnolla, ja korjataan sitten ehdotusten mukaan. Tarkastus kattaa RSD:n kuvauksen, huumorin, sujuvuuden, sen onko Ekskyysmistä otettu kaikki irti, dialogipuiden ja haarojen yhteispelin sekä puuttuvat mekaniikat. Kevyemmät mallit voivat toteuttaa §8:n tehtävät yksi kerrallaan. Jokaisessa tehtävässä kerrotaan, missä tiedostossa työ on ja milloin se on valmis.
+
+**Tila 27.11.2026 klo 17.47:** Joonas hyväksyi kaikki ehdotukset (”olen kaikesta samaa mieltä”). Myös päätöstä odottaneet tehtävät ovat nyt hyväksyttyjä. Toteutusjärjestys on §11:ssä ja valmis kehote toteuttavalle mallille §12:ssa.
 
 **Lyhyesti**
 
@@ -60,7 +62,7 @@ Peli ei nimeä mitään, ei neuvo eikä anna alkoholin korjata mitään. Sisält
 
 ### 2.2 Mitä jää ohueksi (ei vaadi isoja lisäyksiä)
 
-- **Hyväksynnän ylilyönti.** RSD:hen kuuluu usein myös voimakas helpotus tai riemu, kun joku on lämmin. Ekskyysmi reagoi lämpöön lähinnä epäluulolla (”She MISSED us?”). Yksi riemun ylilyönti riittäisi, esimerkiksi kirjastossa (#15), kun kirjastonhoitaja paljastuu majakkojen ystäväksi: Ekskyysmi alkaa heti suunnitella yhteistä majakkamatkaa.
+- **Hyväksynnän ylilyönti.** RSD:hen kuuluu usein myös voimakas helpotus tai riemu, kun joku on lämmin. Ekskyysmi reagoi lämpöön lähinnä epäluulolla (”She MISSED us?”). Yksi riemun ylilyönti riittäisi, esimerkiksi kirjastossa (#15), kun kirjastonhoitaja paljastuu majakkojen ystäväksi: Ekskyysmi alkaa heti suunnitella yhteistä majakkamatkaa. (tehtävä D7)
 - **Odottaminen avun äärellä.** #14 lupaa ”I’m going to ring someone tomorrow.”, ja lomake (#16) tulee kahden kohtauksen jälkeen. Väli on realistinen, mutta peli ei sano sitä ääneen (tehtävä D6).
 
 Lisää RSD-kulmia ei tarvita. Tämä on samaa mieltä EKSKYYSMI.md §9:n kanssa: ”Lisäys korvaa, ei kasaa.”
@@ -154,7 +156,7 @@ Tämä on runsas ja kurinalainen kokonaisuus. Mikään keino ei kulu toistossa: 
   - puraisu (`bit`)
   - vuoto (`leak`)
 - Testit pelaavat 180 maanantaireittiä, 12 kokonaista viikkoa ja 33 hetkeä kolmella valintalinjalla, ja ne vartioivat järjestyksen, kellot, mukin ja tallennuksen.
-- Tilamuuttujista vain kolmea kirjoitetaan mutta ei koskaan lueta: `G.catStarted`, `G.sat` ja `g.dawn`. Ne ovat vaarattomia (tehtävä T5).
+- Tilamuuttujista vain kahta kirjoitetaan mutta ei koskaan lueta: `G.catStarted` ja `g.dawn`. Ne ovat vaarattomia (tehtävä T5). `G.sat` näyttää samalta, mutta tarinatesti lukee sen, joten se jää.
 - Toistuvat rivit samassa läpipeluussa ovat tarkoituksellisia (”Rejection prevented.”, ”The original is very boring.”), lukuun ottamatta epilogin metodeja (alla).
 
 ### 6.2 Löydetyt säröt
@@ -176,122 +178,226 @@ VISIO lupaa enemmän: pilari 3 (”Yksi resurssi: muki”), ydinkysymys ”onko 
 
 ### 7.2 Muut ideat, joita ei ole vielä pöydällä
 
-- **Jaettava kuitti.** Viikon kuitti on pelin tunnistettavin kuva (*DAYS LIVED INSIDE 10.4*, *YESES, UNMEANT ×6*), ja jokaisella pelaajalla se on omanlaisensa. Nappi ”Share receipt” tekisi siitä kuvan (puhelimessa jakovalikko, koneella lataus). Pelaajat vertailevat tuloksia mielellään, ja kuitti toimisi pelin markkinointina ilman yhtäkään mainoslausetta (tehtävä T10).
+- **Kuitti kuvana puuttuu vain APK:sta.** Selaimessa päivän ja viikon kuitissa on jo napit *Save as picture* ja *Copy text* (`shareReceipt`, `copyReceipt`, `src/35-inside.js`): puhelimen selaimessa kuva lähtee jakovalikkoon, koneella se latautuu. Sovelluksen sisällä kuvaa ei voi ladata minnekään, joten nappi kopioi vain tekstin. Viikon kuitti on pelin tunnistettavin kuva (*DAYS LIVED INSIDE 10.4*, *YESES, UNMEANT ×6*), ja pelaajat vertailevat tuloksia mielellään, joten se kannattaa saada jaettavaksi myös APK:sta (tehtävä T10).
 - **Automaattinen eteneminen ja ohitus** (tehtävät T8 ja T9, §4).
 - **Kokeiluhetket tarinaan, jos tilaa tulee:** vahvin on *Leaving.* (pelko siitä, ettei lähtöä huomata, ja ”The second one is worse. I’ve checked.”). Joonas on päättänyt pitää sen Momenttina, joten tämä on vain muistutus.
 
 ---
 
-## 8. Tehtävälista
+## 8. Tehtävälista (hyväksytty 27.11.)
 
 **Merkinnät.** *Malli* tarkoittaa suositeltua tasoa:
 - **kevyt:** selvä tehtävä, testit kertovat onnistumisen
 - **keski:** useampi tiedosto tai uusi asetus
 - **korkea:** koskee lankoja, mukia tai rakennetta
 
-*Päätös* kertoo, tarvitaanko Joonaksen hyväksyntä ennen työtä. Jokaisen tehtävän jälkeen tehdään samat asiat:
-1. `npm test`
-2. versio (`package.json`)
-3. TARINAKARTTA.md:n versiomerkintä
-4. synkronointi
+Repliikit on kirjoitettu valmiiksi. Ne käytetään sellaisinaan: toteuttaja ei keksi uusia, vaan kysyy, jos repliikki ei sovi koodiin. Versiot ja tarkistukset ovat §11:ssä.
 
-### P1 – korjaukset (ei päätöstä, pieni riski)
+### P1 – korjaukset (pieni riski)
 
 **T1. Röntgenin sydän oikealle puolelle.** ✅ Tehty 0.99.43. Luuranko on kasvot katsojaan päin, joten ihmisen vasen puoli on kuvassa oikealla (`skeleton()`, `src/35-inside.js`).
 
 **T2. Epilogin metodit vain kerran.**
-- **Missä:** `epiRollRows()`, `src/37-epilogue.js`. Poista rivi, joka lisää lohkon `EKSKYYSMI’S METHODS`, koska alkumontaasin metodikuva (`mine:1`) näyttää samat rivit.
-- **Valmis kun:** epilogin Dialogue-loki sisältää *WORST CASES, PREPARED* vain kerran. Viikon lopun kuitti (`showWeekEnd`) näyttää metodit edelleen, ja testi `EKSKYYSMI’S METHODS` koskee sitä.
+- **Missä:** `epiRollRows()`, `src/37-epilogue.js`. Poista rivi, joka lisää lohkon `EKSKYYSMI’S METHODS` (`var mine=mineRows();if(mine.length){…}`), koska alkumontaasin metodikuva (`mine:1`) näyttää samat rivit.
+- **Valmis kun:** epilogin transkriptissä *WORST CASES, PREPARED* näkyy vain kerran. Viikon lopun kuitti (`storyRows`, `src/57-posting.js`) näyttää metodit edelleen, ja testi `EKSKYYSMI’S METHODS` (`tests/story.test.cjs`) koskee sitä.
 - **Malli:** kevyt.
 
 **T3. Perjantain maanantai yksiselitteiseksi.**
-- **Missä:** `src/31-story-week.js` (perjantain lounaskohta) ja `KEPT` (`src/20-engine.js`).
+- **Missä:** `src/31-story-week.js` (perjantain lounaskohta, funktio heti repliikin ”I thought not being asked was the verdict.” jälkeen) ja `KEPT` (`src/20-engine.js`).
   - ”I was going to ask you on Monday. You looked busy.” → ”I was going to ask you that Monday. You looked busy.”
   - ”I’m glad I asked you on Monday.” → ”I’m glad I asked you that Monday.”
   - ”So we’ve been being polite AT each other. For a year.” → ”So we were being polite AT each other. For a year.”
   - `KEPT.asked`: ”She was going to ask on Monday.” → ”She was going to ask. That Monday.”
-- **Valmis kun:** `npm test` menee läpi (tarkista, ettei testi lainaa vanhaa riviä) ja `npm run strings` on ajettu. Jos suomennos on jo tehty, päivitä se.
+- **Valmis kun:** testit menevät läpi, ja transkriptissä (`--pick 0` ja `--pick rotate --day C`) perjantai lukeutuu luontevasti.
 - **Langat:** §5 *Lounas Sannan kanssa*.
 - **Malli:** kevyt.
 
 **T4. About-sivun kesto.**
-- **Missä:** `showAbout()`, `src/80-ui.js`: ”About 50 minutes.” → ”About an hour.” Päivitä myös suomenkielinen vastine, jos sellainen on.
+- **Missä:** `showAbout()`, `src/80-ui.js`: ”About 50 minutes.” → ”About an hour.” Suomenkielistä vastinetta ei vielä ole.
 - **Malli:** kevyt.
 
 **T5. Kuolleet tilamuuttujat pois.**
-- **Missä:** `G.catStarted` (`src/30-story-monday.js`), `G.sat` (`src/49-second-act.js`) ja `g.dawn` (`dawn()`, `src/49-second-act.js`) sekä niiden nollaukset `scene()`:ssä (`src/31-story-week.js`).
-- **Valmis kun:** `grep` ei löydä niitä ja testit menevät läpi.
+- **Missä:** `G.catStarted` (`src/30-story-monday.js`) ja `g.dawn` (`dawn()`, `src/49-second-act.js`) sekä `g.dawn`-nollaus `scene()`:ssä (`src/31-story-week.js`). Funktio `dawn()` jää, vain kenttä lähtee. **`G.sat` jää**, koska `tests/story.test.cjs` lukee sen (”Ekskyysmi sits down, for the first time”).
+- **Valmis kun:** `grep` ei löydä kenttiä ja testit menevät läpi.
 - **Malli:** kevyt.
 
 **T6. Lomakeillan kaksoisrivi.**
-- **Mitä:** valittu vaihtoehto puhutaan ensin Ekskyysmin kuplana, ja heti perään tulee itse kysymys (”Ask what the bag does.” → ”And the bag?”). Valinnalle tarvitaan lippu, joka jättää kaiun pois, jolloin vain kysymys kuuluu ja hiljainen ”Am I being… replaced?” säilyy.
-- **Missä:** `choose()`, `src/20-engine.js`: `Q=(o.hush?[]:…)` → `Q=(o.hush||o.echo===false?[]:…)`. `afterForm()`, `src/49-second-act.js`: lisää `echo:false` kolmeen vaihtoehtoon.
-- **Valmis kun:** jokaisella kolmella reitillä mikään kysymys ei toistu peräkkäin, ja hush-testit menevät läpi.
+- **Mitä:** valittu vaihtoehto puhutaan ensin Ekskyysmin kuplana, ja heti perään tulee itse kysymys (”Ask what the bag does.” → ”And the bag?”). Vaihtoehdolle tulee lippu, joka jättää kaiun pois. Silloin kuuluu vain kysymys, ja hiljainen ”Am I being… replaced?” säilyy.
+- **Missä:** `choose()`, `src/20-engine.js`: `Q=(o.hush?[]:[[G.choiceWho||'S',o.t]])` → `Q=(o.hush||o.echo===false?[]:[[G.choiceWho||'S',o.t]])`. `afterForm()`, `src/49-second-act.js`: lisää `echo:false` kolmeen vaihtoehtoon.
+- **Valmis kun:** kaikilla kolmella valinnalla mikään kysymys ei toistu peräkkäin, ja testit menevät läpi.
 - **Malli:** kevyt.
 
 **T7. Baarin humalavivahde pois.**
 - **Missä:** `src/53-bar.js`: ”22:40. Same bar. Ekskyysmi has had the shadow of one drink.” → ”22:40. Same bar. Ekskyysmi has had the shadow of one ginger beer, and a very long day.”
-- **Päätös:** Joonas, koska kyse on sävystä.
 - **Malli:** kevyt.
 
-### P2 – sujuvuus (ei tarinamuutoksia)
+### P2 – repliikit kohtauksiin (ei järjestysmuutoksia)
+
+**D7. Riemun ylilyönti kirjastossa (#15).**
+- **Mitä:** RSD:n toinen puoli: lämpö tuntuu yhtä suurelta kuin torjunta. Ekskyysmi rakentaa hetkessä ystävyyden, ihminen kalibroi, ja heti perään tulee eräpäivähuoli.
+- **Missä:** `src/56-library.js`, ulkoversion *WHAT THE LIBRARIAN SAW* ja `calm`-askeleen jälkeen, ennen riviä ”We came in for a telling-off. We’re leaving with a second volume.”
+- **Repliikit:**
+  ```
+  ['S','Somebody else likes lighthouses.',{look:'up'}],
+  ['S','That’s a friendship. I’ve planned the trip. Bengtskär. Two thermoses.'],
+  ['H','She reserved me a book.'],
+  ['S','…Separate boats, then. We’ll wave.'],
+  ```
+- **Langat:** §5 *Myöhässä oleva kirja*. `keep('library')` ei muutu.
+- **Valmis kun:** `node tools/transcript.cjs --lab library` näyttää rivit oikeassa kohdassa, ja testit menevät läpi.
+- **Malli:** kevyt.
+
+**D4. Valo = näkyvyys (#23).**
+- **Mitä:** raamatun ydinsymboli (varjo syntyy valosta, eli näkyväksi tuleminen maksaa varjon) sanotaan kerran. Kun piirros lähtee, varjo kasvaa jo nyt (`G.morko.sT=1.6`).
+- **Missä:** `labComments()`, `src/50-lab.js`, heti `['P','You: “made a thing” [drawing.png]']` -rivin, sitä seuraavan funktion ja `{wait:0.8}`:n jälkeen, ennen riviä ”Headband on. Replies incoming…”.
+- **Repliikit:**
+  ```
+  ['S','More light. More of me.',{quiet:1}],
+  ['H','I know. I want the light.'],
+  ```
+- **Lisäksi:** EKSKYYSMI.md §3 *Varjo syntyy valosta* saa lauseen ”Sanotaan pelissä kerran: #23, kun piirros lähtee (0.99.45).”
+- **Malli:** kevyt.
+
+**D6. Odotusaika lomakkeeseen (#16).**
+- **Mitä:** #14 lupaa ”I’m going to ring someone tomorrow.” Lomake on sen lanka, ja välissä ovat kirjasto ja pikkujoulut. Yksi kertojan rivi tekee välistä merkityksellisen. Rivi on tosiasia, ei kannanotto.
+- **Missä:** `src/49-second-act.js`: `['N','A waiting room. A clipboard. Eighteen questions.']` → kaksi riviä:
+  ```
+  ['N','A waiting room. Five weeks after the phone call.'],
+  ['N','A clipboard. Eighteen questions.'],
+  ```
+- **Valmis kun:** testit menevät läpi. Kellotesti hyväksyy rivin, koska siinä ei ole kellonaikaa.
+- **Malli:** kevyt.
+
+### P3 – kuva ja mekaniikka
+
+**D5. Toinen laatikko röntgenissä.**
+- **Mitä:** epilogin röntgenissä arkistokaapin vieressä on pieni nimetön laatikko raollaan ja lämpimässä valossa. Se on #23:n ”Leave it open a crack.” kuvana.
+- **Missä:** `drawXray()`, `src/35-inside.js`. Piirrä vain, kun `g.epi&&g.epi.o&&g.epi.o.xray` (epilogin kaksi röntgenkuvaa, ei *One small thing*- eikä *Kick-off*-hetken röntgentä). Kaapin piirtämisen jälkeen:
+  - laatikko kaapin oikean alakulman viereen (noin 30 × 18 px, `cx+cw+8`, `cy+ch-26`) samalla röntgenviivalla
+  - etulevy 3 px ulospäin
+  - yläreunaan ohut lämmin rako (`#ffd98a`, kevyt hehku)
+  - ei tekstiä
+- **Valmis kun:** epilogin röntgenin yleiskuvassa ja lähikuvassa laatikko näkyy, ja muut röntgenit ovat ennallaan. EKSKYYSMI.md §8 *Hyvä arkisto* saa merkinnän ”Näkyy epilogin röntgenissä (0.99.46).”
+- **Malli:** kevyt.
+
+**D2. Lintu pelaajan tekona (#25).**
+- **Mitä:** pelaaja tekee linnun pitämällä, ja kun Sannan varjo sanoo ”Do it again.”, pelaaja tekee sen uudestaan. Haava sulkeutuu pelaajan kädellä.
+- **Missä:**
+  - `HOLD_LABEL` (`src/20-engine.js`): lisää `bird:'Hold: make the bird'`.
+  - `holdText()`: `if(h.kind==='bird')return on?(h.o.text||'Flap. Flap.'):'Hold to make the bird.';`
+  - `holdStep()`: `else if(h.kind==='bird'){M.pose=on?'puppet':null;M.mood='care';if(on&&!h.snd){h.snd=1;sfx('flutter');}if(!on)h.snd=0;}`
+  - `finishHold()`: `else if(h.kind==='bird'){M.pose='puppet';}`
+  - `labRadiator()` (`src/52-radiator.js`): vaihda `{wait:0.8},set({pose:'puppet',mood:'care'}),function(){sfx('flutter');},{wait:1.6},` muotoon `{wait:0.8},set({mood:'care'}),{hold:{kind:'bird',secs:2.2,text:'Two hands. One bird. Nobody laughing.'}},`
+  - `labRadiator()`: vaihda `function(){sfx('flutter');},   // 0.86: and it does` ja `{wait:1.4},set({pose:null}),` muotoon `{hold:{kind:'bird',secs:1.6,text:'Again. Because she asked.'}},{wait:0.6},set({pose:null}),`
+- **Valmis kun:**
+  - testit ja hetkitesti menevät läpi
+  - napautus (`holdTap`) kelpaa pidon sijaan, kuten muissakin pidoissa
+  - TARINAKARTAN rivi #25 kertoo, että pelaaja tekee linnun
+- **Malli:** keski.
+
+**D3. Koko-liukusäädin perjantaina (#22).**
+- **Mitä:** perjantain ”oh, hi” on sama hälytys. Pelaaja avaa varoituksen kuten maanantaina, mikä tahansa koko kelpaa, ja ihminen pysyy. Kuitti vertaa kokoja.
+- **Missä:** `scFri()`, `src/31-story-week.js`. Rivien ”…It still went off. Even though we got it right.” ja ”I felt it.” jälkeen ja ennen `fridayReflex`-askelta:
+  ```
+  function(){G.monWarning=G.warningSize;},
+  {stretch:true},
+  function(){var a=G.monWarning,b=G.warningSize;G.friWarning=b;
+    if(!a)return [['S','Full size. Still here.'],['H','Big is allowed.']];
+    return b>=a-0.05?[['S','Monday size. I checked.'],['H','Big is allowed.']]:
+      [['S','A bit smaller than Monday. Don’t read into it.'],['H','Big would have been allowed too.']];},
+  ```
+- **Kuitti:** `storyRows()` (`src/57-posting.js`), ennen metodilohkoa:
+  ```
+  if(g.friWarning){if(g.monWarning)rows.push(['alarm size, monday','×'+g.monWarning.toFixed(1)]);
+    rows.push(['alarm size, friday','×'+g.friWarning.toFixed(1)],['stayed anyway','friday']);}
+  ```
+- **Tallennus ja nollaus:** `checkpoint()` (`src/28-progress.js`) saa kentät `warningSize`, `monWarning` ja `friWarning`. Jokainen on joko luku väliltä 1,8–3,8 (`clamp`) tai `null`. `reset()` (`src/20-engine.js`) nollaa samat kolme, jotta uusi peli samassa istunnossa ei peri edellisen kokoja.
+- **Testien päivitys** (kuivaharjoitus löysi molemmat):
+  - `tests/story.test.cjs`, `checkpointFixture`, luku 5: lisää `warningSize:null,monWarning:null,friWarning:null` (muuten tarkistus ”replaying an earlier chapter must preserve later histories” kaatuu)
+  - `tests/story.test.cjs`, `labUntil()`: haara `else if(s==='hold')T.advance();` → `else if(s==='hold'||s==='stretch')T.advance();` (muuten perjantain kulku pysähtyy liukusäätimeen)
+- **Valmis kun:** testit (myös jatkotesti `save.test.cjs`) menevät läpi, ja viikon kuitissa näkyvät koot.
+- **Malli:** keski.
+
+**D1. Perjantain diili: ”Is that the mug talking, or the door?” (#22).**
+- **Mitä:** muki saa ensimmäisen päätöksen. Rehellinen vastaus riippuu mukin oikeasta tasosta: perjantai alkaa neljästä, hälytys vie yhden, ja Eerolle sanottu ”Say yes. Old habits.” vie toisen. Jos muki on 2 tai alle, vastaus on ”The mug”, ja ihminen tekee kompromissin. Muuten vastaus on ”The door”. Lounas tapahtuu aina, eikä mitään rangaista (pilari 4).
+- **Missä:** `scFri()`, `src/31-story-week.js`, Sannan keittokysymyksen (funktio, joka palauttaa ”Soup? The one with too much dill.”) jälkeen ja ennen riviä ”Oh, good. That one.”:
+  ```
+  set({mood:'alert'}),
+  dealOffer('skip lunch. a quiet hour at the desk.','it’s friday. she asked first.'),
+  ['S','Before you answer. I’ve drawn up a small deal.'],
+  ['S','Skip lunch. A quiet hour at the desk. The mug gets a rest.'],
+  {choice:[
+    {t:'The mug needs it. Sign here.',m:'hide',then:function(){return mugOrDoor('H');}},
+    {t:'Ask myself first: the mug, or the door?',m:'stay',echo:false,then:function(){return mugOrDoor('S');}},   // echo:false (T6): the question itself is the line
+    {t:'Tear it up. It’s soup.',m:'stay',then:[dealSign(false),function(){G.dealWho='torn';},
+      ['S','Torn. Along the dotted line. I added a dotted line.']]}
+  ]},
+  ['A','…Soup?'],
+  ```
+  ja uusi funktio samaan tiedostoon:
+  ```
+  function mugOrDoor(who){
+    var low=!!(G.mug&&G.mug.v<=2),q=who==='H'?['H','Is that the mug talking, or the door?']:['S','Is that the mug talking… or the door?',{quiet:1}];
+    if(low)return [q,['S','…The mug. Honestly. It’s low.',{quiet:1}],['H','Then soup. No dessert. Back in forty minutes.'],
+      function(){if(G.deal)G.deal.now='soup. no dessert. back in forty.';},dealSign(true),function(){G.dealWho='mug';},
+      ['S','A fair deal. I do write those. Occasionally.']];
+    return [q,{wait:0.8},['S','…The door.',{quiet:1}],['H','Thought so.'],dealSign(false),function(){G.dealWho='door';},
+      ['S','The mug was a very convenient witness.']];
+  }
+  ```
+- **Kuitti:** `storyRows()`: `if(g.dealWho)rows.push(['deals, offered','1'],['who was talking',{door:'the door',mug:'the mug',torn:'nobody. torn.'}[g.dealWho]]);`
+- **Tallennus ja nollaus:**
+  - `checkpoint()` saa kentän `dealWho` (`'door'`, `'mug'`, `'torn'` tai `null`), ja `tests/story.test.cjs`:n `checkpointFixture` (luku 5) saa `dealWho:null`
+  - `reset()` (`src/20-engine.js`) nollaa `G.dealWho`
+  - `scene()` (`src/31-story-week.js`) nollaa `g.deal=null` (AGENTS.md: piirtävä kenttä nollataan kohtauksen vaihtuessa)
+- **Valmis kun:**
+  - testit menevät läpi
+  - transkriptissä molemmat vastaukset näkyvät: `--pick 0` (Eerolle ”No.”) antaa ”The door”, ja reitti, jolla Eerolle sanotaan ”Say yes. Old habits.”, antaa ”The mug”
+  - mukitesti hyväksyy perjantain
+  - TARINAKARTAN rivi #22 ja §5:n *Muki*-lanka mainitsevat diilin, ja §8:n avoin kohta ”Ensimmäinen oikea diili” on merkitty tehdyksi
+- **Malli:** korkea.
+
+### P4 – sujuvuus
 
 **T8. Asetus ”Auto: reading pace”.**
-- **Mitä:** repliikki etenee itsestään lukuajan jälkeen (sanat / 230 per min + 0,6 s, kuten `tools/pace.cjs`).
-- **Ei koske:** valintoja, pitoja, ulkoversioita, koko-liukusäädintä, ”vastaa oikein” -ikkunaa eikä viestien huitomista. Ne odottavat aina pelaajaa.
+- **Mitä:** repliikki etenee itsestään lukuajan jälkeen.
+  - Lukuaika: `max(1.4, sanat/200*60 + 0.9)` sekuntia. Se on hieman väljempi kuin `tools/pace.cjs`.
+  - Ajastin käy vain, kun `WAIT==='click'`, rivi on kokonaan näkyvissä (`!revealing()`) eikä peli ole pausella tai Dialogue-loki auki.
+- **Ei koske:** valintoja, pitoja, ulkoversioita (`view`), koko-liukusäädintä, ”vastaa oikein” -ikkunaa, pallon pudotusta, lamppua eikä viestien huitomista. Ne odottavat aina pelaajaa.
 - **Missä:**
-  - asetus valikkoon kuten *Slow reality* (`src/80-ui.js`) ja localStorage-avain
-  - ajastin `advance()`:n rinnalle (`src/20-engine.js`)
-- **Valmis kun:** asetus päällä viikko etenee testivaljaissa ilman napautuksia (valinnat valitaan), eikä mikään ulkoversio ohitu ennen minimiaikaansa.
+  - painike valikkoon *Slow realityn* tapaan (`index.html` `id="auto"`, `src/80-ui.js`), localStorage-avain `ekskyysmi.auto`
+  - painikkeen tekstit ”Auto: off” ja ”Auto: reading pace” käännettäviksi
+  - ajastin päivityssilmukkaan (`src/60-update.js` tai `src/20-engine.js`)
+- **Valmis kun:**
+  - asetus päällä viikko etenee testivaljaissa pelkillä `T.tick()`-kutsuilla 'click'-tilassa
+  - mikään ulkoversio ei ohitu ennen minimiaikaansa
+  - `python tools/audit_layout.py` näyttää valikon ehjänä viidellä puhelinkoolla
 - **Malli:** keski.
 
 **T9. ”Skip seen” uusintoihin.**
-- **Mitä:** nähdyt rivit muistetaan tunnisteella localStorageen. Nappi kelaa seuraavaan näkemättömään riviin tai valintaan.
-- **Missä:** `src/20-engine.js`, `src/80-ui.js`
-- **Valmis kun:** toinen maanantai kelautuu ensimmäiseen uuteen riviin tai valintaan.
-- **Malli:** keski.
-
-**T10. Jaettava kuitti.**
-- **Mitä:** viikon lopun kuitista (`showWeekEnd`) tehdään PNG canvasilla ja jaetaan Web Share -rajapinnalla tai ladataan. APK:ssa käytetään Capacitorin Share-liitännäistä (`tools/android-patch.cjs`).
-- **Päätös:** Joonas, koska tämä on ominaisuuden laajuus.
-- **Malli:** keski.
-
-### P3 – suunnittelu (Joonaksen päätös ensin)
-
-**D1. Yksi oikea diili tarinaan: ”Is that the mug talking, or the door?”**
-- **Ehdotus:** perjantai (#22) ennen lounasta. Ekskyysmi tarjoaa diilin paperilappuna: ”Skip lunch. A quiet hour. Deal?” Muki on perjantaina hyvä, joten rehellinen vastaus on ”…The door.” Kasvu näkyy pelaajan omana erottelukykynä, ei repliikkinä.
-- **Toinen vaihtoehto:** keskiviikko kello 23.15, jolloin muki on aidosti matala ja vastaus on ”The mug.” (lepo on oikea raja). Kaksi diiliä näyttäisi molemmat vastaukset, mikä on VISIOn idea.
-- **Missä:** valmiit `dealOffer`, `dealSign` ja `dealOptions` (`src/36-mug.js`), kohtaukseen `src/31-story-week.js`.
-- **Langat:** muki (§5), lounas ja perjantain rytmi. Kumpikaan vastaus ei saa estää lounasta, eikä mitään rangaista (pilari 4).
+- **Mitä:** nähdyt rivit muistetaan avaimella `puhuja|englanninkielinen teksti`, tiivistettynä (esim. djb2, base36), localStorageen `ekskyysmi.seen` (enintään noin 5 000 avainta). Jos nykyinen rivi on nähty, näkyy nappi ”Skip seen ›”. Se kelaa eteenpäin niin kauan kuin rivit ovat nähtyjä ja `WAIT==='click'`. Kelaus pysähtyy:
+  - näkemättömään riviin
+  - valintaan, pitoon tai ulkoversioon
+  - kohtauksen korttiin
+  - mihin tahansa muuhun kuin 'click'-tilaan
+- **Missä:** `src/20-engine.js`, `src/80-ui.js`, `assets/game.css`.
 - **Valmis kun:**
-  - mukitesti päivitetty
-  - perjantain järjestys TARINAKARTTAan
-  - kuittiin rivi *DEALS: 1 — the door, recognised.*
-- **Malli:** korkea.
-
-**D2. Lintu pelaajan tekona.**
-- **Mitä:** uusi pito ”Hold: make the bird” patterilla (#25) juuri ennen kuin Sannan varjo kysyy ”…Is that a bird?”. Pelaaja pitää, ja lintu lentää niin kauan kuin pito kestää.
-- **Missä:** `HOLD_LABEL`, `holdText`, `holdStep` ja `finishHold` (`src/20-engine.js`; AGENTS.md: uusi pito tarvitsee haaran kaikkiin kolmeen) sekä `labRadiator` (`src/52-radiator.js`). Asento `puppet` on valmiina.
-- **Valmis kun:** testit ja hetkitesti menevät läpi ja pito toimii hiirellä ja kosketuksella.
+  - ensimmäisellä pelikerralla nappia ei näy
+  - toisella maanantailla nappi vie ensimmäiseen uuteen riviin tai valintaan
+  - testit ja asettelutarkistus menevät läpi
 - **Malli:** keski.
 
-**D3. Koko-liukusäädin perjantaina.**
-- **Mitä:** perjantain ”oh, hi” on sama hälytys. Pelaaja säätää koon kuten maanantaina. Mikä tahansa koko kelpaa, ja ihminen vastaa ”Big is allowed. Stay.” Kuittiin tulee rivi *ALARM SIZE: MONDAY ×a · FRIDAY ×b — stayed: friday.*
-- **Missä:** perjantain alku (`src/31-story-week.js`). Askel `{stretch:true}` on valmiina (maanantai, `src/30-story-monday.js`), ja liukusäätimen pienin arvo 1,8 on jo iso, mikä sopii repliikkiin.
+**T10. Kuitti kuvana myös APK:ssa.**
+- **Mitä:** selaimessa *Save as picture* toimii jo (`shareReceipt()`, `src/35-inside.js`). APK:ssa sama nappi tallentaa PNG:n sovelluksen välimuistiin ja avaa Androidin jakovalikon. Jos jokin vaihe epäonnistuu, nappi kopioi tekstin kuten nyt.
+- **Missä:**
+  - riippuvuudet `@capacitor/filesystem` ja `@capacitor/share` (`npm i`, sitten `npm run android:sync`)
+  - `shareReceipt()`: natiivissa `Capacitor.Plugins.Filesystem.writeFile({path:'really-small-deal-receipt.png',data:base64,directory:'CACHE'})` ja sitten `Capacitor.Plugins.Share.share({files:[uri],title:'Really Small Deal',text:'My receipt.'})`
+  - mahdolliset natiivimuutokset `tools/android-patch.cjs`:n kautta (AGENTS.md)
+- **Valmis kun:**
+  - selain toimii kuten ennen
+  - testit menevät läpi
+  - Joonas on rakentanut APK:n (`cd /d C:\RSD`, `tools\build-apk.cmd`) ja todennut jakovalikon puhelimessa. Tämä on ainoa tehtävä, joka vaatii laitetestin: tee se viimeisenä ja pyydä testi.
 - **Malli:** keski.
-
-**D4. Valo = näkyvyys, yksi repliikkipari.**
-- **Mitä:** #23, kun piirros lähtee. Esimerkiksi: S: ”More light. More of me.” – H: ”I know. I want the light.”
-- **Missä:** `src/49-second-act.js` (ryhmächat).
-- **Malli:** kevyt (teksti), mutta päätös on Joonaksen.
-
-**D5. Toinen laatikko röntgenissä.**
-- **Mitä:** epilogin arkistokaapin lähikuvaan pieni nimetön laatikko raolleen ja lämpimämmällä hehkulla (`drawXray`, `src/35-inside.js`; vain `o.file`).
-- **Malli:** kevyt.
-
-**D6. Odotusaika lomakkeeseen.**
-- **Mitä:** #16:n alkuun kertojan rivi ”A waiting room. Five weeks after the phone call.” Puhelusta tulee lanka, ja väli saa merkityksen. Ei terveydenhuollon arvostelua, pelkkä tosiasia.
-- **Malli:** kevyt, mutta päätös on Joonaksen.
 
 ---
 
@@ -316,12 +422,85 @@ Liitetty teksti pitää pääosin. Tämän pelin kohdalla jako kannattaa tehdä 
 - bugit, jotka ilmenevät vain tietyllä reitillä
 
 **Kevyt:**
-- §8:n P1-tehtävät
+- §8:n P1- ja P2-tehtävät
 - piirtäminen ja asettelu
 - yksittäiset käännökset
 - tekstien hienosäätö, kun lanka ei muutu
 
-**Kirjoittamisesta olen osittain eri mieltä.** Vitsin ensimmäinen versio syntyy parhaiten nopeasti. Sen tarkistaminen, mihin lankoihin se koskee, hyötyy syvästä päättelystä. Paras tapa on luonnostella kevyesti ja tarkistaa raskaasti.
+**Kirjoittamisesta olen osittain eri mieltä.** Vitsin ensimmäinen versio syntyy parhaiten nopeasti. Sen tarkistaminen, mihin lankoihin se koskee, hyötyy syvästä päättelystä. Siksi §8:n repliikit on kirjoitettu ja tarkistettu valmiiksi, ja toteuttaja käyttää niitä sellaisinaan.
 
-**Ohje kevyemmälle mallille (kopioi tehtävän eteen):**
-> Lue AGENTS.md ja tämän tiedoston tehtävä §8 / [ID]. Pelin koodia muokataan vain src/-kansiossa (ei assets/game.js:ää käsin). Ennen tekstimuutosta katso TARINAKARTTA.md §5 langat. Tee vain tämä tehtävä. Aja `node tools/build.cjs` ja `npm test`; kaikkien yhdeksän pitää mennä läpi. Nosta versio package.jsonissa ja kirjaa yksi rivi TARINAKARTTA.md:n versiolokiin. Kerro lopuksi, mitä et pystynyt tarkistamaan oikealla laitteella.
+---
+
+## 11. Toteutusjärjestys ja tarkistus
+
+Yksi rakennemuutos per versio (AGENTS.md). Pienet korjaukset ja repliikit kulkevat ryhmissä, mekaniikat yksitellen.
+
+**Kuivaharjoitus 27.11.:** T2–T7, D1–D4, D6 ja D7 kokeiltiin erillisessä kopiossa juuri näin kirjoitettuina. Kaikki yhdeksän testiä menivät läpi kahden testipäivityksen jälkeen (kirjattu D3:een), ja transkriptit lukeutuivat luontevasti. Perjantain diili antoi ”The door” reitillä, jolla Eerolle sanottiin ei, ja ”The mug” reitillä, jolla sanottiin ”Say yes. Old habits.”. Kokeilua ei julkaistu, joten toteuttaja tekee muutokset itse. T5:stä kokeilu karsi `G.sat`:n pois, koska testi lukee sen.
+
+| Versio | Tehtävät | Mitä muuttuu |
+|---|---|---|
+| 0.99.44 | T2, T3, T4, T5, T6, T7 | korjauksia, ei rakennetta |
+| 0.99.45 | D7, D4, D6 | repliikkejä kohtauksiin, järjestys ennallaan |
+| 0.99.46 | D5 | kuva epilogin röntgenissä |
+| 0.99.47 | D2 | uusi pito patterilla |
+| 0.99.48 | D3 | perjantain koko-liukusäädin ja kuittirivit |
+| 0.99.49 | D1 | perjantain diili ja kuittirivit |
+| 0.99.50 | T8 | asetus: automaattinen eteneminen |
+| 0.99.51 | T9 | asetus: nähdyn ohitus |
+| 0.99.52 | T10 | APK:n kuittikuva (vaatii Joonaksen laitetestin) |
+
+**Ennen ensimmäistä versiota:**
+- Hae GitHubin `main`.
+- Jos C:\RSD on käytettävissä, vertaa sitä repoon. Jos Codex tai Joonas on muuttanut jompaakumpaa, tuo muutokset ensin.
+
+**Jokaisessa versiossa:**
+1. Tee vain sen version tehtävät. Repliikit ovat §8:ssa valmiina, joten käytä niitä sellaisinaan.
+2. Muokkaa vain `src/`-tiedostoja, työkaluja, testejä ja dokumentteja. `assets/game.js` syntyy komennolla `node tools/build.cjs`, eikä sitä muokata käsin.
+3. Aja `npm test`: kaikkien yhdeksän pitää mennä läpi.
+   - Älä heikennä testiä läpäistäksesi sitä.
+   - Jos testi lainaa muuttunutta riviä, päivitä se samassa muutoksessa ja kerro miksi.
+4. Lue muuttunut kohta transkriptistä vähintään kahdella reitillä:
+   - `node tools/transcript.cjs --out a.txt`
+   - `node tools/transcript.cjs --pick rotate --day C --out b.txt`
+   - hetken muutoksessa myös `node tools/transcript.cjs --lab <id>`
+
+   Tarkista, ettei mikään rivi toistu peräkkäin ja että kohta lukeutuu luontevasti.
+5. Aja `npm run pace` (kirjaa muutos) ja `npm run strings`.
+6. Nosta versio `package.json`- ja `package-lock.json`-tiedostoissa, ja aja sitten `node tools/build.cjs`. Build päivittää `index.html`:n versioleimat, joita ei muokata käsin. Lopuksi `node tools/build.cjs --check` menee läpi.
+7. TARINAKARTTA.md:
+   - versiolokiin rivi suomeksi tiedoston alkuun, perusteluna Joonaksen sanat (”Joonas 27.11.: …”)
+   - kartan rivi ja §5:n langat, jos sisältö tai kesto muuttuu
+   - EKSKYYSMI.md, kun §8 niin sanoo
+8. Commit (englanniksi, kuten aiemmat) ja push `main`iin. GitHub Pages päivittyy itsestään.
+   - C:\RSD:n pitää olla sen jälkeen tavu tavulta sama kuin repo.
+   - Jos käytössä on artefaktityökalu, julkaise `index.html` ja `assets/game.js` (ja `assets/game.css`, jos se muuttui) artefaktiin `0c43ad47-5a53-4ea3-af39-f8c5500fa7c6`.
+
+**Pysähdy ja kysy Joonakselta vain, jos:**
+- muutos vaatisi kohtausten järjestyksen muuttamista tai langan katkaisemista
+- testi ei mene läpi ilman tarinamuutosta, jota §8 ei kuvaa
+- §8:n koodiohje ei vastaa koodia niin, että pienin korjaus muuttaisi tarinaa
+- T10 on valmis laitetestiin
+
+Muissa tapauksissa jatka seuraavaan versioon.
+
+**Lopuksi raportoi Joonakselle suomeksi:**
+- tehdyt versiot
+- mitä jäi tekemättä ja miksi
+- mitä ei voitu tarkistaa oikealla laitteella
+- APK-ohje: `cd /d C:\RSD`, sitten `tools\build-apk.cmd`
+
+---
+
+## 12. Kehote toteuttavalle mallille
+
+Kopioi tämä sellaisenaan uuden istunnon alkuun:
+
+> Toteutat Really Small Deal -pelin syvätarkastuksen tehtävälistan. Joonas hyväksyi kaikki ehdotukset 27.11.2026, joten päätöksiä ei tarvitse odottaa.
+>
+> Lue ensin AGENTS.md, SYVATARKASTUS.md (erityisesti §8 ja §11), TARINAKARTTA.md §5 sekä EKSKYYSMI.md §7. Koodi on aina totuus: jos dokumentti ja koodi eroavat, usko koodia ja kerro erosta.
+>
+> Tee versiot 0.99.44–0.99.52 §11:n järjestyksessä ja tarkistuksin. Repliikit ovat §8:ssa valmiina. Käytä niitä sellaisinaan, äläkä kirjoita uusia vitsejä tai rivejä. Pelin teksti on englantia, dokumentit suomea. Älä lisää, siirrä tai poista kohtauksia. Erikoisilme kestää yhden repliikin. Ei neuvoja, diagnooseja, lääkkeitä eikä ammatteja.
+>
+> Jokaisen version jälkeen kaikkien yhdeksän testin pitää mennä läpi, muutos pitää lukea transkriptistä kahdella reitillä, ja commit menee GitHubiin. C:\RSD:n pitää olla sama kuin repo, ja artefakti päivitetään, jos työkalu on käytössä.
+>
+> Pysähdy vain §11:n pysähtymissääntöjen kohdalla. Muuten jatka seuraavaan versioon. Lopuksi raportoi suomeksi, mitä tehtiin, mitä jäi ja mitä ei voitu tarkistaa oikealla laitteella.
