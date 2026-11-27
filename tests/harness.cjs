@@ -3,8 +3,10 @@ const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const root=path.resolve(__dirname,'..');
 module.exports=function makeHarness(){
 const gradient = {addColorStop(){}};
+let painted=null;   // 0.99.39: what reaches the canvas, when a test asks (startPaint)
 const ctx = new Proxy({}, {get(o,k){
   if(k==='measureText') return t=>({width:t.length*8});
+  if((k==='fillText'||k==='strokeText')&&!(k in o)) return t=>{if(painted&&typeof t==='string')painted.push(t);};
   if(k==='createLinearGradient'||k==='createRadialGradient') return ()=>gradient;
   return o[k] ?? (()=>{});
 }, set(o,k,v){o[k]=v;return true;}});
@@ -30,5 +32,5 @@ window.Capacitor={Plugins:{App:{addListener(k,f){nativeListeners[k]=f;},exitApp(
 const sandbox={window,document,console,Math};
 vm.runInNewContext(fs.readFileSync(path.join(root,'assets/game.js'),'utf8'),sandbox);
 const T=window.__T;
-return {T,window,document,element,fire,savedItems,nativeListeners,nativeState,ctx};
+return {T,window,document,element,fire,savedItems,nativeListeners,nativeState,ctx,startPaint(){painted=[];},painted(){return painted||[];}};
 };

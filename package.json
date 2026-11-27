@@ -1,11 +1,12 @@
 {
   "name": "really-small-deal",
-  "version": "0.99.38",
+  "version": "0.99.39",
   "private": true,
   "description": "Really Small Deal. A small moment. A very long shadow.",
   "scripts": {
     "build": "node tools/build.cjs",
-    "test": "node tools/build.cjs --check && node tests/story.test.cjs && node tests/moments.test.cjs && node tests/mug.test.cjs && node tests/clock.test.cjs && node tests/save.test.cjs && node tests/fi.test.cjs && node tests/music.test.cjs",
+    "test": "node tools/build.cjs --check && node tests/story.test.cjs && node tests/moments.test.cjs && node tests/mug.test.cjs && node tests/clock.test.cjs && node tests/save.test.cjs && node tests/fi.test.cjs && node tests/music.test.cjs && node tests/i18n.test.cjs",
+    "strings": "node tools/strings.cjs",
     "pace": "node tools/pace.cjs",
     "www": "node tools/build.cjs && node tools/www.cjs",
     "android:init": "npm run android:sync",

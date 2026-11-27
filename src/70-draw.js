@@ -6,6 +6,8 @@ function wrap(text,maxW){var words=text.split(' '),lines=[],cur='';for(var i=0;i
 // A word in capitals is a word said louder: heavier, a touch bigger, and in Ekskyysmi's bubbles in the accent colour.
 function isLoud(w){return /[A-Z]{2}/.test(w)&&!/[a-z]/.test(w);}
 function bubbleK(o){return o&&o.loud?1.34:o&&o.quiet?0.72:1;}
+// 0.99.39: the lines of a text that fit maxW, in the language being shown (canvas text is measured as painted).
+function wrapText(s,maxW){s=trQ(s);var out=[],cur='';String(s).split(' ').forEach(function(w){var t=cur?cur+' '+w:w;if(cur&&ctx.measureText(t).width>maxW){out.push(cur);cur=w;}else cur=t;});if(cur)out.push(cur);return out;}
 function bubble(x,y,text,o){
   o=o||{};
   var k=bubbleK(o),fs=17*k,lh=22*k,base='600 '+fs+'px system-ui,sans-serif',em='800 '+(fs+1.5*k)+'px system-ui,sans-serif',i,j;

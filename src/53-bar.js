@@ -29,11 +29,11 @@ function bar(){
   ctx.strokeStyle='#e2b04a';ctx.lineWidth=3;line(124,180,140,168);
   // chalkboard
   ctx.fillStyle='#6b4a34';rr(566,168,150,96,5);ctx.fill();ctx.fillStyle='#22302c';rr(573,175,136,82,3);ctx.fill();
-  ctx.fillStyle='#e9e2cf';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('TODAY',641,192);
-  ctx.font='500 13px system-ui,sans-serif';ctx.fillText('Soup.',641,214);ctx.fillText('Also: everything else.',641,236);
+  ctx.fillStyle='#e9e2cf';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('TODAY',641,192,128);
+  ctx.font='500 13px system-ui,sans-serif';ctx.fillText('Soup.',641,214,128);ctx.fillText('Also: everything else.',641,236,128);
   // neon
   var on=RM||Math.sin(t*1.3)>-0.96;ctx.strokeStyle=on?'#ff8fa3':'#7a4a55';ctx.lineWidth=4;ctx.shadowColor='#ff8fa3';ctx.shadowBlur=on?16:0;rr(770,176,112,50,12);ctx.stroke();
-  ctx.fillStyle=on?'#ffd0d8':'#7a4a55';ctx.font='800 22px system-ui,sans-serif';ctx.fillText('OPEN',826,202);ctx.shadowBlur=0;
+  ctx.fillStyle=on?'#ffd0d8':'#7a4a55';ctx.font='800 22px system-ui,sans-serif';ctx.fillText('OPEN',826,202,100);ctx.shadowBlur=0;
   wallClock(330,120,24);
   // coat hooks. One coat. It is only a coat.
   ctx.fillStyle='#1c1418';rr(896,236,60,6,3);ctx.fill();ctx.fillStyle='#55657a';ctx.beginPath();ctx.moveTo(914,242);ctx.lineTo(944,242);ctx.lineTo(952,330);ctx.lineTo(906,330);ctx.closePath();ctx.fill();

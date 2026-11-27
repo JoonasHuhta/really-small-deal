@@ -16,7 +16,7 @@ function startQte(){
   // on a touch screen the buttons arrive shuffled, because of course they do
   if(coarse)for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=order[i];order[i]=order[j];order[j]=t;}
   g.qte={i:0,t:0,secs:qteSecs(coarse),end:null,endT:0,order:order,auto:false};g.qteWon=false;
-  g.lines=[];g.cur={who:'S',text:'RESPOND. CORRECTLY. NOW.'};stopVoice();sfx('startle');
+  g.lines=[];g.cur={who:'S',text:tr('RESPOND. CORRECTLY. NOW.')};stopVoice();sfx('startle');
   WAIT='qte';LOCK=0;render();
 }
 // Friday: the same window, answered without the procedure.
@@ -60,7 +60,7 @@ function drawQte(){
   ctx.fillStyle='#ffffff1a';rr(x-bw/2,y+72,bw,6,3);ctx.fill();
   ctx.fillStyle=left>0.35?'#ebbd79':'#e0563e';rr(x-bw/2,y+72,bw*left,6,3);ctx.fill();
   ctx.font='600 10px system-ui,sans-serif';ctx.fillStyle='#8b8070';
-  var secs=q.secs.toFixed(1);if(LANG==='fi')secs=secs.replace('.',',');
+  var secs=q.secs.toFixed(1);if(loc().dec===',')secs=secs.replace('.',',');
   ctx.fillText(q.auto?tr('WINDOW: NOT REQUIRED'):tr('WINDOW: {s} s · INCLUDES TWO SECONDS FOR READING · REALITY: ALREADY MOVING').replace('{s}',secs),x,y+90);
   if(q.end){
     var a=clamp(q.endT/0.15,0,1),sc=RM?1:1.4-0.4*a,txt=tr(q.end==='won'?'CORRECT.':q.end==='wrong'?'INCORRECT.':'TOO LATE.'),col=q.end==='won'?'#7fc08a':'#e0563e';

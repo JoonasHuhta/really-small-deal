@@ -27,7 +27,7 @@ function epiLift(){
   ctx.fillStyle='#2b2f33';rr(722,140,46,90,6);ctx.fill();ctx.fillStyle='#e8b04a';ctx.font='700 22px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText('3',745,178);
   ctx.beginPath();ctx.moveTo(745,196);ctx.lineTo(737,208);ctx.lineTo(753,208);ctx.closePath();ctx.fill();
 }
-function epiDraft(t){return function(){var g=G;epiSay('P',t);g.lines=[{who:'P',text:t}];g.cur={who:'P',text:t};g.curT=99;};}
+function epiDraft(t){return function(){var g=G,s=tr(t);epiSay('P',s);g.lines=[{who:'P',text:s}];g.cur={who:'P',text:s};g.curT=99;};}
 function epiWorld(o,e){   // things drawn in the room, under the camera: the shadow umbrella, the dark with four eyes
   if(!o.umbrella&&!o.drive&&!o.zone&&!e.dark)return;
   ctx.save();applyCamera();var Hm=G.human,q=geom();
@@ -140,16 +140,16 @@ function mineRows(){var m=G.methods||{};return Object.keys(MINE).filter(function
 function epiSnap(){try{var c=document.createElement('canvas');c.width=cv.width;c.height=cv.height;c.getContext('2d').drawImage(cv,0,0);return c;}catch(e){return null;}}
 // 0.79 (Codex review: the receipt and the captions were only pixels): everything the epilogue writes on the screen also goes
 // into Dialogue (Menu → Dialogue), to be read at your own pace, and to a screen reader through a hidden live region.
-function epiSay(who,text,quiet){history.push({who:who,text:text});if(!quiet)try{var el=document.getElementById('epi-sr');if(el)el.textContent=text;}catch(e){}}
+function epiSay(who,text,quiet){text=trQ(text);history.push({who:who,text:text});if(!quiet)try{var el=document.getElementById('epi-sr');if(el)el.textContent=text;}catch(e){}}
 function epiTell(o){
-  if(o.title)epiSay('N',o.title);
-  if(o.l&&!o.noCap){var note=typeof o.note==='function'?o.note():o.note,val=typeof o.v==='function'?o.v():o.v;epiSay('N',o.l+': '+val+(note?' — '+note:''));}   // 0.92: a counted value was read out as its source code
-  if(o.mine)mineRows().forEach(function(m,i){epiSay('N',m.l+': '+m.v,i>0);});
-  if(o.form){epiSay('N','FORM · PAGE 3 OF 9');EPIFORM.forEach(function(r){epiSay(r[1]==='q'?'N':'S',r[1]==='sig'?'Signed: '+r[2]:r[2],true);});}
-  if(o.roll){epiSay('N','The receipt for the whole week. Every line is here in Dialogue.');var rows=epiRollRows();
-    for(var i=0;i<rows.length;i++){var r=rows[i];if(r.h)epiSay('N',r.h,true);
-      else if(r.l){var v=typeof r.v==='function'?r.v():r.v,n=rows[i+1]&&rows[i+1].n;epiSay('N',r.l+': '+v+(n?' — '+n:''),true);if(n)i++;}
-      else if(r.n)epiSay('N',r.n,true);}}
+  if(o.title)epiSay('N',tr(o.title));
+  if(o.l&&!o.noCap){var note=typeof o.note==='function'?o.note():o.note,val=typeof o.v==='function'?o.v():o.v;epiSay('N',tr(o.l)+': '+trQ(String(val))+(note?' — '+tr(note):''));}   // 0.92: a counted value was read out as its source code
+  if(o.mine)mineRows().forEach(function(m,i){epiSay('N',tr(m.l)+': '+trQ(String(m.v)),i>0);});
+  if(o.form){epiSay('N',tr('FORM · PAGE 3 OF 9'));EPIFORM.forEach(function(r){epiSay(r[1]==='q'?'N':'S',r[1]==='sig'?tr('Signed: Ekskyysmi'):tr(r[2]),true);});}
+  if(o.roll){epiSay('N',tr('The receipt for the whole week. Every line is here in Dialogue.'));var rows=epiRollRows();
+    for(var i=0;i<rows.length;i++){var r=rows[i];if(r.h)epiSay('N',tr(r.h),true);
+      else if(r.l){var v=typeof r.v==='function'?r.v():r.v,n=rows[i+1]&&rows[i+1].n;epiSay('N',tr(r.l)+': '+trQ(String(v))+(n?' — '+tr(n):''),true);if(n)i++;}
+      else if(r.n)epiSay('N',tr(r.n),true);}}
   if(o.credit)epiSay('N',o.credit);
 }
 function epiShot(o){return function(){
@@ -205,7 +205,7 @@ function epiFilterOn(){}
 function drawEpi(){
   var e=G.epi;if(!e)return;
   if(e.theEnd){ctx.fillStyle='#0d1114';ctx.fillRect(0,0,W,H);var a=clamp(e.clock/0.8,0,1);ctx.globalAlpha=a;ctx.fillStyle='#f4eddf';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.font='500 54px Fraunces,Georgia,serif';ctx.fillText('That was the week.',W/2,H/2-8);ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('(Ekskyysmi kept the receipts)',W/2,H/2+40);ctx.globalAlpha=1;return;}
+    ctx.font='500 54px Fraunces,Georgia,serif';ctx.fillText('That was the week.',W/2,H/2-8,W-80);ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('(Ekskyysmi kept the receipts)',W/2,H/2+40,W-80);ctx.globalAlpha=1;return;}
   epiSkipHint(e);
   if(e.o){epiWorld(e.o,e);if(e.o.rain)epiRain();}
   // a warm wash, a little haze: the week as remembered
@@ -221,18 +221,20 @@ function drawEpi(){
   if(!rows.length&&!o.title&&!o.credit)return;
   var lead=Math.min(0.8,(o.secs||5.5)*0.12),a=clamp((e.ct-lead)/0.4,0,1)*clamp(((o.secs||5.5)-0.15-e.ct)/0.35,0,1);if(a<=0)return;   // short shots: caption early and held to the cut
   ctx.save();ctx.globalAlpha=a;ctx.textBaseline='middle';
-  if(o.credit){ctx.textAlign='center';ctx.font='500 22px Fraunces,Georgia,serif';ctx.fillStyle='#f4eddf';ctx.fillText(o.credit,W/2,H-58);ctx.restore();return;}
+  if(o.credit){ctx.textAlign='center';ctx.font='500 22px Fraunces,Georgia,serif';ctx.fillStyle='#f4eddf';ctx.fillText(o.credit,W/2,H-58,W-60);ctx.restore();return;}
   var note=typeof o.note==='function'?o.note():o.note,mono='"DM Mono",ui-monospace,Menlo,monospace';
-  ctx.font='500 12px '+mono;var w=Math.max(380,note?ctx.measureText(note).width+40:0),lh=24,h=24+(o.title?1:rows.length)*lh+(note?18:0),x=W/2-w/2,y=H-30-h;
+  ctx.font='500 12px '+mono;var w=Math.max(380,note?ctx.measureText(note).width+40:0),lh=24;
+  if(!o.title){ctx.font='600 14px '+mono;rows.forEach(function(r){var v=typeof r.v==='function'?r.v():r.v;w=Math.max(w,ctx.measureText(r.l).width+ctx.measureText(String(v)).width+70);});}
+  w=Math.min(w,W-40);var h=24+(o.title?1:rows.length)*lh+(note?18:0),x=W/2-w/2,y=H-30-h;
   ctx.translate(W/2,y+h/2);ctx.rotate(-0.012);ctx.translate(-W/2,-(y+h/2));
   ctx.fillStyle='rgba(244,237,223,0.94)';ctx.fillRect(x,y,w,h);
   for(var i=0;i<w;i+=8){ctx.beginPath();ctx.moveTo(x+i,y+h);ctx.lineTo(x+i+4,y+h+5);ctx.lineTo(x+i+8,y+h);ctx.fill();}   // torn edge
   ctx.fillStyle='#2b2733';
-  if(o.title){ctx.font='700 15px '+mono;ctx.textAlign='center';ctx.fillText(o.title,W/2,y+12+lh/2);}
-  else rows.forEach(function(r,i){var yy=y+12+lh/2+i*lh;ctx.font='600 14px '+mono;ctx.textAlign='left';ctx.fillText(r.l,x+18,yy);
+  if(o.title){ctx.font='700 15px '+mono;ctx.textAlign='center';ctx.fillText(o.title,W/2,y+12+lh/2,w-24);}
+  else rows.forEach(function(r,i){var yy=y+12+lh/2+i*lh;ctx.font='600 14px '+mono;ctx.textAlign='left';ctx.fillText(r.l,x+18,yy,w*0.62);
     var val=typeof r.v==='function'?r.v():r.v;var lw=ctx.measureText(r.l).width;ctx.textAlign='right';ctx.fillText(val,x+w-18,yy);var vw=ctx.measureText(val).width;
     ctx.fillStyle='#8c8590';for(var d=x+18+lw+8;d<x+w-18-vw-8;d+=7)ctx.fillRect(d,yy+4,2,2);ctx.fillStyle='#2b2733';});
-  if(note){ctx.font='500 12px '+mono;ctx.textAlign='left';ctx.fillStyle='#6b6470';ctx.fillText(note,x+18,y+h-14);}
+  if(note){ctx.font='500 12px '+mono;ctx.textAlign='left';ctx.fillStyle='#6b6470';ctx.fillText(note,x+18,y+h-14,w-36);}
   ctx.restore();
 }
 // ---------- timed to the song (Safe At Last, 2:55, ~108 BPM) ----------
@@ -372,10 +374,12 @@ function epiRoll(e){
   var y=H+10-k*(h+H*0.55),mono='"DM Mono",ui-monospace,Menlo,monospace';
   ctx.save();ctx.globalAlpha=clamp(t/1.2,0,1)*clamp((dur-t)/1.2,0,1);ctx.fillStyle='rgba(244,237,223,0.95)';ctx.fillRect(x,y,w,h);
   ctx.textBaseline='middle';rows.forEach(function(r,i){var yy=y+24+i*lh;if(yy<-20||yy>H+20)return;
-    if(r.h){ctx.font='700 14px '+mono;ctx.textAlign='center';ctx.fillStyle='#2b2733';ctx.fillText(r.h,x+w/2,yy);}
-    else if(r.n){ctx.font='500 11px '+mono;ctx.textAlign='left';ctx.fillStyle='#6b6470';ctx.fillText(r.n,x+16,yy);}
-    else if(r.l){var val=typeof r.v==='function'?r.v():r.v;ctx.font='600 12.5px '+mono;ctx.textAlign='left';ctx.fillStyle='#2b2733';ctx.fillText(r.l,x+16,yy);ctx.textAlign='right';ctx.fillText(val,x+w-16,yy);
-      var lw=ctx.measureText(r.l).width;ctx.textAlign='left';var vw=ctx.measureText(val).width;ctx.fillStyle='#8c8590';for(var d=x+16+lw+6;d<x+w-16-vw-6;d+=7)ctx.fillRect(d,yy+4,2,2);}});
+    if(r.h){ctx.font='700 14px '+mono;ctx.textAlign='center';ctx.fillStyle='#2b2733';ctx.fillText(r.h,x+w/2,yy,w-24);}
+    else if(r.n){ctx.font='500 11px '+mono;ctx.textAlign='left';ctx.fillStyle='#6b6470';ctx.fillText(r.n,x+16,yy,w-32);}
+    else if(r.l){var val=String(typeof r.v==='function'?r.v():r.v);ctx.font='600 12.5px '+mono;ctx.fillStyle='#2b2733';   // 0.99.39: a longer language squeezes the label, never over its value
+      var vw=Math.min(ctx.measureText(val).width,w*0.45),room=w-32-vw-12,lw=Math.min(ctx.measureText(r.l).width,room);
+      ctx.textAlign='left';ctx.fillText(r.l,x+16,yy,room);ctx.textAlign='right';ctx.fillText(val,x+w-16,yy,w*0.45);
+      ctx.textAlign='left';ctx.fillStyle='#8c8590';for(var d=x+16+lw+6;d<x+w-16-vw-6;d+=7)ctx.fillRect(d,yy+4,2,2);}});
   ctx.restore();
 }
 // The epilogue is a film: the panel and the hint line under the scene go away (on a phone they were an unreadable bar).
@@ -384,11 +388,11 @@ var EPIFORM=[[0.1,'q','7. How do you usually take criticism?'],[1.1,'a','persona
 function epiForm(e){var t=e.ct,x=500,y=50,w=435,h=325,mono='"DM Mono",ui-monospace,Menlo,monospace',hand='"Segoe Print","Bradley Hand","Comic Sans MS",cursive';
   ctx.save();ctx.translate(x+w/2,y+h/2);ctx.rotate(0.018);ctx.translate(-(x+w/2),-(y+h/2));
   ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(x+6,y+8,w,h);ctx.fillStyle='#f4eddf';ctx.fillRect(x,y,w,h);
-  ctx.fillStyle='#2b2733';ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 12px '+mono;ctx.fillText('FORM · PAGE 3 OF 9',x+18,y+22);
+  ctx.fillStyle='#2b2733';ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 12px '+mono;ctx.fillText('FORM · PAGE 3 OF 9',x+18,y+22,w-36);
   ctx.fillStyle='#c9c0ad';ctx.fillRect(x+18,y+34,w-36,1);var yy=y+58;
   EPIFORM.forEach(function(r){if(t<r[0])return;var a=clamp((t-r[0])/0.3,0,1);ctx.globalAlpha=a;
-    if(r[1]==='q'){ctx.fillStyle='#2b2733';ctx.font='500 16px '+mono;ctx.fillText(r[2],x+18,yy);yy+=32;}
-    else if(r[1]==='a'){ctx.fillStyle='#24408f';ctx.font='italic 600 21px '+hand;ctx.fillText(r[2],x+34,yy);yy+=43;}
+    if(r[1]==='q'){ctx.fillStyle='#2b2733';ctx.font='500 16px '+mono;wrapText(r[2],w-36).forEach(function(l){ctx.fillText(l,x+18,yy);yy+=21;});yy+=11;}
+    else if(r[1]==='a'){ctx.fillStyle='#24408f';ctx.font='italic 600 21px '+hand;wrapText(r[2],w-52).forEach(function(l){ctx.fillText(l,x+34,yy);yy+=27;});yy+=16;}
     else{ctx.fillStyle='#c9c0ad';ctx.fillRect(x+18,y+h-48,w-36,1);ctx.fillStyle='#24408f';ctx.font='italic 700 24px '+hand;ctx.fillText(r[2],x+30,y+h-62);
       ctx.fillStyle='#6b6470';ctx.font='500 11px '+mono;ctx.fillText('signature (the shadow)',x+18,y+h-34);}
     ctx.globalAlpha=1;});

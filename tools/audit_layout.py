@@ -11,7 +11,8 @@ SAVE=json.dumps({"version":2,"ch":3,"unlocked":5,"chapters":{str(i):{"day":"B"} 
 DRIVE='''([target,pick])=>{const T=__T;window.requestAnimationFrame=()=>0;window.__ts=(window.__ts||performance.now()+1e6);let g=0;
  const ok=()=>{const s=T.state(); if(target==='choice4')return s==='choice'&&T.nopts()>=4; if(target==='longline')return s==='click'&&T.G.cur&&T.G.cur.text.length>95; if(target==='paced')return s==='fight'&&T.G.fight.paced&&T.G.fight.t>0.5; if(target==='flow')return s==='fight'&&!T.G.fight.paced&&T.G.fight.t>4; if(target==='chatlog')return s==='view'&&T.G.out&&T.G.out.anim==='chatlog'&&T.G.out.t>2; if(target==='ended')return T.G.ended; return s===target;};
  while(g++<30000&&!ok()){window.__ts+=33;T.frame(window.__ts);const s=T.state();
-  if(s==='click'||(s==='view'&&T.G.out&&T.G.out.t>2.6)){T.unlock();T.advance();}
+  if(s==='view'&&!T.G.out)window.__vw=(window.__vw||0)+1;else window.__vw=0;
+  if(s==='click'||(s==='view'&&T.G.out&&T.G.out.t>2.6)||window.__vw>90){window.__vw=0;T.unlock();T.advance();}   // 0.99.39: a view without an outside picture (a card) waited forever
   else if(s==='choice'){T.unlock();T.choose(Math.min(pick,T.nopts()-1));}
   else if(s==='stretch'){T.unlock();T.advance();}
   else if(s==='hold'){T.holdDown();}
@@ -33,6 +34,7 @@ CHECK='''()=>{const vw=innerWidth,vh=innerHeight,out=[];const de=document.docume
  for(let i=1;i<nav.length;i++){const a=nav[i-1],b=nav[i];const sameRow=b.top<a.bottom-1&&b.bottom>a.top+1;if(sameRow&&b.left<a.right-1)out.push('nav buttons overlap');}
  return out;}'''
 FI="(()=>{const l=document.getElementById('lang');l.value='fi';l.dispatchEvent(new Event('change'));})()"   # the real menu path
+XX="(()=>{localStorage.setItem('ekskyysmi.test','on');__T.lang('xx');})()"   # the pseudo-language is offered in testing mode only
 STATES=[
  ('title',None,None,0),('title-save',None,None,0),('about',"__T.about()",None,0),('chapters',"__T.chapters()",None,0),('lab-list',"__T.labList()",None,0),('moments',"localStorage.setItem('ekskyysmi.save',JSON.stringify({version:2,ch:5,unlocked:5,chapters:{1:{},2:{},3:{},4:{},5:{}}}));__T.moments()",None,0),
  ('intro-skip',"__T.start()",'time',0),('longline',"__T.start('B',true)",'longline',0),('choice',"__T.start('B',true)",'choice',0),('stretch',"__T.start('B',true)",'stretch',0),('hold',"__T.start('B',true)",'hold',1),
@@ -43,7 +45,12 @@ STATES=[
  ('paused',"__T.start('B',true)",'choice',0),('restart-confirm',"__T.start('B',true)",'choice',0),('journal',"__T.start('B',true)",'choice',0),('menu-open',"__T.start('B',true)",'choice',0),('voice',"__T.lab('voice')",'click',0),('quiet',"__T.lab('quiet')",'auto',0),('form',"__T.lab('form')",'choice',0),('night',"__T.lab('night')",'click',0),('rewind',"__T.lab('rewind')",'choice',0),('week-end',"__T.chapter(5)",'ended',0),
  # 0.89: the Finnish pilot (Monday). Finnish lines run longer, so the same Monday states again in Finnish.
  ('fi-longline',FI+";__T.start('B',true)",'longline',0),('fi-choice',FI+";__T.start('B',true)",'choice',0),('fi-qte',FI+";__T.start('B',true)",'qte',0),
- ('fi-hold',FI+";__T.start('B',true)",'hold',1),('fi-monday-end',FI+";__T.start('B',true)",'ended',0),('fi-intro',FI+";__T.start()",'time',0),('fi-title',FI,None,0),('fi-menu',FI+";__T.start('B',true)",'choice',0)]
+ ('fi-hold',FI+";__T.start('B',true)",'hold',1),('fi-monday-end',FI+";__T.start('B',true)",'ended',0),('fi-intro',FI+";__T.start()",'time',0),('fi-title',FI,None,0),('fi-menu',FI+";__T.start('B',true)",'choice',0),
+ # 0.99.39: the pseudo-language (every string accented and 40 % longer): does each screen hold a longer language?
+ ('xx-title',XX,None,0),('xx-longline',XX+";__T.start('B',true)",'longline',0),('xx-choice',XX+";__T.start('B',true)",'choice',0),('xx-choice4',XX+";__T.chapter(3)",'choice4',0),
+ ('xx-qte',XX+";__T.start('B',true)",'qte',0),('xx-hold',XX+";__T.start('B',true)",'hold',1),('xx-monday-end',XX+";__T.start('B',true)",'ended',0),('xx-menu',XX+";__T.start('B',true)",'choice',0),
+ ('xx-about',XX+";__T.about()",None,0),('xx-chapters',XX+";__T.chapters()",None,0),('xx-bar',XX+";__T.lab('bar')",'choice',0),('xx-glass',XX+";__T.lab('glass')",'choice',0),
+ ('xx-santa',XX+";__T.lab('santa')",'choice',0),('xx-busstop',XX+";__T.lab('busstop')",'choice',0),('xx-paced',XX+";__T.lab('comments')",'paced',1)]
 async def main():
     only=sys.argv[1:] 
     async with async_playwright() as p:
@@ -65,9 +72,9 @@ async def main():
                 # 0.99.10 (Codex): on a touch phone held sideways there is no in-game Menu button. The back gesture pauses,
                 # and Settings live on the title screen. So: pause with the back gesture there, and skip the menu-only states.
                 menu=await pg.is_visible('#menu')
-                if not menu and name in('menu-open','fi-menu','restart-confirm','journal'):
+                if not menu and name in('menu-open','fi-menu','xx-menu','restart-confirm','journal'):
                     await ctx.close(); continue
-                if name in('menu-open','fi-menu'): await pg.tap('#menu')
+                if name in('menu-open','fi-menu','xx-menu'): await pg.tap('#menu')
                 if name=='paused':
                     if menu: await pg.tap('#menu'); await pg.tap('#pause')
                     else: await pg.evaluate("__T.back()")

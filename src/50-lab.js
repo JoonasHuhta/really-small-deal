@@ -59,26 +59,26 @@ var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is 
 var TRYING=['kickoff','plusone','lift','busstop','leaving','call'];   // Snow indoors. joined the story (0.99.31), Secret Santa. after the library (0.99.37)
 var SITUATION={santa:'Your present, opened in front of everyone.',leaving:'Going home from a party: say goodbye, or slip out.',call:'Booking something by phone. A live voice.',busstop:'A colleague at the bus stop whose name you never learned.',lift:'A lift with a colleague. Three floors. Nothing to say.',plusone:'Lunch for two, then a third person joins and you drop out.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
-function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
+function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+tr(LABS[k].title)+'</b><span>'+tr(line)+'</span></button>';}   // 0.99.39: the menus translate too
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
 var WIP=['epilogue','mug'];
 function wipList(shown){if(!DEVLAB&&!TESTING)return '';var list=WIP.slice();
   if(TESTING&&shown)for(var k in LABS)if(list.indexOf(k)<0)list.push(k);   // testing: every scene not listed above, the test clones included, once
-  var h='<div class="eyebrow">'+(TESTING?'Work in progress and test clones':'Work in progress')+'</div><div class="lab-list">',n=0;
+  var h='<div class="eyebrow">'+tr(TESTING?'Work in progress and test clones':'Work in progress')+'</div><div class="lab-list">',n=0;
   for(var i=0;i<list.length;i++)if(LABS[list[i]]&&!(shown&&shown[list[i]])){n++;h+=momentButton(list[i],LABS[list[i]].blurb);}
   return n?h+'</div>':'';}
 function showMoments(){
-  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked||1:1,h='<div class="eyebrow">Moments</div>';
-  if(top<2){showOv(h+'<h2>Not yet.</h2><p>More moments open after the first day.</p>'+wipList()+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');return;}
-  h+='<h2>Play a moment.</h2><p>On its own, outside the story.</p><div class="eyebrow">Situations</div><div class="lab-list">';
+  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked||1:1,h='<div class="eyebrow">'+tr('Moments')+'</div>';
+  if(top<2){showOv(h+'<h2>'+tr('Not yet.')+'</h2><p>'+tr('More moments open after the first day.')+'</p>'+wipList()+'<button class="go alt" type="button" data-go="menu">'+tr('Back to title')+'</button>','menu');return;}
+  h+='<h2>'+tr('Play a moment.')+'</h2><p>'+tr('On its own, outside the story.')+'</p><div class="eyebrow">'+tr('Situations')+'</div><div class="lab-list">';
   var shown={};function add(k,line){if(!LABS[k]||shown[k])return '';shown[k]=1;return momentButton(k,line);}
   for(var i=0;i<EXTRAS.length;i++)h+=add(EXTRAS[i],SITUATION[EXTRAS[i]]);
-  h+='</div><div class="eyebrow">New. Being tried</div><div class="lab-list">';
+  h+='</div><div class="eyebrow">'+tr('New. Being tried')+'</div><div class="lab-list">';
   for(i=0;i<TRYING.length;i++)h+=add(TRYING[i],SITUATION[TRYING[i]]);
-  h+='</div><div class="eyebrow">From the story</div><div class="lab-list">';
+  h+='</div><div class="eyebrow">'+tr('From the story')+'</div><div class="lab-list">';
   var last=TESTING||sv&&sv.done?5:top-1;
   for(var c=1;c<=last;c++)for(var j=0;AFTER[c]&&j<AFTER[c].length;j++){var id=AFTER[c][j];h+=add(id,LABS[id]&&LABS[id].blurb);}
-  showOv(h+'</div>'+wipList(shown)+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
+  showOv(h+'</div>'+wipList(shown)+'<button class="go alt" type="button" data-go="menu">'+tr('Back to title')+'</button>','menu');
 }
 function showLab(){
   var h='<div class="eyebrow">Scenario lab</div><h2>Try a scene.</h2><p>Every short scene on its own, including the ones not in the story yet.</p><div class="lab-list">';
@@ -87,8 +87,8 @@ function showLab(){
 }
 function showLabEnd(id){
   var g=G;g.ended=true;g.labEnd=true;WAIT=null;Q=[];epiChrome(false);render();
-  showOv('<div class="eyebrow">'+(DEVLAB?'Scenario lab':'Moments')+'</div><h2>'+LABS[id].title+'</h2><p>'+(DEVLAB?'That was the whole scene. Was it funny? Did it land?':'That was the whole moment.')+'</p>'+
-   '<button class="go" type="button" data-lab="'+id+'">Play it again →</button><button class="go alt" type="button" data-go="'+(DEVLAB?'lab':'moments')+'">Other moments</button><button class="go alt" type="button" data-go="menu">Title screen</button>','end');
+  showOv('<div class="eyebrow">'+tr(DEVLAB?'Scenario lab':'Moments')+'</div><h2>'+tr(LABS[id].title)+'</h2><p>'+tr(DEVLAB?'That was the whole scene. Was it funny? Did it land?':'That was the whole moment.')+'</p>'+
+   '<button class="go" type="button" data-lab="'+id+'">'+tr('Play it again →')+'</button><button class="go alt" type="button" data-go="'+(DEVLAB?'lab':'moments')+'">'+tr('Other moments')+'</button><button class="go alt" type="button" data-go="menu">'+tr('Title screen')+'</button>','end');
 }
 
 /* ---------- Enhance: the eyebrow ---------- */
@@ -223,8 +223,8 @@ function readReply(){
   render();
 }
 function chatTranscript(){
-  return '<ol class="chat-transcript" aria-label="What was actually sent">'+(G.fightLog||[]).map(function(m){
-    return '<li><p>'+esc(m.full)+'</p><span>'+(m.state==='swatted'?(m.wasOpen?'Read, then swatted':'Swatted before reading'):'Reached your human')+'</span></li>';
+  return '<ol class="chat-transcript" aria-label="'+tr('What was actually sent')+'">'+(G.fightLog||[]).map(function(m){
+    return '<li><p>'+esc(tr(m.full))+'</p><span>'+tr(m.state==='swatted'?(m.wasOpen?'Read, then swatted':'Swatted before reading'):'Reached your human')+'</span></li>';
   }).join('')+'</ol>';
 }
 function swat(){

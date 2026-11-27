@@ -85,13 +85,16 @@ function runRows(run){
   rows.push('-',['WEEKDAYS FILED',String(cal)],['DAYS LIVED',livedDays.toFixed(1),'big']);
   return rows;
 }
+// a receipt foot is text with <br> and buttons in it: the text between the tags translates, the buttons already did
+function trFoot(f){f=String(f);var i=f.indexOf('<button'),head=i<0?f:f.slice(0,i),tail=i<0?'':f.slice(i),br=/<br>$/.test(head);if(br)head=head.slice(0,-4);   // the words whole, <br> and all (KAANNOS.md)
+  return trQ(head)+(br?'<br>':'')+tail;}
 function receiptHTML(title,rows,foot){
-  var h='<div class="receipt" role="figure" aria-label="'+esc(title)+'"><div class="rc-head">REALLY SMALL DEAL<br>'+esc(title)+'</div>';
-  rows.forEach(function(r){h+=r==='-'?'<hr>':'<div class="rr'+(r[2]?' '+r[2]:'')+'"><span>'+esc(r[0])+'</span><span>'+esc(r[1])+'</span></div>';});
-  return h+'<div class="rc-foot">'+foot+'</div></div>';
+  title=trQ(title);var h='<div class="receipt" role="figure" aria-label="'+esc(title)+'"><div class="rc-head">'+tr('REALLY SMALL DEAL')+'<br>'+esc(title)+'</div>';   // 0.99.39: the receipt's own words translate
+  rows.forEach(function(r){h+=r==='-'?'<hr>':'<div class="rr'+(r[2]?' '+r[2]:'')+'"><span>'+esc(trQ(r[0]))+'</span><span>'+esc(trQ(r[1]))+'</span></div>';});
+  return h+'<div class="rc-foot">'+trFoot(foot)+'</div></div>';
 }
 function receiptText(title,rows,foot){
-  var wdt=36,out=['REALLY SMALL DEAL',title,''];
+  var wdt=36,out=[tr('REALLY SMALL DEAL'),trQ(title),''];
   rows.forEach(function(r){if(r==='-'){out.push(new Array(wdt+1).join('-'));return;}var a=r[0],b=r[1],gap=Math.max(1,wdt-a.length-b.length);out.push(a+new Array(gap+1).join(' ')+b);});
   out.push('',foot.replace(/<br>/g,'\n').replace(/<[^>]+>/g,''),'','joonashuhta.github.io/really-small-deal');
   return out.join('\n');
@@ -101,7 +104,7 @@ var RC_FOOT_RUN='Outside, a day is a day.<br>Inside, some days come twice.';
 // The receipt as a picture, for sending to someone who will understand. Drawn from the same rows as the paper one.
 function receiptCanvas(title,rows,foot,inWorld){
   var S=2,PW=560,PAD=34,CW=PW-PAD*2,LH=30,F='500 21px ui-monospace,"SF Mono",Menlo,Consolas,monospace',FB='800 26px ui-monospace,"SF Mono",Menlo,Consolas,monospace';
-  var c=document.createElement('canvas'),x=c.getContext('2d'),items=[],y=0,feet=foot.replace(/<br>/g,'\n').replace(/<[^>]+>/g,'').split('\n').filter(function(s){return s;});
+  var c=document.createElement('canvas'),x=i18nCtx(c.getContext('2d')),items=[],y=0,feet=foot.replace(/<br>/g,'\n').replace(/<[^>]+>/g,'').split('\n').filter(function(s){return s;});
   function wrap(t,max){var out=[],cur='';t.split(' ').forEach(function(w){var n=cur?cur+' '+w:w;if(cur&&x.measureText(n).width>max){out.push(cur);cur=w;}else cur=n;});out.push(cur);return out;}
   x.font=F;
   rows.forEach(function(r){

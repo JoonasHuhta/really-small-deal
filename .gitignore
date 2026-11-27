@@ -22,3 +22,6 @@ Thumbs.db
 .idea/
 *.swp
 tools/audit-shots/
+
+# Translation reports (node tools/strings.cjs <lang>); i18n/strings.tsv is kept
+i18n/missing-*.tsv

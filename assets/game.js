@@ -5,6 +5,13 @@
 var W=960,H=540,WALLY=385,FEETY=462,HOME=450,HOMEX=1500;
 var LAMPS=[250,690,1130,HOMEX+60];
 var cv=document.getElementById('c'),ctx=cv.getContext('2d'),ov=document.getElementById('ov');
+// 0.99.39: every word painted on the canvas goes through the dictionary (src/15-fi.js trQ), and is measured as painted, so a
+// longer language lays out by its own widths. Until now 250 painted strings (signs, receipts, tags, captions) stayed English.
+function i18nCtx(c){if(!c||typeof c.fillText!=='function'||c.i18n===true)return c;var ft=c.fillText,st=c.strokeText,mt=c.measureText;c.i18n=true;
+  c.fillText=function(t,x,y,w){t=trQ(t);return w==null?ft.call(c,t,x,y):ft.call(c,t,x,y,w);};
+  if(typeof st==='function')c.strokeText=function(t,x,y,w){t=trQ(t);return w==null?st.call(c,t,x,y):st.call(c,t,x,y,w);};
+  if(typeof mt==='function')c.measureText=function(t){return mt.call(c,trQ(t));};return c;}
+i18nCtx(ctx);   // and the receipt picture's own canvas (35-inside.js)
 var elLine=document.getElementById('line'),elOpts=document.getElementById('opts');
 var SC=1;
 function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=520;COMPACT=document.documentElement.classList.contains('immersive');
@@ -190,16 +197,41 @@ function soundUI(){var b=document.getElementById('sound');if(b){b.textContent=tr
 // Finnish, a pilot (0.89, Joonas 22.11.: "I'd like to try the first scene in Finnish").
 // The English line is the key; a line without a Finnish one stays English, so the pilot can cover Monday only.
 // Lines are whole sentences (KAANNOS.md): nothing is assembled from pieces. The dictionary itself is FI (16-fi-monday.js).
-var FI={},FIV={},FIMISS={};
+// 0.99.39 (Joonas 27.11.: "soon we translate into different languages, make sure everything scales"):
+// - one dictionary per language in DICT (Finnish is DICT.fi = FI); a new language is a new file that fills DICT.<code>.
+// - LOC: what changes besides words (decimal mark, quotation marks).
+// - a number inside a string can be a template: “DELETED · TAKE {n}” translates “DELETED · TAKE 14” (numbers go back in order).
+// - the canvas paints through trQ (00-core.js): signs, receipts, tags and captions translate like lines, quietly.
+// - LANG 'xx' is a pseudo-language for layout tests (Settings, testing mode): every string accented and 40 % longer.
+var FI={},FIV={},FIMISS={},DICT={fi:FI};
+var LOC={en:{dec:'.',q:['“','”']},fi:{dec:',',q:['”','”']},sv:{dec:',',q:['”','”']},xx:{dec:',',q:['«','»']}};
+function loc(){return LOC[LANG]||LOC.en;}
+var NUMRX=/\d+(?:[.,]\d+)?/g;
+function trNum(s,d){var nums=s.match(NUMRX);if(!nums)return null;var t=d[s.replace(NUMRX,'{n}')];if(!t)return null;var i=0,dec=loc().dec;
+  return t.replace(/\{n\}/g,function(){var v=nums[i++];return v==null?'':dec===','?v.replace('.',','):v;});}
+function trLook(s){var d=DICT[LANG];if(!d)return null;return d[s]||trNum(s,d);}
 function tr(s){
-  if(typeof LANG==='undefined'||LANG!=='fi'||typeof s!=='string'||!s)return s;
-  var t=FI[s];if(t)return t;
-  if(!FIV[s]&&/[A-Za-z]/.test(s))FIMISS[s]=(FIMISS[s]||0)+1;   // the tests read this: what the pilot still shows in English
+  if(typeof LANG==='undefined'||LANG==='en'||typeof s!=='string'||!s)return s;
+  if(LANG==='xx')return pseudo(s);
+  var t=trLook(s);if(t)return t;
+  if(!FIV[s]&&/[A-Za-z]/.test(s))FIMISS[s]=(FIMISS[s]||0)+1;   // the tests read this: what the language still shows in English
   return s;
 }
+// Quiet: for the canvas. A piece of a line that is already translated (word wrap, typing) is not a missing entry.
+function trQ(s){if(typeof LANG==='undefined'||LANG==='en'||typeof s!=='string'||!s||!/[A-Za-z]/.test(s))return s;
+  if(LANG==='xx')return pseudo(s);var t=trLook(s);return t||s;}
 function fiIndex(){FIV={};for(var k in FI)if(Object.prototype.hasOwnProperty.call(FI,k))FIV[FI[k]]=1;}
+// Pseudo-language: accented letters (does the font have them?) and 40 % more length (does the layout?). Placeholders, tags,
+// a leading “Name:” of a message and anything already pseudo stay as they are.
+var PSEUDO={a:'á',b:'ƀ',c:'ç',d:'đ',e:'é',f:'ƒ',g:'ğ',h:'ĥ',i:'í',j:'ĵ',k:'ķ',l:'ĺ',m:'ɱ',n:'ñ',o:'ö',p:'þ',q:'ʠ',r:'ŕ',s:'š',t:'ţ',u:'ü',v:'ṽ',w:'ŵ',x:'ẋ',y:'ý',z:'ž',
+  A:'Å',B:'Ɓ',C:'Ç',D:'Đ',E:'É',F:'Ƒ',G:'Ğ',H:'Ĥ',I:'Í',J:'Ĵ',K:'Ķ',L:'Ĺ',M:'Ṁ',N:'Ñ',O:'Ö',P:'Þ',Q:'Ǫ',R:'Ŕ',S:'Š',T:'Ţ',U:'Ü',V:'Ṽ',W:'Ŵ',X:'Ẋ',Y:'Ý',Z:'Ž'};
+function pseudo(s){if(!/[A-Za-z]/.test(s))return s;var m=/^((?:You|[A-Z][a-z]+): )(?=[“(●])/.exec(s),head=m?m[1]:'',body=s.slice(head.length);
+  var out=body.replace(/(<[^>]*>|\{\w+\})|([A-Za-z])/g,function(all,keep,ch){return keep||PSEUDO[ch]||ch;});
+  var letters=(body.match(/[A-Za-z]/g)||[]).length,pad=Math.round(letters*0.4),words=[];
+  while(pad>0){var w=Math.min(pad,6);words.push('ẋẋẋẋẋẋ'.slice(0,w));pad-=w+1;}
+  return head+out+(words.length?' '+words.join(' '):'');}
 // A receipt row: its label in Finnish (a “ ×3” count stays as it is), the value as it is unless it is words.
-function trRow(r){if(!Array.isArray(r))return r;var m=/^(.*?)( ×\d+)?$/.exec(r[0]),v=r[1];if(LANG==='fi'&&typeof v==='string')v=/[a-z]{3}/.test(v)&&!/\d/.test(v)?tr(v):v.replace(/(\d)\.(\d)/g,'$1,$2');return [tr(m[1])+(m[2]||''),v].concat(r.slice(2));}
+function trRow(r){if(!Array.isArray(r))return r;var m=/^(.*?)( ×\d+)?$/.exec(r[0]),v=r[1];if(LANG!=='en'&&typeof v==='string')v=/[A-Za-z]/.test(v)?tr(v):loc().dec===','?v.replace(/(\d)\.(\d)/g,'$1,$2'):v;return [tr(m[1])+(m[2]||''),v].concat(r.slice(2));}   // 0.99.39: a value with words and numbers ('14 h 07 min') is a {n} template
 // ---- src/16-fi-monday.js ----
 // Finnish pilot: Monday (#1–#2). Generated from the English lines the game actually shows (harvest in Finnish mode), then translated by hand.
 // KAANNOS.md: “oh, hi.” → “ai, moi.”, “You too.” → “Samoin.”, “For the record” → “Pöytäkirjaan:”. Quotation marks are Finnish (” ”).
@@ -639,6 +671,10 @@ function trRow(r){if(!Array.isArray(r))return r;var m=/^(.*?)( ×\d+)?$/.exec(r[
 "Coming. COMING.":"Tullaan. TULLAAN."
 ,
 // 0.97: the end of Monday, changed
+// 0.99.39: Monday's controls that did not translate before
+"SPACE":"VÄLILYÖNTI","REALLY SMALL DEAL":"REALLY SMALL DEAL","Really Small Deal":"Really Small Deal",   // the name stays until Joonas picks the Finnish one (KAANNOS.md)
+"{n} h {n} min":"{n} h {n} min","{n} min":"{n} min","{n} s":"{n} s",   // receipt values: the same units in Finnish, decimal comma from LOC
+"Unfurl your warning":"Levitä varoitus","Size of your warning":"Varoituksen koko","That should do it →":"Tuo riittää →","Menu and settings":"Valikko ja asetukset",
 "On to Tuesday →":"Tiistaihin →","I wobbled. You said hi. Slightly after everyone else.":"Huojuin. Sinä sanoit moi. Vähän kaikkien muiden jälkeen."
 };for(var k in d)FI[k]=d[k];fiIndex();})();
 // ---- src/20-engine.js ----
@@ -740,33 +776,33 @@ function render(){
   if(WAIT==='choice'&&CH){
     speaker=g.choiceWho||'S';text=g.nopeMsg||g.choiceAsk||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':g.chapter===1&&!g.lab&&!g.firstPick?'You’re Ekskyysmi. Pick what I say.':'What do we do with this?');   // the very first choice says who the player is
     if(g.form&&g.form.i>=0){speaker='N';text=FORM_Q[g.form.i].q;}
-    for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(tr(CH[i].t))+' <em>'+tr('Not a setting. Yet.')+'</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>':CH[i].off&&CH[i].note?'<button class="opt off'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>'+esc(CH[i].note)+'</em></button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>';
+    for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(tr(CH[i].t))+' <em>'+tr('Not a setting. Yet.')+'</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>':CH[i].off&&CH[i].note?'<button class="opt off'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>'+esc(tr(CH[i].note))+'</em></button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>';
   }else if(WAIT==='stretch'){
     speaker='S';text='A small warning. Just enough to make my point.';
-    html='<div class="stretch-controls"><label for="stretch">Unfurl your warning</label><input id="stretch" type="range" min="1.8" max="3.8" step="0.05" value="'+g.morko.sT+'" aria-label="Size of your warning"><button class="opt cont" type="button" data-i="go">That should do it →</button></div>';
+    html='<div class="stretch-controls"><label for="stretch">'+tr('Unfurl your warning')+'</label><input id="stretch" type="range" min="1.8" max="3.8" step="0.05" value="'+g.morko.sT+'" aria-label="'+tr('Size of your warning')+'"><button class="opt cont" type="button" data-i="go">'+tr('That should do it →')+'</button></div>';
   }else if(WAIT==='auto'&&g.auto){
     speaker='H';text='Already decided.';
-    for(var ai=0;ai<g.auto.opts.length;ai++)html+='<button class="opt'+(g.auto.done&&ai===g.auto.pick?' picked':'')+'" type="button" disabled><i>'+(ai+1)+'</i>'+esc(g.auto.opts[ai])+'</button>';
+    for(var ai=0;ai<g.auto.opts.length;ai++)html+='<button class="opt'+(g.auto.done&&ai===g.auto.pick?' picked':'')+'" type="button" disabled><i>'+(ai+1)+'</i>'+esc(tr(g.auto.opts[ai]))+'</button>';
   }else if(WAIT==='lamp'){
     speaker='N';text='It is dark. There is a lamp.';
-    html='<button class="opt cont" type="button" data-i="go">Turn on the lamp</button>';
+    html='<button class="opt cont" type="button" data-i="go">'+tr('Turn on the lamp')+'</button>';
   }else if(WAIT==='toss'){
     speaker='S';text=tossText();g.toss.shown=text;
-    html='<button class="opt cont" type="button" data-i="go">Let go</button>';
+    html='<button class="opt cont" type="button" data-i="go">'+tr('Let go')+'</button>';
   }else if(WAIT==='hold'){
     speaker='S';text=holdText();g.hold.shown=text;
     html='<div class="hold-controls"><button class="opt cont" type="button" data-i="hold">'+tr(HOLD_LABEL[g.hold.kind])+'</button><div class="holdbar"><i id="holdfill"></i></div></div>';
   }else if(WAIT==='qte'&&g.qte){
-    var qq=g.qte;speaker='S';text='RESPOND. CORRECTLY. NOW.';
-    html=qq.order.map(function(i){var r=RESPONSE[i],done=i<qq.i;return '<button class="opt qte'+(done?' done':'')+'" type="button" data-i="q'+i+'"'+(qq.end||done?' disabled':'')+'><b>'+r.sym+'</b><span>'+tr(r.label)+'</span></button>';}).join('');
+    var qq=g.qte;speaker='S';text=tr('RESPOND. CORRECTLY. NOW.');
+    html=qq.order.map(function(i){var r=RESPONSE[i],done=i<qq.i;return '<button class="opt qte'+(done?' done':'')+'" type="button" data-i="q'+i+'"'+(qq.end||done?' disabled':'')+'><b>'+tr(r.sym)+'</b><span>'+tr(r.label)+'</span></button>';}).join('');
   }else if(WAIT==='fight'){
     speaker='S';text='Incoming! I’ve got this. Probably.';
-    html='<button class="opt cont swat" type="button" data-i="go">Swat! <span>(or tap the scene)</span></button>';
+    html='<button class="opt cont swat" type="button" data-i="go">'+tr('Swat!')+' <span>'+tr('(or tap the scene)')+'</span></button>';
     if(g.fight.paced){
       var reply=currentReply(),ready=reply&&(reply.state==='fly'||reply.state==='open');
       speaker='P';text=reply?(g.fight.msgs.indexOf(reply)+1)+' / '+g.fight.msgs.length+' — '+(reply.seen?reply.full:'“'+reply.far+'”'):'';
-      html='<button class="opt cont" type="button" data-i="read"'+(ready?'':' disabled')+'>'+(ready?(reply.state==='fly'?'Let it come closer →':'Let it through →'):'A moment…')+'</button>'+
-        '<button class="opt" type="button" data-i="go"'+(ready?'':' disabled')+'>Swat this reply away</button>';
+      html='<button class="opt cont" type="button" data-i="read"'+(ready?'':' disabled')+'>'+tr(ready?(reply.state==='fly'?'Let it come closer →':'Let it through →'):'A moment…')+'</button>'+
+        '<button class="opt" type="button" data-i="go"'+(ready?'':' disabled')+'>'+tr('Swat this reply away')+'</button>';
     }
   }else if(WAIT==='view'){
     speaker='N';text=g.out.cap;
@@ -997,7 +1033,7 @@ function drawReplay(){
 function look(){G.gazeFrom='A';G.gazeT=0.5;}
 function calm(){var g=G;g.human.sweatT=0;g.gazeT=0;g.darkT=0;g.anx=0.25;g.morko.sT=1.15;g.morko.mood='calm';g.morko.pose=null;g.human.face='neutral';g.cz=1.025;g.cx=W/2;g.cy=H/2;g.camRate=null;g.hidS=null;}
 function prevent(label,quiet){return function(){G.prevented++;if(quiet)return [];startStamp('press');return [{wait:0.85}];};}   // quiet: counted, not stamped (one stamp on Monday is the joke, two is a lecture)
-function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=LANG==='fi'?{title:tr(o.title),dur:tr(o.dur),cap:tr(o.cap),anim:o.anim,t:0}:o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
+function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=LANG!=='en'?{title:tr(o.title),dur:tr(o.dur),cap:tr(o.cap),anim:o.anim,t:0}:o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
 function leave(){G.axT=1120;G.bxT=1200;G.aFace=1;G.bFace=1;}
 function frozen(){var g=G;sfx('startle');g.morko.st='frozen';g.startles++;g.human.flinch=1;}
 function hide(){G.morko.st='hide';}
@@ -2183,7 +2219,7 @@ function startQte(){
   // on a touch screen the buttons arrive shuffled, because of course they do
   if(coarse)for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=order[i];order[i]=order[j];order[j]=t;}
   g.qte={i:0,t:0,secs:qteSecs(coarse),end:null,endT:0,order:order,auto:false};g.qteWon=false;
-  g.lines=[];g.cur={who:'S',text:'RESPOND. CORRECTLY. NOW.'};stopVoice();sfx('startle');
+  g.lines=[];g.cur={who:'S',text:tr('RESPOND. CORRECTLY. NOW.')};stopVoice();sfx('startle');
   WAIT='qte';LOCK=0;render();
 }
 // Friday: the same window, answered without the procedure.
@@ -2227,7 +2263,7 @@ function drawQte(){
   ctx.fillStyle='#ffffff1a';rr(x-bw/2,y+72,bw,6,3);ctx.fill();
   ctx.fillStyle=left>0.35?'#ebbd79':'#e0563e';rr(x-bw/2,y+72,bw*left,6,3);ctx.fill();
   ctx.font='600 10px system-ui,sans-serif';ctx.fillStyle='#8b8070';
-  var secs=q.secs.toFixed(1);if(LANG==='fi')secs=secs.replace('.',',');
+  var secs=q.secs.toFixed(1);if(loc().dec===',')secs=secs.replace('.',',');
   ctx.fillText(q.auto?tr('WINDOW: NOT REQUIRED'):tr('WINDOW: {s} s · INCLUDES TWO SECONDS FOR READING · REALITY: ALREADY MOVING').replace('{s}',secs),x,y+90);
   if(q.end){
     var a=clamp(q.endT/0.15,0,1),sc=RM?1:1.4-0.4*a,txt=tr(q.end==='won'?'CORRECT.':q.end==='wrong'?'INCORRECT.':'TOO LATE.'),col=q.end==='won'?'#7fc08a':'#e0563e';
@@ -2345,13 +2381,16 @@ function runRows(run){
   rows.push('-',['WEEKDAYS FILED',String(cal)],['DAYS LIVED',livedDays.toFixed(1),'big']);
   return rows;
 }
+// a receipt foot is text with <br> and buttons in it: the text between the tags translates, the buttons already did
+function trFoot(f){f=String(f);var i=f.indexOf('<button'),head=i<0?f:f.slice(0,i),tail=i<0?'':f.slice(i),br=/<br>$/.test(head);if(br)head=head.slice(0,-4);   // the words whole, <br> and all (KAANNOS.md)
+  return trQ(head)+(br?'<br>':'')+tail;}
 function receiptHTML(title,rows,foot){
-  var h='<div class="receipt" role="figure" aria-label="'+esc(title)+'"><div class="rc-head">REALLY SMALL DEAL<br>'+esc(title)+'</div>';
-  rows.forEach(function(r){h+=r==='-'?'<hr>':'<div class="rr'+(r[2]?' '+r[2]:'')+'"><span>'+esc(r[0])+'</span><span>'+esc(r[1])+'</span></div>';});
-  return h+'<div class="rc-foot">'+foot+'</div></div>';
+  title=trQ(title);var h='<div class="receipt" role="figure" aria-label="'+esc(title)+'"><div class="rc-head">'+tr('REALLY SMALL DEAL')+'<br>'+esc(title)+'</div>';   // 0.99.39: the receipt's own words translate
+  rows.forEach(function(r){h+=r==='-'?'<hr>':'<div class="rr'+(r[2]?' '+r[2]:'')+'"><span>'+esc(trQ(r[0]))+'</span><span>'+esc(trQ(r[1]))+'</span></div>';});
+  return h+'<div class="rc-foot">'+trFoot(foot)+'</div></div>';
 }
 function receiptText(title,rows,foot){
-  var wdt=36,out=['REALLY SMALL DEAL',title,''];
+  var wdt=36,out=[tr('REALLY SMALL DEAL'),trQ(title),''];
   rows.forEach(function(r){if(r==='-'){out.push(new Array(wdt+1).join('-'));return;}var a=r[0],b=r[1],gap=Math.max(1,wdt-a.length-b.length);out.push(a+new Array(gap+1).join(' ')+b);});
   out.push('',foot.replace(/<br>/g,'\n').replace(/<[^>]+>/g,''),'','joonashuhta.github.io/really-small-deal');
   return out.join('\n');
@@ -2361,7 +2400,7 @@ var RC_FOOT_RUN='Outside, a day is a day.<br>Inside, some days come twice.';
 // The receipt as a picture, for sending to someone who will understand. Drawn from the same rows as the paper one.
 function receiptCanvas(title,rows,foot,inWorld){
   var S=2,PW=560,PAD=34,CW=PW-PAD*2,LH=30,F='500 21px ui-monospace,"SF Mono",Menlo,Consolas,monospace',FB='800 26px ui-monospace,"SF Mono",Menlo,Consolas,monospace';
-  var c=document.createElement('canvas'),x=c.getContext('2d'),items=[],y=0,feet=foot.replace(/<br>/g,'\n').replace(/<[^>]+>/g,'').split('\n').filter(function(s){return s;});
+  var c=document.createElement('canvas'),x=i18nCtx(c.getContext('2d')),items=[],y=0,feet=foot.replace(/<br>/g,'\n').replace(/<[^>]+>/g,'').split('\n').filter(function(s){return s;});
   function wrap(t,max){var out=[],cur='';t.split(' ').forEach(function(w){var n=cur?cur+' '+w:w;if(cur&&x.measureText(n).width>max){out.push(cur);cur=w;}else cur=n;});out.push(cur);return out;}
   x.font=F;
   rows.forEach(function(r){
@@ -2753,7 +2792,7 @@ function epiLift(){
   ctx.fillStyle='#2b2f33';rr(722,140,46,90,6);ctx.fill();ctx.fillStyle='#e8b04a';ctx.font='700 22px system-ui,sans-serif';ctx.textAlign='center';ctx.fillText('3',745,178);
   ctx.beginPath();ctx.moveTo(745,196);ctx.lineTo(737,208);ctx.lineTo(753,208);ctx.closePath();ctx.fill();
 }
-function epiDraft(t){return function(){var g=G;epiSay('P',t);g.lines=[{who:'P',text:t}];g.cur={who:'P',text:t};g.curT=99;};}
+function epiDraft(t){return function(){var g=G,s=tr(t);epiSay('P',s);g.lines=[{who:'P',text:s}];g.cur={who:'P',text:s};g.curT=99;};}
 function epiWorld(o,e){   // things drawn in the room, under the camera: the shadow umbrella, the dark with four eyes
   if(!o.umbrella&&!o.drive&&!o.zone&&!e.dark)return;
   ctx.save();applyCamera();var Hm=G.human,q=geom();
@@ -2866,16 +2905,16 @@ function mineRows(){var m=G.methods||{};return Object.keys(MINE).filter(function
 function epiSnap(){try{var c=document.createElement('canvas');c.width=cv.width;c.height=cv.height;c.getContext('2d').drawImage(cv,0,0);return c;}catch(e){return null;}}
 // 0.79 (Codex review: the receipt and the captions were only pixels): everything the epilogue writes on the screen also goes
 // into Dialogue (Menu → Dialogue), to be read at your own pace, and to a screen reader through a hidden live region.
-function epiSay(who,text,quiet){history.push({who:who,text:text});if(!quiet)try{var el=document.getElementById('epi-sr');if(el)el.textContent=text;}catch(e){}}
+function epiSay(who,text,quiet){text=trQ(text);history.push({who:who,text:text});if(!quiet)try{var el=document.getElementById('epi-sr');if(el)el.textContent=text;}catch(e){}}
 function epiTell(o){
-  if(o.title)epiSay('N',o.title);
-  if(o.l&&!o.noCap){var note=typeof o.note==='function'?o.note():o.note,val=typeof o.v==='function'?o.v():o.v;epiSay('N',o.l+': '+val+(note?' — '+note:''));}   // 0.92: a counted value was read out as its source code
-  if(o.mine)mineRows().forEach(function(m,i){epiSay('N',m.l+': '+m.v,i>0);});
-  if(o.form){epiSay('N','FORM · PAGE 3 OF 9');EPIFORM.forEach(function(r){epiSay(r[1]==='q'?'N':'S',r[1]==='sig'?'Signed: '+r[2]:r[2],true);});}
-  if(o.roll){epiSay('N','The receipt for the whole week. Every line is here in Dialogue.');var rows=epiRollRows();
-    for(var i=0;i<rows.length;i++){var r=rows[i];if(r.h)epiSay('N',r.h,true);
-      else if(r.l){var v=typeof r.v==='function'?r.v():r.v,n=rows[i+1]&&rows[i+1].n;epiSay('N',r.l+': '+v+(n?' — '+n:''),true);if(n)i++;}
-      else if(r.n)epiSay('N',r.n,true);}}
+  if(o.title)epiSay('N',tr(o.title));
+  if(o.l&&!o.noCap){var note=typeof o.note==='function'?o.note():o.note,val=typeof o.v==='function'?o.v():o.v;epiSay('N',tr(o.l)+': '+trQ(String(val))+(note?' — '+tr(note):''));}   // 0.92: a counted value was read out as its source code
+  if(o.mine)mineRows().forEach(function(m,i){epiSay('N',tr(m.l)+': '+trQ(String(m.v)),i>0);});
+  if(o.form){epiSay('N',tr('FORM · PAGE 3 OF 9'));EPIFORM.forEach(function(r){epiSay(r[1]==='q'?'N':'S',r[1]==='sig'?tr('Signed: Ekskyysmi'):tr(r[2]),true);});}
+  if(o.roll){epiSay('N',tr('The receipt for the whole week. Every line is here in Dialogue.'));var rows=epiRollRows();
+    for(var i=0;i<rows.length;i++){var r=rows[i];if(r.h)epiSay('N',tr(r.h),true);
+      else if(r.l){var v=typeof r.v==='function'?r.v():r.v,n=rows[i+1]&&rows[i+1].n;epiSay('N',tr(r.l)+': '+trQ(String(v))+(n?' — '+tr(n):''),true);if(n)i++;}
+      else if(r.n)epiSay('N',tr(r.n),true);}}
   if(o.credit)epiSay('N',o.credit);
 }
 function epiShot(o){return function(){
@@ -2931,7 +2970,7 @@ function epiFilterOn(){}
 function drawEpi(){
   var e=G.epi;if(!e)return;
   if(e.theEnd){ctx.fillStyle='#0d1114';ctx.fillRect(0,0,W,H);var a=clamp(e.clock/0.8,0,1);ctx.globalAlpha=a;ctx.fillStyle='#f4eddf';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.font='500 54px Fraunces,Georgia,serif';ctx.fillText('That was the week.',W/2,H/2-8);ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('(Ekskyysmi kept the receipts)',W/2,H/2+40);ctx.globalAlpha=1;return;}
+    ctx.font='500 54px Fraunces,Georgia,serif';ctx.fillText('That was the week.',W/2,H/2-8,W-80);ctx.font='500 17px system-ui,sans-serif';ctx.fillStyle='#b9b2a6';ctx.fillText('(Ekskyysmi kept the receipts)',W/2,H/2+40,W-80);ctx.globalAlpha=1;return;}
   epiSkipHint(e);
   if(e.o){epiWorld(e.o,e);if(e.o.rain)epiRain();}
   // a warm wash, a little haze: the week as remembered
@@ -2947,18 +2986,20 @@ function drawEpi(){
   if(!rows.length&&!o.title&&!o.credit)return;
   var lead=Math.min(0.8,(o.secs||5.5)*0.12),a=clamp((e.ct-lead)/0.4,0,1)*clamp(((o.secs||5.5)-0.15-e.ct)/0.35,0,1);if(a<=0)return;   // short shots: caption early and held to the cut
   ctx.save();ctx.globalAlpha=a;ctx.textBaseline='middle';
-  if(o.credit){ctx.textAlign='center';ctx.font='500 22px Fraunces,Georgia,serif';ctx.fillStyle='#f4eddf';ctx.fillText(o.credit,W/2,H-58);ctx.restore();return;}
+  if(o.credit){ctx.textAlign='center';ctx.font='500 22px Fraunces,Georgia,serif';ctx.fillStyle='#f4eddf';ctx.fillText(o.credit,W/2,H-58,W-60);ctx.restore();return;}
   var note=typeof o.note==='function'?o.note():o.note,mono='"DM Mono",ui-monospace,Menlo,monospace';
-  ctx.font='500 12px '+mono;var w=Math.max(380,note?ctx.measureText(note).width+40:0),lh=24,h=24+(o.title?1:rows.length)*lh+(note?18:0),x=W/2-w/2,y=H-30-h;
+  ctx.font='500 12px '+mono;var w=Math.max(380,note?ctx.measureText(note).width+40:0),lh=24;
+  if(!o.title){ctx.font='600 14px '+mono;rows.forEach(function(r){var v=typeof r.v==='function'?r.v():r.v;w=Math.max(w,ctx.measureText(r.l).width+ctx.measureText(String(v)).width+70);});}
+  w=Math.min(w,W-40);var h=24+(o.title?1:rows.length)*lh+(note?18:0),x=W/2-w/2,y=H-30-h;
   ctx.translate(W/2,y+h/2);ctx.rotate(-0.012);ctx.translate(-W/2,-(y+h/2));
   ctx.fillStyle='rgba(244,237,223,0.94)';ctx.fillRect(x,y,w,h);
   for(var i=0;i<w;i+=8){ctx.beginPath();ctx.moveTo(x+i,y+h);ctx.lineTo(x+i+4,y+h+5);ctx.lineTo(x+i+8,y+h);ctx.fill();}   // torn edge
   ctx.fillStyle='#2b2733';
-  if(o.title){ctx.font='700 15px '+mono;ctx.textAlign='center';ctx.fillText(o.title,W/2,y+12+lh/2);}
-  else rows.forEach(function(r,i){var yy=y+12+lh/2+i*lh;ctx.font='600 14px '+mono;ctx.textAlign='left';ctx.fillText(r.l,x+18,yy);
+  if(o.title){ctx.font='700 15px '+mono;ctx.textAlign='center';ctx.fillText(o.title,W/2,y+12+lh/2,w-24);}
+  else rows.forEach(function(r,i){var yy=y+12+lh/2+i*lh;ctx.font='600 14px '+mono;ctx.textAlign='left';ctx.fillText(r.l,x+18,yy,w*0.62);
     var val=typeof r.v==='function'?r.v():r.v;var lw=ctx.measureText(r.l).width;ctx.textAlign='right';ctx.fillText(val,x+w-18,yy);var vw=ctx.measureText(val).width;
     ctx.fillStyle='#8c8590';for(var d=x+18+lw+8;d<x+w-18-vw-8;d+=7)ctx.fillRect(d,yy+4,2,2);ctx.fillStyle='#2b2733';});
-  if(note){ctx.font='500 12px '+mono;ctx.textAlign='left';ctx.fillStyle='#6b6470';ctx.fillText(note,x+18,y+h-14);}
+  if(note){ctx.font='500 12px '+mono;ctx.textAlign='left';ctx.fillStyle='#6b6470';ctx.fillText(note,x+18,y+h-14,w-36);}
   ctx.restore();
 }
 // ---------- timed to the song (Safe At Last, 2:55, ~108 BPM) ----------
@@ -3098,10 +3139,12 @@ function epiRoll(e){
   var y=H+10-k*(h+H*0.55),mono='"DM Mono",ui-monospace,Menlo,monospace';
   ctx.save();ctx.globalAlpha=clamp(t/1.2,0,1)*clamp((dur-t)/1.2,0,1);ctx.fillStyle='rgba(244,237,223,0.95)';ctx.fillRect(x,y,w,h);
   ctx.textBaseline='middle';rows.forEach(function(r,i){var yy=y+24+i*lh;if(yy<-20||yy>H+20)return;
-    if(r.h){ctx.font='700 14px '+mono;ctx.textAlign='center';ctx.fillStyle='#2b2733';ctx.fillText(r.h,x+w/2,yy);}
-    else if(r.n){ctx.font='500 11px '+mono;ctx.textAlign='left';ctx.fillStyle='#6b6470';ctx.fillText(r.n,x+16,yy);}
-    else if(r.l){var val=typeof r.v==='function'?r.v():r.v;ctx.font='600 12.5px '+mono;ctx.textAlign='left';ctx.fillStyle='#2b2733';ctx.fillText(r.l,x+16,yy);ctx.textAlign='right';ctx.fillText(val,x+w-16,yy);
-      var lw=ctx.measureText(r.l).width;ctx.textAlign='left';var vw=ctx.measureText(val).width;ctx.fillStyle='#8c8590';for(var d=x+16+lw+6;d<x+w-16-vw-6;d+=7)ctx.fillRect(d,yy+4,2,2);}});
+    if(r.h){ctx.font='700 14px '+mono;ctx.textAlign='center';ctx.fillStyle='#2b2733';ctx.fillText(r.h,x+w/2,yy,w-24);}
+    else if(r.n){ctx.font='500 11px '+mono;ctx.textAlign='left';ctx.fillStyle='#6b6470';ctx.fillText(r.n,x+16,yy,w-32);}
+    else if(r.l){var val=String(typeof r.v==='function'?r.v():r.v);ctx.font='600 12.5px '+mono;ctx.fillStyle='#2b2733';   // 0.99.39: a longer language squeezes the label, never over its value
+      var vw=Math.min(ctx.measureText(val).width,w*0.45),room=w-32-vw-12,lw=Math.min(ctx.measureText(r.l).width,room);
+      ctx.textAlign='left';ctx.fillText(r.l,x+16,yy,room);ctx.textAlign='right';ctx.fillText(val,x+w-16,yy,w*0.45);
+      ctx.textAlign='left';ctx.fillStyle='#8c8590';for(var d=x+16+lw+6;d<x+w-16-vw-6;d+=7)ctx.fillRect(d,yy+4,2,2);}});
   ctx.restore();
 }
 // The epilogue is a film: the panel and the hint line under the scene go away (on a phone they were an unreadable bar).
@@ -3110,11 +3153,11 @@ var EPIFORM=[[0.1,'q','7. How do you usually take criticism?'],[1.1,'a','persona
 function epiForm(e){var t=e.ct,x=500,y=50,w=435,h=325,mono='"DM Mono",ui-monospace,Menlo,monospace',hand='"Segoe Print","Bradley Hand","Comic Sans MS",cursive';
   ctx.save();ctx.translate(x+w/2,y+h/2);ctx.rotate(0.018);ctx.translate(-(x+w/2),-(y+h/2));
   ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(x+6,y+8,w,h);ctx.fillStyle='#f4eddf';ctx.fillRect(x,y,w,h);
-  ctx.fillStyle='#2b2733';ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 12px '+mono;ctx.fillText('FORM · PAGE 3 OF 9',x+18,y+22);
+  ctx.fillStyle='#2b2733';ctx.textAlign='left';ctx.textBaseline='middle';ctx.font='700 12px '+mono;ctx.fillText('FORM · PAGE 3 OF 9',x+18,y+22,w-36);
   ctx.fillStyle='#c9c0ad';ctx.fillRect(x+18,y+34,w-36,1);var yy=y+58;
   EPIFORM.forEach(function(r){if(t<r[0])return;var a=clamp((t-r[0])/0.3,0,1);ctx.globalAlpha=a;
-    if(r[1]==='q'){ctx.fillStyle='#2b2733';ctx.font='500 16px '+mono;ctx.fillText(r[2],x+18,yy);yy+=32;}
-    else if(r[1]==='a'){ctx.fillStyle='#24408f';ctx.font='italic 600 21px '+hand;ctx.fillText(r[2],x+34,yy);yy+=43;}
+    if(r[1]==='q'){ctx.fillStyle='#2b2733';ctx.font='500 16px '+mono;wrapText(r[2],w-36).forEach(function(l){ctx.fillText(l,x+18,yy);yy+=21;});yy+=11;}
+    else if(r[1]==='a'){ctx.fillStyle='#24408f';ctx.font='italic 600 21px '+hand;wrapText(r[2],w-52).forEach(function(l){ctx.fillText(l,x+34,yy);yy+=27;});yy+=16;}
     else{ctx.fillStyle='#c9c0ad';ctx.fillRect(x+18,y+h-48,w-36,1);ctx.fillStyle='#24408f';ctx.font='italic 700 24px '+hand;ctx.fillText(r[2],x+30,y+h-62);
       ctx.fillStyle='#6b6470';ctx.font='500 11px '+mono;ctx.fillText('signature (the shadow)',x+18,y+h-34);}
     ctx.globalAlpha=1;});
@@ -3952,26 +3995,26 @@ var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is 
 var TRYING=['kickoff','plusone','lift','busstop','leaving','call'];   // Snow indoors. joined the story (0.99.31), Secret Santa. after the library (0.99.37)
 var SITUATION={santa:'Your present, opened in front of everyone.',leaving:'Going home from a party: say goodbye, or slip out.',call:'Booking something by phone. A live voice.',busstop:'A colleague at the bus stop whose name you never learned.',lift:'A lift with a colleague. Three floors. Nothing to say.',plusone:'Lunch for two, then a third person joins and you drop out.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
-function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
+function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+tr(LABS[k].title)+'</b><span>'+tr(line)+'</span></button>';}   // 0.99.39: the menus translate too
 // Alpha only: sketches waiting for a decision are reachable without ?lab (the artifact and the app can’t take a URL flag).
 var WIP=['epilogue','mug'];
 function wipList(shown){if(!DEVLAB&&!TESTING)return '';var list=WIP.slice();
   if(TESTING&&shown)for(var k in LABS)if(list.indexOf(k)<0)list.push(k);   // testing: every scene not listed above, the test clones included, once
-  var h='<div class="eyebrow">'+(TESTING?'Work in progress and test clones':'Work in progress')+'</div><div class="lab-list">',n=0;
+  var h='<div class="eyebrow">'+tr(TESTING?'Work in progress and test clones':'Work in progress')+'</div><div class="lab-list">',n=0;
   for(var i=0;i<list.length;i++)if(LABS[list[i]]&&!(shown&&shown[list[i]])){n++;h+=momentButton(list[i],LABS[list[i]].blurb);}
   return n?h+'</div>':'';}
 function showMoments(){
-  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked||1:1,h='<div class="eyebrow">Moments</div>';
-  if(top<2){showOv(h+'<h2>Not yet.</h2><p>More moments open after the first day.</p>'+wipList()+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');return;}
-  h+='<h2>Play a moment.</h2><p>On its own, outside the story.</p><div class="eyebrow">Situations</div><div class="lab-list">';
+  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked||1:1,h='<div class="eyebrow">'+tr('Moments')+'</div>';
+  if(top<2){showOv(h+'<h2>'+tr('Not yet.')+'</h2><p>'+tr('More moments open after the first day.')+'</p>'+wipList()+'<button class="go alt" type="button" data-go="menu">'+tr('Back to title')+'</button>','menu');return;}
+  h+='<h2>'+tr('Play a moment.')+'</h2><p>'+tr('On its own, outside the story.')+'</p><div class="eyebrow">'+tr('Situations')+'</div><div class="lab-list">';
   var shown={};function add(k,line){if(!LABS[k]||shown[k])return '';shown[k]=1;return momentButton(k,line);}
   for(var i=0;i<EXTRAS.length;i++)h+=add(EXTRAS[i],SITUATION[EXTRAS[i]]);
-  h+='</div><div class="eyebrow">New. Being tried</div><div class="lab-list">';
+  h+='</div><div class="eyebrow">'+tr('New. Being tried')+'</div><div class="lab-list">';
   for(i=0;i<TRYING.length;i++)h+=add(TRYING[i],SITUATION[TRYING[i]]);
-  h+='</div><div class="eyebrow">From the story</div><div class="lab-list">';
+  h+='</div><div class="eyebrow">'+tr('From the story')+'</div><div class="lab-list">';
   var last=TESTING||sv&&sv.done?5:top-1;
   for(var c=1;c<=last;c++)for(var j=0;AFTER[c]&&j<AFTER[c].length;j++){var id=AFTER[c][j];h+=add(id,LABS[id]&&LABS[id].blurb);}
-  showOv(h+'</div>'+wipList(shown)+'<button class="go alt" type="button" data-go="menu">Back to title</button>','menu');
+  showOv(h+'</div>'+wipList(shown)+'<button class="go alt" type="button" data-go="menu">'+tr('Back to title')+'</button>','menu');
 }
 function showLab(){
   var h='<div class="eyebrow">Scenario lab</div><h2>Try a scene.</h2><p>Every short scene on its own, including the ones not in the story yet.</p><div class="lab-list">';
@@ -3980,8 +4023,8 @@ function showLab(){
 }
 function showLabEnd(id){
   var g=G;g.ended=true;g.labEnd=true;WAIT=null;Q=[];epiChrome(false);render();
-  showOv('<div class="eyebrow">'+(DEVLAB?'Scenario lab':'Moments')+'</div><h2>'+LABS[id].title+'</h2><p>'+(DEVLAB?'That was the whole scene. Was it funny? Did it land?':'That was the whole moment.')+'</p>'+
-   '<button class="go" type="button" data-lab="'+id+'">Play it again →</button><button class="go alt" type="button" data-go="'+(DEVLAB?'lab':'moments')+'">Other moments</button><button class="go alt" type="button" data-go="menu">Title screen</button>','end');
+  showOv('<div class="eyebrow">'+tr(DEVLAB?'Scenario lab':'Moments')+'</div><h2>'+tr(LABS[id].title)+'</h2><p>'+tr(DEVLAB?'That was the whole scene. Was it funny? Did it land?':'That was the whole moment.')+'</p>'+
+   '<button class="go" type="button" data-lab="'+id+'">'+tr('Play it again →')+'</button><button class="go alt" type="button" data-go="'+(DEVLAB?'lab':'moments')+'">'+tr('Other moments')+'</button><button class="go alt" type="button" data-go="menu">'+tr('Title screen')+'</button>','end');
 }
 
 /* ---------- Enhance: the eyebrow ---------- */
@@ -4116,8 +4159,8 @@ function readReply(){
   render();
 }
 function chatTranscript(){
-  return '<ol class="chat-transcript" aria-label="What was actually sent">'+(G.fightLog||[]).map(function(m){
-    return '<li><p>'+esc(m.full)+'</p><span>'+(m.state==='swatted'?(m.wasOpen?'Read, then swatted':'Swatted before reading'):'Reached your human')+'</span></li>';
+  return '<ol class="chat-transcript" aria-label="'+tr('What was actually sent')+'">'+(G.fightLog||[]).map(function(m){
+    return '<li><p>'+esc(tr(m.full))+'</p><span>'+tr(m.state==='swatted'?(m.wasOpen?'Read, then swatted':'Swatted before reading'):'Reached your human')+'</span></li>';
   }).join('')+'</ol>';
 }
 function swat(){
@@ -4803,11 +4846,11 @@ function bar(){
   ctx.strokeStyle='#e2b04a';ctx.lineWidth=3;line(124,180,140,168);
   // chalkboard
   ctx.fillStyle='#6b4a34';rr(566,168,150,96,5);ctx.fill();ctx.fillStyle='#22302c';rr(573,175,136,82,3);ctx.fill();
-  ctx.fillStyle='#e9e2cf';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('TODAY',641,192);
-  ctx.font='500 13px system-ui,sans-serif';ctx.fillText('Soup.',641,214);ctx.fillText('Also: everything else.',641,236);
+  ctx.fillStyle='#e9e2cf';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('TODAY',641,192,128);
+  ctx.font='500 13px system-ui,sans-serif';ctx.fillText('Soup.',641,214,128);ctx.fillText('Also: everything else.',641,236,128);
   // neon
   var on=RM||Math.sin(t*1.3)>-0.96;ctx.strokeStyle=on?'#ff8fa3':'#7a4a55';ctx.lineWidth=4;ctx.shadowColor='#ff8fa3';ctx.shadowBlur=on?16:0;rr(770,176,112,50,12);ctx.stroke();
-  ctx.fillStyle=on?'#ffd0d8':'#7a4a55';ctx.font='800 22px system-ui,sans-serif';ctx.fillText('OPEN',826,202);ctx.shadowBlur=0;
+  ctx.fillStyle=on?'#ffd0d8':'#7a4a55';ctx.font='800 22px system-ui,sans-serif';ctx.fillText('OPEN',826,202,100);ctx.shadowBlur=0;
   wallClock(330,120,24);
   // coat hooks. One coat. It is only a coat.
   ctx.fillStyle='#1c1418';rr(896,236,60,6,3);ctx.fill();ctx.fillStyle='#55657a';ctx.beginPath();ctx.moveTo(914,242);ctx.lineTo(944,242);ctx.lineTo(952,330);ctx.lineTo(906,330);ctx.closePath();ctx.fill();
@@ -5182,14 +5225,14 @@ function library(){
       var bx=sx+11;for(i=0;bx<sx+154;i++){var bw=9+((i*7+j*5+r*3)%4)*3,bh=42+((i*5+r*7+j)%4)*5;if(bx+bw>sx+160)break;ctx.fillStyle=cols[(i*3+j+r*2)%cols.length];ctx.fillRect(bx,sy+62-bh,bw,bh);bx+=bw+2;}}}
   // window and a sign nobody needs
   ctx.fillStyle='#f4eedb';rr(640,90,150,120,4);ctx.fill();ctx.fillStyle='#a9c0c4';ctx.fillRect(648,98,134,104);sky(648,98,134,104,false);ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(715,98,715,202);
-  ctx.fillStyle='#2f6b4f';rr(820,110,110,44,6);ctx.fill();ctx.fillStyle='#fbf8ef';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('QUIET,',875,124);ctx.fillText('PLEASE',875,141);
+  ctx.fillStyle='#2f6b4f';rr(820,110,110,44,6);ctx.fill();ctx.fillStyle='#fbf8ef';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('QUIET,',875,124,100);ctx.fillText('PLEASE',875,141,100);
   // the librarian stands behind her desk
   var L=g.lib||{};
   person(760,{body:LIBR.body,hair:LIBR.hair,facing:-1,face:L.smile?'smile':'neutral'});
   ctx.fillStyle='#7a5236';rr(650,366,290,14,4);ctx.fill();ctx.fillStyle='#5c3b27';ctx.fillRect(656,380,278,FEETY-374);
   ctx.strokeStyle='#4a2f1f';ctx.lineWidth=2;line(726,386,726,FEETY+4);line(796,386,796,FEETY+4);line(866,386,866,FEETY+4);
   ctx.fillStyle='#2b2733';rr(836,322,62,44,5);ctx.fill();ctx.fillStyle='#9fd3a8';ctx.fillRect(842,328,50,30);ctx.fillStyle='#2b2733';ctx.fillRect(862,366,10,4);
-  ctx.fillStyle='#fbf8ef';rr(676,340,54,26,3);ctx.fill();ctx.fillStyle='#5a6559';ctx.font='700 9px system-ui,sans-serif';ctx.fillText('RETURNS',703,353);
+  ctx.fillStyle='#fbf8ef';rr(676,340,54,26,3);ctx.fill();ctx.fillStyle='#5a6559';ctx.font='700 9px system-ui,sans-serif';ctx.fillText('RETURNS',703,353,48);
   if(L.book){ctx.fillStyle='#55657a';rr(742,354,46,12,2);ctx.fill();ctx.fillStyle='#e2b04a';ctx.fillRect(748,357,20,3);}
 }
 function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Return one book. Seven weeks late.',clock:15*3600+40*60}).concat([
@@ -5569,7 +5612,7 @@ function busInside(){
   ctx.strokeStyle='#6b7177';ctx.lineWidth=3;line(300,20,300,78);ctx.beginPath();ctx.arc(300,92,14,0,Math.PI*2);ctx.stroke();   // a strap, two metres away
   ctx.fillStyle='#14161b';rr(330,26,300,40,6);ctx.fill();
   ctx.fillStyle=b.announce>0&&(RM||Math.floor(g.time*3)%2)?'#ffcf5a':'#c9953a';ctx.font='700 18px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(b.announce>0?'NEXT STOP: LIBRARY':'3 · CITY CENTRE',480,46);
+  ctx.fillText(b.announce>0?'NEXT STOP: LIBRARY':'3 · CITY CENTRE',480,46,284);
 }
 // the colleague, and the measuring marks on the pavement while Ekskyysmi chooses a distance
 function drawBusFront(){
@@ -6502,6 +6545,8 @@ function wrap(text,maxW){var words=text.split(' '),lines=[],cur='';for(var i=0;i
 // A word in capitals is a word said louder: heavier, a touch bigger, and in Ekskyysmi's bubbles in the accent colour.
 function isLoud(w){return /[A-Z]{2}/.test(w)&&!/[a-z]/.test(w);}
 function bubbleK(o){return o&&o.loud?1.34:o&&o.quiet?0.72:1;}
+// 0.99.39: the lines of a text that fit maxW, in the language being shown (canvas text is measured as painted).
+function wrapText(s,maxW){s=trQ(s);var out=[],cur='';String(s).split(' ').forEach(function(w){var t=cur?cur+' '+w:w;if(cur&&ctx.measureText(t).width>maxW){out.push(cur);cur=w;}else cur=t;});if(cur)out.push(cur);return out;}
 function bubble(x,y,text,o){
   o=o||{};
   var k=bubbleK(o),fs=17*k,lh=22*k,base='600 '+fs+'px system-ui,sans-serif',em='800 '+(fs+1.5*k)+'px system-ui,sans-serif',i,j;
@@ -7237,34 +7282,34 @@ function draw(){
 function showOv(html,kind){ov.innerHTML='<div class="card">'+html+'</div>';ov.className='ov on';ov.dataset.kind=kind||'title';}
 function hideOv(){ov.className='ov';ov.innerHTML='';}
 function showChapters(){
-  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked:0,h='<div class="eyebrow">Chapters</div><h2>Pick a moment.</h2><div class="lab-list">';
-  for(var i=1;i<=top&&i<=5;i++)h+='<button class="lab" type="button" data-ch="'+i+'"><b>'+CHAPTERS[i].title+'</b><span>'+CHAPTERS[i].day.charAt(0)+CHAPTERS[i].day.slice(1).toLowerCase().replace(/\b(mon|tues|wednes|thurs|fri)day\b/g,function(d){return d.charAt(0).toUpperCase()+d.slice(1);})+'</span></button>';
-  showOv(h+'</div><p class="small">Each one starts from its beginning and runs on into the moments after it.</p><button class="go alt" type="button" data-go="menu">Back</button>','menu');
+  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked:0,h='<div class="eyebrow">'+tr('Chapters')+'</div><h2>'+tr('Pick a moment.')+'</h2><div class="lab-list">';
+  for(var i=1;i<=top&&i<=5;i++)h+='<button class="lab" type="button" data-ch="'+i+'"><b>'+tr(CHAPTERS[i].title)+'</b><span>'+tr(CHAPTERS[i].day.charAt(0)+CHAPTERS[i].day.slice(1).toLowerCase().replace(/\b(mon|tues|wednes|thurs|fri)day\b/g,function(d){return d.charAt(0).toUpperCase()+d.slice(1);}))+'</span></button>';
+  showOv(h+'</div><p class="small">'+tr('Each one starts from its beginning and runs on into the moments after it.')+'</p><button class="go alt" type="button" data-go="menu">'+tr('Back')+'</button>','menu');
 }
 // The version is already in the page: index.html asks for game.js?v=<version>.
 function gameVersion(){var e=document.querySelector&&document.querySelector('script[src*="game.js"]'),m=e&&e.src&&/[?&]v=([^&]+)/.exec(e.src);return m?' '+m[1]:'';}
 function showAbout(){
-  showOv('<div class="eyebrow">About</div><h2>What is this?</h2>'+
-   '<p>You play Ekskyysmi, the overprotective shadow of a perfectly ordinary human. The human has one small plan: ask Sanna from work to lunch. You have concerns.</p>'+
+  showOv('<div class="eyebrow">'+tr('About')+'</div><h2>'+tr('What is this?')+'</h2>'+
+   '<p>'+tr('You play Ekskyysmi, the overprotective shadow of a perfectly ordinary human. The human has one small plan: ask Sanna from work to lunch. You have concerns.')+'</p>'+
    // 0.98: what it is about, in plain words first (the term is not common knowledge); loneliness as “wanting company”, shame as
    // a situation in the content note rather than abstract nouns. “Conversations don’t wait either” went: only one thing is timed.
-   '<p>It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.</p>'+
-   '<p>About 50 minutes. It saves as you go. Only one thing is timed, and it’s unfair on purpose.</p>'+
-   '<p class="small">Alpha'+gameVersion()+', still changing. Made by Joonas Huhta (MoshBitSurfers).</p>'+
-   '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
+   '<p>'+tr('It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.')+'</p>'+
+   '<p>'+tr('About 50 minutes. It saves as you go. Only one thing is timed, and it’s unfair on purpose.')+'</p>'+
+   '<p class="small">'+tr('Alpha{v}, still changing. Made by Joonas Huhta (MoshBitSurfers).').replace('{v}',gameVersion())+'</p>'+
+   '<button class="go alt" type="button" data-go="menu">'+tr('Back')+'</button>','menu');
 }
 function showWeekEnd(){
   var g=G;g.ended=true;g.dayEnd=false;WAIT=null;Q=[];render();
-  var note=g.no?'One “no” was said out loud. Everyone survived, including Eero.':'The “no” is still in its box. It keeps.';
+  var note=tr(g.no?'One “no” was said out loud. Everyone survived, including Eero.':'The “no” is still in its box. It keeps.');
   closeDay();if(!g.lab)saveDone();var rows=runRows(g.run),rt='RECEIPT · THE WHOLE THING';
   g.receiptText=receiptText(rt,rows,RC_FOOT_RUN);g.receipt={title:rt,rows:rows,foot:RC_FOOT_RUN};
-  showOv('<div class="end-grid"><div><div class="eyebrow">For now</div><h2>Still here. Both of you.</h2>'+
-   '<p class="small job-line">Ekskyysmi’s job: <s>Keep you from being rejected.</s> Stay with you when it happens.</p>'+
-   '<p>A string of small moments. One “oh, hi”, twice.<br>It went off both times. The second time, somebody stayed.</p>'+
+  showOv('<div class="end-grid"><div><div class="eyebrow">'+tr('For now')+'</div><h2>'+tr('Still here. Both of you.')+'</h2>'+
+   '<p class="small job-line">'+tr('Ekskyysmi’s job:')+' <s>'+tr('Keep you from being rejected.')+'</s> '+tr('Stay with you when it happens.')+'</p>'+
+   '<p>'+tr('A string of small moments. One “oh, hi”, twice.<br>It went off both times. The second time, somebody stayed.')+'</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
-   '<p class="title-quote">“For the record, I intend to go off again on Monday.”</p>'+
-   '<div class="end-go"><button class="go" type="button" data-go="menu">Main menu →</button><button class="go alt" type="button" data-go="start">New game</button></div></div>'+   // 0.97: the story is over; out with one clear press (Codex)
-   receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
+   '<p class="title-quote">'+loc().q[0]+tr('For the record, I intend to go off again on Monday.')+loc().q[1]+'</p>'+
+   '<div class="end-go"><button class="go" type="button" data-go="menu">'+tr('Main menu →')+'</button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button></div></div>'+   // 0.97: the story is over; out with one clear press (Codex)
+   receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">'+tr('Save as picture')+'</button> <button class="rc-copy" type="button" data-go="copyrcpt">'+tr('Copy text')+'</button>')+'</div>','end');
 }
 function showTitle(){
   var sv=loadProgress();music('title');titleTagAt=-9;   // 0.99.33: the first title song stays (QQQ2 was tried on a phone, 27.11., and did not fit)   // the tagline is measured again for the new title
@@ -7277,7 +7322,7 @@ function titleHTML(sv){   // 0.89: its own function, so a language change can re
   var rotateHint=browser?'<p class="rotate-hint">'+tr('Turn your phone sideways for the best experience.')+'</p>':'';
   var fullLink=browser&&fullSupported()
     ?'<button class="link title-full" type="button" data-go="full">'+tr(fullOn()?'Leave full screen':'Full screen')+'</button>':'';
-  return '<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
+  return '<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>'+tr('Really Small Deal')+'<span class="logo-dot">.</span></span></h1>'+
    '<p class="tagline">'+tr('A small moment.<br>A very long shadow.').replace('<br>','<br> ')+'</p>'+
    '<div class="title-actions">'+
    (sv&&!sv.fin?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
@@ -7297,7 +7342,7 @@ function showEnd(){
   showOv('<div class="end-grid"><div><div class="eyebrow">'+tr('End of Monday')+'</div><h2>'+tr('Home. Both of you.')+'</h2>'+
    '<p>'+tr('The greeting lasted two seconds.<br>The shadow took the scenic route.')+'</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
-   '<p class="title-quote">'+(LANG==='fi'?'”':'“')+quote+'”</p>'+
+   '<p class="title-quote">'+loc().q[0]+quote+loc().q[1]+'</p>'+
    // 0.97 (Codex): one way on. “Try another approach” read as the game saying the human should have done better, and three
    // Mondays before Tuesday gave the player three histories and the story one. Monday comes back from Chapters, after.
    '<div class="end-go"><button class="go" type="button" data-go="next">'+tr('On to Tuesday →')+'</button></div></div>'+
@@ -7360,7 +7405,7 @@ document.getElementById('restart').addEventListener('click',function(){
 document.getElementById('journal').addEventListener('click',function(){
   if(ov.classList.contains('on')&&!G.ended)return;
   modalWasPaused=paused;paused=true;syncPause();
-  document.getElementById('log-content').innerHTML=history.map(function(l){return '<div class="log-entry w-'+l.who+'"><b>'+NAMES[l.who]+'</b><p>'+esc(l.text)+'</p></div>';}).join('');
+  document.getElementById('log-content').innerHTML=history.map(function(l){return '<div class="log-entry w-'+l.who+'"><b>'+tr(NAMES[l.who])+'</b><p>'+esc(l.text)+'</p></div>';}).join('');
   logDialog.showModal();
 });
 document.getElementById('close-log').addEventListener('click',function(){logDialog.close();});
@@ -7387,7 +7432,7 @@ document.getElementById('slow').addEventListener('click',function(){
 slowUI();
 function testingUI(){var b=document.getElementById('testing');if(b)b.setAttribute('aria-pressed',String(TESTING));}
 (function(){var b=document.getElementById('testing');if(!b)return;b.addEventListener('click',function(){
-  TESTING=!TESTING;try{window.localStorage.setItem('ekskyysmi.test',TESTING?'on':'off');}catch(e){}testingUI();sfx('pick');
+  TESTING=!TESTING;try{window.localStorage.setItem('ekskyysmi.test',TESTING?'on':'off');}catch(e){}testingUI();if(typeof pseudoUI==='function')pseudoUI();sfx('pick');
   if(!G.started&&ov.classList.contains('on')&&ov.dataset.kind==='title')showOv(titleHTML(loadProgress()));});testingUI();})();
 function belowUI(){var b=document.getElementById('below');if(b)b.setAttribute('aria-pressed',String(textBelow));}
 (function(){var b=document.getElementById('below');if(!b)return;b.addEventListener('click',function(){
@@ -7498,7 +7543,10 @@ if(document.addEventListener)document.addEventListener('click',function(e){
 
 // Language setting. 0.89: Finnish is a pilot for Monday (src/15-fi.js, src/16-fi-monday.js); the rest stays English until it is translated.
 var LANG='en';
-(function(){var el=document.getElementById('lang');if(!el)return;try{var v=window.localStorage.getItem('ekskyysmi.lang');if(v&&el.querySelector('option[value="'+v+'"]:not([disabled])'))el.value=LANG=v;}catch(e){}
+// 0.99.39: the pseudo-language (layout test, src/15-fi.js) is offered in testing mode only.
+function pseudoUI(){var el=document.getElementById('lang'),o=el&&el.querySelector('option[value="xx"]');if(!o)return;o.hidden=o.disabled=!TESTING;
+  if(!TESTING&&LANG==='xx'){LANG=el.value='en';try{window.localStorage.setItem('ekskyysmi.lang','en');document.documentElement.lang='en';}catch(e){}chromeText();}}
+(function(){var el=document.getElementById('lang');if(!el)return;pseudoUI();try{var v=window.localStorage.getItem('ekskyysmi.lang');if(v&&el.querySelector('option[value="'+v+'"]:not([disabled])'))el.value=LANG=v;}catch(e){}
   el.addEventListener('change',function(){LANG=el.value;try{window.localStorage.setItem('ekskyysmi.lang',LANG);document.documentElement.lang=LANG;}catch(e){}sfx('pick');chromeText();
     if(!G.started&&ov.querySelector('h1.logo'))showOv(titleHTML(loadProgress()));render();});
   try{document.documentElement.lang=LANG;}catch(e){}if(LANG!=='en')setTimeout(chromeText,0);})();
@@ -7506,7 +7554,7 @@ var LANG='en';
 function chromeText(){
   var ids={motion:'Less motion',below:'Text below',journal:'Dialogue',restart:'Restart','log-title':'The conversation so far','close-log':'Back to the moment'},id,e;
   for(id in ids){e=document.getElementById(id);if(e)e.textContent=tr(ids[id]);}
-  e=document.querySelector('#menu .menu-label');if(e)e.textContent=tr('Menu');
+  e=document.querySelector('#menu .menu-label');if(e)e.textContent=tr('Menu');e=document.getElementById('menu');if(e&&e.setAttribute)e.setAttribute('aria-label',tr('Menu and settings'));
   e=document.querySelector('.lang-row span');if(e)e.textContent=tr('Language');
   soundUI();textUI();slowUI();e=document.getElementById('pause');if(e)e.textContent=tr(paused?'Resume':'Pause');
   e=document.getElementById('full');if(e)e.textContent=tr(fullOn()?'Leave full screen':'Full screen');
@@ -7524,6 +7572,6 @@ syncImmersive();reset(null);showTitle();
 if(window.location&&new URLSearchParams(window.location.search).get('preview')==='epilogue'){
   showOv('<div class="eyebrow">Really Small Deal</div><h2>The week, itemised.</h2><button class="go" type="button" data-lab="epilogue">Watch epilogue ▶</button><button class="go alt" type="button" data-go="menu">Main menu</button>','menu');
 }
-window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,inside:{run:function(){return G.run;},day:function(){return G.day0;},mult:function(){return G.mult;},add:addLived,cameBack:cameBack,receipt:function(){return G.receiptText;}},qteKey:function(k){return qteKey({key:k});},qte:function(){return G.qte;},full:toggleFull,immersive:function(){return htmlEl.classList.contains('immersive');},chapters:showChapters,hotScreen:function(x,y){var r=cv.getBoundingClientRect(),z=C.z,hw=W/(2*z),hh=H/(2*z),fx=clamp(C.fx,hw,W-hw),fy=clamp(C.fy,hh,H-hh);return [r.left+((x-fx)*z+W/2)/W*r.width,r.top+((y-fy)*z+H/2)/H*r.height];},labList:showLab,moments:showMoments,about:showAbout,lensTap:lensTap,back:backButton,lang:function(v){LANG=v;try{document.documentElement.lang=v;}catch(e){}},fiMiss:function(){return FIMISS;},fiDict:function(){return FI;},music:function(){return musicName;},sound:{load:loadSound,has:function(k){return !!BUF[k];},music:function(){return {name:musicName,playing:!!(musicEl&&!musicEl.paused),t:musicEl?musicEl.currentTime:0,vol:musicEl?musicEl.volume:0};},seek:function(t){if(musicEl)musicEl.currentTime=t;},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
+window.__T={get G(){return G;},start:startGame,frame:frame,advance:advance,choose:choose,state:function(){return WAIT;},nopts:function(){return CH?CH.length:0;},options:function(){return CH;},tick:update,draw:draw,pause:togglePause,unlock:function(){LOCK=0;},reset:reset,title:showTitle,history:function(){return history;},chapter:startChapter,lab:startLab,swat:swat,skipIntro:skipIntro,inside:{run:function(){return G.run;},day:function(){return G.day0;},mult:function(){return G.mult;},add:addLived,cameBack:cameBack,receipt:function(){return G.receiptText;}},qteKey:function(k){return qteKey({key:k});},qte:function(){return G.qte;},full:toggleFull,immersive:function(){return htmlEl.classList.contains('immersive');},chapters:showChapters,hotScreen:function(x,y){var r=cv.getBoundingClientRect(),z=C.z,hw=W/(2*z),hh=H/(2*z),fx=clamp(C.fx,hw,W-hw),fy=clamp(C.fy,hh,H-hh);return [r.left+((x-fx)*z+W/2)/W*r.width,r.top+((y-fy)*z+H/2)/H*r.height];},labList:showLab,moments:showMoments,about:showAbout,lensTap:lensTap,back:backButton,tr:function(s){return tr(s);},trQ:function(s){return trQ(s);},dict:function(l){return DICT[l]||(DICT[l]={});},lang:function(v){LANG=v;try{document.documentElement.lang=v;}catch(e){}try{chromeText();if(!G.started&&ov.querySelector('h1.logo'))showOv(titleHTML(loadProgress()));}catch(e){}},fiMiss:function(){return FIMISS;},fiDict:function(){return FI;},music:function(){return musicName;},sound:{load:loadSound,has:function(k){return !!BUF[k];},music:function(){return {name:musicName,playing:!!(musicEl&&!musicEl.paused),t:musicEl?musicEl.currentTime:0,vol:musicEl?musicEl.volume:0};},seek:function(t){if(musicEl)musicEl.currentTime=t;},play:sfx,list:SAMPLES},holdDown:holdDown,holdUp:holdUp};
 window.requestAnimationFrame(frame);
 })();

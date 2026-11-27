@@ -265,3 +265,7 @@ html.immersive body.playing .opts.n5{grid-column:1/-1;grid-template-columns:repe
 @media (pointer:fine) and (hover:hover) {
   .ov.on[data-kind=title] .title-full { display:inline-block; }
 }
+
+/* 0.99.39: a longer language must fit the About page on a phone held sideways: the text uses the width it has */
+html.immersive .ov[data-kind=menu] .card{max-width:min(520px,100%)}
+html.immersive .ov[data-kind=menu] .card p{max-width:none}

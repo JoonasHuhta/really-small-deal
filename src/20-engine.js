@@ -96,33 +96,33 @@ function render(){
   if(WAIT==='choice'&&CH){
     speaker=g.choiceWho||'S';text=g.nopeMsg||g.choiceAsk||(speaker==='H'?'Ekskyysmi is asleep. The human has the floor.':g.chapter===1&&!g.lab&&!g.firstPick?'You’re Ekskyysmi. Pick what I say.':'What do we do with this?');   // the very first choice says who the player is
     if(g.form&&g.form.i>=0){speaker='N';text=FORM_Q[g.form.i].q;}
-    for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(tr(CH[i].t))+' <em>'+tr('Not a setting. Yet.')+'</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>':CH[i].off&&CH[i].note?'<button class="opt off'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>'+esc(CH[i].note)+'</em></button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>';
+    for(var i=0;i<CH.length;i++)html+=CH[i].hush&&CH[i].off?'<button class="opt off hush'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+esc(tr(CH[i].t))+' <em>'+tr('Not a setting. Yet.')+'</em></span></button>':CH[i].hush?'<button class="opt hush open" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>':CH[i].off&&CH[i].note?'<button class="opt off'+(CH[i].tried?' shake':'')+'" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>'+esc(tr(CH[i].note))+'</em></button>':CH[i].off&&CH[i].tried?'<button class="opt off shake" type="button" data-i="'+i+'"><i>'+(i+1)+'</i><s>'+esc(tr(CH[i].t))+'</s> <em>Ekskyysmi is sitting on this</em></button>':'<button class="opt" type="button" data-i="'+i+'"><i>'+(i+1)+'</i>'+esc(tr(CH[i].t))+'</button>';
   }else if(WAIT==='stretch'){
     speaker='S';text='A small warning. Just enough to make my point.';
-    html='<div class="stretch-controls"><label for="stretch">Unfurl your warning</label><input id="stretch" type="range" min="1.8" max="3.8" step="0.05" value="'+g.morko.sT+'" aria-label="Size of your warning"><button class="opt cont" type="button" data-i="go">That should do it →</button></div>';
+    html='<div class="stretch-controls"><label for="stretch">'+tr('Unfurl your warning')+'</label><input id="stretch" type="range" min="1.8" max="3.8" step="0.05" value="'+g.morko.sT+'" aria-label="'+tr('Size of your warning')+'"><button class="opt cont" type="button" data-i="go">'+tr('That should do it →')+'</button></div>';
   }else if(WAIT==='auto'&&g.auto){
     speaker='H';text='Already decided.';
-    for(var ai=0;ai<g.auto.opts.length;ai++)html+='<button class="opt'+(g.auto.done&&ai===g.auto.pick?' picked':'')+'" type="button" disabled><i>'+(ai+1)+'</i>'+esc(g.auto.opts[ai])+'</button>';
+    for(var ai=0;ai<g.auto.opts.length;ai++)html+='<button class="opt'+(g.auto.done&&ai===g.auto.pick?' picked':'')+'" type="button" disabled><i>'+(ai+1)+'</i>'+esc(tr(g.auto.opts[ai]))+'</button>';
   }else if(WAIT==='lamp'){
     speaker='N';text='It is dark. There is a lamp.';
-    html='<button class="opt cont" type="button" data-i="go">Turn on the lamp</button>';
+    html='<button class="opt cont" type="button" data-i="go">'+tr('Turn on the lamp')+'</button>';
   }else if(WAIT==='toss'){
     speaker='S';text=tossText();g.toss.shown=text;
-    html='<button class="opt cont" type="button" data-i="go">Let go</button>';
+    html='<button class="opt cont" type="button" data-i="go">'+tr('Let go')+'</button>';
   }else if(WAIT==='hold'){
     speaker='S';text=holdText();g.hold.shown=text;
     html='<div class="hold-controls"><button class="opt cont" type="button" data-i="hold">'+tr(HOLD_LABEL[g.hold.kind])+'</button><div class="holdbar"><i id="holdfill"></i></div></div>';
   }else if(WAIT==='qte'&&g.qte){
-    var qq=g.qte;speaker='S';text='RESPOND. CORRECTLY. NOW.';
-    html=qq.order.map(function(i){var r=RESPONSE[i],done=i<qq.i;return '<button class="opt qte'+(done?' done':'')+'" type="button" data-i="q'+i+'"'+(qq.end||done?' disabled':'')+'><b>'+r.sym+'</b><span>'+tr(r.label)+'</span></button>';}).join('');
+    var qq=g.qte;speaker='S';text=tr('RESPOND. CORRECTLY. NOW.');
+    html=qq.order.map(function(i){var r=RESPONSE[i],done=i<qq.i;return '<button class="opt qte'+(done?' done':'')+'" type="button" data-i="q'+i+'"'+(qq.end||done?' disabled':'')+'><b>'+tr(r.sym)+'</b><span>'+tr(r.label)+'</span></button>';}).join('');
   }else if(WAIT==='fight'){
     speaker='S';text='Incoming! I’ve got this. Probably.';
-    html='<button class="opt cont swat" type="button" data-i="go">Swat! <span>(or tap the scene)</span></button>';
+    html='<button class="opt cont swat" type="button" data-i="go">'+tr('Swat!')+' <span>'+tr('(or tap the scene)')+'</span></button>';
     if(g.fight.paced){
       var reply=currentReply(),ready=reply&&(reply.state==='fly'||reply.state==='open');
       speaker='P';text=reply?(g.fight.msgs.indexOf(reply)+1)+' / '+g.fight.msgs.length+' — '+(reply.seen?reply.full:'“'+reply.far+'”'):'';
-      html='<button class="opt cont" type="button" data-i="read"'+(ready?'':' disabled')+'>'+(ready?(reply.state==='fly'?'Let it come closer →':'Let it through →'):'A moment…')+'</button>'+
-        '<button class="opt" type="button" data-i="go"'+(ready?'':' disabled')+'>Swat this reply away</button>';
+      html='<button class="opt cont" type="button" data-i="read"'+(ready?'':' disabled')+'>'+tr(ready?(reply.state==='fly'?'Let it come closer →':'Let it through →'):'A moment…')+'</button>'+
+        '<button class="opt" type="button" data-i="go"'+(ready?'':' disabled')+'>'+tr('Swat this reply away')+'</button>';
     }
   }else if(WAIT==='view'){
     speaker='N';text=g.out.cap;
@@ -353,7 +353,7 @@ function drawReplay(){
 function look(){G.gazeFrom='A';G.gazeT=0.5;}
 function calm(){var g=G;g.human.sweatT=0;g.gazeT=0;g.darkT=0;g.anx=0.25;g.morko.sT=1.15;g.morko.mood='calm';g.morko.pose=null;g.human.face='neutral';g.cz=1.025;g.cx=W/2;g.cy=H/2;g.camRate=null;g.hidS=null;}
 function prevent(label,quiet){return function(){G.prevented++;if(quiet)return [];startStamp('press');return [{wait:0.85}];};}   // quiet: counted, not stamped (one stamp on Monday is the joke, two is a lecture)
-function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=LANG==='fi'?{title:tr(o.title),dur:tr(o.dur),cap:tr(o.cap),anim:o.anim,t:0}:o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
+function outside(o,len){return [function(){G.lines=[];G.band=null;o.t=0;G.out=LANG!=='en'?{title:tr(o.title),dur:tr(o.dur),cap:tr(o.cap),anim:o.anim,t:0}:o;stopVoice();sfx('cut');},{view:true},function(){G.out=null;}];}
 function leave(){G.axT=1120;G.bxT=1200;G.aFace=1;G.bFace=1;}
 function frozen(){var g=G;sfx('startle');g.morko.st='frozen';g.startles++;g.human.flinch=1;}
 function hide(){G.morko.st='hide';}

@@ -436,5 +436,9 @@
 "Coming. COMING.":"Tullaan. TULLAAN."
 ,
 // 0.97: the end of Monday, changed
+// 0.99.39: Monday's controls that did not translate before
+"SPACE":"VÄLILYÖNTI","REALLY SMALL DEAL":"REALLY SMALL DEAL","Really Small Deal":"Really Small Deal",   // the name stays until Joonas picks the Finnish one (KAANNOS.md)
+"{n} h {n} min":"{n} h {n} min","{n} min":"{n} min","{n} s":"{n} s",   // receipt values: the same units in Finnish, decimal comma from LOC
+"Unfurl your warning":"Levitä varoitus","Size of your warning":"Varoituksen koko","That should do it →":"Tuo riittää →","Menu and settings":"Valikko ja asetukset",
 "On to Tuesday →":"Tiistaihin →","I wobbled. You said hi. Slightly after everyone else.":"Huojuin. Sinä sanoit moi. Vähän kaikkien muiden jälkeen."
 };for(var k in d)FI[k]=d[k];fiIndex();})();

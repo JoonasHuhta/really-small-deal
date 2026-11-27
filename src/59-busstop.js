@@ -44,7 +44,7 @@ function busInside(){
   ctx.strokeStyle='#6b7177';ctx.lineWidth=3;line(300,20,300,78);ctx.beginPath();ctx.arc(300,92,14,0,Math.PI*2);ctx.stroke();   // a strap, two metres away
   ctx.fillStyle='#14161b';rr(330,26,300,40,6);ctx.fill();
   ctx.fillStyle=b.announce>0&&(RM||Math.floor(g.time*3)%2)?'#ffcf5a':'#c9953a';ctx.font='700 18px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(b.announce>0?'NEXT STOP: LIBRARY':'3 · CITY CENTRE',480,46);
+  ctx.fillText(b.announce>0?'NEXT STOP: LIBRARY':'3 · CITY CENTRE',480,46,284);
 }
 // the colleague, and the measuring marks on the pavement while Ekskyysmi chooses a distance
 function drawBusFront(){

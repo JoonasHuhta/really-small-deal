@@ -1,6 +1,13 @@
 var W=960,H=540,WALLY=385,FEETY=462,HOME=450,HOMEX=1500;
 var LAMPS=[250,690,1130,HOMEX+60];
 var cv=document.getElementById('c'),ctx=cv.getContext('2d'),ov=document.getElementById('ov');
+// 0.99.39: every word painted on the canvas goes through the dictionary (src/15-fi.js trQ), and is measured as painted, so a
+// longer language lays out by its own widths. Until now 250 painted strings (signs, receipts, tags, captions) stayed English.
+function i18nCtx(c){if(!c||typeof c.fillText!=='function'||c.i18n===true)return c;var ft=c.fillText,st=c.strokeText,mt=c.measureText;c.i18n=true;
+  c.fillText=function(t,x,y,w){t=trQ(t);return w==null?ft.call(c,t,x,y):ft.call(c,t,x,y,w);};
+  if(typeof st==='function')c.strokeText=function(t,x,y,w){t=trQ(t);return w==null?st.call(c,t,x,y):st.call(c,t,x,y,w);};
+  if(typeof mt==='function')c.measureText=function(t){return mt.call(c,trQ(t));};return c;}
+i18nCtx(ctx);   // and the receipt picture's own canvas (35-inside.js)
 var elLine=document.getElementById('line'),elOpts=document.getElementById('opts');
 var SC=1;
 function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.clientWidth||960;cv.width=Math.round(w*dpr);cv.height=Math.round(w*9/16*dpr);SC=cv.width/W;WIDE=w>=520;COMPACT=document.documentElement.classList.contains('immersive');

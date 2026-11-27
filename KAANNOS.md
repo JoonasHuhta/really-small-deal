@@ -1,6 +1,15 @@
-# Käännöshuomiot (suomi, ruotsi)
+# Käännöshuomiot (suomi, ruotsi, muut kielet)
 
 Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sanaan, jotta kääntäjä tietää etsiä vastineen eikä käännöstä. Koodin sääntö: repliikkejä ei koota paloista. Luvut tulevat paikkamerkillä `{n}` (`fmtN`, `31-story-week.js`).
+
+## Työtapa (0.99.39): näin peli käännetään
+
+1. **Lista.** `npm run strings` pelaa pelin läpi (kolme viikkoa, jokainen Moment kolmella polulla, valikot) ja kirjoittaa tiedostoon `i18n/strings.tsv` jokaisen tekstin, jonka pelaaja voi nähdä, siinä järjestyksessä kuin ne tulevat vastaan. Sarakkeet: englanninkielinen rivi (avain), laji (`line` repliikki, `choice` valinta, `card` kortti, `outside` ulkoversio, `ui` valikot ja kuitit, `canvas` kuvaan piirretty teksti), puhuja (S Ekskyysmi, H ihminen, A Sanna, B Eero, R Riitta, N kertoja, P puhelin…), kohtaus ja huomio. 27.11.: noin 2 770 riviä, noin 15 800 sanaa.
+2. **Uusi kieli** on yksi tiedosto `src/17-<kieli>.js`, joka täyttää `DICT.<kieli>`-sanakirjan samaan tapaan kuin `src/16-fi-monday.js` täyttää suomen. Lisäksi `LOC`-rivi (desimaalimerkki, lainausmerkit) tiedostoon `src/15-fi.js` ja `option` kielivalikkoon (`index.html`).
+3. **Mitä puuttuu:** `node tools/strings.cjs fi` kirjoittaa tiedostoon `i18n/missing-fi.tsv` ne rivit, joilla ei vielä ole suomennosta.
+4. **Mahtuuko:** Settings › *Unlock all (testing)* → Language › *Pseudo (layout test)*. Jokainen kirjain korostetaan ja teksti on 40 % pidempi, joten näkee heti, mikä ei mahdu ja mikä jäi kääntymättä. `tests/i18n.test.cjs` tekee saman automaattisesti.
+5. **Luvut:** jos rivissä on luku, joka vaihtelee, käännetään malli: `DELETED · TAKE {n}` → `POISTETTU · OTTO {n}`. Luvut palaavat järjestyksessä, ja desimaalipilkku tulee `LOC`-asetuksesta (`0.4 s` → `0,4 s`). Valuutta samoin: `€{n}` → `{n} €`.
+6. **Kuvaan piirretyt tekstit** (kyltit, kuitit, lappuset, kuvatekstit) kääntyvät samasta sanakirjasta. Kyltti puristaa liian pitkän sanan mahtumaan, ja kuitin pitkä nimike kapenee arvonsa vierellä, joten lyhyt käännös on silti parempi. Ohjeelliset pituudet: kuitin rivin nimike noin 28 merkkiä, kylttiteksti noin 16, kortin otsikko noin 30.
 
 ## Sanaleikit ja idiomit
 
@@ -19,6 +28,18 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
 | “EASY OPEN.” | to, The bag | pakkausteksti |
 | “Ekskyysmi filed that.” | valinnat | parodia ”X will remember that” -ilmoituksesta |
 | “(Say nothing.)” / “Not a setting. Yet.” | valinnat | ”setting” = asetus |
+| “Riitta. Of all the names in the hat.” / “It was a bowl.” | *Secret Santa.* | idiomi ”names in a hat” kirjaimellisesti oikaistuna; suomeksi esim. ”kaikista hatun nimistä” → ”Se oli kulho.” |
+| “Socks.” / “With a FULL STOP.” / “Thank you. Really.” | *Secret Santa.* | Riitan kaksi sanaa ovat koko hänen äänensä: lyhyt, piste perään. Ekskyysmin ”Riitta-sanakirja” laskee ne (”Two words so far.”) |
+| “Merry Christmas! No pressure to like it.” | *Secret Santa.* | pikkujoulut ovat marraskuussa (kortti A FRIDAY, LATE NOVEMBER); joulutoivotus kuuluu tilanteeseen |
+| “Offer the snacks. Leave the lift out of it.” | ke | ”lift” = kyyti autolla (brittienglanti), ei hissi |
+| “Year two.” / “Year 4: could be neater.” | ryhmächat, *Enhance.* | brittiläinen kouluvuosi: Year 2 = 7-vuotias (”You were seven.”). Käytä oman maan luokka-astetta (fi: 1. luokka) |
+| “A fine.” / “She says it’s FINE.” / “Fine.” | kirjasto, ke, pe | ”fine” kulkee läpi viikon: Sannalle lähetetty ”Fine.” (ke) → ”I do that with ‘fine’” (pe) → kirjaston sakko. Katso *Lokalisointi* alla |
+| “NAMES, LEARNED · 1 (JARI)” / “ours: drowned out by LIBRARY.” | epilogi | bussikuulutus peittää ihmisen nimen; kylttiin ja riviin sama pysäkin nimi |
+| “hands at the same height. (married.)” | epilogin rulla | bussin tanko: kädet samalla korkeudella näyttävät pariskunnalta |
+| “after you. no, after YOU.” | epilogi | kohteliaisuussilmukka hississä |
+| “AUDIENCE: STILL HERE.” | epilogi | Ekskyysmi tutkii suurennuslasilla katsojaa |
+| “Outstanding: one meeting. Tuesday, by the radiator.” | epilogin viimeinen kortti | **tapaaminen, ei vastaanottoaika** (lomakkeella on ”An appointment.”); lupaa patterikohtauksen |
+| “ekskyysmi: finnish for ‘excuse me’” | rullan viimeinen rivi | suomeksi vitsi on toisin päin: keksi oma viimeinen rivi (esim. nimen alkuperä tai ”ekskyysmi: suomeksi anteeksi”) |
 
 ## Rakenteet, joissa on luku
 

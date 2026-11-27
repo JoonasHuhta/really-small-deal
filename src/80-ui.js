@@ -2,34 +2,34 @@
 function showOv(html,kind){ov.innerHTML='<div class="card">'+html+'</div>';ov.className='ov on';ov.dataset.kind=kind||'title';}
 function hideOv(){ov.className='ov';ov.innerHTML='';}
 function showChapters(){
-  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked:0,h='<div class="eyebrow">Chapters</div><h2>Pick a moment.</h2><div class="lab-list">';
-  for(var i=1;i<=top&&i<=5;i++)h+='<button class="lab" type="button" data-ch="'+i+'"><b>'+CHAPTERS[i].title+'</b><span>'+CHAPTERS[i].day.charAt(0)+CHAPTERS[i].day.slice(1).toLowerCase().replace(/\b(mon|tues|wednes|thurs|fri)day\b/g,function(d){return d.charAt(0).toUpperCase()+d.slice(1);})+'</span></button>';
-  showOv(h+'</div><p class="small">Each one starts from its beginning and runs on into the moments after it.</p><button class="go alt" type="button" data-go="menu">Back</button>','menu');
+  var sv=loadProgress(),top=TESTING?5:sv?sv.unlocked:0,h='<div class="eyebrow">'+tr('Chapters')+'</div><h2>'+tr('Pick a moment.')+'</h2><div class="lab-list">';
+  for(var i=1;i<=top&&i<=5;i++)h+='<button class="lab" type="button" data-ch="'+i+'"><b>'+tr(CHAPTERS[i].title)+'</b><span>'+tr(CHAPTERS[i].day.charAt(0)+CHAPTERS[i].day.slice(1).toLowerCase().replace(/\b(mon|tues|wednes|thurs|fri)day\b/g,function(d){return d.charAt(0).toUpperCase()+d.slice(1);}))+'</span></button>';
+  showOv(h+'</div><p class="small">'+tr('Each one starts from its beginning and runs on into the moments after it.')+'</p><button class="go alt" type="button" data-go="menu">'+tr('Back')+'</button>','menu');
 }
 // The version is already in the page: index.html asks for game.js?v=<version>.
 function gameVersion(){var e=document.querySelector&&document.querySelector('script[src*="game.js"]'),m=e&&e.src&&/[?&]v=([^&]+)/.exec(e.src);return m?' '+m[1]:'';}
 function showAbout(){
-  showOv('<div class="eyebrow">About</div><h2>What is this?</h2>'+
-   '<p>You play Ekskyysmi, the overprotective shadow of a perfectly ordinary human. The human has one small plan: ask Sanna from work to lunch. You have concerns.</p>'+
+  showOv('<div class="eyebrow">'+tr('About')+'</div><h2>'+tr('What is this?')+'</h2>'+
+   '<p>'+tr('You play Ekskyysmi, the overprotective shadow of a perfectly ordinary human. The human has one small plan: ask Sanna from work to lunch. You have concerns.')+'</p>'+
    // 0.98: what it is about, in plain words first (the term is not common knowledge); loneliness as “wanting company”, shame as
    // a situation in the content note rather than abstract nouns. “Conversations don’t wait either” went: only one thing is timed.
-   '<p>It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.</p>'+
-   '<p>About 50 minutes. It saves as you go. Only one thing is timed, and it’s unfair on purpose.</p>'+
-   '<p class="small">Alpha'+gameVersion()+', still changing. Made by Joonas Huhta (MoshBitSurfers).</p>'+
-   '<button class="go alt" type="button" data-go="menu">Back</button>','menu');
+   '<p>'+tr('It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.')+'</p>'+
+   '<p>'+tr('About 50 minutes. It saves as you go. Only one thing is timed, and it’s unfair on purpose.')+'</p>'+
+   '<p class="small">'+tr('Alpha{v}, still changing. Made by Joonas Huhta (MoshBitSurfers).').replace('{v}',gameVersion())+'</p>'+
+   '<button class="go alt" type="button" data-go="menu">'+tr('Back')+'</button>','menu');
 }
 function showWeekEnd(){
   var g=G;g.ended=true;g.dayEnd=false;WAIT=null;Q=[];render();
-  var note=g.no?'One “no” was said out loud. Everyone survived, including Eero.':'The “no” is still in its box. It keeps.';
+  var note=tr(g.no?'One “no” was said out loud. Everyone survived, including Eero.':'The “no” is still in its box. It keeps.');
   closeDay();if(!g.lab)saveDone();var rows=runRows(g.run),rt='RECEIPT · THE WHOLE THING';
   g.receiptText=receiptText(rt,rows,RC_FOOT_RUN);g.receipt={title:rt,rows:rows,foot:RC_FOOT_RUN};
-  showOv('<div class="end-grid"><div><div class="eyebrow">For now</div><h2>Still here. Both of you.</h2>'+
-   '<p class="small job-line">Ekskyysmi’s job: <s>Keep you from being rejected.</s> Stay with you when it happens.</p>'+
-   '<p>A string of small moments. One “oh, hi”, twice.<br>It went off both times. The second time, somebody stayed.</p>'+
+  showOv('<div class="end-grid"><div><div class="eyebrow">'+tr('For now')+'</div><h2>'+tr('Still here. Both of you.')+'</h2>'+
+   '<p class="small job-line">'+tr('Ekskyysmi’s job:')+' <s>'+tr('Keep you from being rejected.')+'</s> '+tr('Stay with you when it happens.')+'</p>'+
+   '<p>'+tr('A string of small moments. One “oh, hi”, twice.<br>It went off both times. The second time, somebody stayed.')+'</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
-   '<p class="title-quote">“For the record, I intend to go off again on Monday.”</p>'+
-   '<div class="end-go"><button class="go" type="button" data-go="menu">Main menu →</button><button class="go alt" type="button" data-go="start">New game</button></div></div>'+   // 0.97: the story is over; out with one clear press (Codex)
-   receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">Save as picture</button> <button class="rc-copy" type="button" data-go="copyrcpt">Copy text</button>')+'</div>','end');
+   '<p class="title-quote">'+loc().q[0]+tr('For the record, I intend to go off again on Monday.')+loc().q[1]+'</p>'+
+   '<div class="end-go"><button class="go" type="button" data-go="menu">'+tr('Main menu →')+'</button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button></div></div>'+   // 0.97: the story is over; out with one clear press (Codex)
+   receiptHTML(rt,rows,RC_FOOT_RUN+'<br><button class="rc-copy" type="button" data-go="sharercpt">'+tr('Save as picture')+'</button> <button class="rc-copy" type="button" data-go="copyrcpt">'+tr('Copy text')+'</button>')+'</div>','end');
 }
 function showTitle(){
   var sv=loadProgress();music('title');titleTagAt=-9;   // 0.99.33: the first title song stays (QQQ2 was tried on a phone, 27.11., and did not fit)   // the tagline is measured again for the new title
@@ -42,7 +42,7 @@ function titleHTML(sv){   // 0.89: its own function, so a language change can re
   var rotateHint=browser?'<p class="rotate-hint">'+tr('Turn your phone sideways for the best experience.')+'</p>':'';
   var fullLink=browser&&fullSupported()
     ?'<button class="link title-full" type="button" data-go="full">'+tr(fullOn()?'Leave full screen':'Full screen')+'</button>':'';
-  return '<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>Really Small Deal<span class="logo-dot">.</span></span></h1>'+
+  return '<h1 class="logo"><svg class="logo-eyes" viewBox="0 0 64 64" aria-hidden="true"><path d="M44 44l13 13" stroke="#ebbd79" stroke-width="8" stroke-linecap="round"/><circle cx="28" cy="28" r="20" fill="#14111d" stroke="#f4eddf" stroke-width="6"/><ellipse cx="21.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><ellipse cx="34.5" cy="27" rx="4.8" ry="6.4" fill="#faf4e5"/><g class="pupils"><circle cx="23" cy="28.2" r="2.2" fill="#14111d"/><circle cx="36" cy="28.2" r="2.2" fill="#14111d"/></g></svg><span>'+tr('Really Small Deal')+'<span class="logo-dot">.</span></span></h1>'+
    '<p class="tagline">'+tr('A small moment.<br>A very long shadow.').replace('<br>','<br> ')+'</p>'+
    '<div class="title-actions">'+
    (sv&&!sv.fin?'<button class="go" type="button" data-go="cont">'+tr('Continue')+' · '+tr(sv.at?LABS[sv.at.moment].title:dayName(sv.ch))+' <span aria-hidden="true">→</span></button><button class="go alt" type="button" data-go="start">'+tr('New game')+'</button>'
@@ -62,7 +62,7 @@ function showEnd(){
   showOv('<div class="end-grid"><div><div class="eyebrow">'+tr('End of Monday')+'</div><h2>'+tr('Home. Both of you.')+'</h2>'+
    '<p>'+tr('The greeting lasted two seconds.<br>The shadow took the scenic route.')+'</p>'+
    '<div class="end-note"><p>'+note+'</p></div>'+
-   '<p class="title-quote">'+(LANG==='fi'?'”':'“')+quote+'”</p>'+
+   '<p class="title-quote">'+loc().q[0]+quote+loc().q[1]+'</p>'+
    // 0.97 (Codex): one way on. “Try another approach” read as the game saying the human should have done better, and three
    // Mondays before Tuesday gave the player three histories and the story one. Monday comes back from Chapters, after.
    '<div class="end-go"><button class="go" type="button" data-go="next">'+tr('On to Tuesday →')+'</button></div></div>'+
@@ -125,7 +125,7 @@ document.getElementById('restart').addEventListener('click',function(){
 document.getElementById('journal').addEventListener('click',function(){
   if(ov.classList.contains('on')&&!G.ended)return;
   modalWasPaused=paused;paused=true;syncPause();
-  document.getElementById('log-content').innerHTML=history.map(function(l){return '<div class="log-entry w-'+l.who+'"><b>'+NAMES[l.who]+'</b><p>'+esc(l.text)+'</p></div>';}).join('');
+  document.getElementById('log-content').innerHTML=history.map(function(l){return '<div class="log-entry w-'+l.who+'"><b>'+tr(NAMES[l.who])+'</b><p>'+esc(l.text)+'</p></div>';}).join('');
   logDialog.showModal();
 });
 document.getElementById('close-log').addEventListener('click',function(){logDialog.close();});
@@ -152,7 +152,7 @@ document.getElementById('slow').addEventListener('click',function(){
 slowUI();
 function testingUI(){var b=document.getElementById('testing');if(b)b.setAttribute('aria-pressed',String(TESTING));}
 (function(){var b=document.getElementById('testing');if(!b)return;b.addEventListener('click',function(){
-  TESTING=!TESTING;try{window.localStorage.setItem('ekskyysmi.test',TESTING?'on':'off');}catch(e){}testingUI();sfx('pick');
+  TESTING=!TESTING;try{window.localStorage.setItem('ekskyysmi.test',TESTING?'on':'off');}catch(e){}testingUI();if(typeof pseudoUI==='function')pseudoUI();sfx('pick');
   if(!G.started&&ov.classList.contains('on')&&ov.dataset.kind==='title')showOv(titleHTML(loadProgress()));});testingUI();})();
 function belowUI(){var b=document.getElementById('below');if(b)b.setAttribute('aria-pressed',String(textBelow));}
 (function(){var b=document.getElementById('below');if(!b)return;b.addEventListener('click',function(){
@@ -263,7 +263,10 @@ if(document.addEventListener)document.addEventListener('click',function(e){
 
 // Language setting. 0.89: Finnish is a pilot for Monday (src/15-fi.js, src/16-fi-monday.js); the rest stays English until it is translated.
 var LANG='en';
-(function(){var el=document.getElementById('lang');if(!el)return;try{var v=window.localStorage.getItem('ekskyysmi.lang');if(v&&el.querySelector('option[value="'+v+'"]:not([disabled])'))el.value=LANG=v;}catch(e){}
+// 0.99.39: the pseudo-language (layout test, src/15-fi.js) is offered in testing mode only.
+function pseudoUI(){var el=document.getElementById('lang'),o=el&&el.querySelector('option[value="xx"]');if(!o)return;o.hidden=o.disabled=!TESTING;
+  if(!TESTING&&LANG==='xx'){LANG=el.value='en';try{window.localStorage.setItem('ekskyysmi.lang','en');document.documentElement.lang='en';}catch(e){}chromeText();}}
+(function(){var el=document.getElementById('lang');if(!el)return;pseudoUI();try{var v=window.localStorage.getItem('ekskyysmi.lang');if(v&&el.querySelector('option[value="'+v+'"]:not([disabled])'))el.value=LANG=v;}catch(e){}
   el.addEventListener('change',function(){LANG=el.value;try{window.localStorage.setItem('ekskyysmi.lang',LANG);document.documentElement.lang=LANG;}catch(e){}sfx('pick');chromeText();
     if(!G.started&&ov.querySelector('h1.logo'))showOv(titleHTML(loadProgress()));render();});
   try{document.documentElement.lang=LANG;}catch(e){}if(LANG!=='en')setTimeout(chromeText,0);})();
@@ -271,7 +274,7 @@ var LANG='en';
 function chromeText(){
   var ids={motion:'Less motion',below:'Text below',journal:'Dialogue',restart:'Restart','log-title':'The conversation so far','close-log':'Back to the moment'},id,e;
   for(id in ids){e=document.getElementById(id);if(e)e.textContent=tr(ids[id]);}
-  e=document.querySelector('#menu .menu-label');if(e)e.textContent=tr('Menu');
+  e=document.querySelector('#menu .menu-label');if(e)e.textContent=tr('Menu');e=document.getElementById('menu');if(e&&e.setAttribute)e.setAttribute('aria-label',tr('Menu and settings'));
   e=document.querySelector('.lang-row span');if(e)e.textContent=tr('Language');
   soundUI();textUI();slowUI();e=document.getElementById('pause');if(e)e.textContent=tr(paused?'Resume':'Pause');
   e=document.getElementById('full');if(e)e.textContent=tr(fullOn()?'Leave full screen':'Full screen');
