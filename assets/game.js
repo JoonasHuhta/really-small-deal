@@ -2148,14 +2148,14 @@ function mondayRepair(){
 var AFTER={
   2:['enhance','rewind'],
   3:['glass','colleagues','evening'],
-  4:['notnow','bar','nothing','library','form','snow','quiet','evenings','posting','night'],   // the library before the form (21.11.): Evenings is THE SAME DAY as Quiet.
+  4:['notnow','bar','nothing','library','santa','form','snow','quiet','evenings','posting','night'],   // the library before the form (21.11.): Evenings is THE SAME DAY as Quiet.
      // Snow indoors. (0.99.31, Joonas 26.11.: "what the game really needs"): the night after the form. The form says the shadow is
      // common; the dream says it has a colour. It learns to lie down on duty, and the next morning (Quiet.) the wall is empty.
      // The posting (21.11., Joonas: into the story): the first evening of the part-time job, 22:47, between Evenings and the night.
   5:['comments','epilogue','radiator']   // after the final image: the next Tuesday, by the radiator
 };
 // Extras, not in the story (TYOSUUNNITELMA.md section 4): detail, sometime, reply, voice, footage. (The posting joined the story 21.11.)
-var WHEN={snow:'A SUNDAY NIGHT',night:'THAT NIGHT',rewind:'LATE TUESDAY, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'MONDAY MORNING',evenings:'THE SAME DAY, 21:00',posting:'LATER THAT EVENING',detail:'THE NEXT AFTERNOON',enhance:'TUESDAY, ONE LAST MEETING',glass:'THURSDAY MORNING',notnow:'A LATER AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'THAT EVENING',
+var WHEN={santa:'A FRIDAY, LATE NOVEMBER',snow:'A SUNDAY NIGHT',night:'THAT NIGHT',rewind:'LATE TUESDAY, 23:40',nothing:'A SUNDAY, LATE AFTERNOON',form:'A WEEKDAY, 14:10',quiet:'MONDAY MORNING',evenings:'THE SAME DAY, 21:00',posting:'LATER THAT EVENING',detail:'THE NEXT AFTERNOON',enhance:'TUESDAY, ONE LAST MEETING',glass:'THURSDAY MORNING',notnow:'A LATER AFTERNOON',reply:'THE EVENING AFTER BOARD GAMES',bar:'THAT EVENING',
   colleagues:'THURSDAY, AFTER LUNCH',comments:'A SUNDAY EVENING',sometime:'LEAVING WORK',evening:'THURSDAY, AFTER WORK',voice:'LATER THAT EVENING',library:'A SATURDAY, WEEKS LATER',radiator:'THE NEXT TUESDAY'};
 // Moments that continue the one before them: Night shift is the same evening as Evenings (TYOSUUNNITELMA.md T3).
 var NOCARD={epilogue:1};   // the night has its own card since The posting sits between Evenings and the night   // the epilogue follows the last image straight away (it opens on its own card, “That was the week.”)
@@ -3949,7 +3949,7 @@ var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}
 var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
 // 0.99.22 (Joonas 26.11.: "let's make scenes into Moments and try all kinds of things"): new scenes start here, outside the story,
 // under their own heading so a tester knows they are being tried. Whether one joins the week is decided later, with Joonas.
-var TRYING=['kickoff','plusone','lift','busstop','santa','leaving','call'];   // Snow indoors. joined the story (0.99.31)
+var TRYING=['kickoff','plusone','lift','busstop','leaving','call'];   // Snow indoors. joined the story (0.99.31), Secret Santa. after the library (0.99.37)
 var SITUATION={santa:'Your present, opened in front of everyone.',leaving:'Going home from a party: say goodbye, or slip out.',call:'Booking something by phone. A live voice.',busstop:'A colleague at the bus stop whose name you never learned.',lift:'A lift with a colleague. Three floors. Nothing to say.',plusone:'Lunch for two, then a third person joins and you drop out.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
@@ -6043,6 +6043,9 @@ function labPlusOne(){return labScene({set:'canteen',title:'Plus one.',plan:'Hav
  ]);}
 // ---- src/59-santa.js ----
 /* ================= Secret Santa. and Leaving. (Moments, 0.99.30): the office Christmas party ================= */
+// 0.99.37 (Joonas 27.11.): Secret Santa. joins the story after the library (#15b), A FRIDAY, LATE NOVEMBER: a Finnish office
+// party is in November, and Snow indoors. two scenes later has "a little November on the sill". Not now. (#11) comes first,
+// so the shadow's “only allowed to drop one. On purpose.” is a callback the player has seen. Leaving. stays a Moment.
 // Two moments on one evening, like Quiet. and Evenings.
 // Secret Santa.: a present is a piece of you, opened in public. You drew Riitta. Her face says nothing ("Socks."), and then
 // one of the eleven things her shadow juggles falls on its own (in Not now. it may drop only one, on purpose: this one

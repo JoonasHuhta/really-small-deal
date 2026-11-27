@@ -333,8 +333,9 @@ function playLab(id,mode){
   assert.match(t2,/Am I allowed\?/);assert.match(t2,/I missed you/);assert.equal(T.G.morko.asleep,false,'the lamp brings it back');assert.equal(T.G.lampOff,false);
 }
 // The second act sits between Thursday's moments and Friday, in this order (21.11.: the library moved before the form, so Evenings is THE SAME DAY as Quiet;
-// 26.11., 0.99.31: Snow indoors., the night after the form, before Quiet., with Joonas).
-assert.match(require('fs').readFileSync(require('path').join(__dirname,'..','src','33-moments.js'),'utf8'),/4:\['notnow','bar','nothing','library','form','snow','quiet','evenings','posting','night'\]/);
+// 26.11., 0.99.31: Snow indoors., the night after the form, before Quiet., with Joonas; 27.11., 0.99.37: Secret Santa. after the library,
+// after Not now., whose one-dropped-on-purpose it calls back to).
+assert.match(require('fs').readFileSync(require('path').join(__dirname,'..','src','33-moments.js'),'utf8'),/4:\['notnow','bar','nothing','library','santa','form','snow','quiet','evenings','posting','night'\]/);
 // Nothing in the game names a condition, a drug or a profession. The player works it out, or does not.
 {
   const fs2=require('fs'),path2=require('path'),dir=path2.join(__dirname,'..','src');

@@ -1,4 +1,7 @@
 /* ================= Secret Santa. and Leaving. (Moments, 0.99.30): the office Christmas party ================= */
+// 0.99.37 (Joonas 27.11.): Secret Santa. joins the story after the library (#15b), A FRIDAY, LATE NOVEMBER: a Finnish office
+// party is in November, and Snow indoors. two scenes later has "a little November on the sill". Not now. (#11) comes first,
+// so the shadow's “only allowed to drop one. On purpose.” is a callback the player has seen. Leaving. stays a Moment.
 // Two moments on one evening, like Quiet. and Evenings.
 // Secret Santa.: a present is a piece of you, opened in public. You drew Riitta. Her face says nothing ("Socks."), and then
 // one of the eleven things her shadow juggles falls on its own (in Not now. it may drop only one, on purpose: this one

@@ -56,7 +56,7 @@ var DEVLAB=(function(){try{return /[?&]lab\b/.test(window.location.search||'');}
 var EXTRAS=['detail','sometime','reply','voice','footage'];   // the posting is in the story now
 // 0.99.22 (Joonas 26.11.: "let's make scenes into Moments and try all kinds of things"): new scenes start here, outside the story,
 // under their own heading so a tester knows they are being tried. Whether one joins the week is decided later, with Joonas.
-var TRYING=['kickoff','plusone','lift','busstop','santa','leaving','call'];   // Snow indoors. joined the story (0.99.31)
+var TRYING=['kickoff','plusone','lift','busstop','leaving','call'];   // Snow indoors. joined the story (0.99.31), Secret Santa. after the library (0.99.37)
 var SITUATION={santa:'Your present, opened in front of everyone.',leaving:'Going home from a party: say goodbye, or slip out.',call:'Booking something by phone. A live voice.',busstop:'A colleague at the bus stop whose name you never learned.',lift:'A lift with a colleague. Three floors. Nothing to say.',plusone:'Lunch for two, then a third person joins and you drop out.',kickoff:'The phone buzzes. The chest goes before anyone has read anything.',detail:'One small thing in a good review.',sometime:'“We should grab a coffee sometime.”',reply:'A short reply, edited until it says nothing.',
   voice:'Answering a voice message. Take fourteen.',posting:'A job ad that is so you. Not applying. Just in case.',footage:'Watching yourself instead of the conversation.'};
 function momentButton(k,line){return '<button class="lab" type="button" data-lab="'+k+'"><b>'+LABS[k].title+'</b><span>'+line+'</span></button>';}
