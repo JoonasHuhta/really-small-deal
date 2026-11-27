@@ -29,8 +29,8 @@ function bar(){
   ctx.strokeStyle='#e2b04a';ctx.lineWidth=3;line(124,180,140,168);
   // chalkboard
   ctx.fillStyle='#6b4a34';rr(566,168,150,96,5);ctx.fill();ctx.fillStyle='#22302c';rr(573,175,136,82,3);ctx.fill();
-  ctx.fillStyle='#e9e2cf';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';ctx.fillText('TODAY',641,192,128);
-  ctx.font='500 13px system-ui,sans-serif';ctx.fillText('Soup.',641,214,128);ctx.fillText('Also: everything else.',641,236,128);
+  ctx.fillStyle='#e9e2cf';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 13px system-ui,sans-serif';stillText(['TODAY'],641,192,ctx.font,'#e9e2cf',0,128,false,true);   // pictures of words (0.99.40)
+  ctx.font='500 13px system-ui,sans-serif';stillText(['Soup.','Also: everything else.'],641,214,ctx.font,'#e9e2cf',22,128,false,true);
   // neon
   var on=RM||Math.sin(t*1.3)>-0.96;ctx.strokeStyle=on?'#ff8fa3':'#7a4a55';ctx.lineWidth=4;ctx.shadowColor='#ff8fa3';ctx.shadowBlur=on?16:0;rr(770,176,112,50,12);ctx.stroke();
   ctx.fillStyle=on?'#ffd0d8':'#7a4a55';ctx.font='800 22px system-ui,sans-serif';ctx.fillText('OPEN',826,202,100);ctx.shadowBlur=0;

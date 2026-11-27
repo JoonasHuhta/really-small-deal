@@ -2,8 +2,8 @@ english	kind	who	first seen	note
 A Monday. One small plan.	line	N	chapter 1	
 PART ONE	card		chapter 1	
 Better safe.	card		chapter 1	
-BE A MUG.	ui		chapter 1	
-NOT A HERO.	ui		chapter 1	
+BE A MUG.	canvas		chapter 1	not translated: a picture (the office poster)
+NOT A HERO.	canvas		chapter 1	not translated: a picture (the office poster)
 Nobody here yet.	ui		chapter 1	
 drip.	ui		chapter 1	
 (mug handle on the wrong side.)	ui		chapter 1	
@@ -277,7 +277,6 @@ A meeting. You have just said an idea out loud.	line	N	enhance
 …so that’s the idea.	line	H	enhance	
 Interesting.	line	R	enhance	
 “Interesting.” With an eyebrow.	line	S	enhance	
-EYEBROW: UP.	ui		enhance	
 ENHANCE.	line	S	enhance	
 ● ENHANCE ×800	canvas		enhance	has a number
 Note the angle. Twelve degrees. Textbook disdain.	line	S	enhance	
@@ -1471,14 +1470,10 @@ effective: no. appreciated: yes.	ui		epilogue
 SUMMERS, VISITED	ui		epilogue	
 1 (ON SKIS)	canvas		epilogue	has a number
 shadow colour, discovered: blue.	ui		epilogue	
-HA	ui		epilogue	
 LATE FEES	ui		epilogue	
 lighthouses: a shared interest	ui		epilogue	
-Page four: “…in conclusion, sorry.”	line	P	epilogue	
-Sent: three lines. No apology.	line	P	epilogue	
 FLOORS, MISSED	ui		epilogue	
 after you. no, after YOU.	ui		epilogue	
-REJECTED	canvas		epilogue	
 SCRIPT · VERSION 14	ui		epilogue	has a number
 1. Hello. Sorry to bother you.	ui		epilogue	has a number
 2. One haircut, please.	ui		epilogue	has a number
@@ -1487,9 +1482,6 @@ SCRIPT · VERSION 14	ui		epilogue	has a number
 14c. If she laughs: ———	ui		epilogue	has a number
 PHONE CALLS, MADE	ui		epilogue	
 branches written: 14. used: 1.	ui		epilogue	has a number
-Hi. Sorry about the other sorry.	line	P	epilogue	
-ok 👍	line	P	epilogue	
-thud.	ui		epilogue	
 WORST CASES, PREPARED	ui		epilogue	
 YESES, UNMEANT	ui		epilogue	
 EXITS, TAKEN	ui		epilogue	
@@ -1499,6 +1491,8 @@ both signatures on file.	ui		epilogue
 REALLY SMALL DEAL	canvas		epilogue	
 RECEIPT · CONTINUED	ui		epilogue	
 ALSO ON FILE	ui		epilogue	
+UMBRELLA STORIES, TOLD	ui		epilogue	
+classified: not any more	ui		epilogue	
 RIDES HOME	ui		epilogue	
 one in the car. one running behind.	ui		epilogue	
 APPLICATIONS, SENT	ui		epilogue	
@@ -1509,6 +1503,8 @@ DRAFTS, DELETED	ui		epilogue
 sent instead: ok 👍	ui		epilogue	
 GROUP PHOTOS	ui		epilogue	
 shadows in shot: 1 (uninvited)	ui		epilogue	has a number
+STREETLAMPS, PASSED	ui		epilogue	
+sizes: all of them.	ui		epilogue	
 SNOWFLAKES, FILED	ui		epilogue	
 the file: wet, empty. a favourite.	ui		epilogue	
 DISTANCES, KEPT	ui		epilogue	
@@ -1516,13 +1512,11 @@ DISTANCES, KEPT	ui		epilogue
 give or take 0.3. both ways.	ui		epilogue	has a number
 POLES, SHARED	ui		epilogue	
 hands at the same height. (married.)	ui		epilogue	
-STREETLAMPS, PASSED	ui		epilogue	
-sizes: all of them.	ui		epilogue	
+POWER CUTS	ui		epilogue	
+eyes in the dark: four. panic: none.	ui		epilogue	
 SOCKS, GIVEN	ui		epilogue	
 1 PAIR	canvas		epilogue	has a number
 cold since september: handled.	ui		epilogue	
-POWER CUTS	ui		epilogue	
-eyes in the dark: four. panic: none.	ui		epilogue	
 DRAWINGS SHARED	ui		epilogue	
 legs: five. accounts closed: 0.	ui		epilogue	has a number
 DAMAGE REPORT	ui		epilogue	
@@ -1572,22 +1566,17 @@ thank you for coming.	ui		epilogue
 no reply needed.	ui		epilogue	
 (really.)	ui		epilogue	
 ekskyysmi: finnish for “excuse me”.	ui		epilogue	
-HI-YA.	ui		epilogue	
 FORM · PAGE 3 OF 9	ui		epilogue	has a number
 7. How do you usually take criticism?	ui		epilogue	has a number
 personally.	ui		epilogue	
 12. Do you replay conversations afterwards?	ui		epilogue	has a number
 only the ones that happened.	ui		epilogue	
 signature (the shadow)	canvas		epilogue	
-(stealth.)	ui		epilogue	
-SMALL SCRATCH.	ui		epilogue	
-brave things nobody saw: +1	ui		epilogue	has a number
-Riitta: “Quick chat?”	line	P	epilogue	
-CHOP.	ui		epilogue	
-Riitta: “Quick chat? Good news, actually.”	line	P	epilogue	
+Page four: “…in conclusion, sorry.”	line	P	epilogue	
+Sent: three lines. No apology.	line	P	epilogue	
 COMFORT ZONE	ui		epilogue	
 one step out. filed.	ui		epilogue	
-HEART RATE: NORMAL	ui		epilogue	
+HA	ui		epilogue	
 Outstanding: one meeting. Tuesday, by the radiator.	canvas		epilogue	
 THE NEXT TUESDAY	card		radiator	
 Make tea. That’s all.	ui		radiator	
@@ -1716,9 +1705,7 @@ FACE: FRIENDLY. RE-CHECKING.	ui		week end
 PAGE 212. NOBODY HAS DIED YET.	ui		week end	has a number
 AUDIENCE: STILL HERE.	ui		week end	
 The receipt for the whole week. Every line is here in Dialogue.	ui		week end	
-PAGE 341. STILL NOBODY.	ui		week end	has a number
 Signed: Ekskyysmi	ui		week end	
-ONE SMALL THING	ui		week end	
 The roles swap. Pick the human’s advice.	ui		week end	
 One “no” was said out loud. Everyone survived, including Eero.	ui		week end	
 For now	ui		week end	
@@ -2289,6 +2276,7 @@ Eero is handing back the slides. His slides. That you made. At midnight. He is s
 These are really good, by the way.	line	B	detail	
 Good. Accept the compliment. Do not make eye contact with it.	line	S	detail	
 Just one small thing.	line	B	detail	
+HEART RATE: NORMAL	ui		detail	
 Yeah. It’s nothing.	line	H	detail	
 It is NOT nothing. I have the X-ray.	line	S	detail	
 Show him the X-ray.	choice		detail	

@@ -10,6 +10,8 @@ const root=path.resolve(__dirname,'..');
 const harness=require('../tests/harness.cjs');
 const lang=process.argv[2]||null;
 const seen=new Map();   // key -> {kind, who, where, n}
+// Painted words that stay as they are in every language (Joonas 27.11.: the office poster "can be just a picture")
+const KEEP=new Set(['BE A MUG.','NOT A HERO.']);
 let dict=null;
 function note(s,kind,who,where){if(typeof s!=='string'||!/[A-Za-z]/.test(s))return;const e=seen.get(s);
   if(e){e.n++;if(e.kind==='canvas'&&kind!=='canvas'){e.kind=kind;e.who=who;}return;}seen.set(s,{kind,who,where,n:1});}
@@ -54,7 +56,7 @@ for(const [k,v] of seen){
   if(v.kind==='canvas'){const t=k.replace(/▏$/,'').trim();if(!t||whole.includes(t))continue;
     const parts=t.split(/\s+·\s+|\s{2,}/).filter(Boolean);if(parts.length>1&&parts.every(p=>whole.includes(p)||/^[\d:.,€% ×+-]+$/.test(p)))continue;}
   if(/\d/.test(k)){const key=k.replace(/\d+(?:[.,]\d+)?/g,'{n}');if(!tmpl.has(key)){tmpl.set(key,[]);rows.push(key);}tmpl.get(key).push([k,v]);continue;}
-  rows.push([k,v.kind,v.who,v.where,'']);}
+  rows.push([k,v.kind,v.who,v.where,KEEP.has(k)?'not translated: a picture (the office poster)':'']);}
 for(let i=0;i<rows.length;i++)if(typeof rows[i]==='string'){const list=tmpl.get(rows[i]),v=list[0][1];
   rows[i]=list.length>1?[rows[i],v.kind,v.who,v.where,'template: '+list.slice(0,3).map(x=>x[0]).join(' | ')]:[list[0][0],v.kind,v.who,v.where,'has a number'];}
 // rows stay in the order they were first seen: the story in play order, then the Moments, then the menus
@@ -63,6 +65,6 @@ fs.mkdirSync(path.join(root,'i18n'),{recursive:true});
 fs.writeFileSync(path.join(root,'i18n/strings.tsv'),'english\tkind\twho\tfirst seen\tnote\n'+rows.map(r=>r.map(esc).join('\t')).join('\n')+'\n');
 const words=rows.reduce((a,r)=>a+r[0].split(/\s+/).filter(Boolean).length,0),by={};for(const r of rows)by[r[1]]=(by[r[1]]||0)+1;
 console.log('i18n/strings.tsv: '+rows.length+' strings, '+words+' words ('+Object.entries(by).map(([k,v])=>k+' '+v).join(', ')+')');
-if(lang){const d=dict||{},miss=rows.filter(r=>!d[r[0]]);
+if(lang){const d=dict||{},miss=rows.filter(r=>!d[r[0]]&&!KEEP.has(r[0]));
   fs.writeFileSync(path.join(root,'i18n/missing-'+lang+'.tsv'),'english\tkind\twho\tfirst seen\tnote\n'+miss.map(r=>r.map(esc).join('\t')).join('\n')+'\n');
   console.log('i18n/missing-'+lang+'.tsv: '+miss.length+' of '+rows.length+' have no '+lang+' entry yet');}

@@ -8,6 +8,28 @@ function isLoud(w){return /[A-Z]{2}/.test(w)&&!/[a-z]/.test(w);}
 function bubbleK(o){return o&&o.loud?1.34:o&&o.quiet?0.72:1;}
 // 0.99.39: the lines of a text that fit maxW, in the language being shown (canvas text is measured as painted).
 function wrapText(s,maxW){s=trQ(s);var out=[],cur='';String(s).split(' ').forEach(function(w){var t=cur?cur+' '+w:w;if(cur&&ctx.measureText(t).width>maxW){out.push(cur);cur=w;}else cur=t;});if(cur)out.push(cur);return out;}
+// 0.99.40 (Joonas 27.11.: the poster's words "shake and jump" while the camera drifts): small words painted on a wall are drawn
+// as a picture, made once at four times the size. Canvas text under a moving, scaling camera snaps to the pixel grid differently
+// every frame; a picture moves smoothly with the wall. raw: the words stay as painted (the office poster is a picture, never
+// translated); otherwise they go through trQ, and the language is part of the picture's name. Without a document (the test
+// harness) or before the fonts have loaded, the words are drawn as text, as before.
+var STILL={};
+function stillText(lines,x,y,font,col,lh,maxW,raw,mid){   // centred on x; y is the first line's baseline (mid: its middle)
+  var L=raw?lines:lines.map(function(t){return trQ(t);}),key=L.join('\n')+'|'+font+'|'+col+'|'+lh+'|'+(maxW||0)+'|'+(mid?'m':'a')+'|'+(raw?'':LANG),c=STILL[key];
+  if(c===undefined){c=null;try{var D=typeof document!=='undefined'?document:null;
+      if(D&&D.fonts&&D.fonts.status!=='loaded')return drawLines();   // not made yet: try again once the fonts are in
+      if(D&&D.createElement){var K=4,cv=D.createElement('canvas'),x2=cv.getContext&&cv.getContext('2d');
+        if(x2){x2.font=font;var w=0;L.forEach(function(t){w=Math.max(w,Math.min(maxW||1e9,x2.measureText(t).width));});
+          var sz=parseFloat((font.match(/(\d+(?:\.\d+)?)px/)||[0,12])[1]),top=Math.ceil(mid?sz*0.8:sz)+2,pw=Math.ceil(w)+4,ph=top+Math.ceil(lh*(L.length-1)+(mid?sz*0.8:sz*0.4))+2;
+          cv.width=pw*K;cv.height=ph*K;x2.scale(K,K);x2.font=font;x2.fillStyle=col;x2.textAlign='center';x2.textBaseline=mid?'middle':'alphabetic';
+          L.forEach(function(t,k){if(maxW)x2.fillText(t,pw/2,top+k*lh,maxW);else x2.fillText(t,pw/2,top+k*lh);});
+          c={cv:cv,w:pw,h:ph,top:top};}}
+    }catch(_){c=null;}STILL[key]=c;}
+  if(!c)return drawLines();
+  ctx.drawImage(c.cv,x-c.w/2,y-c.top,c.w,c.h);
+  function drawLines(){ctx.save();ctx.font=font;ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline=mid?'middle':'alphabetic';
+    lines.forEach(function(t,k){if(maxW)ctx.fillText(t,x,y+k*lh,maxW);else ctx.fillText(t,x,y+k*lh);});ctx.restore();}
+}
 function bubble(x,y,text,o){
   o=o||{};
   var k=bubbleK(o),fs=17*k,lh=22*k,base='600 '+fs+'px system-ui,sans-serif',em='800 '+(fs+1.5*k)+'px system-ui,sans-serif',i,j;
@@ -82,7 +104,7 @@ function room(flat,noFront){
   ctx.save();ctx.translate(263,162);ctx.rotate(0.07);ctx.beginPath();ctx.moveTo(-17,-2);ctx.lineTo(17,-2);ctx.lineTo(17,38);ctx.lineTo(8,48);ctx.lineTo(-17,48);ctx.closePath();ctx.fill();
   ctx.fillStyle='#dcd4c0';ctx.beginPath();ctx.moveTo(17,38);ctx.lineTo(8,48);ctx.lineTo(7,36);ctx.closePath();ctx.fill();ctx.restore();ctx.fillStyle='#f6f1e4';
   ctx.strokeStyle='#9c958a';ctx.lineWidth=1.5;for(var i=0;i<5;i++)line(157,172+i*9,192,172+i*9);
-  ctx.fillStyle='#5a6559';ctx.font='600 9px "DM Sans",sans-serif';ctx.textAlign='center';ctx.fillText(tr('BE A MUG.'),237,226);ctx.fillText(tr('NOT A HERO.'),237,237);
+  stillText(['BE A MUG.','NOT A HERO.'],237,226,'600 9px "DM Sans",sans-serif','#5a6559',11,0,true);   // a picture (0.99.40)
   ctx.fillStyle='#c9553f';circ(175,164,3);ctx.fill();circ(223,168,3);ctx.fill();circ(263,162,3);ctx.fill();
   var cx=560,cy=92;ctx.fillStyle='#fbf8ef';ctx.strokeStyle='#2b2733';ctx.lineWidth=3;circ(cx,cy,27);ctx.fill();ctx.stroke();
   var s=G.clock,sa=(s%60)/60*Math.PI*2,ma=((s/60)%60)/60*Math.PI*2,ha=((s/3600)%12)/12*Math.PI*2;

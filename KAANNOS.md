@@ -9,7 +9,7 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
 3. **Mitä puuttuu:** `node tools/strings.cjs fi` kirjoittaa tiedostoon `i18n/missing-fi.tsv` ne rivit, joilla ei vielä ole suomennosta.
 4. **Mahtuuko:** Settings › *Unlock all (testing)* → Language › *Pseudo (layout test)*. Jokainen kirjain korostetaan ja teksti on 40 % pidempi, joten näkee heti, mikä ei mahdu ja mikä jäi kääntymättä. `tests/i18n.test.cjs` tekee saman automaattisesti.
 5. **Luvut:** jos rivissä on luku, joka vaihtelee, käännetään malli: `DELETED · TAKE {n}` → `POISTETTU · OTTO {n}`. Luvut palaavat järjestyksessä, ja desimaalipilkku tulee `LOC`-asetuksesta (`0.4 s` → `0,4 s`). Valuutta samoin: `€{n}` → `{n} €`.
-6. **Kuvaan piirretyt tekstit** (kyltit, kuitit, lappuset, kuvatekstit) kääntyvät samasta sanakirjasta. Kyltti puristaa liian pitkän sanan mahtumaan, ja kuitin pitkä nimike kapenee arvonsa vierellä, joten lyhyt käännös on silti parempi. Ohjeelliset pituudet: kuitin rivin nimike noin 28 merkkiä, kylttiteksti noin 16, kortin otsikko noin 30.
+6. **Kuvaan piirretyt tekstit** (kyltit, kuitit, lappuset, kuvatekstit) kääntyvät samasta sanakirjasta. Kyltti puristaa liian pitkän sanan mahtumaan, ja kuitin pitkä nimike kapenee arvonsa vierellä, joten lyhyt käännös on silti parempi. Ohjeelliset pituudet: kuitin rivin nimike noin 28 merkkiä, kylttiteksti noin 16, kortin otsikko noin 30. Seinäkyltit (kirjasto, baarin liitutaulu) piirretään käännettyinä kuviksi (`stillText`), joten kieltä vaihdettaessa kuva tehdään uudestaan. Toimiston juliste *BE A MUG. NOT A HERO.* ei käänny.
 
 ## Sanaleikit ja idiomit
 
@@ -18,7 +18,7 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
 | “It’s a no in a coat.” | ke keskiyö, pe | kielto naamioituna kohteliaaksi; ”takki” palaa perjantaina (”What coat?”) |
 | “Streetlights with a gap policy.” | Lamp gap | byrokratiasana arkiesineelle |
 | “Lamp gap.” | ma kotimatka | lyhyt, kuin liikennemerkki |
-| “BE A MUG. NOT A HERO.” | ilmoitustaulu (piirretty kuva) | ”mug” = muki ja hölmö; kuvassa, vaatii piirron vaihdon |
+| “BE A MUG. NOT A HERO.” | ilmoitustaulu (kuva, 0.99.40) | **Ei käännetä** (Joonas 27.11.: ”saa olla ihan kuva”). Juliste piirretään kuvana, ja se jää englanniksi kaikilla kielillä. ”Mug” on sekä muki että hölmö, ja muki on pelin jaksamisen mittari. |
 | “Informal head of keeping things from getting awkward.” | ma esittely | leikkititteli |
 | “You too.” / “You t— …Thanks, Eero.” | ma, pe | kohteliaisuusrefleksi; vastine on oltava yhtä automaattinen (fi: ”Samoin.”) |
 | “Nobody sneezes in paragraphs.” | to | |

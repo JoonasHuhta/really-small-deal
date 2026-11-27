@@ -14,14 +14,18 @@ function partyRoom(){
   for(var i=0;i<17;i++){var u=i/16,x=-10+u*(W+20),y=54+(1-Math.pow(2*u-1,2))*25;ctx.fillStyle=cols[i%4];ctx.beginPath();ctx.moveTo(x-11,y);ctx.lineTo(x+11,y);ctx.lineTo(x,y+20);ctx.closePath();ctx.fill();}
 }
 SETS.party=partyRoom;
-// the present, in Riitta's hands: wrapped, then two grey wool socks
+// the present, in Riitta's hands: wrapped, then a pair of grey wool socks
 function drawSanta(){
   var g=G,s=g.santa;if(!s||g.set!=='party'||g.out||!g.cowR||Math.abs(g.rx-(g.rxT==null?g.rx:g.rxT))>2)return;
   var x=g.rx-34,y=FEETY-92;
   if(!s.open){ctx.fillStyle='#c9553f';rr(x-15,y-12,30,24,3);ctx.fill();ctx.fillStyle='#e2b04a';ctx.fillRect(x-2,y-12,4,24);ctx.fillRect(x-15,y-2,30,4);
     ctx.beginPath();ctx.ellipse(x-5,y-15,6,3.5,-0.5,0,Math.PI*2);ctx.ellipse(x+5,y-15,6,3.5,0.5,0,Math.PI*2);ctx.fill();return;}
-  ctx.fillStyle='#9aa0a6';for(var k=0;k<2;k++){var sx=x-9+k*14;rr(sx,y-16,9,24,3);ctx.fill();rr(sx,y+3,15,8,4);ctx.fill();}
-  ctx.fillStyle='#c9553f';ctx.fillRect(x-9,y-16,9,4);ctx.fillRect(x+5,y-16,9,4);
+  // 0.99.40 (Joonas 27.11.: "the socks look odd in her hand; one sock, or the two close together"): a pair as it comes from
+  // the shop, one sock just behind the other, feet the same way (out, toward the two of them), held together by a paper band.
+  var sock=function(sx,sy,col,rib){ctx.fillStyle=col;rr(sx,sy,10,23,3);ctx.fill();rr(sx-7,sy+16,17,8,4);ctx.fill();
+    ctx.fillStyle=rib;for(var j=0;j<3;j++)ctx.fillRect(sx+2+j*3,sy+1,1.2,5);};
+  sock(x-4,y-19,'#80868d','#9196a0');sock(x-8,y-15,'#9aa0a6','#b3b8be');
+  ctx.fillStyle='#c9553f';ctx.fillRect(x-9,y-6,16,5);ctx.fillStyle='#e2b04a';ctx.fillRect(x-9,y-4.5,16,1.2);
 }
 MFRONT.push(drawSanta);
 function labSanta(){return labScene({set:'party',title:'Secret Santa.',plan:'Give one present.',clock:16*3600+40*60}).concat([

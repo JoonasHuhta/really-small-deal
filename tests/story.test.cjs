@@ -675,7 +675,12 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
  {const ep=src('37-epilogue.js'),B=Function('return '+ep.match(/var EPIBARS=(\[[^\]]*\])/)[1])(),A=Function('return '+ep.match(/var EPIA=(\[[^\]]*\])/)[1])();
   const nb=[...ep.slice(ep.indexOf('var EPIN=')).matchAll(/^\s*\{bars:([\d.]+)/gm)].reduce((a,m)=>a+ +m[1],0),bt=k=>k<B.length?B[k]:B[B.length-1]+(k-B.length+1)*2.25;
   assert.equal(A.reduce((a,b)=>a+b,0),24,'the opening montage must stay 24 bars (the receipt rolls on the song’s quiet middle)');
-  assert.ok(169.4-bt(51+nb)>=5,'the bird and the credit need at least five seconds before the last hit');}
+  const RE=+ep.match(/ROLLEND=(\d+)/)[1],RF=+ep.match(/ROLLFANFARE=(\d+)/)[1],RS=+ep.match(/ROLLSTART=(\d+)/)[1];
+  assert.equal(RS,25,'the receipt starts on the song’s quiet middle');
+  // 0.99.40 (Joonas 27.11.): the end of the receipt lands on the song's fanfare, about 2:02–2:14, and then the last part begins
+  assert.ok(bt(RF)>=121&&bt(RF)<=124,'the receipt’s last part must start on the fanfare (about 2:02), not at '+bt(RF).toFixed(1)+' s');
+  assert.ok(bt(RE)>=132.5&&bt(RE)<=135,'the receipt must end at about 2:14, not at '+bt(RE).toFixed(1)+' s');
+  assert.ok(169.4-bt(RE+nb)>=5,'the credit needs at least five seconds before the last hit');}
  // 9. Codex review of 0.76 (21.11.): the part label follows the map, and a part card names itself.
  {T.chapter(4);const seen={};let k=0;
   while(T.G.chapter===4&&!T.G.ended&&k++<40000){T.unlock();T.draw();const g=T.G;if(g.moment)seen[g.moment]=element('chapter').textContent;if(g.chap&&g.chap.part===2)seen.part2=element('chapter').textContent;
@@ -694,7 +699,7 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
  // 12b. 0.99.34: “appointment” meant the shadows' meeting but read as the clinic's (The form). The promise names the place.
  {const ep=src('37-epilogue.js');assert.ok(!/credit:'[^']*appointment/i.test(ep),'the last card must not say “appointment”: the form has one');
   const B=[...ep.slice(ep.indexOf('var EPIB='),ep.indexOf('var EPIN=')).matchAll(/^\s*\{bars:([\d.]+)/gm)].reduce((a,m)=>a+ +m[1],0);
-  assert.equal(B,26,'part B (beside the roll) must fill bars 25 to 51');}
+  assert.equal(B,34,'part B (beside the roll) must fill bars 25 to 59');}
  // 13. Friday (Codex 22.11., 0.84): the "no" to Eero costs something real; lunch with Sanna has a reason; the sorry gets one gloss, not two.
  {const fr=src('31-story-week.js');
   assert.ok(fr.includes("['B','Oh. I told Riitta you probably could.']")&&fr.includes("['S','That was awkward. I was right about that one.']"),'Friday: the no must cost something (Eero promised the shift)');
