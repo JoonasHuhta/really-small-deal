@@ -729,5 +729,12 @@ console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment
   assert.ok(g.fade>0.4,'a fade-out from black never starts ('+g.fade+')');H2.T.tick(1);assert.equal(g.fade,1,'a fade-out ends at black');
   g.fade=0.5;g.fadeRate=1.6;g.fadeCol='24,42,45';H2.T.tick(1);assert.equal(g.fadeCol,null,'the card colour stays after its fade');
   assert.ok(!/G\.chap=null;G\.fade=1;\}\];\}\];\}/.test(src('50-lab.js')),'a moment card dips to black again at its end');
-  assert.ok(src('27-parts.js').includes('function breath()')&&/\[breath,/.test(src('50-lab.js'))&&/\[breath,/.test(src('31-story-week.js')),'the beat before a card is gone');}
+  assert.ok(src('27-parts.js').includes('function breath()')&&/\[breath,/.test(src('50-lab.js'))&&/\[breath,/.test(src('31-story-week.js')),'the beat before a card is gone');
+  // 0.99.47: a // comment swallowed the rest of the update line in 0.99.35-0.99.46. The other shadows fade in, a pop fades out,
+  // and no line comment in src/ hides code glued to its end.
+  g.zT=1;g.zShow=0;g.yT=1;g.yShow=0;g.pop={text:'Ekskyysmi filed that.',t:0};H2.T.tick(3);
+  assert.ok(g.zShow>0.9&&g.yShow>0.9,'the other shadows never fade in ('+g.zShow+', '+g.yShow+')');assert.equal(g.pop,null,'“Ekskyysmi filed that.” never fades');
+  for(const f of fs4.readdirSync(p4.join(root,'src')))src(f).split('\n').forEach((l,i)=>{let q=null,j=0;
+    for(;j<l.length;j++){const c=l[j];if(q){if(c==='\\'){j++;continue;}if(c===q)q=null;continue;}if(c==="'"||c==='"'||c==='`'){q=c;continue;}if(c==='/'&&l[j+1]==='/'&&l[j-1]!==':')break;}
+    if(j<l.length)assert.ok(!/[a-z]\.?[A-Z]?[a-zA-Z]*\.[a-zA-Z]+=ease\(|;(if|var|for|return)\b|\)\{/.test(l.slice(j+2).replace(/`[^`]*`/g,'')),f+':'+(i+1)+' code after a // comment never runs');});}
  console.log('PASS: story map order ('+order.length+' rows), cutaway rhyme, Not now after Thursday, no thread, cat, transitions, mug principle, the Fine. thread, epilogue bars, part labels, radiator speakers, phone menu, the appointment.');}

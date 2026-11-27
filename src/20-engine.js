@@ -195,7 +195,7 @@ elOpts.addEventListener('pointerdown',function(e){var t=e.target&&e.target.close
 window.addEventListener('pointerup',holdUp);window.addEventListener('pointercancel',holdUp);window.addEventListener('blur',holdUp);
 
 /* ================= hands-on moments: used sparingly, about one a day ================= */
-var HOLD_LABEL={rewind:'Hold: rewind',cover:'Hold: cover the eyes',pull:'Hold: walk out',still:'Hold: keep perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign',ski:'Hold: ski'};
+var HOLD_LABEL={rewind:'Hold: rewind',cover:'Hold: cover the eyes',pull:'Hold: walk out',still:'Hold: keep perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign',ski:'Hold: ski',bird:'Hold: make the bird'};
 var NOPE=['That one isn’t available. I’m sitting on it.','Still sitting on it.','It’s very comfortable, actually.','Press it all day. I have nowhere to be.'];
 // “(Say nothing.)” is on the menu all week and greyed out until Thursday rewrites the job: the arc, shown in the interface.
 // hush(then) opens it, hush() keeps it shut. It is always the last option.
@@ -218,6 +218,7 @@ function holdText(){
   if(h.kind==='sit')return on?h.o.text:'Hold to sit down. Do nothing else.';
   if(h.kind==='sign')return on?h.o.text:'Hold to sign.';
   if(h.kind==='ski')return on?'Kick. Glide. Kick. Glide.':'Hold to ski to the door.';
+  if(h.kind==='bird')return on?(h.o.text||'Flap. Flap.'):'Hold to make the bird.';
   if(h.kind==='cover')return h.wave?'Sanna is waving. Your human can’t see it.':on?'Hands over the eyes. Nothing gets in.':'Hold to keep the eyes covered.';
   if(h.kind==='pull')return on?'This way. Briskly. Don’t look back.':'Hold to walk out of the room.';
   if(h.kind==='still')return on?'Nobody move. We are a lamp.':'Hold to keep perfectly still.';
@@ -246,6 +247,8 @@ function holdStep(h,on,dt){
     if(g.form)g.form.sig=f;
   }else if(h.kind==='ski'){   // Snow indoors.: the human glides to the door; on the snow the shadow turns blue
     Hm.xT=h.o.from+(h.o.to-h.o.from)*f;M.pose=null;M.mood=on?'alert':'worry';if(g.dream)g.dream.blueT=f;
+  }else if(h.kind==='bird'){   // By the radiator (0.99.47): the player makes the bird; let go and the hands drop
+    M.pose=on?'puppet':null;M.mood='care';if(on&&!h.snd){h.snd=1;sfx('flutter');}if(!on)h.snd=0;
   }else if(h.kind==='still'){
     M.pose='hold';Hm.face='stiff';Hm.sweatT=0.8;if(!on&&dt)Hm.flinch=Math.max(Hm.flinch,0.5);
     if(g.day!=='C')g.aFace=(h.p>1&&h.p<2.1)?-1:1;
@@ -265,6 +268,7 @@ function finishHold(){
   else if(h.kind==='sit'){M.sT=0.62;g.anx=0.05;}
   else if(h.kind==='sign'){if(g.form)g.form.sig=1;}
   else if(h.kind==='ski'){Hm.xT=h.o.to;M.pose=null;if(g.dream)g.dream.blueT=1;}
+  else if(h.kind==='bird'){M.pose='puppet';}
   else{M.pose='comfort';M.sT=1.1;M.mood='care';g.anx=0.1;}
   sfx('pick');run();
 }

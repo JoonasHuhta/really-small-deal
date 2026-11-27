@@ -58,6 +58,8 @@ WHAT THE OTHERS SAW	outside		chapter 1
 duration: {n} seconds	outside		chapter 1	template: duration: 4 seconds | duration: 2 seconds | duration: 0 seconds
 Two nods. One sip. One “you too”. A perfectly ordinary pause.	outside		chapter 1	
 Rejection prevented.	line	S	chapter 1	
+REJECTION	ui		chapter 1	
+PREVENTED	ui		chapter 1	
 That wasn’t a rejection.	line	H	chapter 1	
 And it stays that way.	line	S	chapter 1	
 Here comes Sanna. Remember: casual. Like someone who has lunch all the time.	line	S	chapter 1	
@@ -1718,6 +1720,8 @@ The receipt for the whole week. Every line is here in Dialogue.	ui		week end
 Signed: Ekskyysmi	ui		week end	
 END OF WEEK	ui		week end	
 The roles swap. Pick the human’s advice.	ui		week end	
+Hold: make the bird	ui		week end	
+Hold to make the bird.	ui		week end	
 One “no” was said out loud. Everyone survived, including Eero.	ui		week end	
 For now	ui		week end	
 Still here. Both of you.	ui		week end	

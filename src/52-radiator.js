@@ -29,12 +29,11 @@ function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan
   ['S','I KNOW. Yes. The building has excellent taste.'],
   // EKSKYYSMI.md, link 1: born from a drawing somebody laughed at, it has kept its own art hidden ("Don't tell the office").
   // Out of topics, it does the only other thing it knows. Nobody laughs.
-  {wait:0.8},set({pose:'puppet',mood:'care'}),function(){sfx('flutter');},{wait:1.6},
+  {wait:0.8},set({mood:'care'}),{hold:{kind:'bird',secs:2.2,text:'Two hands. One bird. Nobody laughing.'}},   // 0.99.47 (review D2): the player makes it
   ['Z','…Is that a bird?'],
   ['S','It’s a hobby. Shadows are allowed one.',{quiet:1}],
   ['Z','Do it again.'],
-  function(){sfx('flutter');},   // 0.86: and it does
-  {wait:1.4},set({pose:null}),
+  {hold:{kind:'bird',secs:1.6,text:'Again. Because she asked.'}},{wait:0.6},set({pose:null}),   // 0.86: and it does; 0.99.47: by the player's hand
   {wait:0.9},
   ['A','Kettle’s done!'],
   function(){G.zT=0;}

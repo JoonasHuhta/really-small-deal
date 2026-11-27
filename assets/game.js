@@ -875,7 +875,7 @@ elOpts.addEventListener('pointerdown',function(e){var t=e.target&&e.target.close
 window.addEventListener('pointerup',holdUp);window.addEventListener('pointercancel',holdUp);window.addEventListener('blur',holdUp);
 
 /* ================= hands-on moments: used sparingly, about one a day ================= */
-var HOLD_LABEL={rewind:'Hold: rewind',cover:'Hold: cover the eyes',pull:'Hold: walk out',still:'Hold: keep perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign',ski:'Hold: ski'};
+var HOLD_LABEL={rewind:'Hold: rewind',cover:'Hold: cover the eyes',pull:'Hold: walk out',still:'Hold: keep perfectly still',stay:'Hold: stay',sit:'Hold: sit',sign:'Hold: sign',ski:'Hold: ski',bird:'Hold: make the bird'};
 var NOPE=['That one isn’t available. I’m sitting on it.','Still sitting on it.','It’s very comfortable, actually.','Press it all day. I have nowhere to be.'];
 // “(Say nothing.)” is on the menu all week and greyed out until Thursday rewrites the job: the arc, shown in the interface.
 // hush(then) opens it, hush() keeps it shut. It is always the last option.
@@ -898,6 +898,7 @@ function holdText(){
   if(h.kind==='sit')return on?h.o.text:'Hold to sit down. Do nothing else.';
   if(h.kind==='sign')return on?h.o.text:'Hold to sign.';
   if(h.kind==='ski')return on?'Kick. Glide. Kick. Glide.':'Hold to ski to the door.';
+  if(h.kind==='bird')return on?(h.o.text||'Flap. Flap.'):'Hold to make the bird.';
   if(h.kind==='cover')return h.wave?'Sanna is waving. Your human can’t see it.':on?'Hands over the eyes. Nothing gets in.':'Hold to keep the eyes covered.';
   if(h.kind==='pull')return on?'This way. Briskly. Don’t look back.':'Hold to walk out of the room.';
   if(h.kind==='still')return on?'Nobody move. We are a lamp.':'Hold to keep perfectly still.';
@@ -926,6 +927,8 @@ function holdStep(h,on,dt){
     if(g.form)g.form.sig=f;
   }else if(h.kind==='ski'){   // Snow indoors.: the human glides to the door; on the snow the shadow turns blue
     Hm.xT=h.o.from+(h.o.to-h.o.from)*f;M.pose=null;M.mood=on?'alert':'worry';if(g.dream)g.dream.blueT=f;
+  }else if(h.kind==='bird'){   // By the radiator (0.99.47): the player makes the bird; let go and the hands drop
+    M.pose=on?'puppet':null;M.mood='care';if(on&&!h.snd){h.snd=1;sfx('flutter');}if(!on)h.snd=0;
   }else if(h.kind==='still'){
     M.pose='hold';Hm.face='stiff';Hm.sweatT=0.8;if(!on&&dt)Hm.flinch=Math.max(Hm.flinch,0.5);
     if(g.day!=='C')g.aFace=(h.p>1&&h.p<2.1)?-1:1;
@@ -945,6 +948,7 @@ function finishHold(){
   else if(h.kind==='sit'){M.sT=0.62;g.anx=0.05;}
   else if(h.kind==='sign'){if(g.form)g.form.sig=1;}
   else if(h.kind==='ski'){Hm.xT=h.o.to;M.pose=null;if(g.dream)g.dream.blueT=1;}
+  else if(h.kind==='bird'){M.pose='puppet';}
   else{M.pose='comfort';M.sT=1.1;M.mood='care';g.anx=0.1;}
   sfx('pick');run();
 }
@@ -4809,12 +4813,11 @@ function labRadiator(){return labScene({set:'room',title:'By the radiator.',plan
   ['S','I KNOW. Yes. The building has excellent taste.'],
   // EKSKYYSMI.md, link 1: born from a drawing somebody laughed at, it has kept its own art hidden ("Don't tell the office").
   // Out of topics, it does the only other thing it knows. Nobody laughs.
-  {wait:0.8},set({pose:'puppet',mood:'care'}),function(){sfx('flutter');},{wait:1.6},
+  {wait:0.8},set({mood:'care'}),{hold:{kind:'bird',secs:2.2,text:'Two hands. One bird. Nobody laughing.'}},   // 0.99.47 (review D2): the player makes it
   ['Z','…Is that a bird?'],
   ['S','It’s a hobby. Shadows are allowed one.',{quiet:1}],
   ['Z','Do it again.'],
-  function(){sfx('flutter');},   // 0.86: and it does
-  {wait:1.4},set({pose:null}),
+  {hold:{kind:'bird',secs:1.6,text:'Again. Because she asked.'}},{wait:0.6},set({pose:null}),   // 0.86: and it does; 0.99.47: by the player's hand
   {wait:0.9},
   ['A','Kettle’s done!'],
   function(){G.zT=0;}
@@ -6549,7 +6552,10 @@ function update(dt,elapsed){
       if(hh.p>=hh.secs)finishHold();
     }
   }
-  if(g.card>0)g.card-=dt;if(g.job)g.job.t+=elapsed;if(g.chap)g.chap.t+=dt;g.stampT=(g.stampT||0)+dt;if(g.bigNote)g.bigNote.t+=dt;if(g.fade>0||g.fadeRate<0){g.fade=clamp(g.fade-dt*(g.fadeRate||1.6),0,1);if(!g.fade)g.fadeCol=null;}   // 0.99.35: a fade-out (negative rate) starts from 0; until now it never didHm.sip=ease(Hm.sip||0,Hm.sipT||0,8*dt);titleIdle(dt);M.wake=ease(M.wake==null?1:M.wake,M.asleep?0:M.dim!=null?M.dim:1,2.6*dt);if(g.anx>0.3)g.anx=Math.max(0.3,g.anx-0.06*dt);g.zShow=ease(g.zShow,g.zT,2*dt);g.yShow=ease(g.yShow||0,g.yT||0,2*dt);g.wShow=ease(g.wShow||0,g.wT||0,2*dt);if(g.wDrop)g.wDrop.t+=dt;g.yx=approach(g.yx||0,g.yxT||0,(RM?400:75)*dt);if(g.out)g.out.t+=dt;if(g.pop){g.pop.t+=dt;if(g.pop.t>2.6)g.pop=null;}
+  if(g.card>0)g.card-=dt;if(g.job)g.job.t+=elapsed;if(g.chap)g.chap.t+=dt;g.stampT=(g.stampT||0)+dt;if(g.bigNote)g.bigNote.t+=dt;if(g.fade>0||g.fadeRate<0){g.fade=clamp(g.fade-dt*(g.fadeRate||1.6),0,1);if(!g.fade)g.fadeCol=null;}   // 0.99.35: a fade-out (negative rate) starts from 0; until now it never did
+  // 0.99.47: the comment above had no line break, so everything after it on that line did not run from 0.99.35 to 0.99.46
+  // (Sanna's, Eero's and Riitta's shadows stayed hidden, “Ekskyysmi filed that.” never faded, the title idled still)
+  Hm.sip=ease(Hm.sip||0,Hm.sipT||0,8*dt);titleIdle(dt);M.wake=ease(M.wake==null?1:M.wake,M.asleep?0:M.dim!=null?M.dim:1,2.6*dt);if(g.anx>0.3)g.anx=Math.max(0.3,g.anx-0.06*dt);g.zShow=ease(g.zShow,g.zT,2*dt);g.yShow=ease(g.yShow||0,g.yT||0,2*dt);g.wShow=ease(g.wShow||0,g.wT||0,2*dt);if(g.wDrop)g.wDrop.t+=dt;g.yx=approach(g.yx||0,g.yxT||0,(RM?400:75)*dt);if(g.out)g.out.t+=dt;if(g.pop){g.pop.t+=dt;if(g.pop.t>2.6)g.pop=null;}
   var base=M.sT,offT=-70-(M.s-1)*12;
   if(g.w){var lb=lampBase();base=M.sT+lb.s;offT=lb.off-(M.sT-1)*45;g.w.x=approach(g.w.x,g.w.xT,g.w.speed*dt);g.walking=g.w.x<g.w.xT-0.5&&g.w.speed>0;offT-=gapStep(dt);}
   if(M.st==='free'||M.st==='pokka')M.s=approach(M.s,base,(M.s<base?1.5:1.1)*dt);
