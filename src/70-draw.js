@@ -114,6 +114,27 @@ function applyCamera(){
 var VIEW={l:0,r:W,t:0,z:1};
 
 /* ================= drawing: break room ================= */
+var STAPLER={x:818,y:308};
+function drawStapler(){
+  var x=STAPLER.x,y=STAPLER.y;
+  ctx.fillStyle='#34423f';rr(x-18,y+4,36,4,2);ctx.fill();
+  ctx.fillStyle='#aaa99a';rr(x-15,y+1,27,3,1);ctx.fill();
+  ctx.fillStyle='#51665a';ctx.beginPath();ctx.moveTo(x-17,y+5);ctx.lineTo(x-17,y-6);
+  ctx.quadraticCurveTo(x-17,y-10,x-11,y-10);ctx.lineTo(x+16,y-7);
+  ctx.quadraticCurveTo(x+20,y-6,x+18,y-2);ctx.lineTo(x-8,y);ctx.lineTo(x-9,y+5);ctx.closePath();ctx.fill();
+}
+function drawRadiator(flat){
+  ctx.save();
+  ctx.strokeStyle='#a5aa9a';ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(600,WALLY-5);ctx.lineTo(600,344);ctx.quadraticCurveTo(600,337,592,337);ctx.stroke();
+  ctx.strokeStyle='#a5aa9a';line(599,310,587,310);
+  ctx.fillStyle='#d6d6c3';rr(596,303,12,13,2);ctx.fill();
+  ctx.fillStyle='#c2c4ad';rr(481,300,110,58,5);ctx.fill();
+  ctx.fillStyle=flat?'#dedfd0':'#e2e0cd';rr(481,298,110,56,5);ctx.fill();
+  ctx.strokeStyle='#c3c4af';ctx.lineWidth=1.6;ctx.lineCap='round';
+  for(var x=489;x<589;x+=8)line(x,307,x,346);
+  ctx.restore();
+}
 // The lamp table stands on the floor in front of the wall, so the shadow on the wall goes behind it.
 // In a scene it is drawn after the shadow and the human (drawPair); room() draws it itself only when asked to draw the whole room.
 function roomFront(flat){
@@ -128,6 +149,7 @@ function room(flat,noFront){
   ctx.fillStyle=flat?'#b1b5a3':'#b8bda7';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);
   ctx.fillStyle='#899887';ctx.fillRect(-20,WALLY-6,W+40,6);
   ctx.strokeStyle='#697e7018';ctx.lineWidth=1;for(var f=0;f<8;f++)line(0,405+f*24,W,405+f*24);
+  drawRadiator(flat);
   ctx.fillStyle='#f4eedb';rr(689,99,170,146,4);ctx.fill();ctx.fillStyle='#94ada7';ctx.fillRect(697,107,154,130);
   ctx.fillStyle='#b5c6b7';ctx.beginPath();ctx.moveTo(697,201);ctx.lineTo(740,162);ctx.lineTo(790,205);ctx.lineTo(823,177);ctx.lineTo(851,198);ctx.lineTo(851,237);ctx.lineTo(697,237);ctx.fill();sky(697,107,154,130,false);   // birds in front of the far hills
   ctx.strokeStyle='#f4eedb';ctx.lineWidth=6;line(774,107,774,237);line(697,172,851,172);
@@ -157,6 +179,7 @@ function room(flat,noFront){
   ctx.fillStyle='#fbf8ef';ctx.fillRect(748,302,12,14);ctx.fillRect(766,302,12,14);
   ctx.strokeStyle='#fbf8ef';ctx.lineWidth=2;ctx.beginPath();ctx.arc(760,309,4,-Math.PI/2,Math.PI/2);ctx.stroke();
   ctx.beginPath();if(G.mugFixed===false)ctx.arc(766,309,4,Math.PI/2,Math.PI*1.5);else ctx.arc(778,309,4,-Math.PI/2,Math.PI/2);ctx.stroke();
+  if(G.stapler)drawStapler();
   if(G.mugFx){var mf=G.mugFx,mk=clamp(mf.t/0.18,0,1),ma=clamp(1-(mf.t-0.35)/0.4,0,1);mf.t+=1/60;if(mf.t>0.8)G.mugFx=null;   // three little lines: something was done here
     ctx.strokeStyle='rgba(43,39,51,'+ma+')';ctx.lineWidth=2;ctx.lineCap='round';
     for(var mi=-1;mi<=1;mi++){var an=-Math.PI/2+mi*0.62,r0=13,r1=13+9*mk;line(772+Math.cos(an)*r0,308+Math.sin(an)*r0,772+Math.cos(an)*r1,308+Math.sin(an)*r1);}}
@@ -422,6 +445,10 @@ function morkoFace(q){
   else if(m==='soft'){er=r*0.23;pr=0.66;brow='out';py=0.18;}
   else if(m==='up'){er=r*0.25;pr=0.4;brow='out';py=-0.5;look=0;}
   else if(m==='edge'){er=r*0.24;pr=0.42;brow='flat';py=0.55;look=edgeSide(cx);}   // a glance down at its own shoulder; the brows keep a straight face
+  else if(m==='stapler'){
+    var dx=STAPLER.x-cx,dy=STAPLER.y-(cy-r*0.05),distance=Math.hypot(dx,dy)||1;
+    er=r*0.26;pr=0.4;brow='out';look=1.8*dx/distance;py=0.54*dy/distance;
+  }
   if(m==='calm'){er=r*0.15;pr=0.5;}
   else if(m==='alert'){er=r*0.25;pr=0.4;}
   else if(m==='scared'||m==='surprised'){er=r*0.34;pr=0.24;brow='up';}
@@ -442,7 +469,7 @@ function morkoFace(q){
       if(i<0)line(x-r*0.26,y-r*0.3,x+r*0.24,y-r*0.17);else line(x-r*0.24,y-r*0.36,x+r*0.26,y-r*0.4);
     }else if(m==='pleased'){  // eyes shut in two small arches: entirely satisfied with itself
       ctx.strokeStyle='#f6f1e4';ctx.lineWidth=Math.max(2.5,r*0.12);ctx.beginPath();ctx.arc(x,y+r*0.12,r*0.2,Math.PI*1.12,Math.PI*1.88);ctx.stroke();
-    }else if(lk&&(m==='stunned'||m==='soft'||m==='up'||m==='edge')){
+    }else if(lk&&(m==='stunned'||m==='soft'||m==='up'||m==='edge'||m==='stapler')){
       var jx=m==='stunned'&&!RM?Math.sin(G.time*43+i)*r*0.02:0;
       ctx.fillStyle='#f6f1e4';circ(x+jx,y,er);ctx.fill();
       ctx.fillStyle='#14111d';circ(x+jx+look*er*(m==='edge'?0.42:0.3),y+er*py,er*pr);ctx.fill();

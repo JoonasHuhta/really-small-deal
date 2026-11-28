@@ -14,6 +14,10 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+0.99.64 – Keskiviikon nitoja näkyy taukotilan tasolla, ja Ekskyysmi vilkaisee sitä. Taukotilan seinällä näkyy lämpöpatteri, jonka luona varjot tapaavat.
+
+0.99.63 – Epilogi palaa suurennuslasiin, keskiviikon takkiin ja Eeron kalvoihin. Neljän sekunnin ”Not now.” ja 3 h 10 min harjoittelua näkyvät kahden kuvan ajan. Jari näkyy kahdessa sanattomassa pysäkkikuvassa, ja pitkään kuittiin kirjataan Riitan palautteesta kadonneet kehut.
+
 0.99.62 – Aboutin teksti on tietokoneella suurempi ja lukupalsta keskitetty.
 
 0.99.61 – Text below ja suurin tekstikoko näyttävät repliikin alapalkissa ja säilyttävät puhekuplan, kun sille on tilaa.

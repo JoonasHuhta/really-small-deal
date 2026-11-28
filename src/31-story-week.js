@@ -12,6 +12,7 @@ function scene(o){return function(){
   if(o.day!==undefined)g.dayTag=o.day;else if(o.clock!=null&&g.clock!=null&&o.clock<g.clock-3600)g.dayTag=nextDay(g.dayTag);   // past midnight: the next day
   g.stampT=0;
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
+  g.stapler=!!o.stapler;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.rxT=null;g.rPhone=false;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.journal=null;g.dream=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.pie=null;g.deal=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
@@ -124,7 +125,7 @@ function wedMorning(){return [
   ]},
   function(){G.bigNote=null;G.human.sweatT=0;return outside({title:'WHAT RIITTA SAW',dur:'duration: 3 minutes',anim:'text',
     cap:{sorry:'A good review. One note. Four apologies.',explain:'A good review. One note. One long answer about length.',quiet:'A good review. One note. Then nobody home.',ask:'A good review. One note. One question.'}[G.fb]});},
-  scene({set:'room',clock:9*3600+12*60}),
+  scene({set:'room',clock:9*3600+12*60,stapler:true}),
   addTic('Back at the desk.',160,62,{life:3,size:19}),{wait:1.2},
   ['H','That went well.'],
   ['S','We were CRITICISED.',{loud:1}],
@@ -140,7 +141,7 @@ function wedMorning(){return [
   function(){G.pop={text:'Filed: 1 note. Misplaced: 3 compliments.',t:0};},keep('compliments'),
   refill(1,'three compliments, found'),
   {wait:1.6},
-  ['S','…Look at that stapler.',{look:'up'}],
+  ['S','…Look at that stapler.',{look:'stapler'}],
   ['H','What about it?'],
   ['S','Reliable. Closed-mouthed. It has never once said “oh, hi.”'],
   ['S','I’d like it on the team.'],
