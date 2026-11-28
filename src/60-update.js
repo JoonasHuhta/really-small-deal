@@ -80,12 +80,18 @@ function update(dt,elapsed){
 // The title screen, left alone: every so often the human has a sip. Nothing else.
 // Only before the game starts, and never with Less motion.
 function titleIdle(dt){
-  var g=G,Hm=g.human;
-  if(g.started||Hm.gone||g.lab){if(g.idleT){g.idleT=0;Hm.sipT=0;}return;}
+  var g=G,Hm=g.human,M=g.morko;
+  if(g.started||Hm.gone||g.lab){if(g.idleT){g.idleT=0;Hm.sipT=0;g.titlePass=null;}return;}
   if(g.set==='room')g.mugFixed=false;   // on the title the mug handle hides behind the human's head (and it is Monday's wrong side)
   if(RM)return;
-  var t=(g.idleT=(g.idleT||0)+dt)%11;
+  var t=(g.idleT=(g.idleT||0)+dt)%14;
   Hm.sipT=t>4&&t<5.4?1:0;
+  // 0.99.58: the title's one joke, without a word. Someone walks past out in the hall, and their shadow crosses the light
+  // on the wall. The human drinks their coffee. The shadow sees a social event coming, then pretends it saw nothing,
+  // a size smaller, and grows back. Less motion: none of it.
+  g.titlePass=t>8&&t<9.6?(t-8)/1.6:null;
+  M.mood=t>8.25&&t<9.9?'surprised':t>=9.9&&t<12?'pokka':'care';
+  M.sT=t>=9.9&&t<12?1.14:1.25;
 }
 
 // Footsteps follow the legs: one step each time the leg swing (sin(time*8) in person()) changes sides.

@@ -706,8 +706,15 @@ function drawTitlePortrait(){
   ctx.fillStyle='#e3be80';ctx.fillRect(240,153,69,floor-153);
   ctx.fillStyle='#394847';ctx.beginPath();ctx.moveTo(240,153);ctx.lineTo(292,166);ctx.lineTo(292,floor+9);ctx.lineTo(240,floor);ctx.closePath();ctx.fill();
   ctx.fillStyle='#cbb48c';ctx.fillRect(279,237,9,2.6);
-  var M=G.morko,s=M.s||1.25,above=190*s*0.7+11*s+1.8*20*Math.pow(s,0.45),tag=titleTagBottom();   // the head's top, over the floor line
-  var scale=tag==null?(compact?0.58:0.76):clamp((floor-tag-10)/above,0.56,0.98);
+  if(G.titlePass!=null){   // 0.99.58: someone passing in the hall: their shadow crosses the strip of light (titleIdle)
+    var tp=G.titlePass,tb=250+tp*480,tw=110;ctx.save();ctx.beginPath();
+    ctx.moveTo(307,153);ctx.lineTo(654,126);ctx.lineTo(654,floor);ctx.lineTo(307,floor);ctx.closePath();
+    ctx.moveTo(307,floor);ctx.lineTo(654,floor);ctx.lineTo(597,floor+69);ctx.lineTo(173,floor+69);ctx.closePath();
+    ctx.rect(292,153,17,floor-153);ctx.clip();
+    var pg=ctx.createLinearGradient(tb-tw,0,tb+tw,0);pg.addColorStop(0,'rgba(36,44,42,0)');pg.addColorStop(.5,'rgba(36,44,42,.5)');pg.addColorStop(1,'rgba(36,44,42,0)');
+    ctx.fillStyle=pg;ctx.fillRect(tb-tw,0,tw*2,H);ctx.restore();}
+  var M=G.morko,s=1.25,above=190*s*0.7+11*s+1.8*20*Math.pow(s,0.45),tag=titleTagBottom();   // the head's top, over the floor line
+  var scale=tag==null?(compact?0.58:0.76):clamp((floor-tag-10)/above,0.56,0.98);   // fitted at the resting size (1.25): when the shadow shrinks, only the shadow does
   ctx.save();ctx.translate(537-G.human.x*scale,floor-WALLY*scale);ctx.scale(scale,scale);
   drawPair();ctx.restore();
   drawTitleEdges();

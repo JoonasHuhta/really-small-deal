@@ -6647,12 +6647,18 @@ function update(dt,elapsed){
 // The title screen, left alone: every so often the human has a sip. Nothing else.
 // Only before the game starts, and never with Less motion.
 function titleIdle(dt){
-  var g=G,Hm=g.human;
-  if(g.started||Hm.gone||g.lab){if(g.idleT){g.idleT=0;Hm.sipT=0;}return;}
+  var g=G,Hm=g.human,M=g.morko;
+  if(g.started||Hm.gone||g.lab){if(g.idleT){g.idleT=0;Hm.sipT=0;g.titlePass=null;}return;}
   if(g.set==='room')g.mugFixed=false;   // on the title the mug handle hides behind the human's head (and it is Monday's wrong side)
   if(RM)return;
-  var t=(g.idleT=(g.idleT||0)+dt)%11;
+  var t=(g.idleT=(g.idleT||0)+dt)%14;
   Hm.sipT=t>4&&t<5.4?1:0;
+  // 0.99.58: the title's one joke, without a word. Someone walks past out in the hall, and their shadow crosses the light
+  // on the wall. The human drinks their coffee. The shadow sees a social event coming, then pretends it saw nothing,
+  // a size smaller, and grows back. Less motion: none of it.
+  g.titlePass=t>8&&t<9.6?(t-8)/1.6:null;
+  M.mood=t>8.25&&t<9.9?'surprised':t>=9.9&&t<12?'pokka':'care';
+  M.sT=t>=9.9&&t<12?1.14:1.25;
 }
 
 // Footsteps follow the legs: one step each time the leg swing (sin(time*8) in person()) changes sides.
@@ -7368,8 +7374,15 @@ function drawTitlePortrait(){
   ctx.fillStyle='#e3be80';ctx.fillRect(240,153,69,floor-153);
   ctx.fillStyle='#394847';ctx.beginPath();ctx.moveTo(240,153);ctx.lineTo(292,166);ctx.lineTo(292,floor+9);ctx.lineTo(240,floor);ctx.closePath();ctx.fill();
   ctx.fillStyle='#cbb48c';ctx.fillRect(279,237,9,2.6);
-  var M=G.morko,s=M.s||1.25,above=190*s*0.7+11*s+1.8*20*Math.pow(s,0.45),tag=titleTagBottom();   // the head's top, over the floor line
-  var scale=tag==null?(compact?0.58:0.76):clamp((floor-tag-10)/above,0.56,0.98);
+  if(G.titlePass!=null){   // 0.99.58: someone passing in the hall: their shadow crosses the strip of light (titleIdle)
+    var tp=G.titlePass,tb=250+tp*480,tw=110;ctx.save();ctx.beginPath();
+    ctx.moveTo(307,153);ctx.lineTo(654,126);ctx.lineTo(654,floor);ctx.lineTo(307,floor);ctx.closePath();
+    ctx.moveTo(307,floor);ctx.lineTo(654,floor);ctx.lineTo(597,floor+69);ctx.lineTo(173,floor+69);ctx.closePath();
+    ctx.rect(292,153,17,floor-153);ctx.clip();
+    var pg=ctx.createLinearGradient(tb-tw,0,tb+tw,0);pg.addColorStop(0,'rgba(36,44,42,0)');pg.addColorStop(.5,'rgba(36,44,42,.5)');pg.addColorStop(1,'rgba(36,44,42,0)');
+    ctx.fillStyle=pg;ctx.fillRect(tb-tw,0,tw*2,H);ctx.restore();}
+  var M=G.morko,s=1.25,above=190*s*0.7+11*s+1.8*20*Math.pow(s,0.45),tag=titleTagBottom();   // the head's top, over the floor line
+  var scale=tag==null?(compact?0.58:0.76):clamp((floor-tag-10)/above,0.56,0.98);   // fitted at the resting size (1.25): when the shadow shrinks, only the shadow does
   ctx.save();ctx.translate(537-G.human.x*scale,floor-WALLY*scale);ctx.scale(scale,scale);
   drawPair();ctx.restore();
   drawTitleEdges();

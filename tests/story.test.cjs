@@ -661,6 +661,12 @@ T.chapter(2);assert.equal(T.G.finalFrame,false);assert.equal(T.G.bed,false);asse
  cv.clientWidth=960;h.startPaint();T5.draw();assert.ok(h.painted().includes('comfort'),'a wide scene draws the words in the bubble');
  cv.clientWidth=700;h.startPaint();T5.draw();assert.ok(!h.painted().includes('comfort'),'a phone-sized scene does not draw them twice');
  cv.clientWidth=480;h.startPaint();T5.draw();assert.ok(!h.painted().includes('comfort'),'nor a narrow one');cv.clientWidth=960;}
+// 0.99.58: the title's wordless beat. Someone passes in the hall: the shadow startles, pretends it saw nothing a size smaller, and grows back.
+{const h=require('./harness.cjs')(),T6=h.T;T6.title();const M=T6.G.morko;T6.G.idleT=0;
+ T6.tick(8.7);assert.equal(M.mood,'surprised');assert.ok(T6.G.titlePass>0&&T6.G.titlePass<1,'a shadow crosses the light');assert.ok(Math.abs(M.s-1.25)<0.01,'it never grows past the title fit');
+ T6.tick(2);assert.equal(M.mood,'pokka','it saw nothing');assert.ok(M.s<1.2,'a size smaller');assert.equal(T6.G.titlePass,null);
+ T6.tick(3);assert.equal(M.mood,'care');assert.ok(Math.abs(M.s-1.25)<0.01,'and back');
+ T6.start('B',true);assert.equal(T6.G.titlePass==null,true,'nothing of it follows into the game');}
 console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment resumes; all three bar stories; part cards; distinct replays; form signature; quiet-day payoff; nightlight ending; paused animations; phone controls, audio and local assets. Cutaways: ${views}; size interactions: ${stretches}.`);
 // Portability: nothing in the repo may point at the build machine's own folders (0.70.0: mug.test broke on Windows).
 {const fs3=require('fs'),p3=require('path'),root=p3.join(__dirname,'..');
