@@ -114,7 +114,7 @@ function applyCamera(){
 var VIEW={l:0,r:W,t:0,z:1};
 
 /* ================= drawing: break room ================= */
-var STAPLER={x:818,y:308};
+var STAPLER={x:818,y:308},ROOM_LAMP_X=670;
 function drawStapler(){
   var x=STAPLER.x,y=STAPLER.y;
   ctx.fillStyle='#34423f';rr(x-18,y+4,36,4,2);ctx.fill();
@@ -124,28 +124,33 @@ function drawStapler(){
   ctx.quadraticCurveTo(x+20,y-6,x+18,y-2);ctx.lineTo(x-8,y);ctx.lineTo(x-9,y+5);ctx.closePath();ctx.fill();
 }
 function drawRadiator(flat){
+  var x=511,pipe=x+119;
   ctx.save();
   ctx.strokeStyle='#a5aa9a';ctx.lineWidth=4;
-  ctx.beginPath();ctx.moveTo(600,WALLY-5);ctx.lineTo(600,344);ctx.quadraticCurveTo(600,337,592,337);ctx.stroke();
-  ctx.strokeStyle='#a5aa9a';line(599,310,587,310);
-  ctx.fillStyle='#d6d6c3';rr(596,303,12,13,2);ctx.fill();
-  ctx.fillStyle='#c2c4ad';rr(481,300,110,58,5);ctx.fill();
-  ctx.fillStyle=flat?'#dedfd0':'#e2e0cd';rr(481,298,110,56,5);ctx.fill();
+  ctx.beginPath();ctx.moveTo(pipe,WALLY-5);ctx.lineTo(pipe,344);ctx.quadraticCurveTo(pipe,337,pipe-8,337);ctx.stroke();
+  line(pipe-1,310,x+106,310);
+  ctx.fillStyle='#d6d6c3';rr(pipe-4,303,12,13,2);ctx.fill();
+  ctx.fillStyle='#c2c4ad';rr(x,300,110,58,5);ctx.fill();
+  ctx.fillStyle=flat?'#dedfd0':'#e2e0cd';rr(x,298,110,56,5);ctx.fill();
   ctx.strokeStyle='#c3c4af';ctx.lineWidth=1.6;ctx.lineCap='round';
-  for(var x=489;x<589;x+=8)line(x,307,x,346);
+  for(var rib=x+8;rib<x+108;rib+=8)line(rib,307,rib,346);
   ctx.restore();
 }
 // The lamp table stands on the floor in front of the wall, so the shadow on the wall goes behind it.
 // In a scene it is drawn after the shadow and the human (drawPair); room() draws it itself only when asked to draw the whole room.
 function roomFront(flat){
-  ctx.fillStyle='#6b563e';ctx.fillRect(604,420,72,8);ctx.fillRect(610,428,6,40);ctx.fillRect(664,428,6,40);
-  ctx.strokeStyle='#3d3a44';ctx.lineWidth=4;line(640,420,640,366);
-  ctx.fillStyle=flat?'#d9c79a':'#f3d27a';ctx.beginPath();ctx.moveTo(624,340);ctx.lineTo(656,340);ctx.lineTo(666,368);ctx.lineTo(614,368);ctx.closePath();ctx.fill();
-  if(G.cupLeft){ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(650,406,12,14,2);ctx.fill();ctx.stroke();}
+  var x=ROOM_LAMP_X;
+  ctx.fillStyle='#6b563e';ctx.fillRect(x-36,420,72,8);ctx.fillRect(x-30,428,6,40);ctx.fillRect(x+24,428,6,40);
+  ctx.strokeStyle='#3d3a44';ctx.lineWidth=4;line(x,420,x,366);
+  ctx.fillStyle=flat?'#d9c79a':'#f3d27a';ctx.beginPath();ctx.moveTo(x-16,340);ctx.lineTo(x+16,340);ctx.lineTo(x+26,368);ctx.lineTo(x-26,368);ctx.closePath();ctx.fill();
+  if(G.cupLeft)drawCupOnLampTable();
+}
+function drawCupOnLampTable(){
+  ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(ROOM_LAMP_X+10,406,12,14,2);ctx.fill();ctx.stroke();
 }
 function room(flat,noFront){
   ctx.fillStyle=flat?'#d8d9cc':'#dce0cd';ctx.fillRect(-20,-20,W+40,WALLY+20);
-  if(!flat){var gr=ctx.createRadialGradient(640,345,10,640,345,420);gr.addColorStop(0,'rgba(255,228,150,.6)');gr.addColorStop(1,'rgba(255,228,150,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);}
+  if(!flat){var gr=ctx.createRadialGradient(ROOM_LAMP_X,345,10,ROOM_LAMP_X,345,420);gr.addColorStop(0,'rgba(255,228,150,.6)');gr.addColorStop(1,'rgba(255,228,150,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);}
   ctx.fillStyle=flat?'#b1b5a3':'#b8bda7';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);
   ctx.fillStyle='#899887';ctx.fillRect(-20,WALLY-6,W+40,6);
   ctx.strokeStyle='#697e7018';ctx.lineWidth=1;for(var f=0;f<8;f++)line(0,405+f*24,W,405+f*24);
@@ -599,7 +604,7 @@ function drawOutside(){
   else if(an==='cover'){h.face='down';h.down=true;if(g.day!=='C'&&t>1&&t<2.8){aFace=-1;aWave=true;}}
   else if(an==='exit'){hx=300-t*110;h.back=true;h.facing=-1;h.cup=false;h.walk=true;show=hx>-40;if(t>2.6)aFace=-1;}
   if(an==='tape'&&t>0.4&&t<1.4)bubble(700,FEETY-172,'oh, hi.');
-  if(an==='exit'){ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(650,406,12,14,2);ctx.fill();ctx.stroke();}
+  if(an==='exit')drawCupOnLampTable();
   if(show)person(hx,h);
   if(an==='tape'){person(700,{body:SANNA.body,hair:SANNA.hair,facing:aFace});person(800,{body:MIKA.body,hair:MIKA.hair,facing:1,cup:true});}
   else if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:aFace,wave:aWave});

@@ -14,6 +14,10 @@ Avaa **[index.html](index.html)** selaimessa. Prototyyppi 0.41 toimii paikallise
 
 **Pelin nimi on Really Small Deal** (15.11.2026). Varjon nimi on edelleen Ekskyysmi.
 
+0.99.66 – Torstaina klo 18.40 kodin seinät kallistuvat sisään ja lampun valokehä kapenee. Vähennetyllä liikkeellä sama sommittelu näkyy heti. Sipsipussi palauttaa huoneen ennalleen.
+
+0.99.65 – Taukotilan lämpöpatteri ja lamppupöytä ovat hieman oikeammalla, jotta HUMAN erottuu patterin vieressä.
+
 0.99.64 – Keskiviikon nitoja näkyy taukotilan tasolla, ja Ekskyysmi vilkaisee sitä. Taukotilan seinällä näkyy lämpöpatteri, jonka luona varjot tapaavat.
 
 0.99.63 – Epilogi palaa suurennuslasiin, keskiviikon takkiin ja Eeron kalvoihin. Neljän sekunnin ”Not now.” ja 3 h 10 min harjoittelua näkyvät kahden kuvan ajan. Jari näkyy kahdessa sanattomassa pysäkkikuvassa, ja pitkään kuittiin kirjataan Riitan palautteesta kadonneet kehut.

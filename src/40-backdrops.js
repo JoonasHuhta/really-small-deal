@@ -1,12 +1,37 @@
 /* ================= extra backdrops ================= */
+// Only the wall planes and light move in the inside version of Thursday's wait.
+function homePressureWalls(pressure){
+  var upper=215*pressure,lower=76*pressure;
+  ctx.fillStyle='rgba(20,21,36,'+(0.70*pressure)+')';
+  ctx.beginPath();
+  ctx.moveTo(-20,-20);ctx.lineTo(upper,-20);ctx.lineTo(lower,WALLY);ctx.lineTo(-20,WALLY);ctx.closePath();
+  ctx.moveTo(W+20,-20);ctx.lineTo(W-upper,-20);ctx.lineTo(W-lower,WALLY);ctx.lineTo(W+20,WALLY);ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle='rgba(19,19,30,'+(0.44*pressure)+')';ctx.lineWidth=2;
+  line(upper,-20,lower,WALLY);line(W-upper,-20,W-lower,WALLY);
+}
 function home(){
+  var progress=G.homePressureAt==null?0:RM?1:clamp((G.time-G.homePressureAt)/1.65,0,1);
+  var pressure=progress*progress*(3-2*progress);
   ctx.fillStyle='#2c3242';ctx.fillRect(-20,-20,W+40,WALLY+20);
-  var glx=G.bed?690:520,gr=ctx.createRadialGradient(glx,300,10,glx,300,330);gr.addColorStop(0,'rgba(255,214,140,'+(G.lampOff?0:.42)+')');gr.addColorStop(1,'rgba(255,214,140,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);if(!G.lampOff&&!G.kitchen)dust(G.bed?690:520,250);
+  if(pressure>0){
+    ctx.fillStyle='rgba(18,19,32,'+(0.36*pressure)+')';ctx.fillRect(-20,-20,W+40,WALLY+20);
+  }
+  var glx=G.bed?690:520,lightWidth=1-0.68*pressure;
+  ctx.save();
+  ctx.translate(glx,0);ctx.scale(lightWidth,1);
+  var gr=ctx.createRadialGradient(0,300,10,0,300,330);
+  gr.addColorStop(0,'rgba(255,214,140,'+(G.lampOff?0:.42)+')');gr.addColorStop(1,'rgba(255,214,140,0)');
+  ctx.fillStyle=gr;ctx.fillRect(-glx/lightWidth,0,W/lightWidth,WALLY);ctx.restore();
+  if(!G.lampOff&&!G.kitchen&&pressure<1){
+    ctx.save();ctx.globalAlpha*=1-pressure;dust(glx,250);ctx.restore();
+  }
   ctx.fillStyle='#232733';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);ctx.fillStyle='#1c202b';ctx.fillRect(-20,WALLY-6,W+40,6);
   ctx.fillStyle='#e9e2cf';rr(112,96,170,150,4);ctx.fill();ctx.fillStyle='#12152a';ctx.fillRect(120,104,154,134);sky(120,104,154,134,true);
   ctx.fillStyle='#f6f1e4';circ(236,134,13);ctx.fill();ctx.fillStyle='#12152a';circ(242,130,11);ctx.fill();
   ctx.fillStyle='#f6f1e4';for(var i=0;i<7;i++){circ(132+i*19,118+(i*41)%96,1.2);ctx.fill();}
   ctx.strokeStyle='#e9e2cf';ctx.lineWidth=5;line(197,104,197,238);
+  if(pressure>0)homePressureWalls(pressure);
   if(G.kitchen)kitchen();   // the floor lamp is drawn later (homeLamp): it stands in the room, in front of the shadow on the wall
   if(G.basket){var bx=G.human.x+64;if(Math.abs(bx-520)<70)bx=G.human.x-78;   // never under the lamp (Joonas 20.11.)
     ctx.fillStyle='#b99b6b';ctx.beginPath();ctx.moveTo(bx-30,FEETY-34);ctx.lineTo(bx+30,FEETY-34);ctx.lineTo(bx+24,FEETY);ctx.lineTo(bx-24,FEETY);ctx.closePath();ctx.fill();

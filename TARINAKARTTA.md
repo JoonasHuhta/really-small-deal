@@ -1,5 +1,9 @@
 # Tarinakartta – Really Small Deal
 
+0.99.66 – #10:n odotuksessa klo 18.40 kodin seinät kallistuvat sisään ja lampun valokehä kapenee. Vähennetyllä liikkeellä sama kuva näkyy ilman seinien liikettä. Kun pussi aukeaa, huone palaa normaaliksi.
+
+0.99.65 – Taukotilan patteri ja lamppupöytä siirtyivät hieman oikealle. HUMANin ja patterin väliin jää tilaa varjojen tapaamisessa (#25).
+
 0.99.64 – Keskiviikon (#6) nitoja seisoo taukotilan tasolla, ja Ekskyysmi vilkaisee sitä. Taukotilan lämpöpatteri näkyy jo ennen varjojen tapaamista (#25).
 
 0.99.63 – Epilogi näyttää suurennuslasin kääntymisen, keskiviikon takin ja Eeron iltakalvot. ”Not now.” -kuittipari näkyy noin seitsemän sekuntia. Jari jää kahteen sanattomaan pysäkkikuvaan ja Riitan palautteen yhteydessä näkyvät kadonneet kehut.

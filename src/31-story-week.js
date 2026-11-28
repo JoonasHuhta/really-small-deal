@@ -13,6 +13,7 @@ function scene(o){return function(){
   g.stampT=0;
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.stapler=!!o.stapler;
+  g.homePressureAt=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.rxT=null;g.rPhone=false;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.journal=null;g.dream=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.pie=null;g.deal=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
@@ -298,14 +299,14 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['H','Twenty-one minutes.'],
   ['S','TWENTY-ONE MINUTES. Thank you. I’ve drafted some follow-ups.'],
   {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,m:SEEN[k].m,filed:1,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};});}},
-  function(){G.clock=18*3600+40*60;},
+  function(){G.clock=18*3600+40*60;G.homePressureAt=G.time;},
   ['N','18:40. Still nothing.'],drain(1,'an hour of nothing'),
   set({s:2.5,mood:'stern',anx:0.8}),
   ['S','She hates us. Eero hates us. Riitta wants a shorter you. I’ve run the numbers. It’s unanimous.'],
   // The turn has a physical trigger (lab clone “The bag.”, 0.47): a whole week of holding the face, then a bag that won’t open.
   ['H','I’m going to eat something.',{quiet:1}],
   ['S','Good. Fuel. We’ll need it for the list.'],
-  {wait:0.9},crumbs,hit(0.9,'P'),
+  {wait:0.9},function(){G.homePressureAt=null;},crumbs,hit(0.9,'P'),
   ['N','EASY OPEN. All of it. Everywhere.'],
   ['S','Floor crisps are still crisps, if we—'],
   // The meltdown (Joonas 20.11.: meltdowns are real). The last sip goes, the mug breaks, the hat flies. Alone at home, at the shadow, never at a person.

@@ -1600,6 +1600,7 @@ function scene(o){return function(){
   g.stampT=0;
   g.set=o.set||'room';g.w=null;g.out=null;g.lines=[];g.band=null;g.cur=null;g.stamp=null;g.finalFrame=false;g.choiceWho='S';g.chap=null;
   g.stapler=!!o.stapler;
+  g.homePressureAt=null;
   g.cowA=g.cowB=g.cowR=false;g.zT=g.zShow=0;g.yT=g.yShow=0;g.wT=g.wShow=0;g.wDrop=null;g.toss=null;g.dropped=null;g.bick=0;g.ax=g.axT=1010;g.bx2=g.bxT=1090;g.rx=760;g.rxT=null;g.rPhone=false;g.aFace=-1;g.bFace=-1;g.aWave=false;g.cupLeft=false;
   Hm.x=Hm.xT=HOME;Hm.gone=false;Hm.back=false;Hm.face='neutral';Hm.flinch=0;Hm.sweat=Hm.sweatT=0;Hm.blush=0;Hm.grin=0;Hm.puddle=0;g.aSweat=0;g.cards=[];g.rep=null;g.zoom=null;g.boss=null;g.ninja=false;g.rBrow=0;g.tics=[];g.dish=null;g.kitchen=false;g.lens=null;g.bar=null;g.rec=null;g.draft=null;g.lib=null;g.qte=null;g.jolt=null;
   M.st='free';M.pose=null;M.coat=null;M.wobble=null;M.asleep=false;M.wake=1;M.dim=null;Hm.pose=null;Hm.reach=null;Hm.wet=false;g.five=null;g.ninja=false;g.morko.hat=null;g.journal=null;g.dream=null;g.mugQuiet=false;g.tiredForce=0;g.note=null;g.selfStamps=0;g.form=null;g.auto=null;g.dots=null;g.tape=null;g.mugFx=null;g.cctv=null;g.drawer=false;g.camRate=null;g.hidS=null;g.night=null;g.bed=false;g.pie=null;g.deal=null;g.plain=false;g.paper=null;g.lampOff=false;g.tableShot=false;g.basket=false;g.sat=false;M.sT=o.s||1;M.mood=o.mood||'calm';g.anx=0.12;g.gazeT=0;g.darkT=0;g.rate=1;g.bigNote=null;
@@ -1885,14 +1886,14 @@ function scThu(){return begin(4,{set:'home',plan:'Go to board game night.',clock
   ['H','Twenty-one minutes.'],
   ['S','TWENTY-ONE MINUTES. Thank you. I’ve drafted some follow-ups.'],
   {choice:function(){return ['worries','cancel','freezer','bite'].map(function(k){return {t:SEEN[k].t,m:SEEN[k].m,filed:1,f:function(){G.txt=k;if(k==='bite')G.bit=true;},then:SEEN[k].a};});}},
-  function(){G.clock=18*3600+40*60;},
+  function(){G.clock=18*3600+40*60;G.homePressureAt=G.time;},
   ['N','18:40. Still nothing.'],drain(1,'an hour of nothing'),
   set({s:2.5,mood:'stern',anx:0.8}),
   ['S','She hates us. Eero hates us. Riitta wants a shorter you. I’ve run the numbers. It’s unanimous.'],
   // The turn has a physical trigger (lab clone “The bag.”, 0.47): a whole week of holding the face, then a bag that won’t open.
   ['H','I’m going to eat something.',{quiet:1}],
   ['S','Good. Fuel. We’ll need it for the list.'],
-  {wait:0.9},crumbs,hit(0.9,'P'),
+  {wait:0.9},function(){G.homePressureAt=null;},crumbs,hit(0.9,'P'),
   ['N','EASY OPEN. All of it. Everywhere.'],
   ['S','Floor crisps are still crisps, if we—'],
   // The meltdown (Joonas 20.11.: meltdowns are real). The last sip goes, the mug breaks, the hat flies. Alone at home, at the shadow, never at a person.
@@ -3304,14 +3305,39 @@ function labEpilogue(){
 }
 // ---- src/40-backdrops.js ----
 /* ================= extra backdrops ================= */
+// Only the wall planes and light move in the inside version of Thursday's wait.
+function homePressureWalls(pressure){
+  var upper=215*pressure,lower=76*pressure;
+  ctx.fillStyle='rgba(20,21,36,'+(0.70*pressure)+')';
+  ctx.beginPath();
+  ctx.moveTo(-20,-20);ctx.lineTo(upper,-20);ctx.lineTo(lower,WALLY);ctx.lineTo(-20,WALLY);ctx.closePath();
+  ctx.moveTo(W+20,-20);ctx.lineTo(W-upper,-20);ctx.lineTo(W-lower,WALLY);ctx.lineTo(W+20,WALLY);ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle='rgba(19,19,30,'+(0.44*pressure)+')';ctx.lineWidth=2;
+  line(upper,-20,lower,WALLY);line(W-upper,-20,W-lower,WALLY);
+}
 function home(){
+  var progress=G.homePressureAt==null?0:RM?1:clamp((G.time-G.homePressureAt)/1.65,0,1);
+  var pressure=progress*progress*(3-2*progress);
   ctx.fillStyle='#2c3242';ctx.fillRect(-20,-20,W+40,WALLY+20);
-  var glx=G.bed?690:520,gr=ctx.createRadialGradient(glx,300,10,glx,300,330);gr.addColorStop(0,'rgba(255,214,140,'+(G.lampOff?0:.42)+')');gr.addColorStop(1,'rgba(255,214,140,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);if(!G.lampOff&&!G.kitchen)dust(G.bed?690:520,250);
+  if(pressure>0){
+    ctx.fillStyle='rgba(18,19,32,'+(0.36*pressure)+')';ctx.fillRect(-20,-20,W+40,WALLY+20);
+  }
+  var glx=G.bed?690:520,lightWidth=1-0.68*pressure;
+  ctx.save();
+  ctx.translate(glx,0);ctx.scale(lightWidth,1);
+  var gr=ctx.createRadialGradient(0,300,10,0,300,330);
+  gr.addColorStop(0,'rgba(255,214,140,'+(G.lampOff?0:.42)+')');gr.addColorStop(1,'rgba(255,214,140,0)');
+  ctx.fillStyle=gr;ctx.fillRect(-glx/lightWidth,0,W/lightWidth,WALLY);ctx.restore();
+  if(!G.lampOff&&!G.kitchen&&pressure<1){
+    ctx.save();ctx.globalAlpha*=1-pressure;dust(glx,250);ctx.restore();
+  }
   ctx.fillStyle='#232733';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);ctx.fillStyle='#1c202b';ctx.fillRect(-20,WALLY-6,W+40,6);
   ctx.fillStyle='#e9e2cf';rr(112,96,170,150,4);ctx.fill();ctx.fillStyle='#12152a';ctx.fillRect(120,104,154,134);sky(120,104,154,134,true);
   ctx.fillStyle='#f6f1e4';circ(236,134,13);ctx.fill();ctx.fillStyle='#12152a';circ(242,130,11);ctx.fill();
   ctx.fillStyle='#f6f1e4';for(var i=0;i<7;i++){circ(132+i*19,118+(i*41)%96,1.2);ctx.fill();}
   ctx.strokeStyle='#e9e2cf';ctx.lineWidth=5;line(197,104,197,238);
+  if(pressure>0)homePressureWalls(pressure);
   if(G.kitchen)kitchen();   // the floor lamp is drawn later (homeLamp): it stands in the room, in front of the shadow on the wall
   if(G.basket){var bx=G.human.x+64;if(Math.abs(bx-520)<70)bx=G.human.x-78;   // never under the lamp (Joonas 20.11.)
     ctx.fillStyle='#b99b6b';ctx.beginPath();ctx.moveTo(bx-30,FEETY-34);ctx.lineTo(bx+30,FEETY-34);ctx.lineTo(bx+24,FEETY);ctx.lineTo(bx-24,FEETY);ctx.closePath();ctx.fill();
@@ -6807,7 +6833,7 @@ function applyCamera(){
 var VIEW={l:0,r:W,t:0,z:1};
 
 /* ================= drawing: break room ================= */
-var STAPLER={x:818,y:308};
+var STAPLER={x:818,y:308},ROOM_LAMP_X=670;
 function drawStapler(){
   var x=STAPLER.x,y=STAPLER.y;
   ctx.fillStyle='#34423f';rr(x-18,y+4,36,4,2);ctx.fill();
@@ -6817,28 +6843,33 @@ function drawStapler(){
   ctx.quadraticCurveTo(x+20,y-6,x+18,y-2);ctx.lineTo(x-8,y);ctx.lineTo(x-9,y+5);ctx.closePath();ctx.fill();
 }
 function drawRadiator(flat){
+  var x=511,pipe=x+119;
   ctx.save();
   ctx.strokeStyle='#a5aa9a';ctx.lineWidth=4;
-  ctx.beginPath();ctx.moveTo(600,WALLY-5);ctx.lineTo(600,344);ctx.quadraticCurveTo(600,337,592,337);ctx.stroke();
-  ctx.strokeStyle='#a5aa9a';line(599,310,587,310);
-  ctx.fillStyle='#d6d6c3';rr(596,303,12,13,2);ctx.fill();
-  ctx.fillStyle='#c2c4ad';rr(481,300,110,58,5);ctx.fill();
-  ctx.fillStyle=flat?'#dedfd0':'#e2e0cd';rr(481,298,110,56,5);ctx.fill();
+  ctx.beginPath();ctx.moveTo(pipe,WALLY-5);ctx.lineTo(pipe,344);ctx.quadraticCurveTo(pipe,337,pipe-8,337);ctx.stroke();
+  line(pipe-1,310,x+106,310);
+  ctx.fillStyle='#d6d6c3';rr(pipe-4,303,12,13,2);ctx.fill();
+  ctx.fillStyle='#c2c4ad';rr(x,300,110,58,5);ctx.fill();
+  ctx.fillStyle=flat?'#dedfd0':'#e2e0cd';rr(x,298,110,56,5);ctx.fill();
   ctx.strokeStyle='#c3c4af';ctx.lineWidth=1.6;ctx.lineCap='round';
-  for(var x=489;x<589;x+=8)line(x,307,x,346);
+  for(var rib=x+8;rib<x+108;rib+=8)line(rib,307,rib,346);
   ctx.restore();
 }
 // The lamp table stands on the floor in front of the wall, so the shadow on the wall goes behind it.
 // In a scene it is drawn after the shadow and the human (drawPair); room() draws it itself only when asked to draw the whole room.
 function roomFront(flat){
-  ctx.fillStyle='#6b563e';ctx.fillRect(604,420,72,8);ctx.fillRect(610,428,6,40);ctx.fillRect(664,428,6,40);
-  ctx.strokeStyle='#3d3a44';ctx.lineWidth=4;line(640,420,640,366);
-  ctx.fillStyle=flat?'#d9c79a':'#f3d27a';ctx.beginPath();ctx.moveTo(624,340);ctx.lineTo(656,340);ctx.lineTo(666,368);ctx.lineTo(614,368);ctx.closePath();ctx.fill();
-  if(G.cupLeft){ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(650,406,12,14,2);ctx.fill();ctx.stroke();}
+  var x=ROOM_LAMP_X;
+  ctx.fillStyle='#6b563e';ctx.fillRect(x-36,420,72,8);ctx.fillRect(x-30,428,6,40);ctx.fillRect(x+24,428,6,40);
+  ctx.strokeStyle='#3d3a44';ctx.lineWidth=4;line(x,420,x,366);
+  ctx.fillStyle=flat?'#d9c79a':'#f3d27a';ctx.beginPath();ctx.moveTo(x-16,340);ctx.lineTo(x+16,340);ctx.lineTo(x+26,368);ctx.lineTo(x-26,368);ctx.closePath();ctx.fill();
+  if(G.cupLeft)drawCupOnLampTable();
+}
+function drawCupOnLampTable(){
+  ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(ROOM_LAMP_X+10,406,12,14,2);ctx.fill();ctx.stroke();
 }
 function room(flat,noFront){
   ctx.fillStyle=flat?'#d8d9cc':'#dce0cd';ctx.fillRect(-20,-20,W+40,WALLY+20);
-  if(!flat){var gr=ctx.createRadialGradient(640,345,10,640,345,420);gr.addColorStop(0,'rgba(255,228,150,.6)');gr.addColorStop(1,'rgba(255,228,150,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);}
+  if(!flat){var gr=ctx.createRadialGradient(ROOM_LAMP_X,345,10,ROOM_LAMP_X,345,420);gr.addColorStop(0,'rgba(255,228,150,.6)');gr.addColorStop(1,'rgba(255,228,150,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,WALLY);}
   ctx.fillStyle=flat?'#b1b5a3':'#b8bda7';ctx.fillRect(-20,WALLY,W+40,H-WALLY+20);
   ctx.fillStyle='#899887';ctx.fillRect(-20,WALLY-6,W+40,6);
   ctx.strokeStyle='#697e7018';ctx.lineWidth=1;for(var f=0;f<8;f++)line(0,405+f*24,W,405+f*24);
@@ -7292,7 +7323,7 @@ function drawOutside(){
   else if(an==='cover'){h.face='down';h.down=true;if(g.day!=='C'&&t>1&&t<2.8){aFace=-1;aWave=true;}}
   else if(an==='exit'){hx=300-t*110;h.back=true;h.facing=-1;h.cup=false;h.walk=true;show=hx>-40;if(t>2.6)aFace=-1;}
   if(an==='tape'&&t>0.4&&t<1.4)bubble(700,FEETY-172,'oh, hi.');
-  if(an==='exit'){ctx.fillStyle='#fffdf6';ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;rr(650,406,12,14,2);ctx.fill();ctx.stroke();}
+  if(an==='exit')drawCupOnLampTable();
   if(show)person(hx,h);
   if(an==='tape'){person(700,{body:SANNA.body,hair:SANNA.hair,facing:aFace});person(800,{body:MIKA.body,hair:MIKA.hair,facing:1,cup:true});}
   else if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:aFace,wave:aWave});
