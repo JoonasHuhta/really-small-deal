@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.75 – **Suomennos, osa 7: perjantai ja Patterin luona.** Perjantain kokoliukusäädin, tuomiot, ”selvä”-langan korjaus Sannan kanssa, Eeron maanantaivuoro, pieni diili, lounas ja ilmoitus laatikosta sekä seuraavan tiistain patteritapaaminen ovat suomeksi kaikkine reitteineen, lukemineen ja pitojen ohjeineen. Suomenkielinen viikko on tarkistettu kaikilla reiteillä perjantain loppuun asti. Jäljellä: kommentit, epilogi ja kuitit, viikon loppu sekä kokeiluhetket.
+
 0.99.74 – **Suomennos, osa 6: toisen osan loppu ja Hetket-valikko.** Lunta sisällä., Hiljaista., Iltaisin., Ilmoitus. ja Yövuoro. ovat suomeksi lukemineen, pitojen ohjeineen, arkistokortteineen ja varjojen nimineen (EERON VARJO). Luvut-valikko ja Hetket-valikon nimet ja kuvaukset on suomennettu. Suomenkielinen viikko ja kaikki hetket on tarkistettu toisen osan loppuun asti. Jäljellä: perjantai, kommentit, epilogi, viikon loppu ja kokeiluhetket.
 
 0.99.73 – **Suomennos, osa 5: toisen osan alku.** Ei mitään., Sujut. (kirjasto), Salainen joulupukki. ja Lomake. ovat suomeksi lukemineen, kylttien (HILJAA, KIITOS, PALAUTUS), puhujien ja pidon ohjeiden kanssa. Kirjaston *fine*-vitsi on suomeksi *sujut* (KAANNOS.md). Korjattu: lomakkeen kysymys rivitettiin englanniksi ja vasta palat haettiin sanakirjasta, joten suomessa kysymys ja vastausvaihtoehdot jäivät englanniksi; nyt kysymys käännetään ennen rivitystä. Suomenkielinen viikko ja kaikki hetket on tarkistettu Lomake.-hetkeen asti.
