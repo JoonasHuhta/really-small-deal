@@ -8,6 +8,7 @@ The code is always the truth. Of the documents, these are current:
 2. **`EKSKYYSMI.md`: the character bible.** Origin, relation to RSD, symbols, rules (§7), research (§9).
 3. `VISIO.md` (pillars) and `OUTOUDET.md` (quirks and the "no mockery" rule).
 4. **`SYVATARKASTUS.md` (27.11.2026): the deep review and the open task list (§8).** Each task names its files, when it is done, the model level it needs, and whether Joonas decides first. Take one task at a time.
+5. **`PELIKOKEMUS.md` (28.11.2026): the player experience.** The first five minutes, the emotional map of a full playthrough, emotional safety, the beta-tester guide and form, and the store text. Its §6 proposals wait for Joonas.
 
 Older plans are history and partly out of date: `TYOSUUNNITELMA.md`, `CODEX_JATKO.md`, `SUUNTA.md`, `TOINEN_NAYTOS.md`, `KASIKIRJOITUS.md` (its 0.26 structure table), `SEURAAVAKSI.md`. Read them for ideas, not for the current order.
 
