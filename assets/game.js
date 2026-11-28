@@ -7495,7 +7495,7 @@ function showAbout(){
    '<p>'+tr('It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.')+'</p>'+
    '<p>'+tr('About an hour. It saves as you go. Only one thing is timed, and it’s unfair on purpose.')+'</p>'+
    '<p class="small">'+tr('Alpha{v}, still changing. Made by Joonas Huhta (MoshBitSurfers).').replace('{v}',gameVersion())+'</p>'+
-   '<button class="go alt" type="button" data-go="menu">'+tr('Back')+'</button>','menu');
+   '<button class="go alt" type="button" data-go="menu">'+tr('Back')+'</button>','about');
 }
 function showWeekEnd(){
   var g=G;g.ended=true;g.dayEnd=false;WAIT=null;Q=[];render();

@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.62 – Aboutin teksti on tietokoneella suurempi ja lukupalsta keskitetty.
+
 0.99.61 – Text below ja suurin tekstikoko näyttävät repliikin alapalkissa ja säilyttävät puhekuplan, kun sille on tilaa.
 
 0.99.60 – Repliikit näkyvät jälleen puhekuplissa myös pienessä vaakapelissä. Puhekuplien tekstiä suurennetaan pienellä näytöllä, ja asennon vaihto päivittää myös lukupaneelin. Text below ja suurin tekstikoko näyttävät repliikin lukupaneelissa.
