@@ -1,9 +1,16 @@
 /* ================= state ================= */
+// 0.99.56: the Monday is drawn when a new game starts. The first Monday a device ever sees is A or B: C, where the
+// human really is left out, waits for a replay, when the game has already shown that it is kind. The last Monday is
+// remembered across visits, so the next new game is always a different one.
+var MONDAY_KEY='ekskyysmi.monday';
+function pickMonday(){var last=lastDay;if(!last)try{last=window.localStorage.getItem(MONDAY_KEY);}catch(e){}
+  if(['A','B','C'].indexOf(last)<0)last=null;
+  var opts=(last?['A','B','C']:['A','B']).filter(function(x){return x!==last;});return opts[Math.floor(Math.random()*opts.length)];}
+function rememberMonday(d){lastDay=d;try{window.localStorage.setItem(MONDAY_KEY,d);}catch(e){}}
 function reset(day){
   if(G&&G.epi){G.epi=null;if(musicName==='epilogue')music(null);}try{document.body.classList.remove('epi-on');}catch(e){}   // leaving the epilogue early
   var r=day;
-  if(!r){var opts=['A','B','C'].filter(function(x){return x!==lastDay;});r=opts[Math.floor(Math.random()*opts.length)];}
-  lastDay=r;
+  if(!r)r=['A','B','C'][Math.floor(Math.random()*3)];   // the title and the menus reset too; the Monday you play is drawn in startGame()
   G={time:0,day:r,clock:9*3600+41*60+12,rate:1,started:false,ended:false,
      human:{x:HOME,xT:HOME,flinch:0,gone:false,face:'neutral',back:false,sweat:0,sweatT:0,blush:0,grin:0,puddle:0},aSweat:0,cards:[],rep:null,zoom:null,fight:null,fightRes:null,fightLog:null,boss:null,ninja:false,rBrow:0,lab:null,labEnd:false,tics:[],carsSeen:[],dish:null,kitchen:false,smileT:0,lens:null,lensView:false,glassN:0,skippable:false,moment:null,qte:null,qteWon:false,day0:null,mult:1,prevClock:0,livedShown:0,rolling:false,run:[],jolt:null,awayAt:null,awayNote:null,receiptText:'',bar:null,rec:null,draft:null,lib:null,replySent:null,noCup:false,mugFixed:true,fadeRate:1.6,
      morko:{s:1,sT:1,off:-70,mood:'calm',st:'free',pose:null,coat:null,wobble:null,h:[{x:340,y:380},{x:420,y:380}]},

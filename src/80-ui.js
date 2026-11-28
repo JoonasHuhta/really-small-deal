@@ -70,7 +70,8 @@ function showEnd(){
 }
 function startGame(day,skip){
   var snap=null;try{if(cv.width&&document.createElement){snap=document.createElement('canvas');snap.width=cv.width;snap.height=cv.height;var sc=snap.getContext&&snap.getContext('2d');if(sc)sc.drawImage(cv,0,0);else snap=null;}}catch(e){snap=null;}   // the title picture, to fade from
-  reset(day);G.snap=snap;G.started=true;G.chapter=1;G.dayTag='MONDAY';G.stampT=0;newDay();
+  var d=day||pickMonday();rememberMonday(d);
+  reset(d);G.snap=snap;G.started=true;G.chapter=1;G.dayTag='MONDAY';G.stampT=0;newDay();
   saveProgress(1);
   if(skip){G.bx2=G.bxT=880;Q=scSanna();}
   else Q=scPrelude().concat(scIntro(),[function(){return scSanna();}]);

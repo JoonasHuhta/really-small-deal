@@ -680,11 +680,18 @@ function trRow(r){if(!Array.isArray(r))return r;var m=/^(.*?)( ×\d+)?$/.exec(r[
 };for(var k in d)FI[k]=d[k];fiIndex();})();
 // ---- src/20-engine.js ----
 /* ================= state ================= */
+// 0.99.56: the Monday is drawn when a new game starts. The first Monday a device ever sees is A or B: C, where the
+// human really is left out, waits for a replay, when the game has already shown that it is kind. The last Monday is
+// remembered across visits, so the next new game is always a different one.
+var MONDAY_KEY='ekskyysmi.monday';
+function pickMonday(){var last=lastDay;if(!last)try{last=window.localStorage.getItem(MONDAY_KEY);}catch(e){}
+  if(['A','B','C'].indexOf(last)<0)last=null;
+  var opts=(last?['A','B','C']:['A','B']).filter(function(x){return x!==last;});return opts[Math.floor(Math.random()*opts.length)];}
+function rememberMonday(d){lastDay=d;try{window.localStorage.setItem(MONDAY_KEY,d);}catch(e){}}
 function reset(day){
   if(G&&G.epi){G.epi=null;if(musicName==='epilogue')music(null);}try{document.body.classList.remove('epi-on');}catch(e){}   // leaving the epilogue early
   var r=day;
-  if(!r){var opts=['A','B','C'].filter(function(x){return x!==lastDay;});r=opts[Math.floor(Math.random()*opts.length)];}
-  lastDay=r;
+  if(!r)r=['A','B','C'][Math.floor(Math.random()*3)];   // the title and the menus reset too; the Monday you play is drawn in startGame()
   G={time:0,day:r,clock:9*3600+41*60+12,rate:1,started:false,ended:false,
      human:{x:HOME,xT:HOME,flinch:0,gone:false,face:'neutral',back:false,sweat:0,sweatT:0,blush:0,grin:0,puddle:0},aSweat:0,cards:[],rep:null,zoom:null,fight:null,fightRes:null,fightLog:null,boss:null,ninja:false,rBrow:0,lab:null,labEnd:false,tics:[],carsSeen:[],dish:null,kitchen:false,smileT:0,lens:null,lensView:false,glassN:0,skippable:false,moment:null,qte:null,qteWon:false,day0:null,mult:1,prevClock:0,livedShown:0,rolling:false,run:[],jolt:null,awayAt:null,awayNote:null,receiptText:'',bar:null,rec:null,draft:null,lib:null,replySent:null,noCup:false,mugFixed:true,fadeRate:1.6,
      morko:{s:1,sT:1,off:-70,mood:'calm',st:'free',pose:null,coat:null,wobble:null,h:[{x:340,y:380},{x:420,y:380}]},
@@ -2139,14 +2146,14 @@ function startChapter(n,at){
   n=Number.isInteger(n)?clamp(n,1,5):1;hotReset();
   var saved=loadProgress(),sv=saved&&saved.chapters[n]||{};
   if(at&&at.ch===n&&n>1){   // Continue, in the middle of a chapter
-    reset(at.state.day||'B');var h=G;Object.keys(at.state).forEach(function(k){h[k]=at.state[k];});
+    if(at.state.day)rememberMonday(at.state.day);reset(at.state.day||'B');var h=G;Object.keys(at.state).forEach(function(k){h[k]=at.state[k];});
     h.started=true;h.jobDone=at.jobDone;h.chapter=n;
     // the day in progress comes back with the save; a fresh one only if the save is older than 0.77
     if(h.day0){h.mult=h.day0.trigAt!=null?Math.min(h.day0.trigMult||DOUBLE,h.jobDone?STAY:DOUBLE):1;h.prevClock=h.clock;h.livedShown=0;}else newDay();
     Q=chain(n,at.moment);run();return;
   }
   if(n<=1){startGame(sv.day||null,false);return;}
-  reset(sv.day||'B');var g=G,c=checkpoint(sv);Object.keys(c).forEach(function(k){g[k]=c[k];});g.started=true;g.jobDone=n>4;
+  if(sv.day)rememberMonday(sv.day);reset(sv.day||'B');var g=G,c=checkpoint(sv);Object.keys(c).forEach(function(k){g[k]=c[k];});g.started=true;g.jobDone=n>4;
   Q=chain(n);run();
 }
 // ---- src/32-callbacks.js ----
@@ -7489,7 +7496,8 @@ function showEnd(){
 }
 function startGame(day,skip){
   var snap=null;try{if(cv.width&&document.createElement){snap=document.createElement('canvas');snap.width=cv.width;snap.height=cv.height;var sc=snap.getContext&&snap.getContext('2d');if(sc)sc.drawImage(cv,0,0);else snap=null;}}catch(e){snap=null;}   // the title picture, to fade from
-  reset(day);G.snap=snap;G.started=true;G.chapter=1;G.dayTag='MONDAY';G.stampT=0;newDay();
+  var d=day||pickMonday();rememberMonday(d);
+  reset(d);G.snap=snap;G.started=true;G.chapter=1;G.dayTag='MONDAY';G.stampT=0;newDay();
   saveProgress(1);
   if(skip){G.bx2=G.bxT=880;Q=scSanna();}
   else Q=scPrelude().concat(scIntro(),[function(){return scSanna();}]);

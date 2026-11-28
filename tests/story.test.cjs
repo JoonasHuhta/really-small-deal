@@ -644,6 +644,16 @@ assert.match(revised,/I missed you. I’m keeping the easier day/);assert.doesNo
 assert.equal(T.G.endSeen,true,'the lamp-and-bird image was reached');assert.ok(revised.indexOf('Tuesday works')>revised.lastIndexOf('Leave it open a crack'),'the radiator comes after the final image');
 playLab('comments');assert.equal(T.G.finalFrame,true);assert.equal(T.G.bed,true);assert.equal(T.G.lampOff,false);assert.equal(T.G.morko.pose,'puppet');assert.equal(T.G.zShow,0);
 T.chapter(2);assert.equal(T.G.finalFrame,false);assert.equal(T.G.bed,false);assert.equal(T.G.morko.pose,null);
+// 0.99.56: the first Monday a device sees is A or B; after that a new game never repeats the last Monday, across visits too.
+{const mk=require('./harness.cjs');
+ for(let i=0;i<12;i++){const h=mk();h.T.title();assert.equal(h.savedItems.get('ekskyysmi.monday'),undefined,'the title screen does not draw a Monday');
+   h.T.start();assert.ok(['A','B'].includes(h.T.G.day),'a first Monday is A or B, got '+h.T.G.day);assert.equal(h.savedItems.get('ekskyysmi.monday'),h.T.G.day);}
+ for(const last of ['A','B','C'])for(let i=0;i<4;i++){const h=mk();h.savedItems.set('ekskyysmi.monday',last);h.T.start();
+   assert.notEqual(h.T.G.day,last,'a later visit does not repeat the last Monday ('+last+')');assert.equal(h.savedItems.get('ekskyysmi.monday'),h.T.G.day);}
+ {const h=mk();let prev=null,seenC=false;for(let i=0;i<20;i++){h.T.start();const d=h.T.G.day;if(prev)assert.notEqual(d,prev,'new games alternate');if(d==='C')seenC=true;prev=d;h.T.title();}
+  assert.ok(seenC,'C comes on a replay');}
+ {const h=mk();h.savedItems.set('ekskyysmi.monday','x');h.T.start();assert.ok(['A','B'].includes(h.T.G.day),'a broken record counts as a first visit');}
+ {const h=mk();h.T.start('C',true);assert.equal(h.T.G.day,'C','a chosen Monday is kept');}}
 console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment resumes; all three bar stories; part cards; distinct replays; form signature; quiet-day payoff; nightlight ending; paused animations; phone controls, audio and local assets. Cutaways: ${views}; size interactions: ${stretches}.`);
 // Portability: nothing in the repo may point at the build machine's own folders (0.70.0: mug.test broke on Windows).
 {const fs3=require('fs'),p3=require('path'),root=p3.join(__dirname,'..');
