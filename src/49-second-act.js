@@ -64,7 +64,7 @@ function drawForm(){
   for(i=0;i<5;i++)line(22,84+i*13,22+150+((i*53)%90),84+i*13);
   if(q){
     ctx.fillStyle='#2b2733';ctx.font='800 13px system-ui,sans-serif';ctx.fillText(q.n+'.',22,172);
-    ctx.font='600 15px system-ui,sans-serif';var ls=wrap(q.q,w-70);for(i=0;i<ls.length;i++)ctx.fillText(ls[i],46,172+i*20);
+    ctx.font='600 15px system-ui,sans-serif';var ls=wrap(tr(q.q),w-70);/* 0.99.73: wrapped in the player's language (the English was wrapped, then each piece looked up) */for(i=0;i<ls.length;i++)ctx.fillText(ls[i],46,172+i*20);
     var oy=182+ls.length*20;
     for(i=0;i<3;i++){if(!q.opts[i])continue;var bx=46,by=oy+i*26;
       ctx.strokeStyle='#2b2733';ctx.lineWidth=1.5;ctx.strokeRect(bx,by-8,16,16);ctx.fillStyle='#2b2733';ctx.font='600 13px system-ui,sans-serif';ctx.fillText(q.opts[i],bx+26,by);
