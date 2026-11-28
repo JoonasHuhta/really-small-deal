@@ -1401,6 +1401,7 @@ Then unfile it.	line	H	chapter 5
 There’s no form for that.	line	S	chapter 5	
 …Draft one. Small. Applications close today.	line	S	chapter 5	
 Two colleagues going to lunch.	outside		chapter 5	
+hi	ui		chapter 5	
 For the record, I intend to go off again on Monday.	line	S	chapter 5	
 I know. I’ll be there.	line	H	chapter 5	
 A SUNDAY EVENING	card		comments	
@@ -1593,6 +1594,7 @@ signature (the shadow)	canvas		epilogue
 Page four: “…in conclusion, sorry.”	line	P	epilogue	
 Sent: three lines. No apology.	line	P	epilogue	
 HEART RATE: NORMAL	ui		epilogue	
+HA	ui		epilogue	
 Still open: one meeting. Tuesday, by the radiator.	canvas		epilogue	
 Ekskyysmi and Sanna’s shadow.	canvas		epilogue	
 THE NEXT TUESDAY	card		radiator	
@@ -1905,7 +1907,6 @@ Everything looks like a dagger from a distance.	line	H	comments
 That’s why I keep my distance.	line	S	comments	
 next time, then.	ui		epilogue	
 TIMES WE STAYED	ui		epilogue	
-HA	ui		epilogue	
 “Just say hi.” As if it’s nothing.	line	S	radiator	
 It is nothing.	line	H	radiator	
 It is a WHOLE WORD.	line	S	radiator	
@@ -2071,6 +2072,7 @@ It took them four seconds to go to lunch.	line	H	chapter 1
 Different departments.	line	S	chapter 1	
 they went without us (on the tab)	canvas		chapter 1	
 Apologise to Eero. I’ve drafted something.	choice		chapter 1	
+Maybe YOUR comfort zone could use a walk.	ui		chapter 1	
 the snap	ui		chapter 1	
 I wobbled. You said hi. Slightly after everyone else.	ui		chapter 1	
 The joke I made at Eero?	line	H	chapter 2	

@@ -605,16 +605,16 @@ function drawOutside(){
   else if(an==='grow'){h.face='stiff';h.flinch=t<1.9?0.8:0.25;h.shake=t<2.8;}
   else if(an==='cover'){h.face='down';h.down=true;if(g.day!=='C'&&t>1&&t<2.8){aFace=-1;aWave=true;}}
   else if(an==='exit'){hx=300-t*110;h.back=true;h.facing=-1;h.cup=false;h.walk=true;show=hx>-40;if(t>2.6)aFace=-1;}
-  if(an==='tape'&&t>0.4&&t<1.4)bubble(700,FEETY-172,'oh, hi.');
+  if(an==='tape'&&t>0.4&&t<1.4)bubble(700,FEETY-172,tr('oh, hi.'));
   if(an==='exit')drawCupOnLampTable();
   if(show)person(hx,h);
   if(an==='tape'){person(700,{body:SANNA.body,hair:SANNA.hair,facing:aFace});person(800,{body:MIKA.body,hair:MIKA.hair,facing:1,cup:true});}
   else if(g.cowA)person(g.ax,{body:SANNA.body,hair:SANNA.hair,facing:aFace,wave:aWave});
   if(an!=='tape'&&g.cowB)person(g.bx2,{body:MIKA.body,hair:MIKA.hair,facing:an==='nod'||an==='bite'?-1:g.bFace,cup:true,face:an==='bite'&&t>1.5?(t<2.4?'stiff':'smile'):'neutral',flinch:an==='bite'&&t>1.2&&t<2?0.5:0});
-  if(an==='bite'&&t>0.3&&t<1.5)bubble(hx+40,FEETY-172,'Maybe YOUR comfort zone could use a walk.',{maxW:200});
-  if(an==='bite'&&t>2.4&&t<3.8)bubble(g.bx2,FEETY-172,'…ha.');
-  if(an==='none'&&t>0.6&&t<1.9)bubble(hx,FEETY-172,'hi');
-  if(an==='grow'&&t>1.9&&t<3.3)bubble(hx,FEETY-172,'HI.');
+  if(an==='bite'&&t>0.3&&t<1.5)bubble(hx+40,FEETY-172,tr('Maybe YOUR comfort zone could use a walk.'),{maxW:200});
+  if(an==='bite'&&t>2.4&&t<3.8)bubble(g.bx2,FEETY-172,tr('…ha.'));
+  if(an==='none'&&t>0.6&&t<1.9)bubble(hx,FEETY-172,tr('hi'));
+  if(an==='grow'&&t>1.9&&t<3.3)bubble(hx,FEETY-172,tr('HI.'));   // 0.99.69: the replayed words translate too (in Finnish they stayed English)
   var capY=H-32;   // immersive: the words panel along the bottom carries the caption, so the scene doesn't print it underneath
   ctx.fillStyle='#0f0d14';ctx.fillRect(0,0,W,56);if(!COMPACT)ctx.fillRect(0,capY-32,W,64);
   ctx.fillStyle='#f1ebdd';ctx.textBaseline='middle';ctx.textAlign='left';ctx.font='700 18px system-ui,sans-serif';ctx.fillText(o.title,COMPACT?72:28,29);
