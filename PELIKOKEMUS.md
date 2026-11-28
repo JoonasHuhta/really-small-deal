@@ -23,7 +23,7 @@ Joonaksen pyyntö 28.11.: koodi on punnittu ja testattu, nyt pelikokemus. Kolme 
 
 | Aika | Mitä pelaaja näkee ja tekee |
 |---|---|
-| ennen | Nimiruutu: logo (suurennuslasi, jossa on silmät), *Really Small Deal.*, *A small moment. A very long shadow.* Kuvassa pieni ihminen seisoo avoimen oven valokiilassa puhelin kädessä, ja takana on kohtuuttoman iso, huolestunut varjo. Nappi *New game →*, linkit Settings, Full screen ja About. Nimiruudun kappale soi. |
+| ennen | Nimiruutu: logo (suurennuslasi, jossa on silmät), *Really Small Deal.*, *A small moment. A very long shadow.* Kuvassa pieni ihminen seisoo avoimen oven valokiilassa muki kädessä, ja takana on kohtuuttoman iso, huolestunut varjo. Nappi *New game →*, linkit Settings, Full screen ja About. Nimiruudun kappale soi. |
 | 0:00 | Kortti *PART ONE – Better safe.* ja *A Monday. One small plan.* Kortti odottaa klikkausta (*Begin part one*). Musiikki loppuu, ja koko maanantai on ilman musiikkia. |
 | 0:01–0:18 | Lähes sanaton alku: ”Nobody here yet.”, ihminen tulee, kahvinkeitin tippuu, ”(mug handle on the wrong side.)”, ”(better.)”, siemaus, hymy. Varjo nukkuu lattialla pienenä. Paneelissa on nappi *Skip intro →*. |
 | 0:18 | H: ”Today I’m going to ask Sanna to lunch.” HUDiin tulee *A SMALL PLAN – Ask Sanna to lunch.* |
@@ -354,6 +354,18 @@ Tämä osio on erillään kohdasta 1, jonka ohje kielsi muutosehdotukset. Järje
 2. **Rooli nimiruutuun yhdellä rivillä** taglinen alle: *You play the shadow.* Tagline säilyy. Pelaaja tietää roolin ennen New gamea, ja jaetun linkin lupaus näkyy myös itse pelissä (kohta 1.1).
 3. **Sisältövaroitus ensimmäiselle kortille** kohdan 3 tekstillä.
 4. **Kysymys Joonakselle:** saako ensimmäinen pelikerta olla maanantai C, vai arvotaanko ensimmäisellä kerralla A tai B ja C vasta uusinnoissa? Kumpikin on perusteltu: C on rehellisin, mutta raskain ensivaikutelma.
+
+**Päätökset ja tehdyt muutokset 28.11.**
+- **Työ-pilleri:** Joonas: ”työpilleri on ok”. Pilleri jää ennalleen.
+- **Roolirivi nimiruutuun:** ei. Joonas: rooli selviää alussa riittävän aikaisin ilman alleviivausta, ja pelaaja on tavallaan sekä ihminen että varjo.
+- **Sisältövaroitus:** About-sivu riittää. Ensimmäiseen korttiin ei lisätä mitään.
+- **Maanantai C:** tehty 0.99.56. Laitteen ensimmäinen maanantai on A tai B, ja C tulee uusinnoissa.
+- **Lisäksi tehty:**
+  - 0.99.55: vastausikkuna alkaa 0,35 sekunnin säikähdyksellä, joten tuplapainallus ei enää hylkää sitä näkymättä (kohta 1.5).
+  - 0.99.57: puhelimella repliikki luetaan kerran, alapalkista, ja kuvassa on pieni puhujamerkki (kohta 1.7).
+  - 0.99.58: nimiruudussa on sanaton vitsi. Joku kulkee käytävällä, Ekskyysmi säikähtää ja teeskentelee, ettei nähnyt mitään. Huumori näkyy siis ilman sanoja (kohta 1.1).
+  - 0.99.59: uusi kuvake. Silmille tuli huolestuneet kulmat, ja taustana on nimiruudun seinä ja oven valojuova.
+- **Epilogi:** katsottu kokonaan kuvina tietokoneen ja puhelimen koossa. Muutettavaa ei löytynyt: kuitti on puhelimellakin luettava, ja loppukortti lupaa patterin.
 
 **Betatestin jälkeen, vain jos data niin sanoo**
 5. **Osan 1 keskikohta.** Jos testaajat hyppivät tiistaista torstaihin tai sanovat ”sama vitsi”, *enhance* ja *glass* ovat ehdokkaat yhdistää tai siirtää Momenteiksi.
