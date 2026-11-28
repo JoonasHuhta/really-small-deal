@@ -63,5 +63,5 @@ Jos löytyy vika, hyödylliset tiedot ovat kohtauksen nimi, viimeinen näkyvä r
 - Pelikoodi: `src/NN-name.js` → `node tools/build.cjs` → `assets/game.js`.
 - `npm run android:sync` tekee `www/`:n, Capacitor-synkronoinnin, natiivikorjaukset ja tarkistuksen. `npm run android:check` vertaa projektin pakattavia tiedostoja; se ei yksin todista valmiin APK:n sisältöä.
 - Natiivimuutokset tehdään `tools/android-patch.cjs`:ään. `GameApp.java` piilottaa järjestelmäpalkit ja sallii kameraloven alueen käytön. Vaakasuuntana on `sensorLandscape`, WebView-minimi 108. Reunan pyyhkäisy saa tuoda järjestelmäpalkit esiin.
-- Kuvakkeiden lähteet ovat `resources/`:ssa. `npm run android:icons` generoi Androidin koot. Kuvakkeita ei tässä kierroksessa vaihdettu.
+- Kuvakkeiden lähteet ovat `resources/`:ssa: `icon-only.png` vanhoille Androideille (ennen 8.0), `icon-foreground.png` ja `icon-background.png` mukautuvaan kuvakkeeseen. `tools/android-prepare.cjs` generoi Androidin koot uudelleen aina, kun lähteet ovat uudempia kuin natiiviprojektin kopio, joten `build-apk` vie uuden kuvakkeen APK:hon ilman erillistä vaihetta (`npm run android:icons` tekee saman käsin). 0.99.59: kuvake uusittiin (suurennuslasin silmille huolestuneet kulmat, taustalle nimiruudun seinän sävy ja oven valojuova).
 - Julkaisun allekirjoitettu AAB ja Play Console eivät kuulu tähän testikierrokseen.
