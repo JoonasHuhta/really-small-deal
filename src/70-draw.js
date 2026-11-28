@@ -665,9 +665,9 @@ function jobRewrite(x,y,w){
   var t=G.job.t,k=clamp(t/0.9,0,1);
   ctx.strokeStyle='#e2b04a';ctx.lineWidth=2;line(x-2,y,x-2+(w+4)*k,y);
   if(t>1.1){
-    var n=Math.min(JOB_NEW.length,Math.floor((t-1.1)*24)),txt=JOB_NEW.slice(0,n);
+    var jn=tr(JOB_NEW),n=Math.min(jn.length,Math.floor((t-1.1)*24)),txt=jn.slice(0,n);   // 0.99.71: typed in the player's language (it typed the English, so Finnish showed it letter by letter)
     ctx.font='600 15px Fraunces,Georgia,serif';ctx.textAlign='right';ctx.fillStyle='#e2b04a';
-    ctx.fillText(txt+(n<JOB_NEW.length?'▏':''),x+w,y+22);ctx.textAlign='left';
+    ctx.fillText(txt+(n<jn.length?'▏':''),x+w,y+22);ctx.textAlign='left';
   }
 }
 function jobCard(){
@@ -681,8 +681,8 @@ function jobCard(){
   ctx.font='700 12px system-ui,sans-serif';ctx.fillStyle='#e2b04a';ctx.fillText('EKSKYYSMI’S JOB DESCRIPTION',cx,cy-48);
   ctx.font='500 22px system-ui,sans-serif';ctx.fillStyle='#f1ebdd';var ow=ctx.measureText(JOB_OLD).width;ctx.fillText(JOB_OLD,cx,cy-12);
   var k=clamp(t/0.9,0,1);ctx.strokeStyle='#e2b04a';ctx.lineWidth=3;line(cx-ow/2-4,cy-11,cx-ow/2-4+(ow+8)*k,cy-11);
-  if(t>1.1){var n=Math.min(JOB_NEW.length,Math.floor((t-1.1)*20));
-    ctx.font='600 26px Fraunces,Georgia,serif';ctx.fillStyle='#e2b04a';ctx.fillText(JOB_NEW.slice(0,n)+(n<JOB_NEW.length?'▏':''),cx,cy+32);}
+  if(t>1.1){var jn=tr(JOB_NEW),n=Math.min(jn.length,Math.floor((t-1.1)*20));
+    ctx.font='600 26px Fraunces,Georgia,serif';ctx.fillStyle='#e2b04a';ctx.fillText(jn.slice(0,n)+(n<jn.length?'▏':''),cx,cy+32);}
   ctx.restore();
 }
 function hud(){

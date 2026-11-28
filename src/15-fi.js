@@ -13,7 +13,7 @@ function loc(){return LOC[LANG]||LOC.en;}
 var NUMRX=/\d+(?:[.,]\d+)?/g;
 function trNum(s,d){var nums=s.match(NUMRX);if(!nums)return null;var t=d[s.replace(NUMRX,'{n}')];if(!t)return null;var i=0,dec=loc().dec;
   return t.replace(/\{n\}/g,function(){var v=nums[i++];return v==null?'':dec===','?v.replace('.',','):v;});}
-function trLook(s){var d=DICT[LANG];if(!d)return null;return d[s]||trNum(s,d);}
+function trLook(s){var d=DICT[LANG];if(!d)return null;if(d[s])return d[s];var t=trNum(s,d);if(t&&LANG==='fi')FIV[t]=1;return t;}   // 0.99.71: a line filled from a template is Finnish too, if it passes through tr() again
 function tr(s){
   if(typeof LANG==='undefined'||LANG==='en'||typeof s!=='string'||!s)return s;
   if(LANG==='xx')return pseudo(s);
