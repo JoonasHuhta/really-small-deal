@@ -149,9 +149,8 @@ function render(){
   var label=speaker==='N'?'<b class="sr">'+tr(NAMES.N)+'</b>':'<b>'+tr(NAMES[speaker])+'</b>';
   elLine.innerHTML='<span class="speaker-icon '+icon+'" aria-hidden="true"></span><div class="w-'+speaker+'">'+label+'<p'+(cur&&cur.loud?' class="loud"':cur&&cur.quiet?' class="quiet"':'')+'>'+emph(esc(text))+'</p></div>';
   if(g.finalFrame||g.chap&&g.chap.part)elLine.innerHTML='';   // the part card carries its own caption
-  // Said once, not twice: when the line is already readable in a bubble (or on the outside card), the panel keeps it
-  // only for screen readers. Bigger text, a small scene, or the "Text below" setting brings the panel text back.
-  elLine.classList.toggle('echo',!textBelow&&(g.out&&!g.out.inside?(g.out.anim==='text'||!COMPACT):WAIT==='click'&&!!cur&&lineInBubble(cur)));
+  // Text below and the largest text size keep a readable copy in the panel.
+  elLine.classList.toggle('echo',!textBelow&&(g.out&&!g.out.inside?(g.out.anim==='text'||!COMPACT):textStep<=1&&WAIT==='click'&&!!cur&&lineInBubble(cur)));
   elOpts.innerHTML=html;
   elOpts.classList.toggle('who-S',WAIT==='choice'&&(g.choiceWho||'S')==='S');elOpts.classList.toggle('who-H',WAIT==='choice'&&g.choiceWho==='H');
   for(var nn=2;nn<=5;nn++)elOpts.classList.toggle('n'+nn,WAIT==='choice'&&!!CH&&CH.length===nn);   // column count without :has (older Android web views)   // whose words these are, in their colour
@@ -214,9 +213,7 @@ var textBelow=false;try{textBelow=window.localStorage.getItem('ekskyysmi.below')
 function lineInBubble(l){var g=G;
   var width=cv.clientWidth||0;
   var compact=document.documentElement.classList.contains('immersive');
-  if(textBelow)return false;
-  if(textStep>1)return false;   // the player asked for large text: the panel reads better than a bubble
-  if(l.who==='N')return width>=740&&!!g.band&&!compact;   // the narrator's band stays on wide, windowed screens
+  if(l.who==='N')return !textBelow&&textStep<=1&&width>=740&&!!g.band&&!compact;
   if(width<(compact?480:520))return false;   // a small landscape scene has room for a readable bubble
   if(l.big&&l.who==='S')return true;
   if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)return false;if(l.who==='S'&&g.morko.asleep)return false;

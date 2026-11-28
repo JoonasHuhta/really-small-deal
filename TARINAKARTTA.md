@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.61 – Text below ja suurin tekstikoko näyttävät repliikin alapalkissa ja säilyttävät puhekuplan, kun sille on tilaa.
+
 0.99.60 – Repliikit näkyvät jälleen puhekuplissa myös pienessä vaakapelissä. Puhekuplien tekstiä suurennetaan pienellä näytöllä, ja asennon vaihto päivittää myös lukupaneelin. Text below ja suurin tekstikoko näyttävät repliikin lukupaneelissa.
 
 0.99.59 – **Uusi kuvake** (Joonas 28.11.: ”pitäisikö vielä miettiä pelin icon logoa puhelimelle”). **Syy:** vanha kuvake (suurennuslasi, jossa silmät, tummansinisellä) oli selkeä, mutta puhelimen kotinäytöllä se näytti hakusovellukselta: ilmeetön ja irrallaan nimiruudun väreistä. **Korjaus:** sama merkki, mutta silmillä on huolestuneet kulmat (Ekskyysmin ilme nimiruudussa), ja taustana on nimiruudun seinän vihertävä sävy, jonka yli kulkee oven lämmin valojuova. Merkki erottuu vielä 32 pikselin koossa. Uusittu: `assets/icon.svg` (myös selaimen välilehti), `icon-192/512.png`, Androidin `resources/` (mukautuva kuvake kahdessa kerroksessa sekä uusi `icon-only.png` vanhoille Androideille, jotka saivat ennen kuvakkeensa logosta) ja `assets/branding/rsd-app-icon.png`. Nimiruudun logo ja käynnistyskuva ovat ennallaan. `android-prepare.cjs` generoi Androidin kuvakkeet uudelleen, kun lähteet muuttuvat; kokeiltu Linuxissa: ensimmäinen ajo generoi, toinen ei. APK:ta ei vielä rakennettu Windowsissa.

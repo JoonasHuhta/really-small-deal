@@ -654,22 +654,23 @@ T.chapter(2);assert.equal(T.G.finalFrame,false);assert.equal(T.G.bed,false);asse
   assert.ok(seenC,'C comes on a replay');}
  {const h=mk();h.savedItems.set('ekskyysmi.monday','x');h.T.start();assert.ok(['A','B'].includes(h.T.G.day),'a broken record counts as a first visit');}
  {const h=mk();h.T.start('C',true);assert.equal(h.T.G.day,'C','a chosen Monday is kept');}}
-// Speech is readable once in every layout. Rotation and Text below take effect on the current line.
+// On desktops and landscape phones, saved reading preferences keep the caption and the speech bubble.
 {const h=require('./harness.cjs')(),T5=h.T,cv=h.element('c');T5.start('A',false);let n=0;
  while(!(T5.state()==='click'&&T5.G.cur&&/comfort zone more/.test(T5.G.cur.text))&&n++<1500){T5.unlock();const st=T5.state();if(st==='click')T5.advance();else if(st==='choice')T5.choose(0);else T5.tick(0.5);}
  assert.equal(T5.G.cur.who,'B','Eero is talking');T5.tick(6);
- function check(width,immersive,inBubble){
+ function check(width,immersive,inBubble,hideCaption=inBubble){
    cv.clientWidth=width;h.document.documentElement.classList.toggle('immersive',immersive);
    h.fire(h.window,'resize',{});h.startPaint();T5.draw();
    assert.equal(h.painted().includes('comfort'),inBubble,'bubble text at '+width);
-   assert.equal(h.element('line').classList.contains('echo'),inBubble,'panel hides its visual copy at '+width);
+   assert.equal(h.element('line').classList.contains('echo'),hideCaption,'panel visibility at '+width);
  }
  check(960,false,true);
  check(390,false,false);
  check(507,true,true);
  check(480,true,true);
- h.fire(h.element('below'),'click',{});check(507,true,false);
- h.fire(h.element('below'),'click',{});check(507,true,true);}
+ h.fire(h.element('below'),'click',{});check(507,true,true,false);check(960,true,true,false);
+ h.fire(h.element('below'),'click',{});check(507,true,true);
+ h.fire(h.element('textsize'),'click',{});check(960,true,true,false);}
 // 0.99.58: the title's wordless beat. Someone passes in the hall: the shadow startles, pretends it saw nothing a size smaller, and grows back.
 {const h=require('./harness.cjs')(),T6=h.T;T6.title();const M=T6.G.morko;T6.G.idleT=0;
  T6.tick(8.7);assert.equal(M.mood,'surprised');assert.ok(T6.G.titlePass>0&&T6.G.titlePass<1,'a shadow crosses the light');assert.ok(Math.abs(M.s-1.25)<0.01,'it never grows past the title fit');
