@@ -654,6 +654,13 @@ T.chapter(2);assert.equal(T.G.finalFrame,false);assert.equal(T.G.bed,false);asse
   assert.ok(seenC,'C comes on a replay');}
  {const h=mk();h.savedItems.set('ekskyysmi.monday','x');h.T.start();assert.ok(['A','B'].includes(h.T.G.day),'a broken record counts as a first visit');}
  {const h=mk();h.T.start('C',true);assert.equal(h.T.G.day,'C','a chosen Monday is kept');}}
+// 0.99.57: said once. Where the panel carries a line (a canvas under 740 px, or large text) the scene marks the speaker instead of drawing a second copy.
+{const h=require('./harness.cjs')(),T5=h.T,cv=h.element('c');T5.start('A',false);let n=0;
+ while(!(T5.state()==='click'&&T5.G.cur&&/comfort zone more/.test(T5.G.cur.text))&&n++<1500){T5.unlock();const st=T5.state();if(st==='click')T5.advance();else if(st==='choice')T5.choose(0);else T5.tick(0.5);}
+ assert.equal(T5.G.cur.who,'B','Eero is talking');T5.tick(6);
+ cv.clientWidth=960;h.startPaint();T5.draw();assert.ok(h.painted().includes('comfort'),'a wide scene draws the words in the bubble');
+ cv.clientWidth=700;h.startPaint();T5.draw();assert.ok(!h.painted().includes('comfort'),'a phone-sized scene does not draw them twice');
+ cv.clientWidth=480;h.startPaint();T5.draw();assert.ok(!h.painted().includes('comfort'),'nor a narrow one');cv.clientWidth=960;}
 console.log(`PASS: ${runs} Monday paths; ${weeks} full weeks; chapter and moment resumes; all three bar stories; part cards; distinct replays; form signature; quiet-day payoff; nightlight ending; paused animations; phone controls, audio and local assets. Cutaways: ${views}; size interactions: ${stretches}.`);
 // Portability: nothing in the repo may point at the build machine's own folders (0.70.0: mug.test broke on Windows).
 {const fs3=require('fs'),p3=require('path'),root=p3.join(__dirname,'..');

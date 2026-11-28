@@ -6692,8 +6692,24 @@ function stillText(lines,x,y,font,col,lh,maxW,raw,mid){   // centred on x; y is 
   function drawLines(){ctx.save();ctx.font=font;ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline=mid?'middle':'alphabetic';
     lines.forEach(function(t,k){if(maxW)ctx.fillText(t,x,y+k*lh,maxW);else ctx.fillText(t,x,y+k*lh);});ctx.restore();}
 }
+// 0.99.57: said once. When the panel below carries the line (a canvas under 740 px, where bubble text would be under
+// ~13 px, or large text), drawLines() sets MARK and the scene shows only who is talking: a small bubble with a voice.
+var MARK=false;
+function bubbleMark(x,y,text,o){
+  var w=48,h=26,cx=o.tailX!=null?o.tailX:x,pad=18/(VIEW.z||1),bx=clamp(cx-w/2,Math.max(8,VIEW.l+pad),Math.min(W-8,VIEW.r-pad)-w),
+      topPad=((COMPACT?46:10)+(G.boss?50:0))/(VIEW.z||1),by=o.top!=null?o.top:Math.max(VIEW.t+topPad,y-h-12),i;
+  var fill=o.dark?'#14111d':'#fffdf6',ink=o.dark?'#f6f1e4':'#2b2733';
+  ctx.fillStyle=fill;ctx.strokeStyle=ink;ctx.lineWidth=2;rr(bx,by,w,h,11);ctx.fill();ctx.stroke();
+  if(!o.noTail){var tx=clamp(cx,bx+13,bx+w-13);
+    ctx.beginPath();ctx.moveTo(tx-7,by+h-1);ctx.lineTo(tx,by+h+9);ctx.lineTo(tx+7,by+h-1);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(tx-7,by+h);ctx.lineTo(tx,by+h+9);ctx.lineTo(tx+7,by+h);ctx.stroke();}
+  // three short bars, moving while the line is still being said (the panel shows it whole); still once it is said
+  var talking=!RM&&o.reveal!=null&&o.reveal<String(text).length,k=o.loud?1.35:o.quiet?0.7:1;ctx.fillStyle=ink;
+  for(i=0;i<3;i++){var bh=(talking?4+6*Math.abs(Math.sin(G.time*9+i*1.9)):(i===1?10:6))*k;rr(bx+w/2-11+i*9-2,by+h/2-bh/2,4,bh,2);ctx.fill();}
+}
 function bubble(x,y,text,o){
   o=o||{};
+  if(MARK)return bubbleMark(x,y,text,o);
   var k=bubbleK(o),fs=17*k,lh=22*k,base='600 '+fs+'px system-ui,sans-serif',em='800 '+(fs+1.5*k)+'px system-ui,sans-serif',i,j;
   ctx.font=base;ctx.textAlign='left';ctx.textBaseline='middle';
   var lines=wrap(text,(o.maxW||250)*(k>1?1.22:1)),w=0,words=[],widths=[];
@@ -7143,13 +7159,16 @@ function drawLines(){
   for(var pass=0;pass<2;pass++)for(i=0;i<g.lines.length;i++){
     l=g.lines[i];var isCur=l.who===cur;if((pass===1)!==isCur||!isCur)continue;
     if(l.big&&l.who==='S'){bigBubble(l.text,RM?1e9:revealCount(l.text,g.curT||0,l));continue;}   // drawn on every screen: it is a prop, not a caption
-    if(!WIDE)continue; // on a narrow screen the panel below the scene carries the text
+    // on a narrow screen the panel below the scene carries the text, and the scene keeps the marker (0.99.57)
     if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)continue;   // at night the human is in bed, but the shadow is very much awake
     var n=l.text.length,mw=n>90?330:n>50?290:0,rv=isCur?revealCount(l.text,g.curT||0,l):1e9;
     if(l.who==='S'&&g.morko.asleep)continue;
+    MARK=!lineInBubble(l);
     ctx.save();
     if(l.who==='S'){var q=geom(),above=q.hdY-q.hdR-14-(g.morko.hat&&!g.ninja?44*Math.max(0.6,q.hdR/20):0),sw=mw||260,bh=bubbleH(l.text,sw,l);
-      if(above-12>=bh+8)bubble(q.bx-70,above+12,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet});
+      if(MARK){if(above-12>=34)bubble(q.bx,above+12,l.text,{dark:true,noTail:true,reveal:rv,loud:l.loud,quiet:l.quiet});   // over the head
+        else bubble(q.bx-q.hdR-44,q.hdY+25,l.text,{dark:true,noTail:true,reveal:rv,loud:l.loud,quiet:l.quiet});}   // a tall shadow: beside it
+      else if(above-12>=bh+8)bubble(q.bx-70,above+12,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet});
       else bubble(q.bx-70,0,l.text,{dark:true,noTail:true,maxW:sw,reveal:rv,loud:l.loud,quiet:l.quiet,top:Math.min(q.hdY+q.hdR+14,WALLY-bh-70)});}
     else if(l.who==='H')bubble(g.human.x+60,FEETY-172,l.text,{maxW:mw||230,reveal:rv,tailX:g.human.x+6*(g.human.facing||1)});   // 0.93 (Codex): the box sits right of the human; the tail was 60 to the right too, nearer Sanna standing close (+92) than the human
     else if(l.who==='A')bubble(g.ax,FEETY-172,l.text,{maxW:mw,reveal:rv});
@@ -7166,7 +7185,7 @@ function drawLines(){
     else if(l.who==='Z')bubble(g.ax+62,WALLY-178,l.text,{dark:true,noTail:true,reveal:rv});
     else if(l.who==='Y')bubble(g.yx,WALLY-200,l.text,{dark:true,noTail:true,maxW:mw||250,reveal:rv});
     else if(l.who==='W')bubble(g.rx+92,WALLY-246,l.text,{dark:true,noTail:true,maxW:mw||230,reveal:rv});
-    ctx.restore();
+    ctx.restore();MARK=false;
   }
 }
 
