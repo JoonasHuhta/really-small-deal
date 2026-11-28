@@ -10,19 +10,22 @@ var RESPONSE=[
   {k:' ',sym:'SPACE',label:'BREATHE'}
 ];
 var QTE_SECS=2.8,QTE_SECS_TOUCH=3.1; // the original 0.8 s, plus two seconds for reading (requested by the human)
+// 0.99.55: the first third of a second is the startle. Nothing lands yet, so a key or tap still on its way from the line
+// before (a quick double press) cannot fail the window before it has been seen. The clock starts after the freeze.
+var QTE_FREEZE=0.35;
 function qteSecs(coarse){return (coarse?QTE_SECS_TOUCH:QTE_SECS)*(slowReality?3.2:1);}
 function startQte(){
   var g=G,coarse=!!(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches),order=RESPONSE.map(function(_,i){return i;});
   // on a touch screen the buttons arrive shuffled, because of course they do
   if(coarse)for(var i=order.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=order[i];order[i]=order[j];order[j]=t;}
-  g.qte={i:0,t:0,secs:qteSecs(coarse),end:null,endT:0,order:order,auto:false};g.qteWon=false;
+  g.qte={i:0,t:-QTE_FREEZE,secs:qteSecs(coarse),end:null,endT:0,order:order,auto:false};g.qteWon=false;
   g.lines=[];g.cur={who:'S',text:tr('RESPOND. CORRECTLY. NOW.')};stopVoice();sfx('startle');
   WAIT='qte';LOCK=0;render();
 }
 // Friday: the same window, answered without the procedure.
 function qteAuto(){var g=G;g.qte={i:0,t:0,secs:qteSecs(false),end:null,endT:0,order:RESPONSE.map(function(_,i){return i;}),auto:true};g.lines=[];sfx('startle');}
 function qteInput(idx){
-  var q=G.qte;if(!q||q.end||q.auto||WAIT!=='qte'||paused)return;
+  var q=G.qte;if(!q||q.end||q.auto||WAIT!=='qte'||paused||q.t<0)return;   // still frozen: not an answer
   if(idx===q.i){q.i++;sfx('pick');if(q.i>=RESPONSE.length)qteEnd(true);else render();}
   else qteEnd(false,'wrong');
 }
@@ -44,6 +47,7 @@ function drawQte(){
   var q=G.qte;if(!q)return;
   var x=W/2,y=COMPACT?96:112,w=620,n=RESPONSE.length,i,k;
   ctx.save();
+  if(!q.auto&&!RM&&q.t<0){var hit=1+0.05*(-q.t/QTE_FREEZE);ctx.translate(x,y+30);ctx.scale(hit,hit);ctx.translate(-x,-y-30);}   // it lands like the “oh” did
   ctx.fillStyle='rgba(14,12,20,.88)';rr(x-w/2,y-46,w,152,14);ctx.fill();
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.font='800 15px system-ui,sans-serif';ctx.fillStyle=(RM||Math.floor(G.time*6)%2===0)&&!q.end?'#e0563e':'#f1ebdd';ctx.fillText(tr('RESPOND CORRECTLY'),x,y-26);

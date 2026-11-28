@@ -532,13 +532,15 @@ assert.match(T.inside.receipt(),/Mondays replayed, by you ×2\s+noted/);
 function toWindow(day){T.start(day,true);let n=0;while(T.state()!=='qte'&&n++<200){T.unlock();if(T.state()==='click')T.advance();else T.tick(1);}assert.equal(T.state(),'qte','Monday reaches the window');}
 // 1. Doing nothing: too late, and the spiral begins.
 toWindow('A');T.advance();assert.equal(T.state(),'qte','clicking does not skip the window');
-T.tick(2.5);assert.equal(T.G.qte.end,null,'still open after two and a half seconds: time to read');T.tick(0.4);assert.equal(T.G.qte.end,'late');
+T.tick(2.5);assert.equal(T.G.qte.end,null,'still open after two and a half seconds: time to read');T.tick(0.75);assert.equal(T.G.qte.end,'late','the freeze, then 2.8 seconds');
 T.tick(1.3);assert.notEqual(T.state(),'qte');assert.equal(T.G.qteWon,false);
 // 2. The wrong key, or Enter out of habit: incorrect.
-toWindow('B');T.qteKey('ArrowDown');assert.equal(T.G.qte.end,'wrong');
-toWindow('B');T.qteKey('Enter');assert.equal(T.G.qte.end,'wrong','Enter is not part of the procedure');
+// 0.99.55: the startle. A press still on its way from the line before is not an answer; after the freeze, it is.
+toWindow('B');T.qteKey('Enter');T.qteKey(' ');assert.equal(T.G.qte.end,null,'a double press in the first third of a second does not fail the window');assert.equal(T.G.qte.i,0);
+T.tick(0.4);T.qteKey('Enter');assert.equal(T.G.qte.end,'wrong','Enter is not part of the procedure');
+toWindow('B');T.tick(0.4);T.qteKey('ArrowDown');assert.equal(T.G.qte.end,'wrong');
 // 3. The procedure, in order, in time: the secret branch. Lunch happens, and nobody panics.
-toWindow('C');for(const k of ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' ']){T.tick(0.1);T.qteKey(k);}
+toWindow('C');T.tick(0.3);for(const k of ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' ']){T.tick(0.1);T.qteKey(k);}
 assert.equal(T.G.qte.end,'won');T.tick(1.3);assert.equal(T.G.qteWon,true);
 {let n=0;while(!T.G.ended&&n++<400){T.unlock();T.draw();const st=T.state();
   if(st==='click')T.advance();else if(st==='time')T.tick(6);else if(st==='view'){T.advance();T.tick(6);T.advance();}
