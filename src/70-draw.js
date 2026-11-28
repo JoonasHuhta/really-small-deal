@@ -538,9 +538,11 @@ function drawPair(humanOpts){
   drawHuman(humanOpts);
   if(up&&ht.shoulderHands&&!G.human.gone){ctx.save();ctx.globalAlpha*=fa;drawShoulderHands(q,ht);ctx.restore();}
   if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to. 0.85: after the human: its feet are nearer than theirs, so anyone walking past goes behind it, not over it
+  // 0.99.67: the red journal is drawn before the hands, so a thumb holds the left page and the pen hand grips the quill.
+  // Drawn after them, the book hid both hands and the quill floated over the page on its own.
+  if(up&&G.journal&&G.morko.pose==='journal')drawJournal(q);
   if(up&&ht.front){ctx.save();ctx.globalAlpha*=fa;morkoArms(q,ht);ctx.restore();}
   if(up)drawStamp();
-  if(up&&G.journal&&G.morko.pose==='journal')drawJournal(q);
   if(up&&G.dream)drawMelt(q);   // Snow indoors.: a filed flake melting
 }
 

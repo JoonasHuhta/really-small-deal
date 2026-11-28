@@ -1,6 +1,7 @@
 /* ================= quirks: small private habits of the human, mostly without words ================= */
 // A tic is a little thought written in the air: a count, a sum, a hummed line. It never blocks the story.
-function tic(text,x,y,o){o=o||{};return {text:tr(text),x:x,y:y,t:-(o.at||0),life:o.life||2.6,size:o.size||16,world:!!o.world,col:o.col||'#f1ebdd'};}
+function tic(text,x,y,o){o=o||{};return {text:tr(text),x:x,y:y,t:-(o.at||0),life:o.life||2.6,size:o.size||16,world:!!o.world,col:o.col||'#f1ebdd',
+  floor:o.from?{x:o.from.x,y:o.from.y,a:o.spin||0}:null};}   // 0.99.67: a thing that lands (crisps) flies from `from` to x,y and stays down
 function addTic(text,x,y,o){return function(){G.tics.push(tic(text,x,y,o));};}
 function stepTics(dt){var a=G.tics;for(var i=a.length-1;i>=0;i--){a[i].t+=dt;if(a[i].t>a[i].life)a.splice(i,1);}}
 function drawTics(cam){
@@ -8,6 +9,9 @@ function drawTics(cam){
   var stampBottom=dayStampBottom();
   ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
   for(var i=0;i<a.length;i++){var q=a[i];if(q.t<0)continue;
+    if(q.floor){var p=RM?1:clamp(q.t/0.45,0,1),fx=q.floor.x+(q.x-q.floor.x)*p,fy=q.floor.y+(q.y-q.floor.y)*p-Math.sin(p*Math.PI)*36;
+      ctx.globalAlpha=clamp((q.life-q.t)/0.5,0,1);ctx.save();ctx.translate(fx-(q.world?cam:0),fy);ctx.rotate(q.floor.a+p*3);
+      ctx.fillStyle=q.col;ctx.strokeStyle='rgba(90,60,20,.55)';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,q.size*0.5,q.size*0.32,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.restore();continue;}
     var al=clamp(q.t/0.25,0,1)*clamp((q.life-q.t)/0.5,0,1),x=q.world?q.x-cam:q.x,y=q.y-(RM?0:q.t*6);
     if(stampBottom)y=Math.max(y,VIEW.t+(stampBottom+6)/VIEW.z+q.size*0.8);
     ctx.globalAlpha=al;ctx.font='italic 600 '+q.size+'px Fraunces,Georgia,serif';

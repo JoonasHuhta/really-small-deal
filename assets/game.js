@@ -3211,7 +3211,7 @@ function epiRollRows(){var r=[{h:'REALLY SMALL DEAL'},{h:'RECEIPT · CONTINUED'}
   // 0.99.44: the methods are on the roll once, in the opening montage's methods shot (mine:1); the week's receipt keeps its own list
   // What it felt like from inside: time, effort and bravery nobody else could see. No diagnosis, no advice: bookkeeping.
   r.push({gap:1},{h:'WHAT IT FELT LIKE'});epiInsideRows().forEach(function(x){r.push(x);});
-  r.push({gap:1},{l:'SUBTOTAL',v:'ONE FILED WEEK'},{l:'DISCOUNTS',v:'NONE NEEDED'},{l:'TOTAL',v:'LIVED ONCE'},{gap:1},{h:'Made by Joonas Huhta'},{h:'MoshBitSurfers'},{gap:1},
+  r.push({gap:1},{l:'SUBTOTAL',v:'ONE FILED WEEK'},{l:'DISCOUNTS',v:'NONE NEEDED'},{l:'TOTAL',v:'LIVED ONCE'},{gap:1},{h:'Made by Joonas Huhta'},{gap:1},
     {n:'thank you for coming.'},{n:'no reply needed.'},{n:'(really.)'},{gap:1},{n:'ekskyysmi: finnish for “excuse me”.'});
   return r;}
 function epiInsideRows(){
@@ -4463,7 +4463,8 @@ function drawChatlog(o){
 // ---- src/51-quirks.js ----
 /* ================= quirks: small private habits of the human, mostly without words ================= */
 // A tic is a little thought written in the air: a count, a sum, a hummed line. It never blocks the story.
-function tic(text,x,y,o){o=o||{};return {text:tr(text),x:x,y:y,t:-(o.at||0),life:o.life||2.6,size:o.size||16,world:!!o.world,col:o.col||'#f1ebdd'};}
+function tic(text,x,y,o){o=o||{};return {text:tr(text),x:x,y:y,t:-(o.at||0),life:o.life||2.6,size:o.size||16,world:!!o.world,col:o.col||'#f1ebdd',
+  floor:o.from?{x:o.from.x,y:o.from.y,a:o.spin||0}:null};}   // 0.99.67: a thing that lands (crisps) flies from `from` to x,y and stays down
 function addTic(text,x,y,o){return function(){G.tics.push(tic(text,x,y,o));};}
 function stepTics(dt){var a=G.tics;for(var i=a.length-1;i>=0;i--){a[i].t+=dt;if(a[i].t>a[i].life)a.splice(i,1);}}
 function drawTics(cam){
@@ -4471,6 +4472,9 @@ function drawTics(cam){
   var stampBottom=dayStampBottom();
   ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
   for(var i=0;i<a.length;i++){var q=a[i];if(q.t<0)continue;
+    if(q.floor){var p=RM?1:clamp(q.t/0.45,0,1),fx=q.floor.x+(q.x-q.floor.x)*p,fy=q.floor.y+(q.y-q.floor.y)*p-Math.sin(p*Math.PI)*36;
+      ctx.globalAlpha=clamp((q.life-q.t)/0.5,0,1);ctx.save();ctx.translate(fx-(q.world?cam:0),fy);ctx.rotate(q.floor.a+p*3);
+      ctx.fillStyle=q.col;ctx.strokeStyle='rgba(90,60,20,.55)';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,q.size*0.5,q.size*0.32,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.restore();continue;}
     var al=clamp(q.t/0.25,0,1)*clamp((q.life-q.t)/0.5,0,1),x=q.world?q.x-cam:q.x,y=q.y-(RM?0:q.t*6);
     if(stampBottom)y=Math.max(y,VIEW.t+(stampBottom+6)/VIEW.z+q.size*0.8);
     ctx.globalAlpha=al;ctx.font='italic 600 '+q.size+'px Fraunces,Georgia,serif';
@@ -5432,7 +5436,9 @@ function labLibrary(){return labScene({set:'library',title:'A fine.',plan:'Retur
 // Comedy before and after, none during. Ekskyysmi never agrees with the self-hatred, and offers no fix.
 // “(Say nothing.)” is on the menu and still greyed out: this is before Thursday rewrites the job.
 function spill(){crumbs();sfx('hit');}
-function crumbs(){var g=G;g.torn=true;for(var k=0;k<16;k++)g.tics.push(tic('•',560+Math.random()*240,FEETY-4+Math.random()*12,{at:k*0.03,life:60,size:9+Math.random()*5,col:k%3?'#e2b04a':'#c9553f'}));}
+// 0.99.67: the crisps burst out of the bag in the human's hands and land on the floor, where they stay. Before this they were
+// drawn as tics (the captions that drift upwards), so for a minute every crisp floated slowly to the ceiling.
+function crumbs(){var g=G,from={x:g.human.x+16,y:FEETY-66};g.torn=true;for(var k=0;k<16;k++)g.tics.push(tic('',from.x-60+Math.random()*260,FEETY-2+Math.random()*12,{at:k*0.03,life:600,size:9+Math.random()*5,col:k%3?'#e2b04a':'#c9553f',from:from,spin:k*1.3}));}
 function labBag(){return labScene({set:'home',title:'The bag.',plan:'Eat something. Then the evening.',clock:18*3600+39*60,snacks:1}).concat([
   function(){var g=G;g.torn=false;g.human.grin=3;g.human.x=g.human.xT=560;g.morko.sT=1.2;},
   ['N','18:39. Home. The face from work is still on.'],
@@ -7257,9 +7263,11 @@ function drawPair(humanOpts){
   drawHuman(humanOpts);
   if(up&&ht.shoulderHands&&!G.human.gone){ctx.save();ctx.globalAlpha*=fa;drawShoulderHands(q,ht);ctx.restore();}
   if(G.roomFront!=null&&!G.w&&G.set==='room')roomFront(G.roomFront);   // only in the room it belongs to. 0.85: after the human: its feet are nearer than theirs, so anyone walking past goes behind it, not over it
+  // 0.99.67: the red journal is drawn before the hands, so a thumb holds the left page and the pen hand grips the quill.
+  // Drawn after them, the book hid both hands and the quill floated over the page on its own.
+  if(up&&G.journal&&G.morko.pose==='journal')drawJournal(q);
   if(up&&ht.front){ctx.save();ctx.globalAlpha*=fa;morkoArms(q,ht);ctx.restore();}
   if(up)drawStamp();
-  if(up&&G.journal&&G.morko.pose==='journal')drawJournal(q);
   if(up&&G.dream)drawMelt(q);   // Snow indoors.: a filed flake melting
 }
 
@@ -7577,7 +7585,7 @@ function showAbout(){
    // a situation in the content note rather than abstract nouns. “Conversations don’t wait either” went: only one thing is timed.
    '<p>'+tr('It’s a comedy about rejection sensitivity: wanting company, and being scared to ask. Meant kindly. Not advice. Some moments may land close: being left out, an old embarrassment at 3 a.m., a message left on “Seen.”, a bad night at home.')+'</p>'+
    '<p>'+tr('About an hour. It saves as you go. Only one thing is timed, and it’s unfair on purpose.')+'</p>'+
-   '<p class="small">'+tr('Alpha{v}, still changing. Made by Joonas Huhta (MoshBitSurfers).').replace('{v}',gameVersion())+'</p>'+
+   '<p class="small">'+tr('Alpha{v}, still changing. Made by Joonas Huhta.').replace('{v}',gameVersion())+'</p>'+
    '<button class="go alt" type="button" data-go="menu">'+tr('Back')+'</button>','about');
 }
 function showWeekEnd(){

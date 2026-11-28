@@ -5,7 +5,9 @@
 // Comedy before and after, none during. Ekskyysmi never agrees with the self-hatred, and offers no fix.
 // “(Say nothing.)” is on the menu and still greyed out: this is before Thursday rewrites the job.
 function spill(){crumbs();sfx('hit');}
-function crumbs(){var g=G;g.torn=true;for(var k=0;k<16;k++)g.tics.push(tic('•',560+Math.random()*240,FEETY-4+Math.random()*12,{at:k*0.03,life:60,size:9+Math.random()*5,col:k%3?'#e2b04a':'#c9553f'}));}
+// 0.99.67: the crisps burst out of the bag in the human's hands and land on the floor, where they stay. Before this they were
+// drawn as tics (the captions that drift upwards), so for a minute every crisp floated slowly to the ceiling.
+function crumbs(){var g=G,from={x:g.human.x+16,y:FEETY-66};g.torn=true;for(var k=0;k<16;k++)g.tics.push(tic('',from.x-60+Math.random()*260,FEETY-2+Math.random()*12,{at:k*0.03,life:600,size:9+Math.random()*5,col:k%3?'#e2b04a':'#c9553f',from:from,spin:k*1.3}));}
 function labBag(){return labScene({set:'home',title:'The bag.',plan:'Eat something. Then the evening.',clock:18*3600+39*60,snacks:1}).concat([
   function(){var g=G;g.torn=false;g.human.grin=3;g.human.x=g.human.xT=560;g.morko.sT=1.2;},
   ['N','18:39. Home. The face from work is still on.'],
