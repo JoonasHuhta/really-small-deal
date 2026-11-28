@@ -77,12 +77,15 @@ function bubble(x,y,text,o){
 }
 // A bubble that grows as it is typed, until it is the biggest thing in the room. Its author did not expect that.
 var BIGW=600,BIGX=22,BIGTOP=12;   // left of the HUD rows, over the window
+// 0.99.70: below the day stamp when it shows. At 12 the stamp (and on a computer the menu button) covered the start of the first line,
+// so the 3 a.m. list began mid-sentence in every language.
+function bigTop(){var b=dayStampBottom();return b?b+8:BIGTOP;}
 function bigBox(text,reveal){ctx.font='700 24px system-ui,sans-serif';var lines=wrap(text.slice(0,Math.max(1,reveal)),BIGW-44);return {lines:lines,h:lines.length*31+24};}
 function bigBubble(text,reveal){
-  var b=bigBox(text,reveal),bx=BIGX,i;
+  var b=bigBox(text,reveal),bx=BIGX,top=bigTop(),i;
   ctx.textAlign='left';ctx.textBaseline='middle';
-  ctx.fillStyle='#14111d';ctx.strokeStyle='#f6f1e4';ctx.lineWidth=2.5;rr(bx,BIGTOP,BIGW,b.h,12);ctx.fill();ctx.stroke();
-  ctx.fillStyle='#f6f1e4';for(i=0;i<b.lines.length;i++)ctx.fillText(b.lines[i],bx+22,BIGTOP+12+16+i*31);
+  ctx.fillStyle='#14111d';ctx.strokeStyle='#f6f1e4';ctx.lineWidth=2.5;rr(bx,top,BIGW,b.h,12);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#f6f1e4';for(i=0;i<b.lines.length;i++)ctx.fillText(b.lines[i],bx+22,top+12+16+i*31);
 }
 function bubbleFont(o){
   var width=cv.clientWidth,fs=17*bubbleK(o);
