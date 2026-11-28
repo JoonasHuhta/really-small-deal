@@ -129,7 +129,7 @@ function render(){
     html='<button class="opt cont swat" type="button" data-i="go">'+tr('Swat!')+' <span>'+tr('(or tap the scene)')+'</span></button>';
     if(g.fight.paced){
       var reply=currentReply(),ready=reply&&(reply.state==='fly'||reply.state==='open');
-      speaker='P';text=reply?(g.fight.msgs.indexOf(reply)+1)+' / '+g.fight.msgs.length+' — '+(reply.seen?reply.full:'“'+reply.far+'”'):'';
+      speaker='P';text=reply?(g.fight.msgs.indexOf(reply)+1)+' / '+g.fight.msgs.length+' — '+(reply.seen?tr(reply.full):loc().q[0]+tr(reply.far)+loc().q[1]):'';var textDone=true;   // 0.99.76: built from translated pieces (the joined English had no entry)
       html='<button class="opt cont" type="button" data-i="read"'+(ready?'':' disabled')+'>'+tr(ready?(reply.state==='fly'?'Let it come closer →':'Let it through →'):'A moment…')+'</button>'+
         '<button class="opt" type="button" data-i="go"'+(ready?'':' disabled')+'>'+tr('Swat this reply away')+'</button>';
     }
@@ -143,7 +143,7 @@ function render(){
   }
   if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">'+tr('Begin '+g.chap.day.toLowerCase()+' →')+'</button>';
   if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">'+tr('The week, itemised →')+'</button>';}   // 0.97: says where it goes (the epilogue)
-  text=tr(text);   // 0.89: prompts, hold texts, captions
+  if(!textDone)text=tr(text);   // 0.89: prompts, hold texts, captions (a line already built from translated pieces is not looked up again)
   var icon=speaker==='H'?'human':speaker==='S'?'':speaker==='N'?'narrator':'other';
   // Narration is unlabelled and in italics, as in most narrative games: a voice, not a character. Screen readers still hear “Narrator”.
   var label=speaker==='N'?'<b class="sr">'+tr(NAMES.N)+'</b>':'<b>'+tr(NAMES[speaker])+'</b>';
@@ -320,7 +320,7 @@ var KEPT={hi:['MONDAY','She said hi first.'],compliments:['TUESDAY','Three compl
   eero:['WEDNESDAY','Eero hates presenting. Kept. Not posted.'],library:['PAGE 212','Someone else loves lighthouses too.'],
   asked:['FRIDAY','She was going to ask. That Monday.'],askedYes:['FRIDAY','She was glad she asked.'],drawing:['YEAR 2','The drawing. Before anyone laughed.']};
 function openDrawer(){var g=G,ids=(g.kept||[]).filter(function(k){return KEPT[k];}).concat(['drawing']).slice(0,6);g.cards=[];
-  for(var i=0;i<ids.length;i++){var c=KEPT[ids[i]];g.cards.push({kind:'good',year:c[0],text:c[1],t:-0.4-i*0.75,life:null,x:i%2?795:165,y:115+Math.floor(i/2)*125,rot:(i%2?1:-1)*0.025});}   // two side columns: the middle stays free for the two of them
+  for(var i=0;i<ids.length;i++){var c=KEPT[ids[i]];g.cards.push({kind:'good',year:tr(c[0]),text:tr(c[1]),t:-0.4-i*0.75,life:null,x:i%2?795:165,y:115+Math.floor(i/2)*125,rot:(i%2?1:-1)*0.025});}   // two side columns: the middle stays free for the two of them
   g.drawer=true;sfx('card');}
 function closeArchive(){var g=G;g.drawer=false;for(var i=0;i<g.cards.length;i++)if(g.cards[i].life==null)g.cards[i].life=Math.max(0,g.cards[i].t)+0.35;}
 function drawCards(){

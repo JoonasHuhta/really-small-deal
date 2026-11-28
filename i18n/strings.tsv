@@ -179,6 +179,7 @@ Dialogue	ui		chapter 1
 Restart	ui		chapter 1	
 The conversation so far	ui		chapter 1	
 Back to the moment	ui		chapter 1	
+Unlock all (testing)	ui		chapter 1	
 Pause	ui		chapter 1	
 A small social adventure	ui		chapter 1	
 THE INSIDE VERSION	ui		chapter 1	
@@ -1434,6 +1435,13 @@ Tap the scene to swat a reply away. Or let it come closer and see what it says.	
 All at once. I have a headband.	choice		comments	
 One at a time. Form an orderly queue.	choice		comments	
 Replies arrive automatically. Tap to swat; wait to read.	line	N	comments	
+ok.	ui		comments	
+hmm	ui		comments	
+interesting	ui		comments	
+the colours	ui		comments	
+who made this	ui		comments	
+lol	ui		comments	
+k	ui		comments	
 I… didn’t swat anything.	line	S	comments	
 You held still.	line	H	comments	
 I was paralysed with professionalism.	line	S	comments	
@@ -1465,14 +1473,7 @@ Shared a drawing. Left it up.	canvas		comments
 There’s a drawer with no label.	line	H	comments	
 Nothing. Admin.	line	S	comments	
 You just got smaller.	line	H	comments	
-She said hi first.	canvas		comments	
-Three compliments. Not	canvas		comments	
-misplaced. Filed here.	canvas		comments	
-Eero hates presenting. Kept.	canvas		comments	
-Not posted.	canvas		comments	
-Someone else loves lighthouses	canvas		comments	
-She was going to ask. That	canvas		comments	
-The drawing. Before anyone	canvas		comments	
+She said hi first.	ui		comments	
 You kept these?	line	H	comments	
 I keep everything. It’s the job.	line	S	comments	
 I just never opened this one in front of you.	line	S	comments	
@@ -1594,7 +1595,6 @@ signature (the shadow)	canvas		epilogue
 Page four: “…in conclusion, sorry.”	line	P	epilogue	
 Sent: three lines. No apology.	line	P	epilogue	
 HEART RATE: NORMAL	ui		epilogue	
-HA	ui		epilogue	
 Still open: one meeting. Tuesday, by the radiator.	canvas		epilogue	
 Ekskyysmi and Sanna’s shadow.	canvas		epilogue	
 THE NEXT TUESDAY	card		radiator	
@@ -1712,9 +1712,15 @@ Swat!	ui		week end
 (or tap the scene)	ui		week end	
 Incoming! I’ve got this. Probably.	ui		week end	
 Tap to swat the nearest reply. Waiting lets it come close enough to read.	ui		week end	
+reached your human	ui		week end	
 What was actually sent	ui		week end	
 Reached your human	ui		week end	
+Three compliments. Not misplaced. Filed here.	ui		week end	
+Eero hates presenting. Kept. Not posted.	ui		week end	
 PAGE 212	ui		week end	has a number
+Someone else loves lighthouses too.	ui		week end	
+She was going to ask. That Monday.	ui		week end	
+The drawing. Before anyone laughed.	ui		week end	
 FOR NOW	ui		week end	
 The week, itemised →	ui		week end	
 Stay a little, if you like.	ui		week end	
@@ -1883,14 +1889,8 @@ Already sent.	line	H	comments
 You’ve made a queue for notifications.	line	H	comments	
 Single file. Sharp ends away from the human.	line	S	comments	
 You set the pace. Bring each reply closer to read, or swat it away.	line	N	comments	
-Swatting	canvas		comments	
-HYA!	canvas		comments	
-Begone,	canvas		comments	
-feedback!	canvas		comments	
-Deflected!	canvas		comments	
-shall	canvas		comments	
-pass!	canvas		comments	
-human!	canvas		comments	
+HYA!	ui		comments	
+Deflected!	ui		comments	
 8 daggers deflected. Flawless.	line	S	comments	has a number
 What did they say?	line	H	comments	
 No need to know. They were daggers.	line	S	comments	
@@ -1912,14 +1912,13 @@ It is nothing.	line	H	radiator
 It is a WHOLE WORD.	line	S	radiator	
 Let it come closer →	ui		week end	
 Swat this reply away	ui		week end	
-1 / 8 — “ok.”	ui		week end	has a number
 No timer. Use the buttons to read or swat. Space / Enter or tapping the scene swats.	ui		week end	
-2 / 8 — “hmm”	ui		week end	has a number
-4 / 8 — “interesting”	ui		week end	has a number
-5 / 8 — “the colours”	ui		week end	has a number
-6 / 8 — “who made this”	ui		week end	has a number
-7 / 8 — “lol”	ui		week end	has a number
-8 / 8 — “k”	ui		week end	has a number
+Nothing there. Swatting anyway.	ui		week end	
+Not today!	ui		week end	
+Begone, feedback!	ui		week end	
+You shall not pass!	ui		week end	
+For the human!	ui		week end	
+swatted before reading	ui		week end	
 Swatted before reading	ui		week end	
 The “no” is still in its box. It keeps.	ui		week end	
 Us. Closed session. No catering.	line	S	chapter 1	
@@ -2099,6 +2098,7 @@ I can hear the printer. Has it always been this loud?	line	S	chapter 5
 …No disclaimer?	line	H	comments	
 I’m saying nothing. At a very high volume.	line	S	comments	
 …I’m still getting the headband.	line	S	comments	
+HA	ui		epilogue	
 CORRECT.	ui		chapter 1	
 Hi!	line	H	chapter 1	
 Oh good, you’re in. We’re doing lunch at twelve. Coming?	line	A	chapter 1	
@@ -2125,7 +2125,7 @@ You’ve said yes for me 4 times this week. I meant maybe one.	line	H	chapter 4	
 Full size. Still here.	line	S	chapter 5	
 I’m glad I asked you that Monday.	line	A	chapter 5	
 I was against it. For three seconds.	line	S	chapter 5	
-She was glad she asked.	canvas		comments	
+She was glad she asked.	ui		comments	
 the biggest: “quick chat?” (−2)	ui		epilogue	has a number
 Hey, I was going to— …never mind.	line	A	chapter 1	
 Eero, let’s just go.	line	A	chapter 1	

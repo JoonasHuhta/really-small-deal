@@ -281,11 +281,11 @@ function drawFight(){
     if(m.state==='hit')ctx.globalAlpha=clamp(1.7-m.t,0,1);
     var unfold=m.state==='open'?clamp(m.t/0.25,0,1):1;
     ctx.translate(m.x,m.y);ctx.scale(unfold,1);ctx.translate(-m.x,-m.y);
-    bubble(m.x,m.y+30,m.full,{noTail:true,maxW:210});
+    bubble(m.x,m.y+30,tr(m.full),{noTail:true,maxW:210});   // 0.99.76: the opened reply in the player's language
     if(m.state==='hit'&&m.kind==='good')heart(G.human.x+(m.t*14),FEETY-205-m.t*40,10);
     ctx.restore();
   });
-  if(F.shout){var q=geom();bubble(q.bx-40,q.hdY-q.hdR-10,F.shout.text,{dark:true,noTail:true});}
+  if(F.shout){var q=geom();bubble(q.bx-40,q.hdY-q.hdR-10,tr(F.shout.text),{dark:true,noTail:true});}
 }
 function drawBoss(){
   var b=G.boss,x=24+HUDL,y=22,w=320;
@@ -340,7 +340,7 @@ function labComments(){return labScene({set:'home',title:'The group chat',plan:'
     else o.push(['S',r.deflected+' daggers deflected. '+(r.delivered+(r.noteDelivered?1:0))+' got through. Somehow.']);
     return o;
   },
-  function(){G.fightLog.forEach(function(m){history.push({who:'P',text:m.full+' — '+(m.state==='swatted'?(m.wasOpen?'read, then swatted':'swatted before reading'):'reached your human')});});}
+  function(){G.fightLog.forEach(function(m){history.push({who:'P',text:tr(m.full)+' — '+tr(m.state==='swatted'?(m.wasOpen?'read, then swatted':'swatted before reading'):'reached your human')});});}   // 0.99.76: Dialogue shows the log as written, so it is written in the player's language
  ],outside({title:'WHAT THE OTHERS WROTE',dur:'duration: one evening, eleven people',cap:'Seven nice things. One opinion about colours.',anim:'chatlog'}),[
   function(){
     var r=G.fightRes,o=[];

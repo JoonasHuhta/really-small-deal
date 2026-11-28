@@ -279,7 +279,7 @@ function pseudoUI(){var el=document.getElementById('lang'),o=el&&el.querySelecto
   try{document.documentElement.lang=LANG;}catch(e){}if(LANG!=='en')setTimeout(chromeText,0);})();
 // The menu's own words follow the language too (the toggles set theirs through tr).
 function chromeText(){
-  var ids={motion:'Less motion',below:'Text below',journal:'Dialogue',restart:'Restart','log-title':'The conversation so far','close-log':'Back to the moment'},id,e;
+  var ids={motion:'Less motion',below:'Text below',journal:'Dialogue',restart:'Restart','log-title':'The conversation so far','close-log':'Back to the moment',testing:'Unlock all (testing)'},id,e;   // 0.99.76: the testing switch too
   for(id in ids){e=document.getElementById(id);if(e)e.textContent=tr(ids[id]);}
   e=document.querySelector('#menu .menu-label');if(e)e.textContent=tr('Menu');e=document.getElementById('menu');if(e&&e.setAttribute)e.setAttribute('aria-label',tr('Menu and settings'));
   e=document.querySelector('.lang-row span');if(e)e.textContent=tr('Language');
