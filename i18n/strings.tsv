@@ -1594,7 +1594,6 @@ signature (the shadow)	canvas		epilogue
 Page four: “…in conclusion, sorry.”	line	P	epilogue	
 Sent: three lines. No apology.	line	P	epilogue	
 HEART RATE: NORMAL	ui		epilogue	
-HA	ui		epilogue	
 Still open: one meeting. Tuesday, by the radiator.	canvas		epilogue	
 Ekskyysmi and Sanna’s shadow.	canvas		epilogue	
 THE NEXT TUESDAY	card		radiator	
@@ -1907,6 +1906,7 @@ Everything looks like a dagger from a distance.	line	H	comments
 That’s why I keep my distance.	line	S	comments	
 next time, then.	ui		epilogue	
 TIMES WE STAYED	ui		epilogue	
+HA	ui		epilogue	
 “Just say hi.” As if it’s nothing.	line	S	radiator	
 It is nothing.	line	H	radiator	
 It is a WHOLE WORD.	line	S	radiator	

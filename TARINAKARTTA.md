@@ -1,5 +1,7 @@
 # Tarinakartta – Really Small Deal
 
+0.99.74 – **Suomennos, osa 6: toisen osan loppu ja Hetket-valikko.** Lunta sisällä., Hiljaista., Iltaisin., Ilmoitus. ja Yövuoro. ovat suomeksi lukemineen, pitojen ohjeineen, arkistokortteineen ja varjojen nimineen (EERON VARJO). Luvut-valikko ja Hetket-valikon nimet ja kuvaukset on suomennettu. Suomenkielinen viikko ja kaikki hetket on tarkistettu toisen osan loppuun asti. Jäljellä: perjantai, kommentit, epilogi, viikon loppu ja kokeiluhetket.
+
 0.99.73 – **Suomennos, osa 5: toisen osan alku.** Ei mitään., Sujut. (kirjasto), Salainen joulupukki. ja Lomake. ovat suomeksi lukemineen, kylttien (HILJAA, KIITOS, PALAUTUS), puhujien ja pidon ohjeiden kanssa. Kirjaston *fine*-vitsi on suomeksi *sujut* (KAANNOS.md). Korjattu: lomakkeen kysymys rivitettiin englanniksi ja vasta palat haettiin sanakirjasta, joten suomessa kysymys ja vastausvaihtoehdot jäivät englanniksi; nyt kysymys käännetään ennen rivitystä. Suomenkielinen viikko ja kaikki hetket on tarkistettu Lomake.-hetkeen asti.
 
 0.99.72 – **Suomennos, osa 4: Ei nyt. ja Yksi juoma.** Riitan ”ei nyt”, pysymisosuus, jongleeraava varjo ja pudotettu kortti vuodelta 2011; baarin näkymättömyys, inkiväärilimsa, varjon sateenvarjo, ”Kiitos, samoin.” ruokalistalle ja seuraavan aamun piirakkakuvio. Mukana kyltit (TÄNÄÄN, Keittoa., AUKI), puhujien nimet (BAARIMIKKO, TUNTEMATON, RIITAN VARJO) ja kortin pudotuksen ohjeet. Suomenkielinen viikko ja kaikki hetket on tarkistettu: maanantaista torstaihin ja sen jälkeiset Ei nyt. ja baari eivät näytä englantia.
