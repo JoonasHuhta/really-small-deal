@@ -17,7 +17,7 @@ function resize(){var dpr=Math.min(window.devicePixelRatio||1,2);var w=cv.client
   SCENE_BOTTOM=COMPACT&&G&&G.started&&!G.ended?clamp((pr.top-cr.top)*W/w,120,H):H;
 }
 var COMPACT=false,HUDL=0,SCENE_BOTTOM=540; // visible space above the reading panel, in canvas units
-window.addEventListener('resize',resize);
+window.addEventListener('resize',function(){if(G)render();else resize();});
 var RM=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 // Two settings the player can change at any time. Slow reality only ever makes the window longer:
 // the joke is that the window is impossible, and a player who needs more time still gets the joke.

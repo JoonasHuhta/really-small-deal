@@ -212,10 +212,13 @@ var HUSHNOPE=['That isn’t a setting.','Silence is how they get you.','I don’
 function hush(then){return then?{t:'(Say nothing.)',hush:1,m:'hush',then:[['S','…',{quiet:1}]].concat(then)}:{t:'(Say nothing.)',hush:1,off:true};}
 var textBelow=false;try{textBelow=window.localStorage.getItem('ekskyysmi.below')==='on';}catch(e){}
 function lineInBubble(l){var g=G;
-  if(!WIDE||(cv.clientWidth||0)<740)return false;                 // bubble text under ~13 px: the panel stays
+  var width=cv.clientWidth||0;
+  var compact=document.documentElement.classList.contains('immersive');
+  if(textBelow)return false;
   if(textStep>1)return false;   // the player asked for large text: the panel reads better than a bubble
+  if(l.who==='N')return width>=740&&!!g.band&&!compact;   // the narrator's band stays on wide, windowed screens
+  if(width<(compact?480:520))return false;   // a small landscape scene has room for a readable bubble
   if(l.big&&l.who==='S')return true;
-  if(l.who==='N')return !!g.band&&!COMPACT;   // the narrator is printed in the scene's bottom band
   if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)return false;if(l.who==='S'&&g.morko.asleep)return false;
   if(l.who==='T')return !!g.bar;
   if(l.who==='X')return !!g.bar||!!(g.bus&&(g.set==='busstop'||g.set==='bus'));   // the bar stranger, or the colleague at the bus stop

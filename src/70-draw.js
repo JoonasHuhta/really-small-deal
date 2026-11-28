@@ -30,8 +30,7 @@ function stillText(lines,x,y,font,col,lh,maxW,raw,mid){   // centred on x; y is 
   function drawLines(){ctx.save();ctx.font=font;ctx.fillStyle=col;ctx.textAlign='center';ctx.textBaseline=mid?'middle':'alphabetic';
     lines.forEach(function(t,k){if(maxW)ctx.fillText(t,x,y+k*lh,maxW);else ctx.fillText(t,x,y+k*lh);});ctx.restore();}
 }
-// 0.99.57: said once. When the panel below carries the line (a canvas under 740 px, where bubble text would be under
-// ~13 px, or large text), drawLines() sets MARK and the scene shows only who is talking: a small bubble with a voice.
+// When the panel carries the line, drawLines() leaves a speaker marker in the scene.
 var MARK=false;
 function bubbleMark(x,y,text,o){
   var w=48,h=26,cx=o.tailX!=null?o.tailX:x,pad=18/(VIEW.z||1),bx=clamp(cx-w/2,Math.max(8,VIEW.l+pad),Math.min(W-8,VIEW.r-pad)-w),
@@ -48,13 +47,23 @@ function bubbleMark(x,y,text,o){
 function bubble(x,y,text,o){
   o=o||{};
   if(MARK)return bubbleMark(x,y,text,o);
-  var k=bubbleK(o),fs=17*k,lh=22*k,base='600 '+fs+'px system-ui,sans-serif',em='800 '+(fs+1.5*k)+'px system-ui,sans-serif',i,j;
+  var k=bubbleK(o),fs=bubbleFont(o),lh=fs*22/17,base='600 '+fs+'px system-ui,sans-serif',em='800 '+(fs+1.5*k)+'px system-ui,sans-serif',i,j;
   ctx.font=base;ctx.textAlign='left';ctx.textBaseline='middle';
-  var lines=wrap(text,(o.maxW||250)*(k>1?1.22:1)),w=0,words=[],widths=[];
+  var lines=wrap(text,bubbleWidth(o)),w=0,words=[],widths=[];
   for(i=0;i<lines.length;i++){var ws=lines[i].split(' '),lw=0,wd=[];
     for(j=0;j<ws.length;j++){ctx.font=isLoud(ws[j])?em:base;var m=ctx.measureText(ws[j]+(j<ws.length-1?' ':'')).width;wd.push(m);lw+=m;}
     words.push(ws);widths.push(wd);w=Math.max(w,lw);}
   w+=26;var h=lines.length*lh+16,pad=18/(VIEW.z||1),bx=clamp(x-w/2,Math.max(8,VIEW.l+pad),Math.min(W-8,VIEW.r-pad)-w),topPad=((COMPACT?46:10)+(G.boss?50:0))/(VIEW.z||1),by=o.top!=null?o.top:Math.max(VIEW.t+topPad,y-h-12);
+  if(COMPACT&&cv.clientWidth<740){
+    var safeTop=VIEW.t+topPad,safeBottom=VIEW.t+SCENE_BOTTOM/VIEW.z;
+    by=clamp(by,safeTop,Math.max(safeTop,safeBottom-h-12));
+    // The capacity mug is drawn in screen coordinates, above the scene.
+    var mug=G.mug;
+    if(mug&&!G.out&&!G.epi&&mug.vis>=0.02&&by<(216/VIEW.z+VIEW.t)&&by+h>(136/VIEW.z+VIEW.t)){
+      var mugLeft=VIEW.l+(W-82)/VIEW.z;
+      bx=Math.max(VIEW.l+pad,Math.min(bx,mugLeft-w));
+    }
+  }
   var fill=o.dark?'#14111d':'#fffdf6',ink=o.dark?'#f6f1e4':'#2b2733',hot=o.dark?'#ebbd79':'#2b2733';
   ctx.fillStyle=fill;ctx.strokeStyle=ink;ctx.lineWidth=k>1?3:2;rr(bx,by,w,h,10);ctx.fill();ctx.stroke();
   if(!o.noTail){var tx=clamp(o.tailX!=null?o.tailX:x,bx+16,bx+w-16);
@@ -75,7 +84,19 @@ function bigBubble(text,reveal){
   ctx.fillStyle='#14111d';ctx.strokeStyle='#f6f1e4';ctx.lineWidth=2.5;rr(bx,BIGTOP,BIGW,b.h,12);ctx.fill();ctx.stroke();
   ctx.fillStyle='#f6f1e4';for(i=0;i<b.lines.length;i++)ctx.fillText(b.lines[i],bx+22,BIGTOP+12+16+i*31);
 }
-function bubbleH(text,maxW,o){var k=bubbleK(o);ctx.font='600 '+(17*k)+'px system-ui,sans-serif';return wrap(text,maxW*(k>1?1.22:1)).length*22*k+16;}
+function bubbleFont(o){
+  var width=cv.clientWidth,fs=17*bubbleK(o);
+  return COMPACT&&width>=480&&width<740?Math.max(fs,(o.quiet?11:13)*W/width/VIEW.z):fs;
+}
+function bubbleWidth(o){
+  var maxW=(o.maxW||250)*(o.loud?1.22:1);
+  return COMPACT&&cv.clientWidth>=480&&cv.clientWidth<740?Math.max(maxW,400):maxW;
+}
+function bubbleH(text,maxW,o){
+  var fs=bubbleFont(o);
+  ctx.font='600 '+fs+'px system-ui,sans-serif';
+  return wrap(text,bubbleWidth({maxW:maxW,loud:o.loud})).length*fs*22/17+16;
+}
 function band(text,y){
   ctx.font='500 18px system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
   var lines=wrap(text,820),h=lines.length*24+16;
@@ -497,7 +518,7 @@ function drawLines(){
   for(var pass=0;pass<2;pass++)for(i=0;i<g.lines.length;i++){
     l=g.lines[i];var isCur=l.who===cur;if((pass===1)!==isCur||!isCur)continue;
     if(l.big&&l.who==='S'){bigBubble(l.text,RM?1e9:revealCount(l.text,g.curT||0,l));continue;}   // drawn on every screen: it is a prop, not a caption
-    // on a narrow screen the panel below the scene carries the text, and the scene keeps the marker (0.99.57)
+    // Match the reading panel's choice of where to show the current line.
     if((l.who==='S'&&!g.night||l.who==='H')&&g.human.gone)continue;   // at night the human is in bed, but the shadow is very much awake
     var n=l.text.length,mw=n>90?330:n>50?290:0,rv=isCur?revealCount(l.text,g.curT||0,l):1e9;
     if(l.who==='S'&&g.morko.asleep)continue;

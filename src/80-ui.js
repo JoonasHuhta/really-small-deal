@@ -199,7 +199,7 @@ function syncImmersive(){
   var b=document.getElementById('full'),titleFull=ov.querySelector('.title-full');
   if(b){b.textContent=label;b.setAttribute('aria-pressed',String(fullOn()));}
   if(titleFull)titleFull.textContent=label;
-  resize();
+  if(G)render();else resize();
 }
 function toggleFull(){
   try{
