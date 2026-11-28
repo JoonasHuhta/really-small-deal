@@ -428,7 +428,7 @@
 "A small moment.<br>A very long shadow.":"Pieni hetki.<br>Hyvin pitkä varjo.","Continue":"Jatka","New game":"Uusi peli","Chapters":"Luvut","Moments":"Hetket","Settings":"Asetukset","About":"Tietoa",
 "Quick chat?":"Pikainen juttu?","Resume":"Jatka","Pause":"Tauko","Text: small":"Teksti: pieni","Text: normal":"Teksti: normaali","Text: large":"Teksti: suuri",
 "Slow reality":"Hidas todellisuus","Slow reality: on":"Hidas todellisuus: päällä",
-"Skip seen ›":"Ohita nähty ›","Auto: off":"Automaattinen: pois","Auto: reading pace":"Automaattinen: lukutahti","Lines move on by themselves. Choices and hands-on moments wait for you.":"Repliikit etenevät itsestään. Valinnat ja tekemiset odottavat sinua.","Every line waits for you.":"Jokainen repliikki odottaa sinua.",
+"Auto: off":"Automaattinen: pois","Auto: reading pace":"Automaattinen: lukutahti","Lines move on by themselves. Choices and hands-on moments wait for you.":"Repliikit etenevät itsestään. Valinnat ja tekemiset odottavat sinua.","Every line waits for you.":"Jokainen repliikki odottaa sinua.",
 "The window to respond correctly lasts about nine seconds.":"Oikean vastauksen ikkuna kestää noin yhdeksän sekuntia.","Give yourself about nine seconds to respond correctly.":"Anna itsellesi noin yhdeksän sekuntia vastata oikein.",
 "Full screen":"Koko näyttö","Leave full screen":"Poistu koko näytöstä","Sound on":"Ääni päällä","Sound off":"Ääni pois",
 "Less motion":"Vähemmän liikettä","Text below":"Teksti alle","Dialogue":"Dialogi","Restart":"Aloita alusta","The conversation so far":"Keskustelu tähän asti","Back to the moment":"Takaisin hetkeen",

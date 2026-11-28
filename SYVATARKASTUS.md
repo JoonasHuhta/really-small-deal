@@ -10,6 +10,7 @@ Joonaksen pyyntö: analysoi peli kunnolla, ja korjataan sitten ehdotusten mukaan
 - **T9:** kelaus ohittaa myös nähtyjen rivien väliset tauot (`{wait}`), muuten se pysähtyisi lähes jokaisen rivin jälkeen. Vertailu tehdään vain siihen, mitä oli nähty ennen tämän pelikerran alkua, joten ensimmäisellä kerralla nappia ei näy edes kahdesti sanotulle repliikille.
 - **T10:** uusien liitännäisten vuoksi `tools\build-apk.cmd` ajaa `npm ci`:n, jos `@capacitor/share` puuttuu, ja `android-patch.cjs` / `android-check.cjs` huolehtivat FileProviderista.
 - **Lisäksi 0.99.47:** löytyi bugi, joka ei ollut listalla. 0.99.35:n kommentilta puuttui rivinvaihto, ja päivityssilmukan rivin loppu ei ajanut: Ekskyysmi oli näkymätön pelin alussa heräämisensä jälkeen, eivätkä Sannan, Eeron ja Riitan varjot tulleet näkyviin. Korjattu ja testattu.
+- **T9 poistettu 0.99.54:ssä** Joonaksen pyynnöstä (28.11.: ”skip seen nappi on minusta myös täysin turha, se pois”).
 - **Avoinna:** T10:n puhelintesti (ANDROID.md).
 
 **Lyhyesti**

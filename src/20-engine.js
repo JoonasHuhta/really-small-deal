@@ -1,7 +1,6 @@
 /* ================= state ================= */
 function reset(day){
   if(G&&G.epi){G.epi=null;if(musicName==='epilogue')music(null);}try{document.body.classList.remove('epi-on');}catch(e){}   // leaving the epilogue early
-  seenNewRun();   // 0.99.51: what this playthrough showed counts as seen from the next one
   var r=day;
   if(!r){var opts=['A','B','C'].filter(function(x){return x!==lastDay;});r=opts[Math.floor(Math.random()*opts.length)];}
   lastDay=r;
@@ -58,30 +57,10 @@ function choose(i){
   var then=typeof o.then==='function'?o.then():(o.then||[]);
   Q=(o.hush||o.echo===false?[]:[[G.choiceWho||'S',o.t]]).concat(then,Q);run();   // echo:false: the option's own next line asks it (0.99.44)
 }
-/* 0.99.51 (review T9): Skip seen. A line is known by its speaker and its English text (hashed); the check uses what was seen
-   before this playthrough began, so the first time through nothing is ever skippable, and a line said twice in one run is not. */
-var SEEN_KEY='ekskyysmi.seen',SEEN_MAX=5000,SEEN_BASE=new Set(),SEEN_NOW=new Set(),SKIPPING=false;
-try{(window.localStorage.getItem(SEEN_KEY)||'').split(',').forEach(function(k){if(k)SEEN_BASE.add(k);});}catch(e){}
-function seenKey(who,en){var s=who+'|'+en,h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36);}
-function saveSeen(){var all=Array.from(SEEN_BASE);SEEN_NOW.forEach(function(k){if(!SEEN_BASE.has(k))all.push(k);});if(all.length>SEEN_MAX)all=all.slice(all.length-SEEN_MAX);
-  try{window.localStorage.setItem(SEEN_KEY,all.join(','));}catch(e){}}
-function seenNewRun(){if(!SEEN_NOW.size)return;SEEN_NOW.forEach(function(k){SEEN_BASE.add(k);});SEEN_NOW.clear();saveSeen();}
-function canSkipSeen(){var g=G;return WAIT==='click'&&!!g.cur&&!!g.curSeen&&!g.chap&&!g.epi&&!g.finalFrame&&!g.ended&&!paused;}
-// Fast-forwards while every line is one seen before; waits between them pass too. Stops at an unseen line, a held still, a
-// card, and anything the player does (choice, hold, outside view, slider, window, toss, lamp, swatting, the handled ones).
-function skipSeen(){
-  if(!canSkipSeen())return;SKIPPING=true;stopVoice();
-  try{for(var n=0;n<4000;n++){
-    if(WAIT==='time'&&!G.skippable&&!G.chap){TIMER=0;run();}
-    else if(WAIT==='click'&&canSkipSeen()){LOCK=0;advance();}
-    else break;
-    if(WAIT==='click'&&!canSkipSeen())break;}}
-  finally{SKIPPING=false;}
-  LOCK=0.3;render();if(G.cur&&WAIT==='click'){sfx(G.cur.who==='S'?'popS':'pop');}
-}
+// 0.99.54 (Joonas 28.11.: “skip seen nappi on minusta myös täysin turha, se pois”): Skip seen is gone; its stored list goes too
+try{window.localStorage.removeItem('ekskyysmi.seen');}catch(e){}
 function setLine(who,text,o){
   var g=G,en=text;text=tr(text);   // 0.89: Finnish pilot
-  var sk=seenKey(who,en);g.curSeen=SEEN_BASE.has(sk);if(!SEEN_NOW.has(sk)){SEEN_NOW.add(sk);if(SEEN_NOW.size%25===0)saveSeen();}
   if(who==='N'){g.band=text;}
   else{g.band=null;g.lines=g.lines.filter(function(l){return l.who!==who;});g.lines.push({who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet)});if(g.lines.length>2)g.lines.shift();}
   var prev=g.cur&&g.cur.who,pair=(who==='S'&&prev==='H')||(who==='H'&&prev==='S');
@@ -154,7 +133,6 @@ function render(){
   }else{
     if(WAIT==='time'&&!cur)text=g.skippable?'':'…';   // the intro speaks through its own caption (top left); the panel only offers Skip
     html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">'+tr('Skip intro →')+'</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+tr(WAIT==='time'?'A moment…':'Continue →')+'</button>';
-    if(canSkipSeen())html='<div class="cont-row"><button class="opt cont ghost" type="button" data-i="seen">'+tr('Skip seen ›')+'</button>'+html+'</div>';   // 0.99.51
   }
   if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">'+tr('Begin '+g.chap.day.toLowerCase()+' →')+'</button>';
   if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">'+tr('The week, itemised →')+'</button>';}   // 0.97: says where it goes (the epilogue)
@@ -209,7 +187,6 @@ elOpts.addEventListener('click',function(e){
   if(i.charAt(0)==='q'){qteInput(+i.slice(1));return;}
   if(i==='hold'){holdClick();return;}
   if(i==='skip'){skipIntro();return;}
-  if(i==='seen'){skipSeen();return;}
   if(i==='read'){readReply();return;}
   if(i==='go')userAdvance();else choose(+i);
 });

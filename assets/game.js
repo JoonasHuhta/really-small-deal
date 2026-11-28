@@ -118,7 +118,6 @@ function syncMusic(){
 var VOICE={S:['triangle',185,0.075],H:['sine',330,0.06],A:['sine',494,0.05],B:['triangle',262,0.06],R:['sine',392,0.05],T:['triangle',147,0.06],L:['sine',523,0.05],X:['sine',440,0.05],Z:['triangle',233,0.045]};
 function stopVoice(){for(var i=0;i<voiceNodes.length;i++){try{voiceNodes[i].stop();}catch(e){}}voiceNodes=[];}
 function speak(who,text,o,en){
-  if(SKIPPING)return;   // 0.99.51: no voices while skipping seen lines
   stopVoice();var a=audio();if(!a)return;var t0=a.currentTime+0.02;
   if(who==='P'){
     var pt=en||text;
@@ -147,7 +146,7 @@ function speak(who,text,o,en){
 function noise(t0,dur,vol,type,freq,q){var a=AC;if(!a)return;try{var len=Math.max(1,Math.ceil(a.sampleRate*dur)),b=a.createBuffer(1,len,a.sampleRate),d=b.getChannelData(0);
   for(var i=0;i<len;i++){var e=1-i/len;d[i]=(Math.random()*2-1)*e*e;}
   var s=a.createBufferSource();s.buffer=b;var f=a.createBiquadFilter();f.type=type||'bandpass';f.frequency.value=freq||1000;f.Q.value=q||1;var g=a.createGain();g.gain.value=vol;s.connect(f);f.connect(g);g.connect(BUS);s.start(t0);}catch(e){}}
-function sfx(k){if(SKIPPING||G&&G.epi)return;   // the epilogue is the song alone: no effects, no ducking
+function sfx(k){if(G&&G.epi)return;   // the epilogue is the song alone: no effects, no ducking
 
   var a=audio();if(!a)return;if(SAMPLES[k]){if(BUF[k]){playBuf(k);return;}loadSound(k,SAMPLES[k]);}var t=a.currentTime+0.01;
   if(k==='hit'){duckMusic();tone(120,t,0.4,'sine',0.24,42);tone(900,t,0.06,'square',0.025,300);for(var hb=0;hb<3;hb++){tone(62,t+0.6+hb*0.75,0.13,'sine',0.14-hb*0.03);tone(54,t+0.78+hb*0.75,0.13,'sine',0.1-hb*0.02);}}
@@ -664,7 +663,7 @@ function trRow(r){if(!Array.isArray(r))return r;var m=/^(.*?)( ×\d+)?$/.exec(r[
 "A small moment.<br>A very long shadow.":"Pieni hetki.<br>Hyvin pitkä varjo.","Continue":"Jatka","New game":"Uusi peli","Chapters":"Luvut","Moments":"Hetket","Settings":"Asetukset","About":"Tietoa",
 "Quick chat?":"Pikainen juttu?","Resume":"Jatka","Pause":"Tauko","Text: small":"Teksti: pieni","Text: normal":"Teksti: normaali","Text: large":"Teksti: suuri",
 "Slow reality":"Hidas todellisuus","Slow reality: on":"Hidas todellisuus: päällä",
-"Skip seen ›":"Ohita nähty ›","Auto: off":"Automaattinen: pois","Auto: reading pace":"Automaattinen: lukutahti","Lines move on by themselves. Choices and hands-on moments wait for you.":"Repliikit etenevät itsestään. Valinnat ja tekemiset odottavat sinua.","Every line waits for you.":"Jokainen repliikki odottaa sinua.",
+"Auto: off":"Automaattinen: pois","Auto: reading pace":"Automaattinen: lukutahti","Lines move on by themselves. Choices and hands-on moments wait for you.":"Repliikit etenevät itsestään. Valinnat ja tekemiset odottavat sinua.","Every line waits for you.":"Jokainen repliikki odottaa sinua.",
 "The window to respond correctly lasts about nine seconds.":"Oikean vastauksen ikkuna kestää noin yhdeksän sekuntia.","Give yourself about nine seconds to respond correctly.":"Anna itsellesi noin yhdeksän sekuntia vastata oikein.",
 "Full screen":"Koko näyttö","Leave full screen":"Poistu koko näytöstä","Sound on":"Ääni päällä","Sound off":"Ääni pois",
 "Less motion":"Vähemmän liikettä","Text below":"Teksti alle","Dialogue":"Dialogi","Restart":"Aloita alusta","The conversation so far":"Keskustelu tähän asti","Back to the moment":"Takaisin hetkeen",
@@ -683,7 +682,6 @@ function trRow(r){if(!Array.isArray(r))return r;var m=/^(.*?)( ×\d+)?$/.exec(r[
 /* ================= state ================= */
 function reset(day){
   if(G&&G.epi){G.epi=null;if(musicName==='epilogue')music(null);}try{document.body.classList.remove('epi-on');}catch(e){}   // leaving the epilogue early
-  seenNewRun();   // 0.99.51: what this playthrough showed counts as seen from the next one
   var r=day;
   if(!r){var opts=['A','B','C'].filter(function(x){return x!==lastDay;});r=opts[Math.floor(Math.random()*opts.length)];}
   lastDay=r;
@@ -740,30 +738,10 @@ function choose(i){
   var then=typeof o.then==='function'?o.then():(o.then||[]);
   Q=(o.hush||o.echo===false?[]:[[G.choiceWho||'S',o.t]]).concat(then,Q);run();   // echo:false: the option's own next line asks it (0.99.44)
 }
-/* 0.99.51 (review T9): Skip seen. A line is known by its speaker and its English text (hashed); the check uses what was seen
-   before this playthrough began, so the first time through nothing is ever skippable, and a line said twice in one run is not. */
-var SEEN_KEY='ekskyysmi.seen',SEEN_MAX=5000,SEEN_BASE=new Set(),SEEN_NOW=new Set(),SKIPPING=false;
-try{(window.localStorage.getItem(SEEN_KEY)||'').split(',').forEach(function(k){if(k)SEEN_BASE.add(k);});}catch(e){}
-function seenKey(who,en){var s=who+'|'+en,h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36);}
-function saveSeen(){var all=Array.from(SEEN_BASE);SEEN_NOW.forEach(function(k){if(!SEEN_BASE.has(k))all.push(k);});if(all.length>SEEN_MAX)all=all.slice(all.length-SEEN_MAX);
-  try{window.localStorage.setItem(SEEN_KEY,all.join(','));}catch(e){}}
-function seenNewRun(){if(!SEEN_NOW.size)return;SEEN_NOW.forEach(function(k){SEEN_BASE.add(k);});SEEN_NOW.clear();saveSeen();}
-function canSkipSeen(){var g=G;return WAIT==='click'&&!!g.cur&&!!g.curSeen&&!g.chap&&!g.epi&&!g.finalFrame&&!g.ended&&!paused;}
-// Fast-forwards while every line is one seen before; waits between them pass too. Stops at an unseen line, a held still, a
-// card, and anything the player does (choice, hold, outside view, slider, window, toss, lamp, swatting, the handled ones).
-function skipSeen(){
-  if(!canSkipSeen())return;SKIPPING=true;stopVoice();
-  try{for(var n=0;n<4000;n++){
-    if(WAIT==='time'&&!G.skippable&&!G.chap){TIMER=0;run();}
-    else if(WAIT==='click'&&canSkipSeen()){LOCK=0;advance();}
-    else break;
-    if(WAIT==='click'&&!canSkipSeen())break;}}
-  finally{SKIPPING=false;}
-  LOCK=0.3;render();if(G.cur&&WAIT==='click'){sfx(G.cur.who==='S'?'popS':'pop');}
-}
+// 0.99.54 (Joonas 28.11.: “skip seen nappi on minusta myös täysin turha, se pois”): Skip seen is gone; its stored list goes too
+try{window.localStorage.removeItem('ekskyysmi.seen');}catch(e){}
 function setLine(who,text,o){
   var g=G,en=text;text=tr(text);   // 0.89: Finnish pilot
-  var sk=seenKey(who,en);g.curSeen=SEEN_BASE.has(sk);if(!SEEN_NOW.has(sk)){SEEN_NOW.add(sk);if(SEEN_NOW.size%25===0)saveSeen();}
   if(who==='N'){g.band=text;}
   else{g.band=null;g.lines=g.lines.filter(function(l){return l.who!==who;});g.lines.push({who:who,text:text,big:!!(o&&o.big),loud:!!(o&&o.loud),quiet:!!(o&&o.quiet)});if(g.lines.length>2)g.lines.shift();}
   var prev=g.cur&&g.cur.who,pair=(who==='S'&&prev==='H')||(who==='H'&&prev==='S');
@@ -836,7 +814,6 @@ function render(){
   }else{
     if(WAIT==='time'&&!cur)text=g.skippable?'':'…';   // the intro speaks through its own caption (top left); the panel only offers Skip
     html=WAIT==='time'&&g.skippable?'<button class="opt cont" type="button" data-i="skip">'+tr('Skip intro →')+'</button>':'<button class="opt cont" type="button" data-i="go"'+(WAIT==='click'?'':' disabled')+'>'+tr(WAIT==='time'?'A moment…':'Continue →')+'</button>';
-    if(canSkipSeen())html='<div class="cont-row"><button class="opt cont ghost" type="button" data-i="seen">'+tr('Skip seen ›')+'</button>'+html+'</div>';   // 0.99.51
   }
   if(g.chap&&g.chap.part)html='<button class="opt cont late" type="button" data-i="go">'+tr('Begin '+g.chap.day.toLowerCase()+' →')+'</button>';
   if(g.finalFrame){speaker='N';text='';html='<button class="opt cont" type="button" data-i="go">'+tr('The week, itemised →')+'</button>';}   // 0.97: says where it goes (the epilogue)
@@ -891,7 +868,6 @@ elOpts.addEventListener('click',function(e){
   if(i.charAt(0)==='q'){qteInput(+i.slice(1));return;}
   if(i==='hold'){holdClick();return;}
   if(i==='skip'){skipIntro();return;}
-  if(i==='seen'){skipSeen();return;}
   if(i==='read'){readReply();return;}
   if(i==='go')userAdvance();else choose(+i);
 });
@@ -7665,7 +7641,7 @@ if(fullBtn){if(fullSupported())fullBtn.addEventListener('click',toggleFull);else
 function appVisibility(){
   var hidden=!!document.hidden||nativePaused;if(hidden===appHidden)return;appHidden=hidden;
   if(hidden){
-    saveSeen();goneAway();holdUp();dragging=false;setMenu(false);
+    goneAway();holdUp();dragging=false;setMenu(false);
     if(G&&G.started&&!G.ended)paused=true;
     if(logDialog.open||ov.dataset.kind==='restart'&&ov.classList.contains('on'))modalWasPaused=true;
   }else cameBack();

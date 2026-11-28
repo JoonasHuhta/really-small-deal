@@ -270,9 +270,16 @@ html.immersive body.playing .opts.n5{grid-column:1/-1;grid-template-columns:repe
 html.immersive .ov[data-kind=menu] .card{max-width:min(520px,100%)}
 html.immersive .ov[data-kind=menu] .card p{max-width:none}
 
-/* 0.99.51: Skip seen sits left of Continue, quieter */
-.cont-row{grid-column:1/-1;display:flex;justify-content:flex-end;align-items:stretch;gap:8px;flex-wrap:wrap}.cont-row .opt.cont{justify-self:auto}
-.opt.cont.ghost{background:transparent;color:var(--sage);border-color:#59645e;min-width:0;font-weight:600}.opt.cont.ghost:hover:not(:disabled),.opt.cont.ghost:focus-visible{background:#ffffff0d;border-color:var(--sage);color:var(--ink)}
-.playing .cont-row .opt.cont:not(.ghost){flex:1 1 auto}html.immersive body.playing .opts:has(.cont-row){grid-column:auto;grid-template-columns:1fr}
 /* 0.99.53 (Joonas 27.11.): in the bottom bar the speaker's name follows the text size (it was a fixed 10 px), and the bar's content
    starts further in on wide screens (about 18 px on the smallest phone, 160 px on a 1500 px screen), so reading does not begin in the corner. */
+/* 0.99.54 (Joonas 28.11.: on a phone the bottom bar covered almost the whole human). Short screens (phones held sideways, also with
+   the browser's text zoom) get a lower bar: smaller type and tighter lines, a narrower Continue so the text has the width. */
+@media(max-height:440px){
+  html.immersive body.playing .play-panel{gap:4px 10px;padding-top:5px;padding-bottom:calc(5px + env(safe-area-inset-bottom))}
+  html.immersive body.playing .line p{font-size:calc(13px * var(--ts,1));line-height:1.3}
+  html.immersive body.playing .line p.loud{font-size:calc(15.5px * var(--ts,1))}html.immersive body.playing .line p.quiet{font-size:calc(10.5px * var(--ts,1))}
+  html.immersive body.playing .line b{font-size:calc(11px * var(--ts,1));margin-right:8px}
+  html.immersive body.playing .opt{font-size:calc(12px * var(--ts,1));line-height:1.25;padding:5px 9px;min-height:44px}
+  html.immersive body.playing .opts:has(.opt:nth-child(4)) .opt{font-size:calc(11.5px * var(--ts,1));padding:5px 7px}
+  html.immersive body.playing .opt.cont{min-width:0;padding:6px 14px;font-size:calc(12px * var(--ts,1))}
+}
