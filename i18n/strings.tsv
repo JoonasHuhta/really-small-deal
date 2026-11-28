@@ -102,49 +102,55 @@ A strategic exit. We can come back.	choice		chapter 1
 For how long?	line	H	chapter 1	
 Until retirement.	line	S	chapter 1	
 Stood very still. Then a slightly too loud hi, to nobody in particular.	outside		chapter 1	
-Hey, I was going to— …never mind.	line	A	chapter 1	
-Eero, let’s just go.	line	A	chapter 1	
-She was about to say something.	line	H	chapter 1	
-And now she can’t. You’re welcome.	line	S	chapter 1	
-…You’re welcome?	line	S	chapter 1	
+You okay? You look like you’ve seen something big.	line	A	chapter 1	
+Nothing big.	line	H	chapter 1	
+I’m medium. At most.	line	S	chapter 1	
+Okay! We’re off to lunch. See you!	line	A	chapter 1	
+She said “see you”.	line	H	chapter 1	
+Not “come with us”. I noticed.	line	S	chapter 1	
+I was standing like a wardrobe.	line	H	chapter 1	
+A very convincing wardrobe. Nobody invites a wardrobe.	line	S	chapter 1	
 −1  they went without us	canvas		chapter 1	has a number
-KIV-304 …  3+0+4 = 7	canvas		chapter 1	has a number
+KIV-304 …  3+0+4 = 7	ui		chapter 1	has a number
 THE WALK HOME	ui		chapter 1	
 Nine minutes, usually.	ui		chapter 1	
 Right. Debrief. I’ve prepared slides.	line	S	chapter 1	
+Right.	line	H	chapter 1	
 Please don’t have slides.	line	H	chapter 1	
 Two. Slide one: the full stop.	line	S	chapter 1	
 Slide two: she said hi first. Irrelevant. Filed.	line	S	chapter 1	
 Mention what I actually saw.	choice		chapter 1	
 Review the “oh”. Again.	choice		chapter 1	
 We can walk while I’m still worried.	choice		chapter 1	
-She started a sentence. We never got the rest.	line	S	chapter 1	
-We could ask.	line	H	chapter 1	
-Without a reconstruction of the incident?	line	S	chapter 1	
-You: “Lunch tomorrow?”	line	P	chapter 1	
+For the record, she wasn’t being cold. I’ve rewatched it.	line	S	chapter 1	
+You said the “oh” was a verdict.	line	H	chapter 1	
+I said a lot of things. Quickly.	line	S	chapter 1	
 Wait. WAIT. Lamp gap.	ui		chapter 1	
-Sanna: “YES. I never know if you want company.”	line	P	chapter 1	
-…She thought WE didn’t want HER?	line	S	chapter 1	
+Sanna: “Missed you at lunch! The noodle place has a new spicy one. Tomorrow?”	line	P	chapter 1	
+She MISSED us?	line	S	chapter 1	
+She missed me.	line	H	chapter 1	
+Same thing. I’m attached.	line	S	chapter 1	
+You: “Tomorrow!”	line	P	chapter 1	
 Bring up the comfort zone thing.	choice		chapter 1	
 Exhibit A. I’ve had it restored.	line	S	chapter 1	
-● REPLAY 1/3 · restored by Ekskyysmi	canvas		chapter 1	has a number
 Note the comma.	line	S	chapter 1	
+● REPLAY 1/3 · restored by Ekskyysmi	canvas		chapter 1	has a number
 People don’t say commas.	line	H	chapter 1	
 ohhh. …hi.	line	A	chapter 1	
-Enhanced. Look at the eyebrows.	line	S	chapter 1	
 ● REPLAY 2/3 · enhanced	canvas		chapter 1	has a number
+Enhanced. Look at the eyebrows.	line	S	chapter 1	
 You drew those.	line	H	chapter 1	
 I RESTORED those.	line	S	chapter 1	
 OH.  …  hi.	line	A	chapter 1	
-Director’s cut. With the audience.	line	S	chapter 1	
 ● REPLAY 3/3 · director’s cut	canvas		chapter 1	has a number
+Director’s cut. With the audience.	line	S	chapter 1	
 There was no audience.	line	H	chapter 1	
 There’s always an audience. It just sits in here.	line	S	chapter 1	
 By now the whole building says “oh”. There’s a memo.	line	S	chapter 1	
 …I’ve scared myself with my own cut.	line	S	chapter 1	
 Can we watch the original?	line	H	chapter 1	
-−1  the replay	canvas		chapter 1	has a number
 The original is very boring.	line	S	chapter 1	
+the replay (on the tab)	canvas		chapter 1	
 THE ORIGINAL TAPE	outside		chapter 1	
 Sanna said hi. Nobody else was in the room. Literally nobody.	outside		chapter 1	
 …It’s shorter than I remember.	line	S	chapter 1	
@@ -187,12 +193,15 @@ Space / Enter to continue · P to pause · Dialogue to look back.	ui		chapter 1
 MONDAY	ui		chapter 1	
 HUMAN	ui		chapter 1	
 A moment…	ui		chapter 1	
+EKSKYYSMI	ui		chapter 1	
 You’re Ekskyysmi. Pick what I say.	ui		chapter 1	
 Choose a line · keys 1–4 · every choice keeps the story moving.	ui		chapter 1	has a number
+EERO	ui		chapter 1	
 comfort-zone advice	ui		chapter 1	
 What do we do with this?	ui		chapter 1	
 THE OUTSIDE VERSION	ui		chapter 1	
 Back inside →	ui		chapter 1	
+SANNA	ui		chapter 1	
 EYE CONTACT (NOT TOO MUCH)	ui		chapter 1	
 Arrow keys and Space, in this order. Or tap the buttons. Two seconds have been added for reading. Reality did not add them.	ui		chapter 1	
 WINDOW: {s} s · INCLUDES TWO SECONDS FOR READING · REALITY: ALREADY MOVING	ui		chapter 1	
@@ -213,8 +222,8 @@ they went without us	ui		chapter 1
 The walk home	ui		chapter 1	
 THE MOMENT HAS PASSED. MOSTLY.	ui		chapter 1	
 PHONE	ui		chapter 1	
-“YES.”	ui		chapter 1	
 the replay	ui		chapter 1	
+ (on the tab)	ui		chapter 1	
 home. toast.	ui		chapter 1	
 YEAR {n}	ui		chapter 1	template: YEAR 2 | YEAR 4
 Showed someone a drawing. Somebody laughed.	ui		chapter 1	
@@ -235,6 +244,7 @@ DAYS LIVED TODAY	ui		chapter 1
 DAILY RECEIPT	ui		chapter 1	
 A MONDAY	ui		chapter 1	
 Thank you for your vigilance.<br>No refunds. No returns.	ui		chapter 1	
+REALLY SMALL DEAL	ui		chapter 1	
 End of Monday	ui		chapter 1	
 Home. Both of you.	ui		chapter 1	
 The greeting lasted two seconds.<br>The shadow took the scenic route.	ui		chapter 1	
@@ -244,8 +254,8 @@ Copy text	ui		chapter 1
 A TUESDAY	card		chapter 2	
 Quick chat?	card		chapter 2	
 Tuesday. Nearly five. Lunch report: moved. Sanna, 11:40: “Dentist!! Sorry!! Friday?”	line	S	chapter 2	has a number
-You reviewed the exclamation marks for an hour.	line	H	chapter 2	
 Get through Tuesday.	ui		chapter 2	
+You reviewed the exclamation marks for an hour.	line	H	chapter 2	
 There are four. That’s either remorse or enthusiasm. I’ve filed it under both.	line	S	chapter 2	
 Riitta, at the coffee machine. Eleven things on her mind. All of them today.	line	N	chapter 2	
 Riitta: “Quick chat tomorrow at 9?”	line	P	chapter 2	has a number
@@ -307,6 +317,7 @@ The clock behind you. Nearly six. She missed lunch.	outside		enhance
 You enhanced a hungry eyebrow.	line	H	enhance	
 I’m filing it under “eyebrows, inconclusive”.	line	S	enhance	
 You have a file for eyebrows?	line	H	enhance	
+ha	ui		enhance	
 I have a WING for eyebrows.	line	S	enhance	
 LATE TUESDAY, 23:40	card		rewind	has a number
 Rewind.	card		rewind	
@@ -331,7 +342,6 @@ Let the human play the original.	choice		rewind
 ❚❚ JAMMED	canvas		rewind	
 oh, h—	canvas		rewind	
 She has horns.	line	H	rewind	
-ha	ui		rewind	
 Hold on.	line	S	rewind	
 Memory is a living document.	line	S	rewind	
 Play the original.	line	H	rewind	
@@ -346,8 +356,8 @@ Go to sleep.	line	H	rewind
 I’m a shadow. It’s dark. I’m EVERYWHERE.	line	S	rewind	
 A WEDNESDAY	card		chapter 3	
 Could you just…	card		chapter 3	
-Are you awake?	line	S	chapter 3	
 Get some sleep.	ui		chapter 3	
+Are you awake?	line	S	chapter 3	
 I am now. It’s three in the morning.	line	H	chapter 3	
 Out there, yes. In here it’s about Thursday. I did the afternoon twice.	line	S	chapter 3	
 So. I’ve prepared your nine o’clock. Three scenarios.	line	S	chapter 3	
@@ -373,8 +383,8 @@ And yet nobody has ever been rejected in their sleep. You’re welcome.	line	S	c
 The quick chat.	ui		chapter 3	
 This label has been scratching my neck since eight.	line	H	chapter 3	
 One crisis at a time. …Two crises.	line	S	chapter 3	
-Can you just… handle this one?	line	H	chapter 3	
 −1  the label	canvas		chapter 3	has a number
+Can you just… handle this one?	line	H	chapter 3	
 Full authority?	line	S	chapter 3	
 I have waited my whole life for that sentence.	line	S	chapter 3	
 Thanks for coming. I’ll be quick.	line	R	chapter 3	
@@ -420,8 +430,8 @@ I’d like it on the team.	line	S	chapter 3
 It’s the office stapler. It’s on everyone’s team.	line	H	chapter 3	
 …Anyway. Doom.	line	S	chapter 3	
 An hour of your own work. Headphones on. Nobody needed anything.	line	N	chapter 3	
-Do your own work for once.	ui		chapter 3	
 Then the headphones die. Someone is on speakerphone. Has been since nine.	line	N	chapter 3	
+Do your own work for once.	ui		chapter 3	
 He has said “can you hear me now” forty times. We can. We all can.	line	S	chapter 3	
 −1  speakerphone	canvas		chapter 3	has a number
 Hey! Quick favour. Could you take my slides for Friday? I’m swamped.	line	B	chapter 3	
@@ -431,9 +441,9 @@ Say yes.	choice		chapter 3
 Say yes. Enthusiastically.	choice		chapter 3	
 Say yes, and offer something extra.	choice		chapter 3	
 No.	choice		chapter 3	
-Sure.	line	H	chapter 3	
 THINGS AGREED TO	ui		chapter 3	
 saying yes (on the tab)	canvas		chapter 3	
+Sure.	line	H	chapter 3	
 Clean. Safe. Nobody is upset.	line	S	chapter 3	
 Legend.	line	B	chapter 3	
 Coat on. Nobody rejects a coat.	line	S	chapter 3	
@@ -646,18 +656,18 @@ Casual. Breezy. A person with no worries.	line	S	chapter 4
 I have nothing BUT worries. You put them in an exclamation mark.	line	H	chapter 4	
 18:40. Still nothing.	line	N	chapter 4	has a number
 She hates us. Eero hates us. Riitta wants a shorter you. I’ve run the numbers. It’s unanimous.	line	S	chapter 4	
-−1  an hour of nothing	canvas		chapter 4	has a number
 I’m going to eat something.	line	H	chapter 4	
+−1  an hour of nothing	canvas		chapter 4	has a number
 Good. Fuel. We’ll need it for the list.	line	S	chapter 4	
 Good.	line	H	chapter 4	
 EASY OPEN. All of it. Everywhere.	line	N	chapter 4	
 Floor crisps are still crisps, if we—	line	S	chapter 4	
 STOP! STOP IT! ALL OF IT!	line	H	chapter 4	
-I’m PROTECTING you.	line	S	chapter 4	
 (the party hat.)	ui		chapter 4	
 the bag. the last sip.	canvas		chapter 4	
+I’m PROTECTING you.	line	S	chapter 4	
 From WHAT? BOARD GAMES?	line	H	chapter 4	
-You’ve prepared 5 worst cases this week. None of them happened.	line	H	chapter 4	has a number
+You’ve prepared {n} worst cases this week. None of them happened.	line	H	chapter 4	template: You’ve prepared 5 worst cases this week. None of them happened. | You’ve prepared 4 worst cases this week. None of them happened.
 I’m at home with ten bags of snacks and one on the FLOOR.	line	H	chapter 4	
 You’re not protecting me. You’re just the loudest thing in the room.	line	H	chapter 4	
 …That one landed.	line	S	chapter 4	
@@ -697,8 +707,8 @@ Same hours?	line	H	chapter 4
 Same hours. Fewer exits.	line	S	chapter 4	
 The pieces. Glue. Gold, because it was the only glue in the drawer.	line	N	chapter 4	
 It’s got seams now.	line	S	chapter 4	
-glued. gold seams.	ui		chapter 4	
 It holds coffee.	line	H	chapter 4	
+glued. gold seams.	ui		chapter 4	
 Sanna: “Phone died!! 7. And there are ALWAYS worries, who are you kidding.”	line	P	chapter 4	has a number
 Her phone died.	line	S	chapter 4	
 For over an hour I grieved a battery.	line	S	chapter 4	
@@ -977,7 +987,6 @@ Socks.	line	R	santa
 “Socks.” With a FULL STOP.	line	S	santa	
 …Her shadow is juggling. Eleven things. None of them is her face.	line	S	santa	
 Oh. That one fell on its own.	line	W	santa	
-Oh.	line	H	santa	
 I thought you were only allowed to drop one. On purpose.	line	S	santa	
 I am. This was her feet.	line	W	santa	
 I’ve been cold since September.	line	R	santa	
@@ -997,9 +1006,9 @@ A WEEKDAY, 14:10	card		form	has a number
 The form.	card		form	
 Fill it in.	ui		form	
 A waiting room. Five weeks after the phone call.	line	N	form	
-A clipboard. Eighteen questions.	line	N	form	
 ABOUT YOU	canvas		form	
 18 questions. Take your time.	canvas		form	has a number
+A clipboard. Eighteen questions.	line	N	form	
 A form! Finally. Somebody professional.	line	S	form	
 Give it here. I’ll do the boxes.	line	S	form	
 How often do you replay a conversation after it has ended?	line	N	form	
@@ -1274,8 +1283,8 @@ A Friday. Not necessarily that one.	line	N	chapter 5
 PART THREE	card		chapter 5	
 Still here.	card		chapter 5	
 Friday. Same room. Same coffee. I’d like to flag that I’m calm.	line	S	chapter 5	
-Say the thing.	ui		chapter 5	
 You’ve brought the whole archive.	line	H	chapter 5	
+Say the thing.	ui		chapter 5	
 Just the travel edition.	line	S	chapter 5	
 It has wheels.	line	S	chapter 5	
 You’re vibrating.	line	H	chapter 5	
@@ -1335,8 +1344,8 @@ I checked. Tuesday works.	line	Z	chapter 5
 By the radiator.	line	S	chapter 5	
 I moved a worry.	line	Z	chapter 5	
 …Filed. Under the other pile.	line	S	chapter 5	
-There’s another pile?	line	H	chapter 5	
 She told me herself.	ui		chapter 5	
+There’s another pile?	line	H	chapter 5	
 It’s new.	line	S	chapter 5	
 Is that why you used to vanish at lunch? We stopped asking. I thought asking was pressure.	line	A	chapter 5	
 I thought not being asked was the verdict.	line	H	chapter 5	
@@ -1353,6 +1362,7 @@ Say yes. Old habits.	choice		chapter 5
 Not this time, Eero.	line	H	chapter 5	
 He’s going to—	line	S	chapter 5	
 Oh. I told Riitta you probably could.	line	B	chapter 5	
+Oh.	line	H	chapter 5	
 Take it back. Quick. Say you can.	choice		chapter 5	
 Say nothing. Stand next to them.	choice		chapter 5	
 Say you can. It’s one Monday. It’s ONE Monday.	line	S	chapter 5	
@@ -1363,11 +1373,11 @@ That was awkward. I was right about that one.	line	S	chapter 5
 It’s Friday. No dentist.	line	A	chapter 5	
 Soup? The one with too much dill.	line	A	chapter 5	
 Before you answer. I’ve drawn up a small deal.	line	S	chapter 5	
+Skip lunch. A quiet hour at the desk. The mug gets a rest.	line	S	chapter 5	
 A REALLY SMALL DEAL	canvas		chapter 5	
 NOW: skip lunch. a quiet hour at the desk.	canvas		chapter 5	
 LATER: it’s friday. she asked first.	canvas		chapter 5	
 signed: ___________  witnessed: E.	canvas		chapter 5	
-Skip lunch. A quiet hour at the desk. The mug gets a rest.	line	S	chapter 5	
 The mug needs it. Sign here.	choice		chapter 5	
 Ask myself first: the mug, or the door?	choice		chapter 5	
 Tear it up. It’s soup.	choice		chapter 5	
@@ -1375,8 +1385,8 @@ Is that the mug talking, or the door?	line	H	chapter 5
 …The door.	line	S	chapter 5	
 Thought so.	line	H	chapter 5	
 The mug was a very convenient witness.	line	S	chapter 5	
-NO DEAL	canvas		chapter 5	
 …Soup?	line	A	chapter 5	
+NO DEAL	canvas		chapter 5	
 Oh, good. That one.	line	H	chapter 5	
 It’s a tr—	line	S	chapter 5	
 …No. It’s lunch.	line	S	chapter 5	
@@ -1446,8 +1456,8 @@ I’m leaving the drawing up.	line	H	comments
 I let them all come close. Every single one.	line	S	comments	
 Mostly… cats. People liked the cat.	line	S	comments	
 BOSS DEFEATED. Correction: there was no boss.	line	N	comments	
-NOT A BOSS · THE GROUP CHAT	canvas		comments	
 Year two. Somebody laughed.	line	S	comments	
+NOT A BOSS · THE GROUP CHAT	canvas		comments	
 This time I left it up.	line	H	comments	
 …I’ll update the file.	line	S	comments	
 Shared a drawing. Left it up.	canvas		comments	
@@ -1505,7 +1515,6 @@ EXITS, TAKEN	ui		epilogue
 EVENING PLANS	ui		epilogue	
 SIT HERE	canvas		epilogue	
 both signatures on file.	ui		epilogue	
-REALLY SMALL DEAL	canvas		epilogue	
 RECEIPT · CONTINUED	ui		epilogue	
 ALSO ON FILE	ui		epilogue	
 UMBRELLA STORIES, TOLD	ui		epilogue	
@@ -1584,7 +1593,6 @@ signature (the shadow)	canvas		epilogue
 Page four: “…in conclusion, sorry.”	line	P	epilogue	
 Sent: three lines. No apology.	line	P	epilogue	
 HEART RATE: NORMAL	ui		epilogue	
-HA	ui		epilogue	
 Still open: one meeting. Tuesday, by the radiator.	canvas		epilogue	
 Ekskyysmi and Sanna’s shadow.	canvas		epilogue	
 THE NEXT TUESDAY	card		radiator	
@@ -1644,7 +1652,6 @@ three compliments, found	ui		week end
 an hour, headphones on	ui		week end	
 speakerphone	ui		week end	
 saying yes	ui		week end	
- (on the tab)	ui		week end	
 THURSDAY	ui		week end	
 Move the glass over the room. Everything looks worse through it. That is its job.	ui		week end	
 SILENCE: 0.8 s (ENLARGED)	ui		week end	has a number
@@ -1737,15 +1744,16 @@ Soon they forget your desk. Someone puts a plant on it. The plant gets invited t
 It’s a cup.	line	H	chapter 1	
 Not one personal remark.	line	S	chapter 1	
 Looked into the cup until the moment had passed.	outside		chapter 1	
-Looks busy. Maybe another day.	line	A	chapter 1	
-Shame.	line	B	chapter 1	
-For the record, I saw a hand go up.	line	S	chapter 1	
-When?	line	H	chapter 1	
-While I was covering your eyes.	line	S	chapter 1	
-In my defence, the cup was extremely safe.	line	S	chapter 1	
-Right.	line	H	chapter 1	
+I waved just now.	line	A	chapter 1	
+I was looking at the cup.	line	H	chapter 1	
+Ha. Good cup. Anyway, we’re heading to lunch!	line	A	chapter 1	
+Ha.	line	H	chapter 1	
+She likes the cup.	line	S	chapter 1	
+She went to lunch.	line	H	chapter 1	
+With the cup’s blessing.	line	S	chapter 1	
+Without me.	line	H	chapter 1	
+…The cup didn’t mention that part.	line	S	chapter 1	
 The plant has your desk now. The plant went to lunch.	line	S	chapter 1	
-the replay (on the tab)	canvas		chapter 1	
 I’ve done the maths. Today: one break room, two conversations, one lunch decision. Three expeditions. Eero took the lift.	line	S	chapter 1	
 He means well.	line	H	chapter 1	
 He means well from INSIDE his comfort zone. It has a sofa.	line	S	chapter 1	
@@ -1864,7 +1872,6 @@ Is that the mug talking… or the door?	line	S	chapter 5
 Then soup. No dessert. Back in forty minutes.	line	H	chapter 5	
 A fair deal. I do write those. Occasionally.	line	S	chapter 5	
 NOW: soup. no dessert. back in forty.	canvas		chapter 5	
-DEAL	canvas		chapter 5	
 That rejection letter you wrote? I’m applying anyway.	line	H	chapter 5	
 They’ve already turned you down. I have the letter.	line	S	chapter 5	
 You have the letter because you wrote it.	line	H	chapter 5	
@@ -1898,6 +1905,7 @@ Everything looks like a dagger from a distance.	line	H	comments
 That’s why I keep my distance.	line	S	comments	
 next time, then.	ui		epilogue	
 TIMES WE STAYED	ui		epilogue	
+HA	ui		epilogue	
 “Just say hi.” As if it’s nothing.	line	S	radiator	
 It is nothing.	line	H	radiator	
 It is a WHOLE WORD.	line	S	radiator	
@@ -1926,9 +1934,11 @@ My coffee’s still here.	line	H	chapter 1
 A convincing alibi.	line	S	chapter 1	
 Oh— hey, are you…	line	A	chapter 1	
 Left. The coffee stayed.	outside		chapter 1	
-Oh. Already gone.	line	A	chapter 1	
-Maybe not a lunch person.	line	B	chapter 1	
-In the corridor, a shadow records one more rejection prevented.	line	N	chapter 1	
+Oh. Gone?	line	A	chapter 1	
+Left the coffee, though.	line	B	chapter 1	
+Shame. I was going to ask about lunch.	line	A	chapter 1	
+Shame.	line	B	chapter 1	
+In the corridor, a shadow records one more rejection prevented. Nobody had been planning one.	line	N	chapter 1	
 Wait. Before the door.	line	S	chapter 1	
 One look. For the archive.	line	S	chapter 1	
 The group chat has a logo now.	line	S	chapter 1	
@@ -2038,6 +2048,145 @@ For emergencies. I’ve never needed it. I’ve always needed it.	line	S	comment
 Then it’s a radiator. I’ve spent time with worse.	line	S	radiator	
 You’re doing my voice.	line	H	radiator	
 I learned from the best. Unfortunately.	line	S	radiator	
+Wait—	line	H	chapter 1	
+Maybe YOUR comfort zone could use a walk, Eero.	line	H	chapter 1	
+…Ha. Fair.	line	B	chapter 1	
+One slightly sharp joke. Eero laughed a beat too late.	outside		chapter 1	
+…Did we just bite Eero?	line	S	chapter 1	
+We bit Eero.	line	H	chapter 1	
+Eero is SOFT. Eero owns a cardigan.	line	S	chapter 1	
+I was defending us. From advice.	line	S	chapter 1	
+−1  the snap	canvas		chapter 1	has a number
+He was being nice.	line	H	chapter 1	
+I know that NOW. Two seconds ago he was a predator.	line	S	chapter 1	
+I reserve the right to wobble.	line	S	chapter 1	
+You can wobble.	line	H	chapter 1	
+A pause. Then a “hi”, just after the moment had moved on.	outside		chapter 1	
+Eero, lunch? The noodle place?	line	A	chapter 1	
+Starving.	line	B	chapter 1	
+…Hi.	line	H	chapter 1	
+The “hi” arrives. Nobody is left to receive it.	line	N	chapter 1	
+It took us four minutes to agree on “hi”.	line	S	chapter 1	
+It took them four seconds to go to lunch.	line	H	chapter 1	
+Different departments.	line	S	chapter 1	
+they went without us (on the tab)	canvas		chapter 1	
+Apologise to Eero. I’ve drafted something.	choice		chapter 1	
+the snap	ui		chapter 1	
+I wobbled. You said hi. Slightly after everyone else.	ui		chapter 1	
+The joke I made at Eero?	line	H	chapter 2	
+We have motive. Witnesses. A cardigan.	line	S	chapter 2	
+Riitta wasn’t there.	line	H	chapter 2	
+Cardigans travel.	line	S	chapter 2	
+That’s walking TOWARDS it.	line	S	chapter 3	
+How short is shorter?	line	H	chapter 3	
+Half a page. That’s all. The content’s great.	line	R	chapter 3	
+…Half a page. That’s not a character flaw. That’s a measurement.	line	S	chapter 3	
+A good review. One note. One question.	outside		chapter 3	
+You didn’t look at anything.	line	H	glass	
+I didn’t need to. I know what I’d have found.	line	S	glass	
+That’s the problem with the glass.	line	H	glass	
+You: “???”	line	P	chapter 4	
+…That had teeth.	line	S	chapter 4	
+That was you.	line	H	chapter 4	
+Sanna: “??? to you too! Phone died. 7?”	line	P	chapter 4	has a number
+She bit back. Affectionately. Is that allowed?	line	S	chapter 4	
+I’ve got “hi” ready. And several escape plans.	line	S	chapter 5	
+…Did you just not say anything?	line	H	chapter 5	
+I’m trying it.	line	S	chapter 5	
+I can hear the printer. Has it always been this loud?	line	S	chapter 5	
+…No disclaimer?	line	H	comments	
+I’m saying nothing. At a very high volume.	line	S	comments	
+…I’m still getting the headband.	line	S	comments	
+CORRECT.	ui		chapter 1	
+Hi!	line	H	chapter 1	
+Oh good, you’re in. We’re doing lunch at twelve. Coming?	line	A	chapter 1	
+You did it.	line	S	chapter 1	
+Nobody has ever done it. I designed it so that nobody could do it.	line	S	chapter 1	
+I said hi.	line	H	chapter 1	
+In under three seconds. With BREATHING.	line	S	chapter 1	
+I’m going to need to lie down.	line	S	chapter 1	
+duration: 1 second	outside		chapter 1	has a number
+Someone said hi back. That was all it ever was.	outside		chapter 1	
+For the record. We had lunch.	line	S	chapter 1	
+We did.	line	H	chapter 1	
+Because you answered inside the window.	line	S	chapter 1	
+Because I said hi.	line	H	chapter 1	
+Those are the same thing and I resent it.	line	S	chapter 1	
+−1  the replay	canvas		chapter 1	has a number
+You answered inside the window. Nobody has done that before. Lunch happened. The shadow is lying down.	ui		chapter 1	
+I would like to lodge a complaint about the speed of that hi.	ui		chapter 1	
+{n} min	ui		chapter 1	template: 54 min | 40 min | 30 min
+Tuesday. Monday’s lunch report: we had lunch. No incident. Nothing to file.	line	S	chapter 2	
+You could leave it blank.	line	H	chapter 2	
+I’ve filed the blank. For completeness.	line	S	chapter 2	
+You’ve said yes for me 4 times this week. I meant maybe one.	line	H	chapter 4	has a number
+Full size. Still here.	line	S	chapter 5	
+I’m glad I asked you that Monday.	line	A	chapter 5	
+I was against it. For three seconds.	line	S	chapter 5	
+She was glad she asked.	canvas		comments	
+the biggest: “quick chat?” (−2)	ui		epilogue	has a number
+Hey, I was going to— …never mind.	line	A	chapter 1	
+Eero, let’s just go.	line	A	chapter 1	
+She was about to say something.	line	H	chapter 1	
+And now she can’t. You’re welcome.	line	S	chapter 1	
+…You’re welcome?	line	S	chapter 1	
+She started a sentence. We never got the rest.	line	S	chapter 1	
+We could ask.	line	H	chapter 1	
+Without a reconstruction of the incident?	line	S	chapter 1	
+You: “Lunch tomorrow?”	line	P	chapter 1	
+Sanna: “YES. I never know if you want company.”	line	P	chapter 1	
+…She thought WE didn’t want HER?	line	S	chapter 1	
+“YES.”	ui		chapter 1	
+Looks busy. Maybe another day.	line	A	chapter 1	
+For the record, I saw a hand go up.	line	S	chapter 1	
+When?	line	H	chapter 1	
+While I was covering your eyes.	line	S	chapter 1	
+In my defence, the cup was extremely safe.	line	S	chapter 1	
+Oh. Already gone.	line	A	chapter 1	
+Maybe not a lunch person.	line	B	chapter 1	
+In the corridor, a shadow records one more rejection prevented.	line	N	chapter 1	
+Good. We said hi. Eventually. Let’s never speak again.	line	S	chapter 1	
+I’m going to ask.	line	H	chapter 1	
+Don’t.	line	S	chapter 1	
+Sanna, do you want to—	line	H	chapter 1	
+Eero! Wait up, I’m coming!	line	A	chapter 1	
+—get lunch.	line	H	chapter 1	
+The question arrives at an empty doorway. It was a good question.	line	N	chapter 1	
+She didn’t hear it.	line	S	chapter 1	
+So technically she didn’t say no.	line	S	chapter 1	
+Technically nobody said anything.	line	H	chapter 1	
+Lunch? No need to ask the others, right?	line	A	chapter 1	
+No need.	line	B	chapter 1	
+…I didn’t make that one up.	line	S	chapter 1	
+I’d like it noted that I don’t enjoy being right.	line	S	chapter 1	
+They said: no need to ask the others. That happened. I’m not doing a bit.	line	S	chapter 1	
+You: “Rough day. Call?”	line	P	chapter 1	
+Reply: “Calling.”	line	P	chapter 1	
+…Who is that?	line	S	chapter 1	
+Someone who asks.	line	H	chapter 1	
+I’d like to vet them.	line	S	chapter 1	
+You’ve met. You hid.	line	H	chapter 1	
+Today hurt. You reached for someone who makes room for you.	ui		chapter 1	
+After Monday? I’m not un-noting Monday.	line	S	chapter 3	
+Noted. I still want to go.	line	H	chapter 3	
+Monday stung, though. “No need to ask the others.”	line	H	chapter 5	
+…You heard that. I’m sorry. That was lazy of us.	line	A	chapter 5	
+I’d like that in writing.	line	S	chapter 5	
+Thanks. It still stings a bit.	line	H	chapter 5	
+…Weather. They said weather.	line	S	chapter 1	
+You’re a terrible liar.	line	H	chapter 1	
+They said: no need to ask the others.	line	S	chapter 1	
+…Okay.	line	H	chapter 1	
+I’d have covered it forever. I only have the two hands.	line	S	chapter 1	
+Today hurt. Their choice to leave you out was theirs.	ui		chapter 1	
+Only the empty room heard that. The shadow would call it a win. It doesn’t feel like one.	line	N	chapter 1	
+Today felt lonely. Not every missing piece needs filling in tonight.	ui		chapter 1	
+I left before lunch on Monday. Then I spent the day guessing.	line	H	chapter 5	
+We went without asking you. I’m sorry. That was lazy of us.	line	A	chapter 5	
+I had seventeen theories. None of them were that short.	line	S	chapter 5	
+Thanks. Monday still stung.	line	H	chapter 5	
+They left me out of lunch.	line	H	chapter 2	
+And now there’s a meeting. The plot has acquired a calendar.	line	S	chapter 2	
 Leave work. That’s all.	ui		sometime	
 Good chat today! We should grab a coffee sometime.	line	B	sometime	
 …When?	line	H	sometime	
@@ -2544,7 +2693,6 @@ I haven’t seen it.	line	H	plusone
 Oh! Then we stop. Eero. No more.	line	A	plusone	
 I was only going to say the dog lives.	line	B	plusone	
 EERO.	line	A	plusone	
-Ha.	line	H	plusone	
 One second after everyone. That second is now on file.	line	S	plusone	
 I’ve been counting the gaps.	line	H	plusone	
 How many?	line	A	plusone	
@@ -2589,7 +2737,6 @@ The doors close. The lift, which has seen this before, goes back down.	line	N	li
 Lovely. More lift.	line	Y	lift	
 Two colleagues in a lift. One “morning” each. They missed their floor being polite.	outside		lift	
 We missed our floor.	line	S	lift	
-We did.	line	H	lift	
 Being polite.	line	S	lift	
 Both of us.	line	H	lift	
 Is it Tuesday?	line	S	lift	
@@ -2763,6 +2910,7 @@ Whatever’s easiest for you.	line	H	call
 “Easiest for me is you telling me. Same as last time it is.”	line	P	call	
 Turn your phone sideways for the best experience.	ui		menus	
 Full screen	ui		menus	
+Really Small Deal	ui		menus	
 A small moment.<br>A very long shadow.	ui		menus	
 Settings	ui		menus	
 About	ui		menus	

@@ -9,7 +9,7 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
 3. **Mitä puuttuu:** `node tools/strings.cjs fi` kirjoittaa tiedostoon `i18n/missing-fi.tsv` ne rivit, joilla ei vielä ole suomennosta.
 4. **Mahtuuko:** Settings › *Unlock all (testing)* → Language › *Pseudo (layout test)*. Jokainen kirjain korostetaan ja teksti on 40 % pidempi, joten näkee heti, mikä ei mahdu ja mikä jäi kääntymättä. `tests/i18n.test.cjs` tekee saman automaattisesti.
 5. **Luvut:** jos rivissä on luku, joka vaihtelee, käännetään malli: `DELETED · TAKE {n}` → `POISTETTU · OTTO {n}`. Luvut palaavat järjestyksessä, ja desimaalipilkku tulee `LOC`-asetuksesta (`0.4 s` → `0,4 s`). Valuutta samoin: `€{n}` → `{n} €`.
-6. **Kuvaan piirretyt tekstit** (kyltit, kuitit, lappuset, kuvatekstit) kääntyvät samasta sanakirjasta. Kyltti puristaa liian pitkän sanan mahtumaan, ja kuitin pitkä nimike kapenee arvonsa vierellä, joten lyhyt käännös on silti parempi. Ohjeelliset pituudet: kuitin rivin nimike noin 28 merkkiä, kylttiteksti noin 16, kortin otsikko noin 30. Seinäkyltit (kirjasto, baarin liitutaulu) piirretään käännettyinä kuviksi (`stillText`), joten kieltä vaihdettaessa kuva tehdään uudestaan. Toimiston juliste *BE A MUG. NOT A HERO.* ei käänny.
+6. **Kuvaan piirretyt tekstit** (kyltit, kuitit, lappuset, kuvatekstit) kääntyvät samasta sanakirjasta. Kyltti puristaa liian pitkän sanan mahtumaan, ja kuitin pitkä nimike kapenee arvonsa vierellä, joten lyhyt käännös on silti parempi. Ohjeelliset pituudet: kuitin rivin nimike noin 28 merkkiä, kylttiteksti noin 16, kortin otsikko noin 30.
 
 ## Sanaleikit ja idiomit
 
@@ -18,7 +18,7 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
 | “It’s a no in a coat.” | ke keskiyö, pe | kielto naamioituna kohteliaaksi; ”takki” palaa perjantaina (”What coat?”) |
 | “Streetlights with a gap policy.” | Lamp gap | byrokratiasana arkiesineelle |
 | “Lamp gap.” | ma kotimatka | lyhyt, kuin liikennemerkki |
-| “BE A MUG. NOT A HERO.” | ilmoitustaulu (kuva, 0.99.40) | **Ei käännetä** (Joonas 27.11.: ”saa olla ihan kuva”). Juliste piirretään kuvana, ja se jää englanniksi kaikilla kielillä. ”Mug” on sekä muki että hölmö, ja muki on pelin jaksamisen mittari. |
+| “BE A MUG. NOT A HERO.” | ilmoitustaulu (piirretty kuva) | ”mug” = muki ja hölmö; kuvassa, vaatii piirron vaihdon |
 | “Informal head of keeping things from getting awkward.” | ma esittely | leikkititteli |
 | “You too.” / “You t— …Thanks, Eero.” | ma, pe | kohteliaisuusrefleksi; vastine on oltava yhtä automaattinen (fi: ”Samoin.”) |
 | “Nobody sneezes in paragraphs.” | to | |
@@ -38,7 +38,7 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
 | “hands at the same height. (married.)” | epilogin rulla | bussin tanko: kädet samalla korkeudella näyttävät pariskunnalta |
 | “after you. no, after YOU.” | epilogi | kohteliaisuussilmukka hississä |
 | “AUDIENCE: STILL HERE.” | epilogi | Ekskyysmi tutkii suurennuslasilla katsojaa |
-| “Still open: one meeting. Tuesday, by the radiator.” + “Ekskyysmi and Sanna’s shadow.” | epilogin viimeinen kortti, kaksi riviä | **tapaaminen, ei vastaanottoaika** (lomakkeella on ”An appointment.”). Toinen rivi kertoo, kenen tapaaminen. Lupaa patterikohtauksen. Ei sanaa ”outstanding” (0.99.41: luettiin ”erinomaiseksi”). |
+| “Outstanding: one meeting. Tuesday, by the radiator.” | epilogin viimeinen kortti | **tapaaminen, ei vastaanottoaika** (lomakkeella on ”An appointment.”); lupaa patterikohtauksen |
 | “ekskyysmi: finnish for ‘excuse me’” | rullan viimeinen rivi | suomeksi vitsi on toisin päin: keksi oma viimeinen rivi (esim. nimen alkuperä tai ”ekskyysmi: suomeksi anteeksi”) |
 
 ## Rakenteet, joissa on luku
@@ -77,3 +77,10 @@ Peli on englanniksi. Tähän listataan rivit, jotka eivät käänny sanasta sana
   - **Mielensäpahoittaja-ajatus (Joonas 22.11.).** Kyrön hahmon nimi on hahmotyypin nimi, ja meillä on jo sellainen: **Ekskyysmi**. Suomalainen tunnistaa sanasta heti anteeksipyytelevän ja kömpelön tyypin, joka yrittää englantia. Ehdotus: suomeksi peli on nimeltään *Ekskyysmi* ja englanniksi *Really Small Deal*. Lyhenne voi elää alaotsikossa: *Ekskyysmi – raskaansarjan sisäinen draama*. Muita ehdokkaita: *Varmuuden vuoksi.* (varjon motto ja maanantain ensimmäinen ”Better safe.”) ja *Ai, moi.* Sanaa ”mielensäpahoittaja” ei käytetä nimessä eikä markkinoinnissa, koska se on Kyrön hahmon nimi. Jos arvostelija tekee vertauksen itse, parempaa palautetta tuskin voi saada.
   - **Mitä Mielensäpahoittaja-perinne antaa suomennokselle:** monologin, jossa pieni asia paisuu periaatteelliseksi täysin vakavalla äänellä, ja jäykkyyden, jonka alla on hellyys. Ero on peilikuva: Mielensäpahoittaja pahoittaa mielensä maailmasta, Ekskyysmi pelkää, että maailma pahoittaa mielensä meistä. Kummallakin on arkisto. Toiselle se todistaa, että ennen oli paremmin, toiselle (2009, 2016, 2019), että nytkin menee pieleen. Suomenkielinen Ekskyysmi saa puhua tällä suomalaisella äänellä eikä käännetyllä englannilla.
   - Suomen kielessä otsikoissa on iso alkukirjain vain ensimmäisessä sanassa. Lyhenne RSD näkyy silti, jos logo korostaa sanojen alkukirjaimia.
+
+## Suomennos 2.0 (0.99.68–, Joonas 28.11.: ”aloitat suomennoksesta, pidä lystiä ja jatka, tarkistan suomen itse myöhemmin”)
+Englanti on lukittu, joten suomi kirjoitetaan nyt kokonaan, osa kerrallaan: maanantai ja valikot (0.99.68), tiistai ja keskiviikko, torstai ja baari, osa kaksi, perjantai ja loppu, sitten kokeiluhetket. Kokeilun 0.89 maanantai kirjoitettiin uudelleen.
+- **Äänet.** Ekskyysmi puhuu virkakieltä täysin vakavalla äänellä (Mielensäpahoittaja-perinne): pöytäkirja, arkisto, toimenpide, alivaliokunta; lyhyitä iskulauseita; huuto isoilla kirjaimilla. Ihminen puhuu arkista, kuivaa kirjakieltä (ei mä/sä-kirjoitusta). Sanna on lämmin ja vähän epävarma, Eero innokas valmentaja, Riitta lyhyt, piste perään. Kertoja: lyhyt preesens.
+- **Vakiot.** ”oh, hi.” → ”ai, moi.” · ”You too.” → ”Samoin.” · ”For the record” → ”Pöytäkirjaan:” · ”Ekskyysmi filed that.” → ”Ekskyysmi arkistoi tämän.” · rejection → torjunta · ”Keep you from being rejected.” → ”Varjella sinua torjunnalta.” (varjo/varjella) · ”Quick chat?” → ”Ehditkö hetken?” · ”Seen.” → ”Nähty.” · ”Lamp gap.” → ”Lamppujen väli.” · comfort zone → mukavuusalue · ”I’m attached.” → ”Olen kiinnittynyt.” · ”YEAR 2” → ”2. LUOKKA”.
+- **Ajat** kertojan riveillä suomalaisittain pisteellä (18.40.). Kellotaulu HUDissa ei muutu.
+- **Työtapa.** `node tools/strings.cjs fi` pelaa nyt viikon 18 kertaa (jokainen maanantai, neljä valintalinjaa, sekalinja ja voitettu vastausikkuna); kolme maanantai-B-viikkoa jätti aiemmin maanantait A ja C pois. Suomenkielinen arvo lasketaan suomeksi vain suomessa, joten nimet kuten SANNA eivät enää putoa listalta.

@@ -18,7 +18,7 @@ function tr(s){
   if(typeof LANG==='undefined'||LANG==='en'||typeof s!=='string'||!s)return s;
   if(LANG==='xx')return pseudo(s);
   var t=trLook(s);if(t)return t;
-  if(!FIV[s]&&/[A-Za-z]/.test(s))FIMISS[s]=(FIMISS[s]||0)+1;   // the tests read this: what the language still shows in English
+  if(!(LANG==='fi'&&FIV[s])&&/[A-Za-z]/.test(s))FIMISS[s]=(FIMISS[s]||0)+1;   // the tests read this: what the language still shows in English (0.99.68: a Finnish value counts as Finnish only in Finnish, so the harvest keeps names like SANNA)
   return s;
 }
 // Quiet: for the canvas. A piece of a line that is already translated (word wrap, typing) is not a missing entry.

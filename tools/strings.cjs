@@ -1,7 +1,7 @@
 // Every string a player can see, collected by playing the game (0.99.39, for translators).
 //   node tools/strings.cjs        → i18n/strings.tsv: the English key, what it is, who says it, where it is first seen
 //   node tools/strings.cjs fi     → also i18n/missing-fi.tsv: the keys that language has no entry for yet
-// Plays three full weeks, every Moment on three choice paths, and the menus, in a language with an empty dictionary, so
+// Plays the week eighteen times (each Monday, four picks, a mixed path, a won window), every Moment on three choice paths, and the menus, in a language with an empty dictionary, so
 // tr() records every string it is asked for. Canvas text is recorded as it is painted. Pieces of a line (word wrap, typing)
 // are left out. A string whose number changes between runs is listed once, as a template with {n}.
 'use strict';
@@ -24,13 +24,16 @@ function step(H,canvas,where,last){const g=H.T.G;
   if(g.chap&&g.chap!==last.chap){last.chap=g.chap;for(const k of ['day','title','caption'])note(g.chap[k],'card','',where());}
   if(canvas.length){for(const t of canvas)note(t,'canvas','',where());canvas.length=0;}}
 function harvest(H,where){for(const k of Object.keys(H.T.fiMiss()))note(k,'ui','',where);}
-// 1. three weeks
-for(const pick of [0,1,2]){const {H,canvas}=fresh(),{T,element,fire}=H,last={};T.start('B',false);
+// 1. the week: each Monday (A, B, C) with each first-to-fourth pick, a mixed path, and a won response window (0.99.68:
+//    three Monday-B weeks missed every Monday-A and -C line and everything after a won window)
+const WEEKS=[];for(const day of ['A','B','C']){for(const pick of [0,1,2,3])WEEKS.push({day,pick});WEEKS.push({day,pick:-1});WEEKS.push({day,pick:0,win:true});}
+for(const run of WEEKS){const pick=run.pick;let ci=0;const {H,canvas}=fresh(),{T,element,fire}=H,last={};T.start(run.day,false);
   const where=()=>T.G.moment||('chapter '+T.G.chapter);
   for(let j=0;j<400000;j++){const g=T.G,s=T.state();if(g.ended&&!g.dayEnd)break;T.unlock();if(j%2===0)T.draw();step(H,canvas,where,last);
     if(s==='click'||s==='stretch'||s==='lamp')T.advance();
-    else if(s==='choice'){const os=T.options(),ok=os.map((o,i)=>i).filter(i=>!os[i].off);T.choose(ok[Math.min(pick,ok.length-1)]);}
+    else if(s==='choice'){const os=T.options(),ok=os.map((o,i)=>i).filter(i=>!os[i].off);const p=pick<0?(ci*7+run.day.charCodeAt(0))%4:pick;ci++;T.choose(ok[Math.min(p,ok.length-1)]);}
     else if(s==='hold'){T.holdDown();T.tick(.12);}
+    else if(s==='qte'&&run.win){const q=T.qte();if(q&&!q.end&&q.t>=0&&q.i<5)T.qteKey(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '][q.i]);T.tick(.05);}
     else if(s==='view'){T.tick(1);T.draw();step(H,canvas,where,last);T.tick(2);T.unlock();T.advance();}
     else if(['qte','auto','time','fight','toss'].includes(s)){if(s==='toss')T.advance();if(s==='fight'&&g.fight&&g.fight.paced)T.swat();T.tick(.12);}
     else if(g.dayEnd){harvest(H,where());fire(element('ov'),'click',{target:{getAttribute:k=>k==='data-go'?'next':null}});}
